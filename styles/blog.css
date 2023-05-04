@@ -368,5 +368,12 @@ body {
       display: block;
       margin-right: 15rem;
     }
+
+    .logo {
+      font-size: 2em;
+      color: #fff;
+      margin-left: -60px;
+    }
+
   }
 }
