@@ -409,5 +409,11 @@ body {
       width: 100px;
       height: 40px;
     }
+
+    .logo {
+      font-size: 2em;
+      color: #fff;
+      margin-left: -60px;
+    }
   }
 }
