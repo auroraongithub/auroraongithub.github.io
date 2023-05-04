@@ -44,15 +44,6 @@ toggle2.addEventListener('click', function () {
   this.classList.toggle('bi-moon');
   if (this.classList.toggle('bi-brightness-high-fill')) {
 
-    body.style.background = 'white';
-    body.style.color = 'black';
-    body.style.transition = '1s';
-    backbtn.style.color = 'black';
-    backbtn.style.transition = '1s';
-    bloglist.style.color = 'black';
-    bloglist.style.transition = '1s';
-
-  } else {
     body.style.background = '#0a0a0a';
     body.style.color = 'white';
     body.style.transition = '1s';
@@ -61,13 +52,23 @@ toggle2.addEventListener('click', function () {
     bloglist.style.color = 'white';
     bloglist.style.transition = '1s';
 
+  } else {
+
+    body.style.background = 'white';
+    body.style.color = 'black';
+    body.style.transition = '1s';
+    backbtn.style.color = 'black';
+    backbtn.style.transition = '1s';
+    bloglist.style.color = 'black';
+    bloglist.style.transition = '1s';
+
   }
 
 });
 
 var toggleButton = document.getElementById("toggleDark2");
 toggleButton.addEventListener("click", function () {
-  document.body.classList.toggle("dark-mode");
-  bloglist.classList.toggle("dark-mode");
+  document.body.classList.toggle("light-mode");
+  bloglist.classList.toggle("light-mode");
 
 });
