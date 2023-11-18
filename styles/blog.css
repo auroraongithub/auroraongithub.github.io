@@ -195,11 +195,22 @@ body {
     flex-direction: row;
 }
 
-.toblog a {
-    position: relative;
-    display: flex;
-    width: 100%;
-    color: rgb(255, 255, 255);
+.toblog {
+    border: 1px solid rgba(255, 255, 255, 0);
+    padding: 0.5rem 1rem;
+    margin: 1rem auto;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #7b25d7;
+    color: white;
+    transition: 0.1s ease-in-out;
+}
+
+.toblog:hover {
+    background-color: #8828ed;  
+    cursor: pointer;
+    border: 1px solid rgb(255, 255, 255);
+    transition: 0.1s ease-in-out;
 }
 
 .bloglist a {
