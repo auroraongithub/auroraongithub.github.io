@@ -200,8 +200,8 @@ const getBlogsAdmin = async () => {
         postsDiv.innerHTML += `<h5>${year.year}</h5>`;
         year.posts.forEach(post => {
             postsDiv.innerHTML += `<div class="blog-item"><a class="btna" href="./post.html?id=${post.id}">${post.title}</a>
-            <a class="edit-btn" href = "./update-blog.html?id=${post.id}" > Edit</a >
-            <a class="delete-btn" onclick="deletePost('${post.id}')" > Delete</a> <br><p>${post.date}</p></div><br>`;
+            <a class="edit-btn" href = "./update-blog.html?id=${post.id}" > <i class="fa fa-edit"></i></a>&nbsp;
+            <a class="delete-btn" onclick="deletePost('${post.id}')" > <i class="fas fa-trash"></i></a> <br><p>${post.date}</p></div><br>`;
 
 
 
