@@ -479,5 +479,57 @@ textarea {
             color: #fff;
             margin-left: -60px;
         }
+
+        .delete-btn {
+            margin-right: 2rem;
+            margin-top: 12px;
+            left: 90%;
+        }
+        
+        .edit-btn {
+            margin-right: 2rem;
+            margin-top: 12px;
+            left: 83%;
+        }
+        
+        .edit-btn,
+        .delete-btn {
+            display: none;
+            cursor: pointer;
+            transition: 0.1s ease-in-out;
+            color: #fff;
+            position: absolute;
+        }
+        
+        .edit-btn:hover {
+            display: none;
+            cursor: pointer;
+            transition: 0.1s ease-in-out;
+            color: #bbbbbb;
+        }
+        
+        .delete-btn:hover {
+            display: none;
+            cursor: pointer;
+            transition: 0.1s ease-in-out;
+            color: #ff3030;
+        }
+        
+        .blog-item:hover .edit-btn,
+        .blog-item:hover .delete-btn {
+            display: inline-block;
+            transition: 0.1s ease-in-out;
+        }
+        
+        .blog-item {
+            transition: 0.1s ease-in-out;
+            background-color: #ffffff00;
+            border-radius: 5px;
+        }
+        
+        .blog-item:hover {
+            transition: 0.1s ease-in-out;
+            background-color: rgba(77, 77, 77, 0.219);
+        }
     }
 }
