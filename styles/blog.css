@@ -22,6 +22,27 @@ header {
     backdrop-filter: blur(10px);
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f100;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
 .container {
     max-width: 960px;
 }
@@ -248,18 +269,71 @@ body {
     display: none;
 }
 
+.delete-btn {
+    margin-right: 2rem;
+    margin-top: 12px;
+    left: 95%;
+}
+
 .edit-btn {
-    margin-left: 50px;
+    margin-right: 2rem;
+    margin-top: 12px;
+    left: 90%;
 }
 
 .edit-btn,
 .delete-btn {
     display: none;
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+    color: #fff;
+    position: absolute;
+}
+
+.edit-btn:hover {
+    display: none;
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+    color: #bbbbbb;
+}
+
+.delete-btn:hover {
+    display: none;
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+    color: #ff3030;
 }
 
 .blog-item:hover .edit-btn,
 .blog-item:hover .delete-btn {
     display: inline-block;
+    transition: 0.1s ease-in-out;
+}
+
+.blog-item {
+    transition: 0.1s ease-in-out;
+    background-color: #ffffff00;
+    border-radius: 5px;
+}
+
+.blog-item:hover {
+    transition: 0.1s ease-in-out;
+    background-color: rgba(77, 77, 77, 0.219);
+}
+
+textarea {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 200px;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 10px;
+    background-color: #292929;
+    border: 1px solid #000;
+    color: white;
+    resize: none;
+    
 }
 
 @media screen and (max-width: 1024px) {

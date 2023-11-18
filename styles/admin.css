@@ -12,14 +12,44 @@
     border: none;
     padding: 0.5rem;
     border-radius: 10px;
-    background-color: #d3d3d3;
+    background-color: #292929;
     border: 1px solid #000;
+    color: white;
+    resize: none;
 }
 
-.submit-btn {
+.form-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-content input {
     border: none;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 10px;
+    background-color: #292929;
+    border: 1px solid #000;
+    color: white;
+    resize: none;
+}
+
+
+
+.submit-btn {
+    border: 1px solid rgba(255, 255, 255, 0);
     padding: 0.5rem 1rem;
     margin: 1rem auto;
     cursor: pointer;
     border-radius: 5px;
+    background-color: #7b25d7;
+    color: white;
+    transition: 0.1s ease-in-out;
+}
+
+.submit-btn:hover {
+    background-color: #8828ed;  
+    cursor: pointer;
+    border: 1px solid rgb(255, 255, 255);
+    transition: 0.1s ease-in-out;
 }
