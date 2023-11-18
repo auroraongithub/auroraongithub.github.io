@@ -51,9 +51,6 @@ const getTheme = theme => {
 
 // function for setting light theme
 const setLightTheme = () => {
-  if  (body.style.background == 'white') {
-    body.style.color = 'black';
-  }
   body.style.background = 'white';
   body.style.color = 'black';
   body.style.transition = '1s';
@@ -61,19 +58,14 @@ const setLightTheme = () => {
   bloglist.style.transition = '1s';
   backbtn.style.color = 'black';
   backbtn.style.transition = '1s';
-
 }
 
 const setDarkTheme = () => {
-  if  (body.style.background == '#0a0a0a') {
-    body.style.color = 'white';
-  }
   body.style.background = '#0a0a0a';
   body.style.color = 'white';
   body.style.transition = '1s';
   bloglist.style.color = 'white';
   bloglist.style.transition = '1s';
-
   backbtn.style.color = 'white';
   backbtn.style.transition = '1s';
 }
