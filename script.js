@@ -108,7 +108,7 @@ async function getPost() {
     window.location.href = './blogs.html';
   }
 
-  const postData = await axios.get('https://nijikade-backend.vercel.app/api/blog' + id);
+  const postData = await axios.get('https://nijikade-backend.vercel.app/api/blog/' + id);
   const post = postData.data;
   const title = document.querySelector('#title');
   const content = document.querySelector('#post-content');
