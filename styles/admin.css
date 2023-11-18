@@ -1,0 +1,25 @@
+.form {
+    max-width: 800px;
+    padding: 10px;
+}
+
+.form-element {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-element input {
+    border: none;
+    padding: 0.5rem;
+    border-radius: 10px;
+    background-color: #d3d3d3;
+    border: 1px solid #000;
+}
+
+.submit-btn {
+    border: none;
+    padding: 0.5rem 1rem;
+    margin: 1rem auto;
+    cursor: pointer;
+    border-radius: 5px;
+}

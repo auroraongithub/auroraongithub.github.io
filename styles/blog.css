@@ -1,385 +1,398 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-  scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
 }
 
 header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px 100px;
-  background: rgba(0, 0, 0, 0.792);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 100;
-  backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+    background: rgba(0, 0, 0, 0.792);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(10px);
 }
 
 .container {
-  max-width: 960px;
+    max-width: 960px;
 }
 
 .spacer {
-  flex: 1;
+    flex: 1;
 }
 
 a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 /*navbar*/
 
 .logo {
-  font-size: 2em;
-  color: #fff;
+    font-size: 2em;
+    color: #fff;
 }
 
 .navigation a {
-  position: relative;
-  font-size: 1.1em;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 500;
-  margin-left: 40px;
+    position: relative;
+    font-size: 1.1em;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 40px;
 }
 
 .navigation i {
-  font-size: 1.1em;
-  cursor: pointer;
-  position: absolute;
-  top: 28px;
-  margin-left: 40px;
-  color: white;
+    font-size: 1.1em;
+    cursor: pointer;
+    position: absolute;
+    top: 28px;
+    margin-left: 40px;
+    color: white;
 }
 
 .navigation a:after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -6px;
-  width: 100%;
-  height: 3px;
-  background-color: #fff;
-  border-radius: 5px;
-  transform: scaleX(0);
-  transform-origin: bottom right;
-  transition: transform .25s ease-out;
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 3px;
+    background-color: #fff;
+    border-radius: 5px;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
 }
 
 .navigation a:hover::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
+    transform: scaleX(1);
+    transform-origin: bottom left;
 }
 
 /*blog part items*/
 
 h1 {
-  /* color: var(--primary-color); */
-  color: white;
-  font-size: 3rem;
-  margin: 0;
+    /* color: var(--primary-color); */
+    color: white;
+    font-size: 3rem;
+    margin: 0;
 }
 
 h2 {
-  font-size: 2rem;
+    font-size: 2rem;
 }
 
-.header>h3 {
-  color: white;
+.header > h3 {
+    color: white;
 }
 
 h4 {
-  font-size: 4rem;
+    font-size: 4rem;
 }
 
 h5 {
-  font-size: 1.5rem;
-  font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    font-family: 'Roboto', sans-serif;
 }
 
 h6 {
-  font-size: 1.2rem;
-  color: red;
+    font-size: 1.2rem;
+    color: red;
 }
 
 body {
-  position: relative;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  min-height: 40vh;
-  background: #0a0a0a;
-  color: white;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 40vh;
+    background: #0a0a0a;
+    color: white;
 }
 
 .bloglist {
-  position: relative;
-  display: block;
-  margin-right: 40rem;
-  width: 50%;
-  padding: 1rem;
+    position: relative;
+    display: block;
+    margin-right: 40rem;
+    width: 50%;
+    padding: 1rem;
 }
 
 .contents {
-  position: relative;
-  display: block;
-  margin: 10rem 0rem;
-  max-width: 100%;
-  padding: 1rem;
+    position: relative;
+    display: block;
+    margin: 10rem 0rem;
+    max-width: 100%;
+    padding: 1rem;
 }
 
 .contents h4 {
-  font-size: 3rem;
-  margin-bottom: 2rem;
+    font-size: 3rem;
+    margin-bottom: 2rem;
 }
 
 .contents p {
-  font-size: 1.2rem;
-  line-height: 1.5;
-  margin-bottom: 2rem;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
 }
 
 .contents img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #back {
-  position: relative;
-  display: block;
-  /* margin-left: 5rem; */
-  margin-top: -10rem;
-  padding: 1rem;
-  width: 100%;
-  color: white;
+    position: relative;
+    display: block;
+    /* margin-left: 5rem; */
+    margin-top: -10rem;
+    padding: 1rem;
+    width: 100%;
+    color: white;
 }
 
 .blog {
-  position: relative;
-  flex-direction: row;
+    position: relative;
+    flex-direction: row;
 }
 
 .toblog a {
-  position: relative;
-  display: flex;
-  width: 100%;
-  color: rgb(255, 255, 255);
+    position: relative;
+    display: flex;
+    width: 100%;
+    color: rgb(255, 255, 255);
 }
 
 .bloglist a {
-  color: rgb(255, 255, 255);
-  font-size: 1.2rem;
-  transition: 1s;
+    color: rgb(255, 255, 255);
+    font-size: 1.2rem;
+    transition: 1s;
 }
 
 .light-mode .bloglist a {
-  color: #000000;
-  transition: 1s;
+    color: #000000;
+    transition: 1s;
 }
 
 #blogs {
-  position: relative;
-  flex-direction: row;
+    position: relative;
+    flex-direction: row;
 }
 
 .bloglist,
-.bloglist>p {
-  width: 100%;
-  max-width: 100%;
-  position: relative;
+.bloglist > p {
+    width: 100%;
+    max-width: 100%;
+    position: relative;
 }
 
 /*Padding*/
 
 .padded {
-  padding-top: 5rem;
-  padding-right: 10rem;
-  padding-left: 3rem;
-  padding-bottom: 3rem;
+    padding-top: 5rem;
+    padding-right: 10rem;
+    padding-left: 3rem;
+    padding-bottom: 3rem;
 }
 
 .padded2 {
-  padding-top: 10px;
-  padding-left: 5rem;
+    padding-top: 10px;
+    padding-left: 5rem;
 }
 
 .padded3 {
-  padding: 5rem;
+    padding: 5rem;
 }
 
 /* */
 
 .menutext {
-  display: none;
+    display: none;
 }
 
 .mobilenav #toggleDark2 {
-  display: none;
+    display: none;
 }
 
 .mobilenav {
-  display: none;
+    display: none;
 }
 
 .menutext {
-  display: none;
+    display: none;
 }
 
 .dropdown {
-  display: none;
+    display: none;
 }
 
 #menubutton {
-  display: none;
+    display: none;
+}
+
+.edit-btn {
+    margin-left: 50px;
+}
+
+.edit-btn,
+.delete-btn {
+    display: none;
+}
+
+.blog-item:hover .edit-btn,
+.blog-item:hover .delete-btn {
+    display: inline-block;
 }
 
 @media screen and (max-width: 1024px) {
-  .container {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .padded {
-    padding: 5rem;
-  }
-
-  @media screen and (max-width: 840px) {
-    .navigation {
-      display: none;
+    .container {
+        width: 100%;
+        max-width: 100%;
     }
 
-    .mobilenav #toggleDark2 {
-      display: block;
+    .padded {
+        padding: 5rem;
     }
 
-    .mobilenav {
-      display: block;
-    }
+    @media screen and (max-width: 840px) {
+        .navigation {
+            display: none;
+        }
 
-    .navigation i {
-      display: none;
-    }
+        .mobilenav #toggleDark2 {
+            display: block;
+        }
 
-    #menubutton {
-      display: block;
-    }
+        .mobilenav {
+            display: block;
+        }
 
-    header i {
-      flex-direction: row;
-      color: white;
-    }
+        .navigation i {
+            display: none;
+        }
 
-    .mobilenav #toggleDark2 {
-      font-size: 1.1em;
-      cursor: pointer;
-      position: absolute;
-      top: 30px;
-      margin-left: 100px;
-      color: white;
-    }
+        #menubutton {
+            display: block;
+        }
 
-    #menubutton {
-      color: #fff;
-      text-decoration: none;
-      transition: 0.2s;
-    }
+        header i {
+            flex-direction: row;
+            color: white;
+        }
 
-    #menubutton:hover {
-      color: #888888;
-      text-decoration: none;
-    }
+        .mobilenav #toggleDark2 {
+            font-size: 1.1em;
+            cursor: pointer;
+            position: absolute;
+            top: 30px;
+            margin-left: 100px;
+            color: white;
+        }
 
-    .menutext {
-      display: block;
-      position: relative;
-    }
+        #menubutton {
+            color: #fff;
+            text-decoration: none;
+            transition: 0.2s;
+        }
 
-    .dropdown {
-      display: none;
-      overflow: visible;
-      position: absolute;
-      text-decoration: none;
-      color: white;
-      top: 100%;
-      left: 0;
-      z-index: 9999;
-    }
+        #menubutton:hover {
+            color: #888888;
+            text-decoration: none;
+        }
 
-    .dropdown i {
-      margin-left: 20px;
-      margin-bottom: 30px;
-    }
+        .menutext {
+            display: block;
+            position: relative;
+        }
 
-    .dropdown a {
-      text-decoration: none;
-      color: white;
-      margin-top: 10px;
-      transition: 0.2s;
-    }
+        .dropdown {
+            display: none;
+            overflow: visible;
+            position: absolute;
+            text-decoration: none;
+            color: white;
+            top: 100%;
+            left: 0;
+            z-index: 9999;
+        }
 
-    .dropdown a:hover {
-      text-decoration: none;
-      color: rgb(170, 170, 170);
-    }
+        .dropdown i {
+            margin-left: 20px;
+            margin-bottom: 30px;
+        }
 
-    .menutext ul {
-      list-style-type: none;
-      color: white;
-    }
+        .dropdown a {
+            text-decoration: none;
+            color: white;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
 
-    .menutext:hover .dropdown {
-      display: block;
-      margin-top: auto;
-      background-color: #000000;
-      font-size: 1.2rem;
-    }
+        .dropdown a:hover {
+            text-decoration: none;
+            color: rgb(170, 170, 170);
+        }
 
-    .menutext:hover .dropdown ul {
-      display: block;
-    }
+        .menutext ul {
+            list-style-type: none;
+            color: white;
+        }
 
-    .menutext:hover .dropdown ul li {
-      display: block;
-      width: 100px;
-    }
+        .menutext:hover .dropdown {
+            display: block;
+            margin-top: auto;
+            background-color: #000000;
+            font-size: 1.2rem;
+        }
 
-    .menutext ul li:hover .dropdown ul {
-      display: block;
-      margin-top: 10px;
-      margin-left: 10px;
-    }
+        .menutext:hover .dropdown ul {
+            display: block;
+        }
 
-    .menutext ul li:hover .dropdown ul li {
-      width: 100px;
-      height: 40px;
-    }
+        .menutext:hover .dropdown ul li {
+            display: block;
+            width: 100px;
+        }
 
-    .bloglist {
-      position: relative;
-      display: block;
-      margin-right: 15rem;
-    }
+        .menutext ul li:hover .dropdown ul {
+            display: block;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
 
-    .logo {
-      font-size: 2em;
-      color: #fff;
-      margin-left: -60px;
-    }
+        .menutext ul li:hover .dropdown ul li {
+            width: 100px;
+            height: 40px;
+        }
 
-  }
+        .bloglist {
+            position: relative;
+            display: block;
+            margin-right: 15rem;
+        }
+
+        .logo {
+            font-size: 2em;
+            color: #fff;
+            margin-left: -60px;
+        }
+    }
 }
