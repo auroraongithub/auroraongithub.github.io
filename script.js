@@ -3,6 +3,7 @@ const toggle2 = document.getElementById('toggleDark2');
 const body = document.querySelector('body');
 const bloglist = document.querySelector('.bloglist a');
 const backbtn = document.querySelector(".toblog a");
+const cards = document.querySelectorAll('.card');
 
 
 toggle.addEventListener('click', function () {
@@ -37,7 +38,9 @@ toggle2.addEventListener('click', function () {
 var toggleButton = document.getElementById("toggleDark2");
 toggleButton.addEventListener("click", function () {
   document.body.classList.toggle("light-mode");
-  bloglist.classList.toggle("light-mode");
+  if (bloglist) {
+    bloglist.classList.toggle("light-mode");
+  }
 });
 
 // function to save theme to localstorage
@@ -51,24 +54,48 @@ const getTheme = theme => {
 
 // function for setting light theme
 const setLightTheme = () => {
-  body.style.background = 'white';
-  body.style.color = 'black';
-  body.style.transition = '1s';
-  bloglist.style.color = 'black';
-  bloglist.style.transition = '1s';
-  backbtn.style.color = 'black';
-  backbtn.style.transition = '1s';
+  if (body) {
+    body.style.background = 'white';
+    body.style.color = 'black';
+    body.style.transition = '1s';
+  }
+
+  if (cards) {
+    cards.forEach((card) => card.style.color = 'black');
+  }
+
+  if (backbtn) {
+    backbtn.style.color = 'black';
+    backbtn.style.transition = '1s';
+  }
+
+  if (bloglist) {
+    bloglist.style.color = 'black';
+    bloglist.style.transition = '1s';
+  }
+
 }
 
 const setDarkTheme = () => {
-  body.style.background = '#0a0a0a';
-  body.style.color = 'white';
-  body.style.transition = '1s';
-  bloglist.style.color = 'white';
-  bloglist.style.transition = '1s';
-  backbtn.style.color = 'white';
-  backbtn.style.transition = '1s';
+  if (body) {
+    body.style.background = '#0a0a0a';
+    body.style.color = 'white';
+    body.style.transition = '1s';
+  }
+  if (cards) {
+    cards.forEach((card) => card.style.color = 'white');
+
+  }
+  if (backbtn) {
+    backbtn.style.color = 'white';
+    backbtn.style.transition = '1s';
+  }
+  if (bloglist) {
+    bloglist.style.color = 'white';
+    bloglist.style.transition = '1s';
+  }
 }
+
 
 const theme = getTheme();
 if (theme == 'dark') {
