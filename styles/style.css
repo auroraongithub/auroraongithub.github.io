@@ -131,6 +131,61 @@ a:hover {
   transform-origin: bottom left;
 }
 
+/* Slideshow container */
+.manga-container {
+    position: relative;
+    margin: 0 28.5%;  
+    margin-left: 18.5%;
+    margin-top: 4%;
+    height: 500px; /* Fixed height of the slideshow */
+    overflow: hidden;
+    box-shadow: 0px 15px 35px rgb(0, 128, 128, 0.5);
+    border: 2px solid rgba(153, 153, 153, 0.5);
+    border-radius: 20px;
+}
+
+.mySlides {
+    display: none;
+    max-width: 100%;
+    height: 100%;
+}
+
+.mySlides img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.2s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    z-index: 1;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
 /*github repo wrapper*/
 
 .projects {
@@ -334,6 +389,15 @@ footer img {
     width: 100%;
     max-width: 100%;
   }
+    
+    .manga-container {
+    position: relative;
+    margin: 0 20.5%;  
+    margin-left: 8.5%;
+    margin-top: 4%;
+    height: 400px; /* Fixed height of the slideshow */
+    overflow: hidden;
+}
 
   #about {
     grid-template-columns: initial;
@@ -358,6 +422,16 @@ footer img {
   }
 
   @media screen and (max-width: 840px) {
+      
+    .manga-container {
+        position: relative;
+        margin: 0 11.5%;  
+        margin-left: 0%;
+        margin-top: 4%;
+        height: 300px; /* Fixed height of the slideshow */
+        overflow: hidden;
+}
+
     .navigation {
       display: none;
     }
