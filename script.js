@@ -110,8 +110,8 @@ if (theme == 'dark') {
 
 
 
-async function getBlogs() {
-  const blog = await axios.get('https://nijikade-backend.vercel.app/api/blog');
+async function getAllPosts(type) {
+  const blog = await axios.get('http://localhost:3000/api/post?type=' + type);
   const years = blog.data.posts;
   const postsDiv = document.querySelector('#posts');
   postsDiv.innerHTML = '';
@@ -133,7 +133,7 @@ async function getPost() {
     window.location.href = './blogs.html';
   }
 
-  const postData = await axios.get('https://nijikade-backend.vercel.app/api/blog/' + id);
+  const postData = await axios.get('http://localhost:3000/api/post/' + id);
   const post = postData.data;
   const title = document.querySelector('#title');
   const content = document.querySelector('#post-content');
@@ -159,14 +159,14 @@ function showSlides(n) {
   let i;
   let slides = document.getElementsByClassName("mySlides");
   let dots = document.getElementsByClassName("dot");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
+  if (n > slides.length) { slideIndex = 1 }
+  if (n < 1) { slideIndex = slides.length }
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
   }
   for (i = 0; i < dots.length; i++) {
     dots[i].className = dots[i].className.replace(" active", "");
   }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
+  slides[slideIndex - 1].style.display = "block";
+  dots[slideIndex - 1].className += " active";
 }
