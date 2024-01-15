@@ -8,26 +8,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="roraosu's website.">
     <meta name="keywords" content="blog about me">
-    <link rel="stylesheet" href="../styles/blog.css">
+    <link rel="stylesheet" href="./../styles/admin.css">
+    <link rel="stylesheet" href="./../styles/blog.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <link rel="icon" type="img/x-icon" href="/img/favicon.ico">
-    <script src="/script.js" defer></script>
+    <script src="./../script.js" defer></script>
     <script src="./script.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 </head>
 
-<body onload="getBlogsAdmin()">
+<body>
     <header>
         <h2 class="logo">nijika.de</h2>
-         <nav class="navigation">
+        <nav class="navigation">
             <a href="/">Home</a>
-            <a href="#">Blogs</a>
+            <a href="./blogs.html">Blogs</a>
             <a href="./stories.html">Stories</a>
-            <a href="./add-blog.html">Add Post</a>
+            <a href="#">Add Post</a>
             <i class="bi bi-brightness-high-fill" id="toggleDark"></i>
         </nav>
 
@@ -40,9 +41,9 @@
                         <div class="dropdown">
                             <ul>
                                 <li><a href="/">Home</a></li>
-                                <li><a href="#">Blogs</a></li>
+                                <li><a href="./blogs.html">Blogs</a></li>
                                 <li><a href="./stories.html">Stories</a></li>
-                                <li><a href="./add-blog.html">Add Post</a></li>
+                                <li><a href="#">Add Post</a></li>
                             </ul>
                         </div>
                     </li>
@@ -50,8 +51,6 @@
             </div>
             <i class="bi bi-brightness-high-fill" id="toggleDark2"></i>
         </nav>
-
-       
     </header>
     <div class="container">
         <br>
@@ -60,9 +59,33 @@
         <br>
         <section id="blogs">
             <div class="bloglist" class="padded">
-                <h4>Blogs</h4>
-                <div id="posts">Please wait</div>
-                 </section>
+                <h4>Add Post</h4>
+                <br>
+
+
+                <form id="addBlogForm">
+                    <div class="form-element">
+                        <label for="title">Title</label>
+                        <input class="form-control" id="title" type="text" placeholder="Title">
+                    </div>
+
+                     <div class="form-element">
+                        <label for="content">Content</label>
+                        <textarea class="form-control" id="content"></textarea>
+                    </div>
+                    <div class="form-element">
+                        <label for="postType">Post Type</label>
+                        <select id="postType" class="form-control">
+                            <option value="blog">Blog</option>
+                            <option value="story">Story</option>
+                        </select>
+                    </div>
+
+                    <button class="submit-btn">Post</button>
+                </form>
+
+               </div>
+        </section>
     </div>
 
     </div>

@@ -4,6 +4,7 @@ const body = document.querySelector('body');
 const bloglist = document.querySelector('.bloglist a');
 const backbtn = document.querySelector(".toblog a");
 const cards = document.querySelectorAll('.card');
+const blogs = document.querySelectorAll('.bloglist a');
 
 
 toggle.addEventListener('click', function () {
@@ -62,6 +63,7 @@ const setLightTheme = () => {
 
   if (cards) {
     cards.forEach((card) => card.style.color = 'black');
+    cards.forEach((card) => card.style.border = 'black');
   }
 
   if (backbtn) {
@@ -73,7 +75,9 @@ const setLightTheme = () => {
     bloglist.style.color = 'black';
     bloglist.style.transition = '1s';
   }
-
+  if (blogs) {
+    blogs.forEach((blogs) => blogs.style.color = 'black');
+  }
 }
 
 const setDarkTheme = () => {
@@ -84,15 +88,18 @@ const setDarkTheme = () => {
   }
   if (cards) {
     cards.forEach((card) => card.style.color = 'white');
-
+    cards.forEach((card) => card.style.border = 'white');
   }
   if (backbtn) {
     backbtn.style.color = 'white';
     backbtn.style.transition = '1s';
   }
   if (bloglist) {
-    bloglist.style.color = 'white';
+    blogs.style.color = 'white';
     bloglist.style.transition = '1s';
+  }
+  if (blogs) {
+    blogs.forEach((bloglist) => bloglist.style.color = 'white');
   }
 }
 
@@ -110,8 +117,8 @@ if (theme == 'dark') {
 
 
 
-async function getAllPosts(type) {
-  const blog = await axios.get('http://localhost:3000/api/post?type=' + type);
+async function getBlogs() {
+  const blog = await axios.get('https://nijika-api.vercel.app/api/blog');
   const years = blog.data.posts;
   const postsDiv = document.querySelector('#posts');
   postsDiv.innerHTML = '';
@@ -133,40 +140,11 @@ async function getPost() {
     window.location.href = './blogs.html';
   }
 
-  const postData = await axios.get('http://localhost:3000/api/post/' + id);
+  const postData = await axios.get('https://nijika-api.vercel.app/api/blog/' + id);
   const post = postData.data;
   const title = document.querySelector('#title');
   const content = document.querySelector('#post-content');
 
   title.innerHTML = post.data.title;
   content.innerHTML = post.data.content;
-}
-
-let slideIndex = 1;
-showSlides(slideIndex);
-
-// Next/previous controls
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
-
-// Thumbnail image controls
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("dot");
-  if (n > slides.length) { slideIndex = 1 }
-  if (n < 1) { slideIndex = slides.length }
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex - 1].style.display = "block";
-  dots[slideIndex - 1].className += " active";
 }
