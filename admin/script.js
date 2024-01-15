@@ -54,6 +54,7 @@ if (loginForm) {
 const addBlogForm = document.querySelector('#addBlogForm');
 const titleInput = document.querySelector('#title');
 const contentInput = document.querySelector('#content');
+const typeInput = document.querySelector('#category');
 
 
 if (addBlogForm) {
@@ -62,6 +63,7 @@ if (addBlogForm) {
 
         const title = titleInput.value;
         const content = contentInput.value;
+        const type = typeInput.value;
         const token = localStorage.getItem('jwt');
 
         if (!token) {
@@ -80,6 +82,14 @@ if (addBlogForm) {
             return;
         }
 
+        if (type === '') {
+            Swal.fire({
+                title: "Select category",
+                icon: "error"
+            });
+            return;
+        }
+
         Swal.fire({
             title: 'Please wait',
             allowOutsideClick: false,
@@ -90,15 +100,16 @@ if (addBlogForm) {
         });
 
         try {
-            const response = await axios.post(`https://nijikade-backend.vercel.app/api/blog?token=${token}`, { title, content });
+            const response = await axios.post(`https://nijikade-backend.vercel.app/api/post?token=${token}`, { title, type, content });
             localStorage.setItem('jwt', response.data.token)
             Swal.close();
             Swal.fire({
-                title: 'Blog added successfully',
+                title: 'Post added successfully',
                 icon: "success"
             });
 
         } catch (error) {
+
             let errorMessage = 'An error occurred';
 
             if (error.response && error.response.data && error.response.data.error) {
@@ -161,11 +172,11 @@ if (updateBlogForm) {
             if (!id) {
                 window.location.href = './blogs.html';
             }
-            const response = await axios.patch(`https://nijikade-backend.vercel.app/api/blog/${id}?token=${token}`, { title, content });
+            const response = await axios.patch(`https://nijikade-backend.vercel.app/api/post/${id}?token=${token}`, { title, content });
             localStorage.setItem('jwt', response.data.token)
             Swal.close();
             Swal.fire({
-                title: 'Blog updated successfully',
+                title: 'Post updated successfully',
                 icon: "success"
             });
 
@@ -191,8 +202,8 @@ if (updateBlogForm) {
 }
 
 
-const getBlogsAdmin = async () => {
-    const blog = await axios.get('https://nijikade-backend.vercel.app/api/blog');
+const getPostsAdmin = async (type) => {
+    const blog = await axios.get('https://nijikade-backend.vercel.app/api/post?type=' + type);
     const years = blog.data.posts;
     const postsDiv = document.querySelector('#posts');
     postsDiv.innerHTML = '';
@@ -200,21 +211,14 @@ const getBlogsAdmin = async () => {
         postsDiv.innerHTML += `<h5>${year.year}</h5>`;
         year.posts.forEach(post => {
             postsDiv.innerHTML += `<div class="blog-item"><a class="btna" href="./post.html?id=${post.id}">${post.title}</a>
-            <a class="edit-btn" href = "./update-blog.html?id=${post.id}" > <i class="fa fa-edit"></i></a>&nbsp;
+            <a class="edit-btn" href = "./update-post.html?id=${post.id}" > <i class="fa fa-edit"></i></a>&nbsp;
             <a class="delete-btn" onclick="deletePost('${post.id}')" > <i class="fas fa-trash"></i></a> <br><p>${post.date}</p></div><br>`;
-
-
-
         });
         postsDiv.innerHTML += '<br>'
     });
 }
 
-
-
-
-
-const getBlogData = async () => {
+const getPostData = async () => {
     const url = new URL(window.location.href);
     const id = url.searchParams.get('id');
 
@@ -222,7 +226,7 @@ const getBlogData = async () => {
         window.location.href = './blogs.html';
     }
 
-    const postData = await axios.get('https://nijikade-backend.vercel.app/api/blog/' + id);
+    const postData = await axios.get('https://nijikade-backend.vercel.app/api/post/' + id);
     const post = postData.data;
     const title = document.querySelector('#title');
     const content = document.querySelector('#post-content');
@@ -252,7 +256,7 @@ const deletePost = (id) => {
         reverseButtons: true,
     }).then((result) => {
         if (result.isConfirmed) {
-            axios.delete(`https://nijikade-backend.vercel.app/api/blog/${id}?token=${token}`)
+            axios.delete(`https://nijikade-backend.vercel.app/post/${id}?token=${token}`)
                 .then((response) => {
                     Swal.fire({
                         title: 'Post deleted successfully',
