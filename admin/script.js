@@ -2,7 +2,6 @@ const loginForm = document.querySelector('#loginForm');
 const emailInput = document.querySelector('#email');
 const passwordInput = document.querySelector('#password');
 
-
 if (loginForm) {
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -63,9 +62,7 @@ if (addBlogForm) {
         event.preventDefault();
 
         const title = titleInput.value;
-        const content = quill.root.innerHTML;
-
-
+        const content = contentInput.value;
         const type = typeInput.value;
         const token = localStorage.getItem('jwt');
 
@@ -77,7 +74,7 @@ if (addBlogForm) {
             return;
         }
 
-        if (title === '' || quill.root.innerText === '') {
+        if (title === '' || content === '') {
             Swal.fire({
                 title: "Fill all the fields",
                 icon: "error"
@@ -140,7 +137,7 @@ if (updateBlogForm) {
         event.preventDefault();
 
         const title = titleInput.value;
-        const content = quill.root.innerHTML;
+        const content = contentInput.value;
         const token = localStorage.getItem('jwt');
 
         if (!token) {
@@ -151,7 +148,7 @@ if (updateBlogForm) {
             return;
         }
 
-        if (title === '' || quill.root.innerText === '') {
+        if (title === '' || content === '') {
             Swal.fire({
                 title: "Fill all the fields",
                 icon: "error"
@@ -235,7 +232,7 @@ const getPostData = async () => {
     const content = document.querySelector('#post-content');
 
     titleInput.value = post.data.title;
-    quill.clipboard.dangerouslyPasteHTML(post.data.content);
+    contentInput.value = post.data.content;
 }
 
 const deletePost = (id) => {
