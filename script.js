@@ -135,7 +135,6 @@ async function getPost() {
 
   const postData = await axios.get('https://nijikade-backend.vercel.app/api/post/' + id);
   const post = postData.data;
-  const tags = document.querySelector('#tags');
   const title = document.querySelector('#title');
   const content = document.querySelector('#post-content');
 
