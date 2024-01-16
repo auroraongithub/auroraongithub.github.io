@@ -54,6 +54,7 @@ if (loginForm) {
 
 const addBlogForm = document.querySelector('#addBlogForm');
 const titleInput = document.querySelector('#title');
+const contentInput = document.querySelector('#content');
 const typeInput = document.querySelector('#category');
 
 
