@@ -4,11 +4,13 @@ const body = document.querySelector('body');
 const bloglist = document.querySelector('.bloglist a');
 const backbtn = document.querySelector(".toblog a");
 const cards = document.querySelectorAll('.card');
+const tagIcon = document.querySelectorAll('.tag-icon');
 
 
 toggle.addEventListener('click', function () {
   this.classList.toggle('bi-moon');
   if (this.classList.toggle('bi-brightness-high-fill')) {
+
     changeTheme('dark');
     setDarkTheme();
   } else {
@@ -74,6 +76,13 @@ const setLightTheme = () => {
     bloglist.style.transition = '1s';
   }
 
+
+  if (tagIcon) {
+    document.querySelectorAll('.tag-icon').forEach((tag) => { tag.style.fill = '#000' });
+  }
+
+
+
 }
 
 const setDarkTheme = () => {
@@ -93,6 +102,10 @@ const setDarkTheme = () => {
   if (bloglist) {
     bloglist.style.color = 'white';
     bloglist.style.transition = '1s';
+  }
+
+  if (tagIcon) {
+    document.querySelectorAll('.tag-icon').forEach((tag) => { tag.style.fill = '#fff' });
   }
 }
 
@@ -118,7 +131,10 @@ async function getAllPosts(type) {
   years.forEach(year => {
     postsDiv.innerHTML += `<h5>${year.year}</h5>`;
     year.posts.forEach(post => {
-      postsDiv.innerHTML += `<a class="btna" href="./post.html?id=${post.id}">${post.title}</a><p>${post.date}</p><br>`;
+      postsDiv.innerHTML += `<a class="btna" href="./post.html?id=${post.id}">${post.title}</a>
+
+            <p class="post-info"><span class="date">${post.date}</span><svg class="tag-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M17.868 4.504A1 1 0 0 0 17 4H3a1 1 0 0 0-.868 1.496L5.849 12l-3.717 6.504A1 1 0 0 0 3 20h14a1 1 0 0 0 .868-.504l4-7a.998.998 0 0 0 0-.992l-4-7zM16.42 18H4.724l3.145-5.504a.998.998 0 0 0 0-.992L4.724 6H16.42l3.429 6-3.429 6z"></path></svg><span class="tags">${post.tags || 'No tags'}</span></p>
+      <br>`;
     });
     postsDiv.innerHTML += '<br>'
   });
