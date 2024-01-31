@@ -25,23 +25,23 @@ header {
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
+}
+
+/* Track */
+::-webkit-scrollbar-track {
     background: #f1f1f100;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 10px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
     background: #555;
-  }
+}
 
 .container {
     max-width: 960px;
@@ -207,7 +207,7 @@ body {
 }
 
 .toblog:hover {
-    background-color: #8828ed;  
+    background-color: #8828ed;
     cursor: pointer;
     border: 1px solid rgb(255, 255, 255);
     transition: 0.1s ease-in-out;
@@ -344,9 +344,25 @@ textarea {
     border: 1px solid #000;
     color: white;
     resize: none;
-    
 }
 
+.post-info {
+    display: flex;
+    align-items: center;
+}
+
+.date {
+    margin-right: 10px;
+}
+.tags {
+    font-size: 14px;
+}
+
+.tag-icon {
+    margin-right: 5px;
+    height: 20px;
+    width: 20px;
+}
 @media screen and (max-width: 1024px) {
     .container {
         width: 100%;
@@ -485,13 +501,13 @@ textarea {
             margin-top: 12px;
             left: 90%;
         }
-        
+
         .edit-btn {
             margin-right: 2rem;
             margin-top: 12px;
             left: 83%;
         }
-        
+
         .edit-btn,
         .delete-btn {
             display: none;
@@ -500,33 +516,33 @@ textarea {
             color: #fff;
             position: absolute;
         }
-        
+
         .edit-btn:hover {
             display: none;
             cursor: pointer;
             transition: 0.1s ease-in-out;
             color: #bbbbbb;
         }
-        
+
         .delete-btn:hover {
             display: none;
             cursor: pointer;
             transition: 0.1s ease-in-out;
             color: #ff3030;
         }
-        
+
         .blog-item:hover .edit-btn,
         .blog-item:hover .delete-btn {
             display: inline-block;
             transition: 0.1s ease-in-out;
         }
-        
+
         .blog-item {
             transition: 0.1s ease-in-out;
             background-color: #ffffff00;
             border-radius: 5px;
         }
-        
+
         .blog-item:hover {
             transition: 0.1s ease-in-out;
             background-color: rgba(77, 77, 77, 0.219);
