@@ -186,3 +186,119 @@ function showSlides(n) {
   slides[slideIndex - 1].style.display = "block";
   dots[slideIndex - 1].className += " active";
 }
+
+/* ASSIGNMENT 1 */
+
+function updateConversionFields() {
+  const conversionType = document.getElementById('conversionType').value;
+  const input = document.getElementById('inputValue');
+  
+  if (conversionType === "CtoF") {
+    input.placeholder = "Enter Celsius";
+  } else if (conversionType === "FtoC") {
+    input.placeholder = "Enter Fahrenheit";
+  } else if (conversionType === "MtoF") {
+    input.placeholder = "Enter Meters";
+  } else if (conversionType === "FtoM") {
+    input.placeholder = "Enter Feet";
+  }
+  
+  document.getElementById('result').innerText = "";
+}
+
+function Conversion() {
+  const conversionType = document.getElementById('conversionType').value;
+  const inputValue = parseFloat(document.getElementById('inputValue').value);
+  let resultText = "";
+
+  if (conversionType === "CtoF") {
+    const fahrenheit = (inputValue * 9 / 5) + 32;
+    resultText = `Fahrenheit: ${fahrenheit.toFixed(2)}°F`;
+  } else if (conversionType === "FtoC") {
+    const celsius = (inputValue - 32) * 5 / 9;
+    resultText = `Celsius: ${celsius.toFixed(2)}°C`;
+  } else if (conversionType === "MtoF") {
+    const feet = inputValue * 3.28084;
+    resultText = `Feet: ${feet.toFixed(2)} ft`;
+  } else if (conversionType === "FtoM") {
+    const meters = inputValue / 3.28084;
+    resultText = `Meters: ${meters.toFixed(2)} m`;
+  }
+
+  document.getElementById('result').innerText = resultText;
+}
+
+updateConversionFields();
+
+/* ASSIGNMENT 2 */
+
+function calculateTax() {
+  let ti, basictax, brackettax, totaltax;
+
+  ti = document.getElementById("ti").value * 1;
+
+  if (ti < 250000) {
+      basictax = 0;
+      brackettax = 0;
+  } else if (ti >= 250000 && ti < 400000) {
+      basictax = 0;
+      brackettax = 0.2 * (ti - 250000);
+  } else if (ti >= 400000 && ti < 800000) {
+      basictax = 30000;
+      brackettax = 0.25 * (ti - 400000);
+  } else if (ti >= 800000 && ti < 2000000) {
+      basictax = 130000;
+      brackettax = 0.30 * (ti - 800000);
+  } else if (ti >= 2000000 && ti < 8000000) {
+      basictax = 490000;
+      brackettax = 0.32 * (ti - 2000000);
+  } else if (ti >= 8000000) {
+      basictax = 2410000;
+      brackettax = 0.35 * (ti - 8000000);
+  }
+
+  totaltax = basictax + brackettax;
+  document.getElementById("incometax").textContent = `Income Tax: ${totaltax.toFixed(0)}`; 
+}
+
+/* ASSIGNMENT 3 */
+
+function numberCalculator() {
+  const n = parseInt(document.getElementById("numberInput").value);
+  const operation = document.getElementById("operation").value;
+  let resultText = "";
+
+  if (isNaN(n) || n <= 0) {
+    resultText = "Please enter a valid positive number.";
+  } else {
+    switch (operation) {
+      case "factorial":
+        resultText = `Factorial of ${n}: ${factorial(n)}`;
+        break;
+      case "sum":
+        resultText = `Sum of first ${n} natural numbers: ${sumOfFirstN(n)}`;
+        break;
+      case "average":
+        resultText = `Average of first ${n} natural numbers: ${averageOfFirstN(n).toFixed(2)}`;
+        break;
+    }
+  }
+  
+  document.getElementById("result").textContent = resultText;
+}
+
+function factorial(n) {
+  let factorial = 1;
+  for (let i = 1; i <= n; i++) {
+    factorial *= i;
+  }
+  return factorial;
+}
+
+function sumOfFirstN(n) {
+  return (n * (n + 1)) / 2;
+}
+
+function averageOfFirstN(n) {
+  return sumOfFirstN(n) / n;
+}

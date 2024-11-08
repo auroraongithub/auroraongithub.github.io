@@ -59,6 +59,58 @@ a:hover {
   text-decoration: underline;
 }
 
+.converter {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+select, input, button {
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  max-width: 230px;
+}
+
+select {
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  width: 220px;
+  text-align: left;
+  width: 100%;
+  max-width: 230px;
+  margin-bottom: -40px;
+}
+
+input {
+  background: #1e1e1e;
+  color: #fff;
+  text-align: center;
+  width: 200px;
+}
+
+input::placeholder {
+  color: #888;
+}
+
+/* Result styling */
+#result {
+  font-size: 1.2em;
+  margin-top: 15px;
+}
+
 .avatar img {
   align-items: center;
   width: 196px;
@@ -71,35 +123,81 @@ a:hover {
   margin-right: auto;
 }
 
-.conversion-section h1, .converter h2 {
-  color: white;
-  margin-bottom: 20px;
+/* taxable income */
+
+.calculator {
+  max-width: 100%;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
 }
+
+.calculator button {
+  padding: 10px 15px;
+  background-color: #7b25d7;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;  width: 100%;
+  max-width: 230px;
+}
+
+.calculator button:hover {
+  background-color: #8828ed;
+  transition: 0.1s ease-in-out;
+}
+
+/* converter */
 
 .converter input {
   padding: 10px;
   border-radius: 5px;
   border: none;
-  margin-right: 10px;
-  width: 200px;
+  width: 100%;
+  max-width: 230px;
 }
 
 .converter button {
   padding: 10px 15px;
-  background-color: #888;
+  background-color: #7b25d7;
   border: none;
   color: white;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: pointer;  width: 100%;
+  max-width: 230px;
 }
 
 .converter button:hover {
-  background-color: #555;
+  background-color: #8828ed;
+  transition: 0.1s ease-in-out;
 }
 
 .converter p {
   margin-top: 10px;
   font-size: 1.2em;
+}
+
+.toblog {
+  border: 1px solid rgba(255, 255, 255, 0);
+  padding: 0.5rem 1rem;
+  margin: 1rem auto;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #d3d3d3;
+  color: rgb(0, 0, 0);
+  transition: 0.1s ease-in-out;
+  width: 100%;
+  max-width: 230px;
+  text-align: center;
+}
+
+.toblog:hover {
+  background-color: #e4e4e4;
+  cursor: pointer;
+  border: 1px solid rgb(255, 255, 255);
+  transition: 0.1s ease-in-out;
 }
 
 .top {

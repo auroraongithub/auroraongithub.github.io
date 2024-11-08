@@ -60,12 +60,21 @@
     <br>
 
     <div class="calculator">
-        <h1>Income Tax Calculator</h1>
+        <h1>Number Calculator</h1>
+        <label for="numberInput">Enter a Number (N):</label>
+        <input type="number" id="numberInput" placeholder="Enter a number" required>
         <br>
-        <label for="ti">Enter Taxable Income:</label>
-        &nbsp&nbsp&nbsp<input type="number" id="ti" placeholder="Enter amount" required><br>
-        <button onclick="calculateTax()">Calculate Tax</button>
-        <p class="result" id="incometax"></p>
+        <label for="operation">Select Operation:</label>
+        <select id="operation">
+          <option value="factorial">Factorial</option>
+          <option value="sum">Sum of First N</option>
+          <option value="average">Average of First N</option>
+        </select>
+        <br>
+        <br>
+        <button onclick="numberCalculator()">Calculate</button>
+    
+        <p class="result" id="result"></p>
       </div>
 
   <a href="./index.html" class="toblog">
