@@ -71,6 +71,37 @@ a:hover {
   margin-right: auto;
 }
 
+.conversion-section h1, .converter h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.converter input {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  margin-right: 10px;
+  width: 200px;
+}
+
+.converter button {
+  padding: 10px 15px;
+  background-color: #888;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.converter button:hover {
+  background-color: #555;
+}
+
+.converter p {
+  margin-top: 10px;
+  font-size: 1.2em;
+}
+
 .top {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url("../img/topheader.png");
