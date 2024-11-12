@@ -59,6 +59,35 @@ a:hover {
   text-decoration: underline;
 }
 
+/* payroll */
+
+.payroll-container {
+  width: 100%;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid;
+  padding: 10px;
+  text-align: center;
+}
+
+.remove-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* payroll */
+
 .converter {
   margin: 20px;
   display: flex;
@@ -438,7 +467,6 @@ input::placeholder {
 
 h1 {
   /* color: var(--primary-color); */
-  color: white;
   font-size: 3rem;
   margin: 0;
 }
