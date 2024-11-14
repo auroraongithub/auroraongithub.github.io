@@ -302,3 +302,41 @@ function sumOfFirstN(n) {
 function averageOfFirstN(n) {
   return sumOfFirstN(n) / n;
 }
+
+/* ASSIGNMENT 4 */
+
+function addToTable() {
+
+  const employeeName = document.getElementById("employeeName").value;
+  const daysWorked = parseFloat(document.getElementById("daysWorked").value);
+  const dailyRate = parseFloat(document.getElementById("dailyRate").value);
+  const deductionAmount = parseFloat(document.getElementById("deductionAmount").value);
+
+  if (!employeeName || !daysWorked || !dailyRate || !deductionAmount) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  const grossPay = daysWorked * dailyRate;
+  const netPay = grossPay - deductionAmount;
+
+  const tableBody = document.getElementById("itemstable").querySelector("tbody");
+  const newRow = document.createElement("tr");
+  newRow.innerHTML = `
+      <td>${employeeNumber}</td>
+      <td>${employeeName}</td>
+      <td>${daysWorked}</td>
+      <td>${dailyRate}</td>
+      <td>${grossPay.toFixed(2)}</td>
+      <td>${deductionAmount}</td>
+      <td>${netPay.toFixed(2)}</td>
+  `;
+
+  tableBody.appendChild(newRow);
+
+  document.getElementById("employeeName").value = "";
+  document.getElementById("daysWorked").value = "";
+  document.getElementById("dailyRate").value = "";
+  document.getElementById("deductionAmount").value = "";
+  
+}

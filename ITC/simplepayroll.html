@@ -63,24 +63,53 @@
       <h1>Simple Payroll</h1>
       <br>
       <label class="inputlabel" for="employeeName">Employee Name:</label>
-      <input id="qty" class="alignright" type="text" ></input><br>
+      <input id="employeeName" class="alignright" type="text" placeholder="Name" ></input><br>
       <label class="inputlabel" for="daysWorked">Days Worked:</label>
-      <input id="price" type="number"></input><br>
+      <input id="daysWorked" type="number" type="number" placeholder="Days Worked"></input><br>
       <label class="inputlabel" for="dailyRate">Daily Rate:</label>
-      <input id="amount" type="number" readonly></input><br>
+      <input id="dailyRate" type="number" type="number" placeholder="Daily Rate"></input><br>
       <label class="inputlabel" for="deductionAmount">Deduction Amount:</label>
-      <input id="amount" type="number" readonly></input>
+      <input id="deductionAmount" type="number" type="number" placeholder="Deduction Amount"></input>
    </div>
+   <div id="payrolltable">
+    <table id="itemstable">
+        <thead>
+            <tr>
+                <td id="employeeNumber">No.</td>
+                <td id="namecolumn">Name</td>
+                <td id="daysworkedcolumn">Days Worked</td>
+                <td id="ratecolumn">Daily Rate</td>
+                <td id="grosspaycolumn">Gross Pay</td>
+                <td id="deductioncolumn">Deduction Amount</td>
+                <td id="netpaycolumn">Net Pay</td>
+            </tr>
+        </thead>
+        <tbody id="tablebody">
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
    <div class="payroll-container" id="buttonsdiv">
-    <button id="btnaddtocart">Add Item</button>
-    <button id="btnclearcart">Clear Cart</button> 
+    <label class="inputlabel" for="employeeNumber"></label>
+    <input id="employeeNumber" type="number" placeholder="Employee Number"></input><br>
+    <button id="btnaddemployee" onclick="addToTable()">Add</button>
+    <button id="btnremoveemployee" onclick="removeFromTable()">Remove</button>
+    <label class="inputlabel" for="employeeNumber"></label>
 </div>
 
   <a href="./" class="toblog">
     &#8592; Back
   </a>
-
-    
 
     <script src="../script.js" defer></script>
 
