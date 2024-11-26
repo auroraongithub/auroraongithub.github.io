@@ -235,8 +235,7 @@ updateConversionFields();
 function calculateTax() {
   let ti, basictax, brackettax, totaltax;
 
-  ti = document.getElementById("ti").value * 1;
-  console.log("Taxable Income:", ti); // Debugging line
+  ti = document.getElementById("taxableincome").value * 1;
 
   if (ti < 250000) {
       basictax = 0;
@@ -259,8 +258,7 @@ function calculateTax() {
   }
 
   totaltax = basictax + brackettax;
-  console.log("Total Tax:", totaltax); // Debugging line
-  document.getElementById("result").textContent = `Income Tax: ${totaltax.toFixed(0)}`;
+  document.getElementById("incometax").textContent = `Income Tax: ${totaltax.toFixed(0)}`; 
 }
 
 /* ASSIGNMENT 3 */
