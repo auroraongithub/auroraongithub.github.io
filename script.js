@@ -253,23 +253,9 @@ let ti, basictax, totaltax;
   }
 
   totaltax = totaltax.toFixed(2);
-  document.getElementById("incometax").value = totaltax; 
+  document.getElementById("incometax").textContent = 'Income Tax: ${totaltax}'; 
 }
 
-function taxEvent() //Events
-{
-    document.getElementById("taxableincome").addEventListener("keyup",()=>
-    {
-        calculateTax();
-    });
-}
-
-//main
-(() =>
-{
-    taxEvent();
-
-})();
 
 /* ASSIGNMENT 3 */
 
