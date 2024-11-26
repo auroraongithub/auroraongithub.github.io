@@ -253,7 +253,7 @@ let ti, basictax, totaltax;
   }
 
   totaltax = totaltax.toFixed(2);
-  document.getElementById("incometax").textContent = 'Income Tax: ${totaltax}'; 
+  document.getElementById("incometax").textContent = `Income Tax: ${totaltax}`; 
 }
 
 
