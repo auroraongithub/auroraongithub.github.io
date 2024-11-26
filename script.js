@@ -256,6 +256,21 @@ let ti, basictax, totaltax;
   document.getElementById("incometax").value = totaltax; 
 }
 
+function taxEvent() //Events
+{
+    document.getElementById("taxableincome").addEventListener("keyup",()=>
+    {
+        calculateTax();
+    });
+}
+
+//main
+(() =>
+{
+    taxEvent();
+
+})();
+
 /* ASSIGNMENT 3 */
 
 function numberCalculator() {
