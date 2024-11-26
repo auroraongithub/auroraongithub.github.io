@@ -258,7 +258,7 @@ function calculateTax() {
   }
 
   totaltax = basictax + brackettax;
-  document.getElementById("incometax").textContent = `Income Tax: ${totaltax.toFixed(0)}`; 
+  document.getElementById("result").textContent = `Income Tax: ${totaltax.toFixed(0)}`; 
 }
 
 /* ASSIGNMENT 3 */
