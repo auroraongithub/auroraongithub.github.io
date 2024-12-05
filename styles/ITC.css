@@ -191,6 +191,165 @@ input::placeholder {
   justify-content: center;
 }
 
+/* table and stuff */
+
+main {
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.info {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 400px; /* Adjust box width */
+  margin: 20px auto;
+}
+
+.info label {
+  display: block;
+  margin-bottom: 13px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.info input {
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  transition: box-shadow 0.3s ease;
+}
+
+.info input:focus {
+  box-shadow: 0 0 8px #161616;
+}
+
+#buttonsdiv button {
+  background: #1f1f1f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+#buttonsdiv button:hover {
+  background: #2f2f2f;
+  transform: scale(1.05);
+}
+
+#listdiv {
+  margin-top: 30px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table th, table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+tfoot td {
+  font-weight: bold;
+}
+
+#employeeControls {
+  display: flex;
+  gap: 20px; 
+  margin-top: 20px;
+}
+
+.control-box {
+  padding: 20px;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+label.inputline {
+  font-weight: bold;
+}
+
+#employeeNum, #delEmployee {
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  transition: box-shadow 0.3s ease;
+}
+
+#employeeNum:focus, #delEmployee:focus {
+  box-shadow: 0 0 8px #161616;
+}
+
+#btndelete {
+  background: #ff4a4a;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+#btndelete:hover {
+  background: #ff3939;
+  transform: scale(1.05);
+}
+
+dialog {
+  background: rgba( 255, 255, 255, 0 );
+  box-shadow: 0 8px 32px 0 rgba(44, 44, 44, 0.37);
+  backdrop-filter: blur( 4px );
+  -webkit-backdrop-filter: blur( 4px );
+  border-radius: 10px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+  padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  z-index: 1000;
+}
+
+dialog h4 {
+  margin-bottom: 15px;
+  color: #ff4d4d;
+  text-shadow: 3px 2px 5px rgba(0,0,0,0.51);
+}
+
+dialog button {
+  background: #1c1c1c;
+  color: white;
+  border: none;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+dialog button:hover {
+  background: #353535;
+}
+
 /*navbar*/
 
 .logo {
@@ -413,7 +572,6 @@ input::placeholder {
 
 h1 {
   /* color: var(--primary-color); */
-  color: white;
   font-size: 3rem;
   margin: 0;
 }

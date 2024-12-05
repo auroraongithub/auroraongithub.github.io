@@ -59,58 +59,105 @@
     <br>
     <br>
 
-    <div class= "payroll-container" id="inputdiv">
-      <h1>Simple Payroll</h1>
-      <br>
-      <label class="inputlabel" for="employeeName">Employee Name:</label>
-      <input id="employeeName" class="alignright" type="text" placeholder="Name" ></input><br>
-      <label class="inputlabel" for="daysWorked">Days Worked:</label>
-      <input id="daysWorked" type="number" type="number" placeholder="Days Worked"></input><br>
-      <label class="inputlabel" for="dailyRate">Daily Rate:</label>
-      <input id="dailyRate" type="number" type="number" placeholder="Daily Rate"></input><br>
-      <label class="inputlabel" for="deductionAmount">Deduction Amount:</label>
-      <input id="deductionAmount" type="number" type="number" placeholder="Deduction Amount"></input>
+    <main>
+    <h1>Simple Payroll</h1>
+    <div class="info">
+        <div class="rap">
+            <label for = "employee">Employee Name:</label>
+            <input type="text" name="employee" id="employee">
+            <label for = "daysWorked">Days Worked:</label>
+            <input type="number" name="daysWorked" id="daysWorked">
+            <p>
+            <label for = "dayRate">Daily Rate:</label>
+            <input type="number" name="dayRate" id="dayRate">
+            <label for = "deduct">Deduction Amount:</label>
+            <input type="number" name="deduct" id="deduct">
+            </p>
+        </div>
+    </div>
+
+    
+   <div id="buttonsdiv">
+       <button id="btnaddEmployee">Add Employee</button>
+       <br><br>
+       <button id="btnclearList">Clear List</button> 
    </div>
-   <div id="payrolltable">
-    <table id="itemstable">
-        <thead>
-            <tr>
-                <td id="employeeNumber">No.</td>
-                <td id="namecolumn">Name</td>
-                <td id="daysworkedcolumn">Days Worked</td>
-                <td id="ratecolumn">Daily Rate</td>
-                <td id="grosspaycolumn">Gross Pay</td>
-                <td id="deductioncolumn">Deduction Amount</td>
-                <td id="netpaycolumn">Net Pay</td>
-            </tr>
-        </thead>
-        <tbody id="tablebody">
-        </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tfoot>
-    </table>
-</div>
-   <div class="payroll-container" id="buttonsdiv">
-    <label class="inputlabel" for="employeeNumber"></label>
-    <input id="employeeNumber" type="number" placeholder="Employee Number"></input><br>
-    <button id="btnaddemployee" onclick="addToTable()">Add</button>
-    <button id="btnremoveemployee" onclick="removeFromTable()">Remove</button>
-    <label class="inputlabel" for="employeeNumber"></label>
-</div>
+   <div id="listdiv">
+      <h3>List of Employees</h3>
+      <table id="employeetable" border=1>
+          <thead>
+              <tr>
+                  <td>No.</d>
+                  <td>Employee Name</td>
+                  <td>Days Worked</td>
+                  <td>Daily Rate</td>
+                  <td>Gross Pay</td>
+                  <td>Deduction Amount</td>
+                  <td id="Netcolumn">Net Pay</td>
+              </tr>
+          </thead>
+          <tbody id="tablebody">
+          </tbody>
+          <tfoot>
+              <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td id="totalNet"></td>
+                  
+              </tr>
+          </tfoot>
+
+      </table>
+      <br>
+          <div id="employeeControls">
+            <div class="control-box">
+                <label class="inputline" for="employeeNum">Number of Employees:</label>
+                <br>
+                <br>
+                <input id="employeeNum" type="number" readonly>
+            </div>
+            <div class="control-box">
+                <label class="inputline" for="delEmployee">Delete Employee:</label>
+                <br>
+                <br>
+                <input id="delEmployee" type="number">
+                <br>
+                <br>
+                <button id="btndelete">Delete</button>
+            </div>
+        </div>
+   </div>
+
+<!-- popup -->
+
+<dialog id="dlgConfirmCancel">
+    <form method="dialog">
+       <h4 id="dlgmsg"></h4>   
+       <button id="confirm" value="confirm" >Confirm</button>
+       <button id="cancel" value="cancel" >Cancel</button>
+       
+    </form>
+</dialog>
+
+<dialog id="dlgAreYouSure">
+    <form method="dialog">
+       <h4 id="dlgmsg2">Are you sure?</h4>   
+       <button id="yes" value="yes" >Yes</button>
+       <button id="no" value="no" >No</button>
+       
+    </form>
+</dialog>
+</main>
 
   <a href="./" class="toblog">
     &#8592; Back
   </a>
 
+    <script src="./ITCassignment4.js" defer></script>
     <script src="../script.js" defer></script>
 
 </body>
