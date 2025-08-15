@@ -1,118 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>nijika.de</title>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="roraosu's website." />
-        <meta name="keywords" content="blog about me" />
-        <link rel="stylesheet" href="./../styles/admin.css" />
-        <link rel="stylesheet" href="./../styles/blog.css" />
-        <link
-            rel="stylesheet"
-            href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-            integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-            crossorigin="anonymous"
-        />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
-        <link rel="icon" type="img/x-icon" href="/img/favicon.ico" />
-        <script src="./../script.js" defer></script>
-        <script src="./script.js" defer></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
-        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-    </head>
-
-    <body onload="getPostData()">
-        <header>
-            <h2 class="logo">nijika.de</h2>
-            <nav class="navigation">
-                <a href="/">Home</a>
-                <a href="./blogs.html">Blogs</a>
-                <a href="./stories.html">Stories</a>
-                <a href="./add-post.html">Add Post</a>
-                <i class="bi bi-brightness-high-fill" id="toggleDark"></i>
-            </nav>
-
-            <nav class="mobilenav">
-                <div class="menutext">
-                    <ul>
-                        <li>
-                            <a href="#" id="menubutton">Menu <i class="fas fa-caret-down"></i></a>
-
-                            <div class="dropdown">
-                                <ul>
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="./blogs.html">Blogs</a></li>
-                                    <li><a href="./stories.html">Stories</a></li>
-                                    <li><a href="./add-post.html">Add Post</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <i class="bi bi-brightness-high-fill" id="toggleDark2"></i>
-            </nav>
-        </header>
-        <div class="container">
-            <br />
-            <br />
-            <br />
-            <br />
-            <section id="blogs">
-                <div class="bloglist" class="padded">
-                    <h4>Update Post</h4>
-                    <br />
-
-                    <form id="updateBlogForm">
-                        <div class="form-element">
-                            <label for="title">Title</label>
-                            <input class="form-control" id="title" type="text" placeholder="Title" />
-                        </div>
-
-                        <br />
-                        <div class="form-element">
-                            <label for="tags">Tags</label>
-                            <input class="form-control" id="tags" type="text" placeholder="Tags" />
-                        </div>
-
-                        <br />
-                        <div class="form-element">
-                            <label>Content</label>
-                            <div id="editor"></div>
-                        </div>
-
-                        <button class="submit-btn">Update</button>
-                    </form>
-                </div>
-            </section>
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Update Post · nijika.de</title>
+    <link rel="stylesheet" href="./../assets/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">nijika.de</div>
+        <div class="nav-actions">
+          <button class="theme-toggle" data-toggle-theme title="Toggle theme"><i class="bi bi-brightness-high"></i></button>
         </div>
-        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+      </div>
+    </header>
 
-        <script>
-            var quill = new Quill('#editor', {
-                theme: 'snow',
-                modules: {
-                    toolbar: [
-                        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        ['blockquote', 'code-block'],
-                        [{ list: 'ordered' }, { list: 'bullet' }],
-                        [{ script: 'sub' }, { script: 'super' }],
-                        [{ indent: '-1' }, { indent: '+1' }],
-                        [{ direction: 'rtl' }],
-                        [{ size: ['small', false, 'large', 'huge'] }],
-                        [{ header: 1 }, { header: 2 }],
-                        [{ color: [] }, { background: [] }],
-                        [{ font: [] }],
-                        [{ align: [] }],
-                        ['link', 'video', 'formula'],
-                        ['clean'],
-                    ],
-                },
-            });
-        </script>
-    </body>
+    <main class="container" style="padding: 32px 0 48px;">
+      <div class="narrow">
+        <h2>Update Post</h2>
+      </div>
+      <form id="updateBlogForm" class="form narrow">
+        <div class="field">
+          <label for="title">Title</label>
+          <input id="title" type="text" placeholder="Title" />
+        </div>
+        <div class="field">
+          <label for="tags">Tags</label>
+          <input id="tags" type="text" placeholder="tag1, tag2" />
+        </div>
+        <div class="field">
+          <label>Content</label>
+          <div id="editor"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Update Post</button>
+      </form>
+    </main>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script type="module">
+      import '../assets/app.js';
+      const titleInput = document.querySelector('#title');
+      const tagsInput = document.querySelector('#tags');
+      const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            [{ header: [1,2,3,4,5,6,false] }],
+            ['bold','italic','underline','strike'],
+            [{ color: [] }, { background: [] }],
+            [{ script: 'sub' }, { script: 'super' }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ align: [] }],
+            ['blockquote','code-block'],
+            ['link','image','video','formula'],
+            ['clean']
+          ]
+        }
+      });
+      async function getPostData() {
+        const url = new URL(window.location.href);
+        const id = url.searchParams.get('id');
+        if (!id) return window.location.href = './blogs.html';
+        const res = await fetch('https://nijikade-backend.vercel.app/api/post/' + id);
+        const data = await res.json();
+        titleInput.value = data.data.title;
+        tagsInput.value = data.data.tags || '';
+        quill.clipboard.dangerouslyPasteHTML(data.data.content);
+      }
+      getPostData();
+      document.querySelector('#updateBlogForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const url = new URL(window.location.href);
+        const id = url.searchParams.get('id');
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('You are not logged in');
+        const title = titleInput.value.trim();
+        const tags = tagsInput.value.trim();
+        const content = quill.root.innerHTML;
+        if (!title || !tags || !quill.root.innerText.trim()) return alert('Fill all the fields');
+        const res = await fetch(`https://nijikade-backend.vercel.app/api/post/${id}?token=${token}`, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content, tags })
+        });
+        if (!res.ok) { const j = await res.json(); return alert(j.error || 'Failed'); }
+        alert('Post updated successfully');
+      });
+    </script>
+  </body>
 </html>
+
+

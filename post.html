@@ -1,75 +1,102 @@
 <!doctype html>
-<html lang="en">
-
-<head>
-    <title>nijika.de</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="roraosu's website.">
-    <meta name="keywords" content="blog about me">
-    <link rel="stylesheet" href="../styles/blog.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
-    <link rel="icon" type="img/x-icon" href="/img/favicon.ico">
-    <script src="./script.js" defer></script>
-    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
-</head>
-
-<body onload="getPost()">
-    
-       <header>
-        <h2 class="logo">nijika.de</h2>
-        <nav class="navigation">
-            <a href="/">Home</a>
-            <a href="/#about">About</a>
-            <a href="/#portfolio">Portfolio</a>
-            <a href="/blogs.html">Blogs</a>
-            <a href="/stories.html">Stories</a>
-            <i class="bi bi-brightness-high-fill" id="toggleDark"></i>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post · nijika.de</title>
+    <meta name="description" content="Post" />
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico" />
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  </head>
+  <body onload="import('./assets/app.js').then(m=>m.getPost())">
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">nijika.de</div>
+        <nav class="site-nav">
+          <a href="./">Home</a>
+          <a href="./#about">About</a>
+          <a href="./#portfolio">Portfolio</a>
+          <a href="./blogs.html">Blogs</a>
+          <a href="./stories.html">Stories</a>
         </nav>
-
-        <nav class="mobilenav ">
-            <div class="menutext">
-                <ul>
-                    <li>
-                        <a href="#" id="menubutton">Menu <i class="fas fa-caret-down"></i></a>
-
-                        <div class="dropdown">
-                            <ul>
-                                <li><a href="/">Home</a></li>
-                                <li><a href="/#about">About</a></li>
-                                <li><a href="/#portfolio">Portfolio</a></li>
-                                <li><a href="/blogs">Blogs</a></li>
-                                <li><a href="/stories">Stories</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <i class="bi bi-brightness-high-fill" id="toggleDark2"></i>
-        </nav>
+        <div class="nav-actions">
+          <button class="theme-toggle" title="Toggle theme" data-toggle-theme><i class="bi bi-brightness-high"></i></button>
+          <button class="burger" aria-label="Menu" data-toggle-menu><i class="bi bi-list"></i></button>
+        </div>
+      </div>
+      <div class="mobile-bar container">
+        <button class="theme-toggle" title="Toggle theme" data-toggle-theme><i class="bi bi-brightness-high"></i></button>
+        <button class="btn btn-ghost" data-toggle-menu>Menu <i class="bi bi-caret-down-fill"></i></button>
+      </div>
+      <div class="mobile-menu container">
+        <a href="./">Home</a>
+        <a href="./#about">About</a>
+        <a href="./#portfolio">Portfolio</a>
+        <a href="./blogs.html">Blogs</a>
+        <a href="./stories.html">Stories</a>
+      </div>
     </header>
 
-    <div class="container">
-        <section id="blog">
-            <div class="contents" class="padded3">
-                <h4 id="title">Loading</h4>
+    <main class="container" style="padding: 32px 0 48px;">
+      <article class="post stack-4">
+        <div class="stack-4" style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
+          <a id="prevPost" class="btn btn-ghost" href="#" style="visibility:hidden; line-height: 1; padding-top: 8px; padding-bottom: 8px;">← Prev</a>
+          <a id="nextPost" class="btn btn-ghost" href="#" style="visibility:hidden; line-height: 1; padding-top: 8px; padding-bottom: 8px;">Next →</a>
+        </div>
+        <div class="narrow">
+          <h1 id="title">Loading</h1>
+          <div id="meta" class="post-meta"></div>
+        </div>
+        <div id="post-content" class="content">...</div>
+        <div style="display:flex; justify-content:space-between; gap:8px;">
+          <a id="prevPost2" class="btn btn-ghost" href="#" style="visibility:hidden">← Prev</a>
+          <a id="nextPost2" class="btn btn-ghost" href="#" style="visibility:hidden">Next →</a>
+        </div>
+      </article>
+    </main>
 
-                <div id="post-content">
-                    ...
-                </div>
-            </div>
-        </section>
-        <section id="back">
-            <button onclick="location.href = '/blogs.html'" class="toblog">Back to blog list</button>
-    </section>
-    </div>
+    <footer>
+      <div class="stack-2">
+        <div>
+          <a class="link" href="https://twitter.com/twit_aurora">Twitter</a>
+          · <a class="link" href="https://youtube.com/c/roraYT">YouTube</a>
+          · <a class="link" href="mailto:chompajamas@gmail.com">Email</a>
+        </div>
+        <div>© 2025 nijika.de</div>
+      </div>
+    </footer>
 
-
-    </div>
-</body>
-
+    <script type="module">
+      import './assets/app.js';
+      import { getPost } from './assets/app.js';
+      async function load() {
+        // load post
+        await getPost();
+        // compute reading time
+        const content = document.querySelector('#post-content');
+        const meta = document.querySelector('#meta');
+        const words = (content?.innerText || '').trim().split(/\s+/).length;
+        const minutes = Math.max(1, Math.round(words / 200));
+        const date = new Date().toISOString().slice(0,10);
+        meta.textContent = `${minutes} min read · ${date}`;
+        // fetch list for prev/next indexing
+        const res = await fetch('https://nijikade-backend.vercel.app/api/post?type=blog');
+        const data = await res.json();
+        const list = (data.posts||[]).flatMap(g=>g.posts);
+        const url = new URL(window.location.href);
+        const id = url.searchParams.get('id');
+        const idx = list.findIndex(p=>String(p.id)===String(id));
+        const prev = list[idx-1];
+        const next = list[idx+1];
+        const prevEls = [document.querySelector('#prevPost'), document.querySelector('#prevPost2')];
+        const nextEls = [document.querySelector('#nextPost'), document.querySelector('#nextPost2')];
+        if (prev) prevEls.forEach(el=>{ el.href = `./post.html?id=${prev.id}`; el.style.visibility='visible'; });
+        if (next) nextEls.forEach(el=>{ el.href = `./post.html?id=${next.id}`; el.style.visibility='visible'; });
+      }
+      load();
+    </script>
+  </body>
 </html>
+
+
