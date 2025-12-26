@@ -1,138 +1,258 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>nijika.de</title>
-    <meta name="description" content="roraosu's website." />
-    <link rel="icon" type="image/x-icon" href="./img/favicon.ico" />
-    <link rel="stylesheet" href="./assets/styles.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="container nav">
-        <div class="brand">nijika.de</div>
-        <nav class="site-nav">
-          <a href="./">Home</a>
-          <a href="./#about">About</a>
-          <a href="./#portfolio">Portfolio</a>
-          <a href="./blogs.html">Blogs</a>
-          <a href="./stories.html">Stories</a>
-        </nav>
-        <div class="nav-actions">
-          <button class="theme-toggle" title="Toggle theme" data-toggle-theme><i class="bi bi-brightness-high"></i></button>
-          <button class="burger" aria-label="Menu" data-toggle-menu><i class="bi bi-list"></i></button>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nijika.de</title>
+  <meta name="description" content="roraosu's website - Scanlator, Gamer, Creator">
+  <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+  <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+  <!-- ==================== MAIN CONTAINER ==================== -->
+  <div class="neo-container">
+    
+    <!-- Site Banner/Header -->
+    <div class="site-banner">
+      <div class="brand">nijika.de</div>
+      <div class="header-controls">
+        <button class="color-picker-toggle" title="Change color" data-color-picker>
+          <i class="bi bi-palette"></i>
+        </button>
+        <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+          <i class="bi bi-brightness-high"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Color Picker Modal -->
+    <div class="color-picker-modal" data-color-modal>
+      <div class="color-picker-content">
+        <div class="color-picker-header">
+          <h3>Choose Your Color</h3>
+          <button class="color-picker-close" data-color-close>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="color-picker-options">
+          <button class="color-option" data-color="cyan" title="Cyan (Current)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
+            <span>Cyan</span>
+          </button>
+          <button class="color-option" data-color="pink" title="Pink (Original)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
+            <span>Pink</span>
+          </button>
+          <button class="color-option" data-color="purple" title="Purple">
+            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
+            <span>Purple</span>
+          </button>
+          <button class="color-option" data-color="green" title="Green">
+            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
+            <span>Green</span>
+          </button>
+          <button class="color-option" data-color="orange" title="Orange">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
+            <span>Orange</span>
+          </button>
+          <button class="color-option" data-color="blue" title="Blue">
+            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
+            <span>Blue</span>
+          </button>
         </div>
       </div>
-      <div class="mobile-bar container">
-        <button class="theme-toggle" title="Toggle theme" data-toggle-theme><i class="bi bi-brightness-high"></i></button>
-        <button class="btn btn-ghost" data-toggle-menu>Menu <i class="bi bi-caret-down-fill"></i></button>
-      </div>
-      <div class="mobile-menu container">
-        <a href="./">Home</a>
-        <a href="./#about">About</a>
-        <a href="./#portfolio">Portfolio</a>
-        <a href="./blogs.html">Blogs</a>
-        <a href="./stories.html">Stories</a>
-      </div>
-    </header>
+    </div>
 
-    <main>
-      <section class="hero">
-        <div class="container stack-4">
-          <img class="avatar" src="./img/pfp.jpg" alt="me" />
-          <h1>aurora.</h1>
-          <h3>Scanlator, Gamer, Creator</h3>
-        </div>
-      </section>
-
-      <section id="about">
-        <div class="container grid" style="grid-template-columns: repeat(2,minmax(0,1fr)); align-items:center; gap:24px;">
-          <img src="./img/aboutme.gif" alt="About" style="width:100%; border-radius:16px; border:1px solid var(--border);" />
-          <div class="stack-4">
-            <h2>About Me</h2>
-            <p>I am a hobbyist coder and I also design for projects for myself or ones that I find interesting. I usually create designs in photoshop and code sites when I have nothing to do. I'm a pretty competitive gamer. You can find me the most in osu! and Valorant.</p>
-            <p>Currently, I'm working on some projects, some of them are listed below.</p>
+    <!-- Layout: Sidebar + Main -->
+    <div class="neo-layout">
+      
+      <!-- ==================== SIDEBAR ==================== -->
+      <aside class="neo-sidebar">
+        
+        <!-- Navigation Box -->
+        <div class="neo-box scroll-animate">
+          <div class="neo-header"><h3>Navigate</h3></div>
+          <div class="neo-content">
+            <ul>
+              <li><a href="./">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#portfolio">Portfolio</a></li>
+              <li><a href="./blogs.html">Blogs</a></li>
+              <li><a href="./stories.html">Stories</a></li>
+            </ul>
           </div>
         </div>
-      </section>
 
-      <section class="container stack-4">
-        <div class="section-head">
-          <h2>Our Group's Mangas</h2>
-          <p>All series that our group worked on</p>
+        <!-- Links Box -->
+        <div class="neo-box scroll-animate">
+          <div class="neo-header"><h3>Links</h3></div>
+          <div class="neo-content">
+            <ul>
+              <li><a href="https://twitter.com/twit_aurora" target="_blank">Twitter</a></li>
+              <li><a href="https://youtube.com/c/roraYT" target="_blank">YouTube</a></li>
+              <li><a href="https://github.com/auroraongithub" target="_blank">GitHub</a></li>
+              <li><a href="mailto:chompajamas@gmail.com">Email</a></li>
+            </ul>
+          </div>
         </div>
-        <div class="carousel">
-          <div class="carousel-viewport">
-            <div class="carousel-track" id="seriesTrack">
-              <!-- EveScans series from Mangadex hardcoded covers -->
-              <a class="carousel-item" data-series="mabarai" href="https://mangadex.org/title/4db9c1e8-243b-4f73-95e8-ea29f632f456/mabarai-san-wa-boku-wo-karitai" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/Xokjrz1g" alt="Mabarai-san Hunts Me Down" /></a>
-              <a class="carousel-item" data-series="blacksmith" href="https://mangadex.org/title/4bdeff13-b1fb-4fd8-9a9f-56d2d885c2c7/kyuutei-kajishi-no-shiawase-na-nichijou-black-na-shokuba-wo-tsuihou-saretaga-ringoku-de-koushaku" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/kDWy1Q5D" alt="Happy Daily Life of a Court Blacksmith" /></a>
-              <a class="carousel-item" data-series="contract" href="https://mangadex.org/title/72fe5a3b-a69b-4f74-af4e-9d679b28b750/there-is-a-lie-in-my-contract-marriage" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/YCcLn58Y" alt="There Is a Lie in My Contract Marriage" /></a>
-              <a class="carousel-item" data-series="kobayashi" href="https://mangadex.org/title/a944aace-6f03-4298-b864-aee895acab28/endo-and-kobayashi-s-live-commentary-on-the-villainess" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/ciVSQwrK" alt="Endo and Kobayashi's Live Commentary on the Villainess" /></a>
-              <a class="carousel-item" data-series="forcedgf" href="https://mangadex.org/title/fc7e628c-6c26-497a-b17d-dfea90b44652/bocchi-no-boku-ni-kyousei-kanojo-ga-yattekita" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/iUZa6NKv" alt="I’m a Loner and My Girlfriend Came to Me by Force" /></a>
-              <a class="carousel-item" data-series="deathgame" href="https://mangadex.org/title/720466f8-2eee-43a5-893b-67f9190c04ae/isekaigaeri-no-moto-yuusha-desuga-death-game-ni-makikomare-mashita" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/Qf5k02iY" alt="A Former Hero Returning From Another World Gets Involved in a Death Game" /></a>
-              <a class="carousel-item" data-series="finalmessage" href="https://mangadex.org/title/d21daa0a-0abc-45c4-b9b1-d3456ba884d5/okuru-kotoba" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/POLDhgtZ" alt="Final Message" /></a>
-              <a class="carousel-item" data-series="shigure" href="https://mangadex.org/title/a476ce7f-2fb8-4f6f-8337-fa62ce5034fb/shigure-san-wants-to-shine" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/EuNjtaDy" alt="Shigure-San Wants to Shine!" /></a>
-              <a class="carousel-item" data-series="80k" href="https://mangadex.org/title/89ed3ec2-ebe6-4d6b-92eb-d753a8bb365e/saving-80-000-gold-in-another-world-for-my-retirement" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/94S9tuew" alt="Saving 80,000 Gold Coins in the Different World for My Old Age" /></a>
-              <a class="carousel-item" data-series="mmo" href="https://mangadex.org/title/b5ef1317-7c35-411a-b33b-f588c2f76940/retire-shita-ningyoushi-no-mmo-kikou-jojishi" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/hwpT2eim" alt="Retire Shita Ningyoushi no MMO Kikou Jojishi" /></a>
+
+        <!-- Scrollbox with images -->
+        <div class="neo-box scroll-animate">
+          <div class="neo-header"><h3>Gallery</h3></div>
+          <div class="neo-content">
+            <div class="neo-scrollbox">
+              <img src="./img/pfp.png" alt="Profile">
+              <img src="./img/aboutme.gif" alt="About me">
             </div>
           </div>
-          <button class="carousel-ctrl carousel-prev" data-carousel-prev aria-label="Prev"><i class="bi bi-chevron-left"></i></button>
-          <button class="carousel-ctrl carousel-next" data-carousel-next aria-label="Next"><i class="bi bi-chevron-right"></i></button>
-          <div class="hover-card" id="seriesHover"></div>
         </div>
-      </section>
 
-      <section id="portfolio">
-        <div class="container stack-4">
-          <div class="section-head">
-            <h2>Portfolio</h2>
-            <p>my work!</p>
+        <!-- Additional Images -->
+        <div class="neo-box scroll-animate">
+          <div class="neo-header"><h3>More</h3></div>
+          <div class="neo-content" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+            <img src="./img/igotaleek.gif" alt="I got a leek" style="width: 120px; border-radius: 4px;">
+            <img src="./img/2voca.jpg" alt="Vocaloid" style="width: 120px; border-radius: 4px;">
+            <img src="./img/0178-mikuwink2.gif" alt="Miku wink" style="width: 120px; border-radius: 4px;">
           </div>
-          <div class="grid">
-            <a href="https://github.com/auroraongithub/osu-Offline-Switcher" target="_blank" class="card">
-              <div class="title">osu-Offline-Switcher</div>
-              <div>github for osu! offline switcher.</div>
-              <div class="meta"><span><i class="bi bi-code"></i> C#</span><span><i class="bi bi-star"></i> 1</span><span><i class="bi bi-git"></i> 1</span></div>
-            </a>
-            <a href="https://github.com/auroraongithub/auroraongithub.github.io" target="_blank" class="card">
-              <div class="title">auroraongithub.github.io</div>
-              <div>this website.</div>
-              <div class="meta"><span><i class="bi bi-code"></i> HTML, CSS, JS</span><span><i class="bi bi-star"></i> 0</span><span><i class="bi bi-git"></i> 0</span></div>
-            </a>
-            <a href="https://github.com/auroraongithub/auroraongithubold.github.io" target="_blank" class="card">
-              <div class="title">auroraongithubold.github.io</div>
-              <div>aurora.'s personal profile page.</div>
-              <div class="meta"><span><i class="bi bi-code"></i> HTML, CSS</span><span><i class="bi bi-star"></i> 0</span><span><i class="bi bi-git"></i> 0</span></div>
-            </a>
+        </div>
+
+      </aside>
+
+      <!-- ==================== MAIN CONTENT ==================== -->
+      <main class="neo-main">
+        
+        <!-- Hero Section -->
+        <div class="neo-hero scroll-animate">
+          <img class="avatar" src="./img/pfp.png" alt="Aurora">
+          <h1>aurora.</h1>
+          <p>Creator, Scanlator</p>
+        </div>
+
+        <!-- About Section -->
+        <section id="about" class="neo-box scroll-animate">
+          <div class="neo-header"><h2>About Me</h2></div>
+          <div class="neo-content">
+            <div class="about-grid">
+              <img src="./img/aboutme.gif" alt="About">
+              <div>
+                <p>I am a hobbyist coder and I also design for projects for myself or ones that I find interesting. I usually create designs in photoshop and code sites when I have nothing to do.</p>
+                <p>I'm a pretty competitive gamer. You can find me the most in osu! and Valorant.</p>
+                <p>Currently, I'm working on some projects, some of them are listed below.</p>
+              </div>
+            </div>
           </div>
-          <div class="stack-2" style="text-align:center;">
+        </section>
+
+        <!-- Manga Carousel Section -->
+        <section class="neo-box scroll-animate">
+          <div class="neo-header"><h2>Our Group's Mangas</h2></div>
+          <div class="neo-content">
+            <p class="text-muted mb-2">All series that our group worked on</p>
+            <div class="neo-carousel">
+              <div class="carousel-viewport">
+                <div class="carousel-track" id="seriesTrack">
+                  <a class="carousel-item" data-series="mabarai" href="https://mangadex.org/title/4db9c1e8-243b-4f73-95e8-ea29f632f456/mabarai-san-wa-boku-wo-karitai" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/Xokjrz1g" alt="Mabarai-san Hunts Me Down"></a>
+                  <a class="carousel-item" data-series="blacksmith" href="https://mangadex.org/title/4bdeff13-b1fb-4fd8-9a9f-56d2d885c2c7/kyuutei-kajishi-no-shiawase-na-nichijou-black-na-shokuba-wo-tsuihou-saretaga-ringoku-de-koushaku" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/kDWy1Q5D" alt="Happy Daily Life of a Court Blacksmith"></a>
+                  <a class="carousel-item" data-series="contract" href="https://mangadex.org/title/72fe5a3b-a69b-4f74-af4e-9d679b28b750/there-is-a-lie-in-my-contract-marriage" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/YCcLn58Y" alt="There Is a Lie in My Contract Marriage"></a>
+                  <a class="carousel-item" data-series="kobayashi" href="https://mangadex.org/title/a944aace-6f03-4298-b864-aee895acab28/endo-and-kobayashi-s-live-commentary-on-the-villainess" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/ciVSQwrK" alt="Endo and Kobayashi's Live Commentary on the Villainess"></a>
+                  <a class="carousel-item" data-series="forcedgf" href="https://mangadex.org/title/fc7e628c-6c26-497a-b17d-dfea90b44652/bocchi-no-boku-ni-kyousei-kanojo-ga-yattekita" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/iUZa6NKv" alt="I'm a Loner and My Girlfriend Came to Me by Force"></a>
+                  <a class="carousel-item" data-series="deathgame" href="https://mangadex.org/title/720466f8-2eee-43a5-893b-67f9190c04ae/isekaigaeri-no-moto-yuusha-desuga-death-game-ni-makikomare-mashita" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/Qf5k02iY" alt="A Former Hero Returning From Another World Gets Involved in a Death Game"></a>
+                  <a class="carousel-item" data-series="finalmessage" href="https://mangadex.org/title/d21daa0a-0abc-45c4-b9b1-d3456ba884d5/okuru-kotoba" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/POLDhgtZ" alt="Final Message"></a>
+                  <a class="carousel-item" data-series="shigure" href="https://mangadex.org/title/a476ce7f-2fb8-4f6f-8337-fa62ce5034fb/shigure-san-wants-to-shine" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/EuNjtaDy" alt="Shigure-San Wants to Shine!"></a>
+                  <a class="carousel-item" data-series="80k" href="https://mangadex.org/title/89ed3ec2-ebe6-4d6b-92eb-d753a8bb365e/saving-80-000-gold-in-another-world-for-my-retirement" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/94S9tuew" alt="Saving 80,000 Gold Coins in the Different World for My Old Age"></a>
+                  <a class="carousel-item" data-series="mmo" href="https://mangadex.org/title/b5ef1317-7c35-411a-b33b-f588c2f76940/retire-shita-ningyoushi-no-mmo-kikou-jojishi" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/hwpT2eim" alt="Retire Shita Ningyoushi no MMO Kikou Jojishi"></a>
+                </div>
+              </div>
+              <button class="carousel-ctrl carousel-prev" data-carousel-prev aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+              <button class="carousel-ctrl carousel-next" data-carousel-next aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Hover card outside carousel viewport -->
+        <div class="hover-card" id="seriesHover"></div>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="neo-box scroll-animate">
+          <div class="neo-header"><h2>Portfolio</h2></div>
+          <div class="neo-content">
+            <p class="text-muted mb-2">my work!</p>
+            <div class="neo-grid">
+              <a href="https://github.com/auroraongithub/osu-Offline-Switcher" target="_blank" class="neo-card">
+                <div class="title">osu-Offline-Switcher</div>
+                <div class="desc">github for osu! offline switcher.</div>
+                <div class="meta">
+                  <span><i class="bi bi-code"></i> C#</span>
+                  <span><i class="bi bi-star"></i> 1</span>
+                  <span><i class="bi bi-git"></i> 1</span>
+                </div>
+              </a>
+              <a href="https://github.com/auroraongithub/auroraongithub.github.io" target="_blank" class="neo-card">
+                <div class="title">auroraongithub.github.io</div>
+                <div class="desc">this website.</div>
+                <div class="meta">
+                  <span><i class="bi bi-code"></i> HTML, CSS, JS</span>
+                  <span><i class="bi bi-star"></i> 0</span>
+                  <span><i class="bi bi-git"></i> 0</span>
+                </div>
+              </a>
+              <a href="https://github.com/auroraongithubold.github.io" target="_blank" class="neo-card">
+                <div class="title">auroraongithubold.github.io</div>
+                <div class="desc">aurora.'s personal profile page.</div>
+                <div class="meta">
+                  <span><i class="bi bi-code"></i> HTML, CSS</span>
+                  <span><i class="bi bi-star"></i> 0</span>
+                  <span><i class="bi bi-git"></i> 0</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Discord Section -->
+        <section class="neo-box scroll-animate">
+          <div class="neo-header"><h2>Join Us!</h2></div>
+          <div class="neo-content discord-banner">
             <h3>Join our Discord Server!</h3>
-            <a href="https://dsc.gg/evescans"><img src="https://i.imgur.com/uIY1eNn.png" style="max-width:520px;width:100%;border-radius:12px;border:1px solid var(--border)" alt="Discord" /></a>
+            <a href="https://dsc.gg/evescans" target="_blank">
+              <img src="https://imgur-archive.ppy.sh/discord/915843559830204416-954686279314989056-ESBANNER.png?width=1080&height=270" alt="Discord Server Banner">
+            </a>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
 
-    <footer>
-      <div class="stack-2">
-        <div>
-          <a class="link" href="https://twitter.com/twit_aurora">Twitter</a>
-          · <a class="link" href="https://youtube.com/c/roraYT">YouTube</a>
-          · <a class="link" href="mailto:chompajamas@gmail.com">Email</a>
-        </div>
-        <div>© 2025 nijika.de</div>
-      </div>
-    </footer>
+      </main>
+    </div>
 
-    <script type="module">
-      import { initCarousel } from './assets/app.js';
-      window.addEventListener('load', initCarousel);
-    </script>
-    <script src="./assets/app.js" type="module"></script>
-  </body>
-  </html>
+    <!-- Footer -->
+    <div class="neo-footer">
+      <a href="https://twitter.com/twit_aurora">Twitter</a> · 
+      <a href="https://youtube.com/c/roraYT">YouTube</a> · 
+      <a href="mailto:chompajamas@gmail.com">Email</a>
+      <br>
+      © 2025 nijika.de
+    </div>
 
+  </div>
 
+  <!-- ==================== MOBILE BOTTOM NAV ==================== -->
+  <nav class="mobile-bottom-nav">
+    <ul>
+      <li><a href="./" class="active"><i class="bi bi-house-fill"></i><span>Home</span></a></li>
+      <li><a href="#about"><i class="bi bi-person-fill"></i><span>About</span></a></li>
+      <li><a href="#portfolio"><i class="bi bi-briefcase-fill"></i><span>Work</span></a></li>
+      <li><a href="./blogs.html"><i class="bi bi-journal-text"></i><span>Blogs</span></a></li>
+      <li><a href="./stories.html"><i class="bi bi-book-fill"></i><span>Stories</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { initCarousel } from './assets/app.js';
+    window.addEventListener('load', initCarousel);
+  </script>
+  <script src="./assets/app.js" type="module"></script>
+</body>
+</html>

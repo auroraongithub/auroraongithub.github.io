@@ -8,26 +8,84 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   </head>
   <body>
-    <header class="site-header">
-      <div class="container nav">
-        <div class="brand">nijika.de</div>
-        <nav class="site-nav">
-          <a href="./blogs.html">Blogs</a>
-          <a href="./stories.html">Stories</a>
-          <a href="./add-post.html">Add Post</a>
-        </nav>
-        <div class="nav-actions">
-          <button class="theme-toggle" data-toggle-theme title="Toggle theme"><i class="bi bi-brightness-high"></i></button>
+    <!-- Color Picker Modal -->
+    <div class="color-picker-modal" data-color-modal>
+      <div class="color-picker-content">
+        <div class="color-picker-header">
+          <h3>Choose Your Color</h3>
+          <button class="color-picker-close" data-color-close>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="color-picker-options">
+          <button class="color-option" data-color="cyan" title="Cyan (Current)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
+            <span>Cyan</span>
+          </button>
+          <button class="color-option" data-color="pink" title="Pink (Original)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
+            <span>Pink</span>
+          </button>
+          <button class="color-option" data-color="purple" title="Purple">
+            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
+            <span>Purple</span>
+          </button>
+          <button class="color-option" data-color="green" title="Green">
+            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
+            <span>Green</span>
+          </button>
+          <button class="color-option" data-color="orange" title="Orange">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
+            <span>Orange</span>
+          </button>
+          <button class="color-option" data-color="blue" title="Blue">
+            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
+            <span>Blue</span>
+          </button>
         </div>
       </div>
-    </header>
+    </div>
 
-    <main class="container" style="padding: 32px 0 48px;">
-      <div class="section-head">
-        <h2>Blogs</h2>
+    <div class="neo-container">
+      <!-- Site Banner/Header -->
+      <div class="site-banner">
+        <div class="brand">nijika.de</div>
+        <div class="header-controls">
+          <button class="color-picker-toggle" title="Change color" data-color-picker>
+            <i class="bi bi-palette"></i>
+          </button>
+          <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+            <i class="bi bi-brightness-high"></i>
+          </button>
+        </div>
       </div>
-      <div id="posts" class="post-list stack-4">Please wait...</div>
-    </main>
+
+      <div class="neo-layout">
+        <aside class="neo-sidebar">
+          <div class="neo-box">
+            <div class="neo-header"><h3>Navigate</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./blogs.html">Blogs</a></li>
+                <li><a href="./stories.html">Stories</a></li>
+                <li><a href="./add-post.html">Add Post</a></li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        <main class="neo-main">
+          <section class="neo-box">
+            <div class="neo-header"><h2>Blogs</h2></div>
+            <div class="neo-content">
+              <div id="posts" class="masonry-grid">
+                <div class="loading">Loading posts...</div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
 
     <script type="module">
       import '../assets/app.js';
@@ -37,18 +95,38 @@
         const data = await res.json();
         root.innerHTML = '';
         data.posts.forEach(year => {
-          const y = document.createElement('h3'); y.textContent = year.year; root.appendChild(y);
+          const yearHeader = document.createElement('div');
+          yearHeader.className = 'year-header';
+          yearHeader.textContent = year.year;
+          root.appendChild(yearHeader);
+          
           year.posts.forEach(post => {
-            const div = document.createElement('div');
-            div.className = 'post-item';
-            div.innerHTML = `<a class="link" href="./post.html?id=${post.id}">${post.title}</a>
-              <span class="row-actions">
-                <a class="btn-icon" href="./update-post.html?id=${post.id}" title="Edit"><i class="bi bi-pencil"></i></a>
-                <a class="btn-icon" href="#" data-del="${post.id}" title="Delete"><i class="bi bi-trash"></i></a>
-              </span>`;
-            root.appendChild(div);
+            const card = document.createElement('div');
+            card.className = 'masonry-item';
+            card.innerHTML = `
+              <div class="item-header">
+                <h3><a href="./post.html?id=${post.id}">${post.title}</a></h3>
+              </div>
+              <div class="item-content">
+                <div class="item-meta">
+                  <span><i class="bi bi-calendar3"></i> ${post.date}</span>
+                  <span class="chip">${post.tags || 'No tags'}</span>
+                </div>
+                <div class="item-actions" style="margin-top: 10px; display: flex; gap: 10px;">
+                  <a class="btn btn-ghost" href="./update-post.html?id=${post.id}" title="Edit"><i class="bi bi-pencil"></i> Edit</a>
+                  <button class="btn btn-ghost" data-del="${post.id}" title="Delete" style="color: #ff6b6b;"><i class="bi bi-trash"></i> Delete</button>
+                </div>
+              </div>
+            `;
+            root.appendChild(card);
           })
         })
+        
+        // Trigger scroll animations
+        if (window.initScrollAnimations) {
+          window.initScrollAnimations();
+        }
+        
         root.querySelectorAll('[data-del]').forEach(a => a.addEventListener('click', async (e) => {
           e.preventDefault();
           const id = a.getAttribute('data-del');

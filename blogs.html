@@ -1,167 +1,302 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Blogs · nijika.de</title>
-    <meta name="description" content="Blogs" />
-    <link rel="icon" type="image/x-icon" href="./img/favicon.ico" />
-    <link rel="stylesheet" href="./assets/styles.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-  </head>
-  <body onload="import('./assets/app.js').then(m=>m.getAllPosts('blog'))">
-    <header class="site-header">
-      <div class="container nav">
-        <div class="brand">nijika.de</div>
-        <nav class="site-nav">
-          <a href="./">Home</a>
-          <a href="./#about">About</a>
-          <a href="./#portfolio">Portfolio</a>
-          <a href="#">Blogs</a>
-          <a href="./stories.html">Stories</a>
-        </nav>
-        <div class="nav-actions">
-          <button class="theme-toggle" title="Toggle theme" data-toggle-theme><i class="bi bi-brightness-high"></i></button>
-          <button class="burger" aria-label="Menu" data-toggle-menu><i class="bi bi-list"></i></button>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogs · nijika.de</title>
+  <meta name="description" content="Blog posts from nijika.de">
+  <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+  <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+  <!-- ==================== MAIN CONTAINER ==================== -->
+  <div class="neo-container">
+    
+    <!-- Site Banner/Header -->
+    <div class="site-banner">
+      <div class="brand">nijika.de</div>
+      <div class="header-controls">
+        <button class="color-picker-toggle" title="Change color" data-color-picker>
+          <i class="bi bi-palette"></i>
+        </button>
+        <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+          <i class="bi bi-brightness-high"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Color Picker Modal -->
+    <div class="color-picker-modal" data-color-modal>
+      <div class="color-picker-content">
+        <div class="color-picker-header">
+          <h3>Choose Your Color</h3>
+          <button class="color-picker-close" data-color-close>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="color-picker-options">
+          <button class="color-option" data-color="cyan" title="Cyan (Current)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
+            <span>Cyan</span>
+          </button>
+          <button class="color-option" data-color="pink" title="Pink (Original)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
+            <span>Pink</span>
+          </button>
+          <button class="color-option" data-color="purple" title="Purple">
+            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
+            <span>Purple</span>
+          </button>
+          <button class="color-option" data-color="green" title="Green">
+            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
+            <span>Green</span>
+          </button>
+          <button class="color-option" data-color="orange" title="Orange">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
+            <span>Orange</span>
+          </button>
+          <button class="color-option" data-color="blue" title="Blue">
+            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
+            <span>Blue</span>
+          </button>
         </div>
       </div>
-      <div class="mobile-bar container">
-        <button class="theme-toggle" title="Toggle theme" data-toggle-theme><i class="bi bi-brightness-high"></i></button>
-        <button class="btn btn-ghost" data-toggle-menu>Menu <i class="bi bi-caret-down-fill"></i></button>
-      </div>
-      <div class="mobile-menu container">
-        <a href="./">Home</a>
-        <a href="./#about">About</a>
-        <a href="./#portfolio">Portfolio</a>
-        <a href="#">Blogs</a>
-        <a href="./stories.html">Stories</a>
-      </div>
-    </header>
+    </div>
 
-    <main class="container" style="padding: 32px 0 48px;">
-      <div class="section-head narrow">
-        <h2>Blogs</h2>
-      </div>
-      <div class="filters">
-        <input class="search" id="search" type="search" placeholder="Search posts..." />
-        <button class="btn btn-ghost tags-toggle" id="toggleTags"><i class="bi bi-sliders"></i> Tags</button>
-        <div class="selected-tags" id="selectedTags"></div>
-        <div class="tags-dropdown" id="tagsDropdown">
-          <div id="tagsBar"></div>
-          <div class="actions">
-            <button class="btn btn-primary" id="applyTags">Apply</button>
-            <button class="btn btn-ghost" id="clearTags">Clear</button>
+    <!-- Layout: Sidebar + Main -->
+    <div class="neo-layout">
+      
+      <!-- ==================== SIDEBAR ==================== -->
+      <aside class="neo-sidebar">
+        
+        <!-- Navigation Box -->
+        <div class="neo-box">
+          <div class="neo-header"><h3>Navigate</h3></div>
+          <div class="neo-content">
+            <ul>
+              <li><a href="./">Home</a></li>
+              <li><a href="./#about">About</a></li>
+              <li><a href="./#portfolio">Portfolio</a></li>
+              <li><a href="./blogs.html">Blogs</a></li>
+              <li><a href="./stories.html">Stories</a></li>
+            </ul>
           </div>
         </div>
-      </div>
-      <div id="posts" class="post-list stack-4">Loading...</div>
-    </main>
 
-    <footer>
-      <div class="stack-2">
-        <div>
-          <a class="link" href="https://twitter.com/twit_aurora">Twitter</a>
-          · <a class="link" href="https://youtube.com/c/roraYT">YouTube</a>
-          · <a class="link" href="mailto:chompajamas@gmail.com">Email</a>
+        <!-- Links Box -->
+        <div class="neo-box">
+          <div class="neo-header"><h3>Links</h3></div>
+          <div class="neo-content">
+            <ul>
+              <li><a href="https://twitter.com/twit_aurora" target="_blank">Twitter</a></li>
+              <li><a href="https://youtube.com/c/roraYT" target="_blank">YouTube</a></li>
+              <li><a href="https://github.com/auroraongithub" target="_blank">GitHub</a></li>
+              <li><a href="mailto:chompajamas@gmail.com">Email</a></li>
+            </ul>
+          </div>
         </div>
-        <div>© 2025 nijika.de</div>
-      </div>
-    </footer>
 
-    <script type="module">
-      import './assets/app.js';
-      const postsRoot = document.querySelector('#posts');
-      const tagsBar = document.querySelector('#tagsBar');
-      const searchInput = document.querySelector('#search');
-      const toggleTagsBtn = document.querySelector('#toggleTags');
-      const tagsDropdown = document.querySelector('#tagsDropdown');
-      const selectedTagsBar = document.querySelector('#selectedTags');
-      const applyBtn = document.querySelector('#applyTags');
-      const clearBtn = document.querySelector('#clearTags');
-      let all = [];
-      let activeTags = new Set();
+      </aside>
 
-      function render(list){
-        postsRoot.innerHTML = '';
-        list.forEach(group => {
-          const h = document.createElement('h3'); h.textContent = group.year; postsRoot.appendChild(h);
-          group.posts.forEach(p => {
-            const div = document.createElement('div');
-            div.className = 'post-item';
-            div.innerHTML = `<a class="link" href="./post.html?id=${p.id}">${p.title}</a>
-            <div class="post-meta"><span>${p.date}</span><span class="chip">${p.tags || 'No tags'}</span></div>`;
-            postsRoot.appendChild(div);
-          });
+      <!-- ==================== MAIN CONTENT ==================== -->
+      <main class="neo-main">
+        
+        <!-- Page Header -->
+        <section class="neo-box scroll-animate">
+          <div class="neo-header"><h2>Blogs</h2></div>
+          <div class="neo-content">
+            <p class="text-muted">My thoughts, updates, and ramblings</p>
+          </div>
+        </section>
+
+        <!-- Search & Filters -->
+        <div class="neo-filters scroll-animate">
+          <input class="search" id="search" type="search" placeholder="Search posts...">
+          <button class="btn btn-ghost" id="toggleTags"><i class="bi bi-sliders"></i> Tags</button>
+          <div class="selected-tags" id="selectedTags"></div>
+          <div class="tags-dropdown" id="tagsDropdown">
+            <div id="tagsBar"></div>
+            <div class="actions">
+              <button class="btn btn-primary" id="applyTags">Apply</button>
+              <button class="btn btn-ghost" id="clearTags">Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Posts Masonry Grid -->
+        <div id="posts" class="masonry-grid">
+          <div class="loading">Loading posts...</div>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <div class="neo-footer">
+      <a href="https://twitter.com/twit_aurora">Twitter</a> · 
+      <a href="https://youtube.com/c/roraYT">YouTube</a> · 
+      <a href="mailto:chompajamas@gmail.com">Email</a>
+      <br>
+      © 2025 nijika.de
+    </div>
+
+  </div>
+
+  <!-- ==================== MOBILE BOTTOM NAV ==================== -->
+  <nav class="mobile-bottom-nav">
+    <ul>
+      <li><a href="./"><i class="bi bi-house-fill"></i><span>Home</span></a></li>
+      <li><a href="./#about"><i class="bi bi-person-fill"></i><span>About</span></a></li>
+      <li><a href="./#portfolio"><i class="bi bi-briefcase-fill"></i><span>Work</span></a></li>
+      <li><a href="./blogs.html" class="active"><i class="bi bi-journal-text"></i><span>Blogs</span></a></li>
+      <li><a href="./stories.html"><i class="bi bi-book-fill"></i><span>Stories</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- Scripts -->
+  <script type="module">
+    import './assets/app.js';
+    
+    const postsRoot = document.querySelector('#posts');
+    const tagsBar = document.querySelector('#tagsBar');
+    const searchInput = document.querySelector('#search');
+    const toggleTagsBtn = document.querySelector('#toggleTags');
+    const tagsDropdown = document.querySelector('#tagsDropdown');
+    const selectedTagsBar = document.querySelector('#selectedTags');
+    const applyBtn = document.querySelector('#applyTags');
+    const clearBtn = document.querySelector('#clearTags');
+    
+    let all = [];
+    let activeTags = new Set();
+
+    // Render posts as masonry cards
+    function render(list) {
+      postsRoot.innerHTML = '';
+      
+      list.forEach(group => {
+        // Year header
+        const yearHeader = document.createElement('div');
+        yearHeader.className = 'year-header';
+        yearHeader.textContent = group.year;
+        postsRoot.appendChild(yearHeader);
+        
+        // Posts for this year
+        group.posts.forEach((p, i) => {
+          const card = document.createElement('div');
+          card.className = 'masonry-item';
+          card.style.animationDelay = `${i * 0.1}s`;
+          card.innerHTML = `
+            <div class="item-header">
+              <h3><a href="./post.html?id=${p.id}">${p.title}</a></h3>
+            </div>
+            <div class="item-content">
+              <div class="item-meta">
+                <span><i class="bi bi-calendar3"></i> ${p.date}</span>
+                <span class="chip">${p.tags || 'No tags'}</span>
+              </div>
+            </div>
+          `;
+          postsRoot.appendChild(card);
         });
+      });
+      
+      // Trigger scroll animations
+      if (window.initScrollAnimations) {
+        window.initScrollAnimations();
       }
+    }
 
-      function collectTags(groups){
-        const set = new Set();
-        groups.forEach(g => (g.posts||[]).forEach(p => (p.tags||'').split(',').map(t=>t.trim()).filter(Boolean).forEach(t=>set.add(t))));
-        return Array.from(set).sort();
-      }
+    function collectTags(groups) {
+      const set = new Set();
+      groups.forEach(g => (g.posts || []).forEach(p => 
+        (p.tags || '').split(',').map(t => t.trim()).filter(Boolean).forEach(t => set.add(t))
+      ));
+      return Array.from(set).sort();
+    }
 
-      function renderTags(tags){
-        tagsBar.innerHTML = '';
-        tags.forEach(tag => {
-          const el = document.createElement('span');
-          el.className = 'chip tag' + (activeTags.has(tag)?' active':'');
-          el.textContent = tag;
-          el.addEventListener('click', ()=>{
-            if (activeTags.has(tag)) activeTags.delete(tag); else activeTags.add(tag);
-            el.classList.toggle('active');
-          });
-          tagsBar.appendChild(el);
+    function renderTags(tags) {
+      tagsBar.innerHTML = '';
+      tags.forEach(tag => {
+        const el = document.createElement('span');
+        el.className = 'chip tag' + (activeTags.has(tag) ? ' active' : '');
+        el.textContent = tag;
+        el.addEventListener('click', () => {
+          if (activeTags.has(tag)) activeTags.delete(tag);
+          else activeTags.add(tag);
+          el.classList.toggle('active');
         });
-      }
+        tagsBar.appendChild(el);
+      });
+    }
 
-      function renderSelectedTags(){
-        selectedTagsBar.innerHTML = '';
-        if (activeTags.size === 0) return;
-        activeTags.forEach(tag => {
-          const chip = document.createElement('span');
-          chip.className = 'chip tag active';
-          chip.textContent = tag;
-          chip.addEventListener('click', ()=>{ activeTags.delete(tag); filter(); });
-          selectedTagsBar.appendChild(chip);
+    function renderSelectedTags() {
+      selectedTagsBar.innerHTML = '';
+      if (activeTags.size === 0) return;
+      activeTags.forEach(tag => {
+        const chip = document.createElement('span');
+        chip.className = 'chip tag active';
+        chip.textContent = tag;
+        chip.addEventListener('click', () => { 
+          activeTags.delete(tag); 
+          filter(); 
         });
-      }
+        selectedTagsBar.appendChild(chip);
+      });
+    }
 
-      function filter(){
-        const q = searchInput.value.trim().toLowerCase();
-        const out = all.map(group => ({
-          year: group.year,
-          posts: group.posts.filter(p => {
-            const postTags = (p.tags||'').toLowerCase().split(',').map(s=>s.trim()).filter(Boolean);
-            const inTag = activeTags.size===0 || Array.from(activeTags).every(t => postTags.includes(t.toLowerCase()));
-            const inText = !q || p.title.toLowerCase().includes(q) || (p.tags||'').toLowerCase().includes(q);
-            return inTag && inText;
-          })
-        })).filter(g => g.posts.length);
-        render(out);
-        renderSelectedTags();
-      }
+    function filter() {
+      const q = searchInput.value.trim().toLowerCase();
+      const out = all.map(group => ({
+        year: group.year,
+        posts: group.posts.filter(p => {
+          const postTags = (p.tags || '').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+          const inTag = activeTags.size === 0 || Array.from(activeTags).every(t => postTags.includes(t.toLowerCase()));
+          const inText = !q || p.title.toLowerCase().includes(q) || (p.tags || '').toLowerCase().includes(q);
+          return inTag && inText;
+        })
+      })).filter(g => g.posts.length);
+      render(out);
+      renderSelectedTags();
+    }
 
-      (async function init(){
+    // Initialize
+    (async function init() {
+      try {
         const res = await fetch('https://nijikade-backend.vercel.app/api/post?type=blog');
         const data = await res.json();
         all = data.posts || [];
         render(all);
         renderTags(collectTags(all));
-      })();
+      } catch (e) {
+        postsRoot.innerHTML = '<div class="neo-box"><div class="neo-content">Failed to load posts. Please try again later.</div></div>';
+      }
+    })();
 
-      searchInput.addEventListener('input', filter);
-      toggleTagsBtn.addEventListener('click', () => {
-        const isOpen = tagsDropdown.style.display === 'block';
-        tagsDropdown.style.display = isOpen ? 'none' : 'block';
-      });
-      applyBtn.addEventListener('click', () => { tagsDropdown.style.display = 'none'; filter(); });
-      clearBtn.addEventListener('click', () => { activeTags.clear(); filter(); tagsDropdown.style.display = 'none'; });
-      document.addEventListener('click', (e) => {
-        if (!tagsDropdown.contains(e.target) && !toggleTagsBtn.contains(e.target)) tagsDropdown.style.display = 'none';
-      });
-    </script>
-  </body>
+    // Event listeners
+    searchInput.addEventListener('input', filter);
+    
+    toggleTagsBtn.addEventListener('click', () => {
+      tagsDropdown.classList.toggle('show');
+    });
+    
+    applyBtn.addEventListener('click', () => { 
+      tagsDropdown.classList.remove('show');
+      filter(); 
+    });
+    
+    clearBtn.addEventListener('click', () => { 
+      activeTags.clear(); 
+      filter(); 
+      tagsDropdown.classList.remove('show');
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!tagsDropdown.contains(e.target) && !toggleTagsBtn.contains(e.target)) {
+        tagsDropdown.classList.remove('show');
+      }
+    });
+  </script>
+</body>
 </html>
-
-

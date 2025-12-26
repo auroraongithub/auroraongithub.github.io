@@ -8,29 +8,92 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   </head>
   <body>
-    <header class="site-header">
-      <div class="container nav">
-        <div class="brand">nijika.de</div>
-        <div class="nav-actions">
-          <button class="theme-toggle" data-toggle-theme title="Toggle theme"><i class="bi bi-brightness-high"></i></button>
+    <!-- Color Picker Modal -->
+    <div class="color-picker-modal" data-color-modal>
+      <div class="color-picker-content">
+        <div class="color-picker-header">
+          <h3>Choose Your Color</h3>
+          <button class="color-picker-close" data-color-close>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="color-picker-options">
+          <button class="color-option" data-color="cyan" title="Cyan (Current)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
+            <span>Cyan</span>
+          </button>
+          <button class="color-option" data-color="pink" title="Pink (Original)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
+            <span>Pink</span>
+          </button>
+          <button class="color-option" data-color="purple" title="Purple">
+            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
+            <span>Purple</span>
+          </button>
+          <button class="color-option" data-color="green" title="Green">
+            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
+            <span>Green</span>
+          </button>
+          <button class="color-option" data-color="orange" title="Orange">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
+            <span>Orange</span>
+          </button>
+          <button class="color-option" data-color="blue" title="Blue">
+            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
+            <span>Blue</span>
+          </button>
         </div>
       </div>
-    </header>
+    </div>
 
-    <main class="container" style="padding: 32px 0 48px;">
-      <h2>Admin Login</h2>
-      <form id="loginForm" class="form">
-        <div class="field">
-          <label for="email">Email</label>
-          <input id="email" type="email" placeholder="name@example.com" required />
+    <div class="neo-container">
+      <!-- Site Banner/Header -->
+      <div class="site-banner">
+        <div class="brand">nijika.de</div>
+        <div class="header-controls">
+          <button class="color-picker-toggle" title="Change color" data-color-picker>
+            <i class="bi bi-palette"></i>
+          </button>
+          <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+            <i class="bi bi-brightness-high"></i>
+          </button>
         </div>
-        <div class="field">
-          <label for="password">Password</label>
-          <input id="password" type="password" placeholder="••••••" required />
-        </div>
-        <button class="btn btn-primary" type="submit">Login</button>
-      </form>
-    </main>
+      </div>
+
+      <div class="neo-layout">
+        <aside class="neo-sidebar">
+          <div class="neo-box">
+            <div class="neo-header"><h3>Navigate</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./blogs.html">Blogs</a></li>
+                <li><a href="./stories.html">Stories</a></li>
+                <li><a href="./add-post.html">Add Post</a></li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        <main class="neo-main">
+          <section class="neo-box">
+            <div class="neo-header"><h2>Admin Login</h2></div>
+            <div class="neo-content">
+              <form id="loginForm" class="form">
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" type="email" placeholder="name@example.com" required />
+                </div>
+                <div class="field">
+                  <label for="password">Password</label>
+                  <input id="password" type="password" placeholder="••••••" required />
+                </div>
+                <button class="btn btn-primary" type="submit">Login</button>
+              </form>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
 
     <script type="module">
       import './login_logic.js';
