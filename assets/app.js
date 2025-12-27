@@ -690,7 +690,7 @@ async function initDesktopWidgets() {
   
   // Load Changelog widget (sidebar + drawer)
   try {
-    const res = await fetch(`${API_BASE}/site/changelog?limit=3`);
+    const res = await fetch(`${API_BASE}/site/changelog?limit=1`);
     const entries = await res.json();
     
     const changelogHTML = !entries.length 
@@ -1700,3 +1700,4 @@ window.portfolioNext = function() {
     renderPortfolio();
   }
 };
+
