@@ -8,6 +8,45 @@
   <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
   <link rel="stylesheet" href="./assets/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <script type="text/javascript">
+  function tb8_makeArray(n){
+    this.length = n;
+    return this.length;
+  }
+  tb8_messages = new tb8_makeArray(3);
+  tb8_messages[0] = "nijika.de";
+  tb8_messages[1] = "nijika.de";
+  tb8_messages[2] = "nijika.de";
+  tb8_rptType = 'infinite';
+  tb8_rptNbr = 5;
+  tb8_speed = 100;
+  tb8_delay = 2000;
+  var tb8_counter=1;
+  var tb8_currMsg=0;
+  var tb8_tekst ="";
+  var tb8_i=0;
+  var tb8_TID = null;
+  function tb8_pisi(){
+    tb8_tekst = tb8_tekst + tb8_messages[tb8_currMsg].substring(tb8_i, tb8_i+1);
+    document.title = tb8_tekst;
+    tb8_sp=tb8_speed;
+    tb8_i++;
+    if (tb8_i==tb8_messages[tb8_currMsg].length){
+      tb8_currMsg++; tb8_i=0; tb8_tekst="";tb8_sp=tb8_delay;
+    }
+    if (tb8_currMsg == tb8_messages.length){
+      if ((tb8_rptType == 'finite') && (tb8_counter==tb8_rptNbr)){
+        clearTimeout(tb8_TID);
+        return;
+      }
+      tb8_counter++;
+      tb8_currMsg = 0;
+    }
+    tb8_TID = setTimeout("tb8_pisi()", tb8_sp);
+  }
+  tb8_pisi()
+  </script>
 </head>
 <body>
 
@@ -24,6 +63,24 @@
         <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
           <i class="bi bi-brightness-high"></i>
         </button>
+      </div>
+    </div>
+
+    <!-- Status Strip (CRT Effect) -->
+    <div class="status-strip-screen" id="statusStrip">
+      <div class="status-strip-content">
+        <div class="status-info">
+          <span class="status-feeling"><i class="bi bi-emoji-smile"></i> <span id="statusFeeling">Loading...</span></span>
+          <span class="status-divider">|</span>
+          <span class="status-doing"><i class="bi bi-activity"></i> <span id="statusDoing">Loading...</span></span>
+          <span class="status-divider hide-mobile">|</span>
+          <span class="status-updated hide-mobile"><i class="bi bi-clock"></i> <span id="statusUpdated">--</span></span>
+        </div>
+        <div class="status-marquee">
+          <div class="marquee-track" id="marqueeTrack">
+            <span class="marquee-text" id="marqueeText">Welcome to nijika.de! ✨</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -104,7 +161,7 @@
           <div class="neo-content">
             <div class="neo-scrollbox">
               <img src="./img/pfp.png" alt="Profile">
-              <img src="./img/aboutme.gif" alt="About me">
+              <img src="./img/topheader.png" alt="Profile">
             </div>
           </div>
         </div>
@@ -119,6 +176,31 @@
           </div>
         </div>
 
+        <!-- Stats Widget -->
+        <div class="neo-box scroll-animate">
+          <div class="neo-header"><h3><i class="bi bi-bar-chart"></i> Stats</h3></div>
+          <div class="neo-content">
+            <div class="stats-grid sidebar-stats">
+              <div class="stat-item">
+                <span class="stat-value" id="statProjects">--</span>
+                <span class="stat-label">Projects</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statPosts">--</span>
+                <span class="stat-label">Posts</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statVisitors">--</span>
+                <span class="stat-label">Online Now</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statPageviews">--</span>
+                <span class="stat-label">Total Visits</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </aside>
 
       <!-- ==================== MAIN CONTENT ==================== -->
@@ -126,9 +208,7 @@
         
         <!-- Hero Section -->
         <div class="neo-hero scroll-animate">
-          <img class="avatar" src="./img/pfp.png" alt="Aurora">
-          <h1>aurora.</h1>
-          <p>Creator, Scanlator</p>
+          <img class="avatar" src="./img/aboutme.gif" alt="About Me">
         </div>
 
         <!-- About Section -->
@@ -136,8 +216,9 @@
           <div class="neo-header"><h2>About Me</h2></div>
           <div class="neo-content">
             <div class="about-grid">
-              <img src="./img/aboutme.gif" alt="About">
+              <img src="./img/pfp.png" alt="Aurora">
               <div>
+                <h3 style="margin-top: 0;">aurora · Creator, Scanlator</h3>
                 <p>I am a hobbyist coder and I also design for projects for myself or ones that I find interesting. I usually create designs in photoshop and code sites when I have nothing to do.</p>
                 <p>I'm a pretty competitive gamer. You can find me the most in osu! and Valorant.</p>
                 <p>Currently, I'm working on some projects, some of them are listed below.</p>
@@ -174,6 +255,39 @@
         
         <!-- Hover card outside carousel viewport -->
         <div class="hover-card" id="seriesHover"></div>
+
+        <!-- ==================== FAVORITES SECTION ==================== -->
+        <section class="neo-box scroll-animate" id="favorites">
+          <div class="neo-header"><h2><i class="bi bi-heart"></i> Favorites</h2></div>
+          <div class="neo-content">
+            <!-- Category Tabs -->
+            <div class="favorites-tabs">
+              <button class="fav-tab active" data-category="anime" onclick="switchFavoritesTab('anime')">
+                <i class="bi bi-play-circle"></i> Anime
+              </button>
+              <button class="fav-tab" data-category="manga" onclick="switchFavoritesTab('manga')">
+                <i class="bi bi-book"></i> Manga/LN
+              </button>
+              <button class="fav-tab" data-category="characters" onclick="switchFavoritesTab('characters')">
+                <i class="bi bi-person"></i> Characters
+              </button>
+              <button class="fav-tab" data-category="games" onclick="switchFavoritesTab('games')">
+                <i class="bi bi-controller"></i> Games
+              </button>
+            </div>
+            
+            <!-- Favorites Carousel -->
+            <div class="neo-carousel favorites-carousel">
+              <div class="carousel-viewport">
+                <div class="carousel-track" id="favoritesTrack">
+                  <div class="loading-small" style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading favorites...</div>
+                </div>
+              </div>
+              <button class="carousel-ctrl carousel-prev" data-fav-carousel-prev aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+              <button class="carousel-ctrl carousel-next" data-fav-carousel-next aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+            </div>
+          </div>
+        </section>
 
         <!-- Portfolio Section -->
         <section id="portfolio" class="neo-box scroll-animate">
@@ -212,6 +326,34 @@
           </div>
         </section>
 
+        <!-- ==================== RECENT / PROOF OF LIFE ==================== -->
+        <section class="neo-box scroll-animate" id="recent">
+          <div class="neo-header"><h2><i class="bi bi-clock-history"></i> Recent / Proof of Life</h2></div>
+          <div class="neo-content">
+            <div class="recent-grid">
+              
+              <!-- Latest Blog Posts -->
+              <div class="recent-panel">
+                <h3><i class="bi bi-journal-text"></i> Latest Blog Posts</h3>
+                <div class="recent-list" id="recentBlogs">
+                  <div class="loading-small">Loading...</div>
+                </div>
+                <a href="./blogs.html" class="widget-link">View all blogs <i class="bi bi-arrow-right"></i></a>
+              </div>
+              
+              <!-- Latest Stories -->
+              <div class="recent-panel">
+                <h3><i class="bi bi-book"></i> Latest Stories</h3>
+                <div class="recent-list" id="recentStories">
+                  <div class="loading-small">Loading...</div>
+                </div>
+                <a href="./stories.html" class="widget-link">View all stories <i class="bi bi-arrow-right"></i></a>
+              </div>
+              
+            </div>
+          </div>
+        </section>
+
         <!-- Discord Section -->
         <section class="neo-box scroll-animate">
           <div class="neo-header"><h2>Join Us!</h2></div>
@@ -224,6 +366,75 @@
         </section>
 
       </main>
+
+      <!-- ==================== RIGHT SIDEBAR (WIDGETS) ==================== -->
+      <aside class="neo-widgets">
+        
+        <!-- Now Widget -->
+        <div class="neo-box scroll-animate widget-now">
+          <div class="neo-header"><h3><i class="bi bi-clock-history"></i> Now</h3></div>
+          <div class="neo-content">
+            <div class="now-widget-item">
+              <span class="now-widget-label">Working On</span>
+              <span class="now-widget-value" id="widgetWorkingOn">Loading...</span>
+            </div>
+            <div class="now-widget-item">
+              <span class="now-widget-label">Learning</span>
+              <span class="now-widget-value" id="widgetLearning">Loading...</span>
+            </div>
+            <div class="now-widget-item">
+              <span class="now-widget-label">Open to Collabs</span>
+              <span class="now-widget-value" id="widgetCollabs"><i class="bi bi-question-circle"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Changelog Widget -->
+        <div class="neo-box scroll-animate widget-changelog">
+          <div class="neo-header"><h3><i class="bi bi-list-check"></i> Updates</h3></div>
+          <div class="neo-content">
+            <div class="changelog-widget-list" id="widgetChangelog">
+              <div class="loading-small">Loading...</div>
+            </div>
+            <a href="./changelog.html" class="widget-link" style="margin-top: 10px; display: block;">View all updates <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- Spotify Widget -->
+        <div class="neo-box scroll-animate widget-spotify" id="widgetSpotifyBox" style="display: none;">
+          <div class="neo-header"><h3><i class="bi bi-spotify"></i> Listening</h3></div>
+          <div class="neo-content" style="padding: 0;">
+            <iframe id="widgetSpotify" style="border-radius: 8px; border: none;" src="" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+        </div>
+
+        <!-- Shoutbox Widget -->
+        <div class="neo-box scroll-animate widget-shoutbox-sidebar">
+          <div class="neo-header"><h3><i class="bi bi-chat-dots"></i> Shoutbox</h3></div>
+          <div class="neo-content" style="padding: 0; min-height: 200px;">
+            <iframe 
+              src="https://iframe.chat/embed?chat=nijikade" 
+              id="chattable" 
+              class="shoutbox-iframe" 
+              title="Shoutbox"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+              loading="eager"
+            ></iframe>
+          </div>
+        </div>
+
+        <!-- Resources Quick Links -->
+        <div class="neo-box scroll-animate widget-resources">
+          <div class="neo-header"><h3><i class="bi bi-book"></i> Resources</h3></div>
+          <div class="neo-content">
+            <ul class="resources-list">
+              <li><a href="./resources.html?cat=scanlation"><i class="bi bi-translate"></i> Scanlation</a></li>
+              <li><a href="./resources.html?cat=youtube"><i class="bi bi-youtube"></i> YouTube</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </aside>
     </div>
 
     <!-- Footer -->
@@ -242,16 +453,98 @@
     <ul>
       <li><a href="./" class="active"><i class="bi bi-house-fill"></i><span>Home</span></a></li>
       <li><a href="#about"><i class="bi bi-person-fill"></i><span>About</span></a></li>
-      <li><a href="#portfolio"><i class="bi bi-briefcase-fill"></i><span>Work</span></a></li>
       <li><a href="./blogs.html"><i class="bi bi-journal-text"></i><span>Blogs</span></a></li>
       <li><a href="./stories.html"><i class="bi bi-book-fill"></i><span>Stories</span></a></li>
+      <li><a href="#" data-more-toggle><i class="bi bi-grid-fill"></i><span>More</span></a></li>
     </ul>
   </nav>
 
+  <!-- More Drawer (Mobile) -->
+  <div class="more-drawer" id="moreDrawer">
+    <div class="more-drawer-overlay" data-more-close></div>
+    <div class="more-drawer-content">
+      <div class="more-drawer-header">
+        <h3>More</h3>
+        <button class="more-drawer-close" data-more-close><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="more-drawer-body">
+        <div class="more-drawer-section">
+          <h4>Widgets</h4>
+          <ul>
+            <li><a href="#" data-drawer-scroll="statusStrip"><i class="bi bi-broadcast"></i> Status</a></li>
+            <li><a href="#" data-now-modal><i class="bi bi-clock-history"></i> Now</a></li>
+            <li><a href="#" data-changelog-modal><i class="bi bi-list-check"></i> Changelog</a></li>
+          </ul>
+        </div>
+        <div class="more-drawer-section">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="./resources.html?cat=scanlation"><i class="bi bi-book"></i> Scanlation Guide</a></li>
+            <li><a href="./resources.html?cat=youtube"><i class="bi bi-youtube"></i> YouTube Guide</a></li>
+          </ul>
+        </div>
+        <div class="more-drawer-section">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://dsc.gg/evescans" target="_blank"><i class="bi bi-discord"></i> Discord</a></li>
+            <li><a href="#portfolio"><i class="bi bi-briefcase-fill"></i> Portfolio</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Now Modal -->
+  <div class="now-modal" id="nowModal">
+    <div class="now-modal-overlay" data-now-close></div>
+    <div class="now-modal-content">
+      <div class="now-modal-header">
+        <h3><i class="bi bi-clock-history"></i> What I'm Up To</h3>
+        <button class="now-modal-close" data-now-close><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="now-modal-body">
+        <div class="now-item">
+          <span class="now-label">Working On</span>
+          <span class="now-value" id="nowWorkingOn">Loading...</span>
+        </div>
+        <div class="now-item">
+          <span class="now-label">Learning</span>
+          <span class="now-value" id="nowLearning">Loading...</span>
+        </div>
+        <div class="now-item">
+          <span class="now-label">Open to Collabs</span>
+          <span class="now-value" id="nowCollabs"><i class="bi bi-question-circle"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Changelog Modal -->
+  <div class="changelog-modal" id="changelogModal">
+    <div class="changelog-modal-overlay" data-changelog-close></div>
+    <div class="changelog-modal-content">
+      <div class="changelog-modal-header">
+        <h3><i class="bi bi-list-check"></i> Changelog</h3>
+        <button class="changelog-modal-close" data-changelog-close><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="changelog-modal-body" id="changelogList">
+        <div class="loading"><i class="bi bi-arrow-repeat spin"></i> Loading...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
+  <script src="https://iframe.chat/scripts/main.min.js"></script>
   <script type="module">
     import { initCarousel } from './assets/app.js';
     window.addEventListener('load', initCarousel);
+    
+    // Initialize chattable
+    window.addEventListener('load', () => {
+      if (typeof chattable !== 'undefined') {
+        chattable.initialize();
+      }
+    });
   </script>
   <script src="./assets/app.js" type="module"></script>
 </body>

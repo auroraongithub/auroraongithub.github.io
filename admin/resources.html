@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Resources Editor · nijika.de Admin</title>
+    <link rel="stylesheet" href="./../assets/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+      .panel-list { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
+      .panel-item {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      .panel-header .panel-title-input {
+        flex: 1;
+        font-size: 1rem;
+        font-weight: 600;
+        background: transparent;
+        border: none;
+        color: var(--text);
+        padding: 5px 10px;
+        border-radius: 4px;
+      }
+      .panel-header .panel-title-input:focus {
+        outline: none;
+        background: var(--bg-secondary);
+      }
+      .panel-actions { display: flex; gap: 8px; }
+      .panel-actions button { padding: 6px 10px; font-size: 0.85rem; }
+      .panel-body { padding: 15px; }
+      .panel-editor {
+        background: var(--bg);
+        border-radius: 8px;
+        min-height: 200px;
+      }
+      .panel-editor .ql-toolbar {
+        border-radius: 8px 8px 0 0;
+        border-color: var(--border);
+        background: var(--bg-secondary);
+      }
+      .panel-editor .ql-container {
+        border-radius: 0 0 8px 8px;
+        border-color: var(--border);
+        min-height: 150px;
+        font-size: 0.95rem;
+      }
+      .category-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+      .category-tabs button { padding: 12px 24px; font-size: 0.95rem; }
+      .category-tabs button.active { background: var(--primary); color: var(--bg); border-color: var(--primary); }
+      .add-panel-btn { margin-top: 15px; }
+      .save-bar {
+        position: sticky;
+        bottom: 0;
+        background: var(--bg);
+        padding: 15px;
+        border-top: 2px solid var(--primary);
+        margin: 20px -15px -15px -15px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Color Picker Modal -->
+    <div class="color-picker-modal" data-color-modal>
+      <div class="color-picker-content">
+        <div class="color-picker-header">
+          <h3>Choose Your Color</h3>
+          <button class="color-picker-close" data-color-close>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="color-picker-options">
+          <button class="color-option" data-color="cyan" title="Cyan">
+            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
+            <span>Cyan</span>
+          </button>
+          <button class="color-option" data-color="pink" title="Pink">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
+            <span>Pink</span>
+          </button>
+          <button class="color-option" data-color="purple" title="Purple">
+            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
+            <span>Purple</span>
+          </button>
+          <button class="color-option" data-color="green" title="Green">
+            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
+            <span>Green</span>
+          </button>
+          <button class="color-option" data-color="orange" title="Orange">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
+            <span>Orange</span>
+          </button>
+          <button class="color-option" data-color="blue" title="Blue">
+            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
+            <span>Blue</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="neo-container">
+      <div class="site-banner">
+        <div class="brand">nijika.de</div>
+        <div class="header-controls">
+          <button class="color-picker-toggle" title="Change color" data-color-picker>
+            <i class="bi bi-palette"></i>
+          </button>
+          <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+            <i class="bi bi-brightness-high"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="neo-layout">
+        <aside class="neo-sidebar">
+          <div class="neo-box">
+            <div class="neo-header"><h3>Content</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./blogs.html">Blogs</a></li>
+                <li><a href="./stories.html">Stories</a></li>
+                <li><a href="./add-post.html">Add Post</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="neo-box">
+            <div class="neo-header"><h3>Site</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./status.html">Status Strip</a></li>
+                <li><a href="./now.html">Now Page</a></li>
+                <li><a href="./changelog.html">Changelog</a></li>
+                <li><a href="./resources.html">Resources</a></li>
+                <li><a href="./favorites.html">Favorites</a></li>
+                <li><a href="./settings.html">Settings</a></li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        <main class="neo-main">
+          <section class="neo-box">
+            <div class="neo-header"><h2><i class="bi bi-book"></i> Resources Editor</h2></div>
+            <div class="neo-content">
+              <!-- Category Tabs -->
+              <div class="category-tabs">
+                <button class="btn active" data-category="scanlation" onclick="switchCategory('scanlation')">
+                  <i class="bi bi-translate"></i> Scanlation
+                </button>
+                <button class="btn" data-category="youtube" onclick="switchCategory('youtube')">
+                  <i class="bi bi-youtube"></i> YouTube
+                </button>
+              </div>
+
+              <p class="text-muted">Edit resource panels inline. Changes are saved when you click "Save All".</p>
+
+              <!-- Panels List -->
+              <div id="panelsList" class="panel-list">
+                <div class="loading">Loading...</div>
+              </div>
+
+              <!-- Add New Panel Button -->
+              <button class="btn btn-primary add-panel-btn" onclick="addNewPanel()">
+                <i class="bi bi-plus-lg"></i> Add New Panel
+              </button>
+
+              <!-- Sticky Save Bar -->
+              <div class="save-bar">
+                <button class="btn" onclick="loadPanels()">
+                  <i class="bi bi-arrow-counterclockwise"></i> Discard Changes
+                </button>
+                <button class="btn btn-primary" onclick="saveAllPanels()">
+                  <i class="bi bi-check-lg"></i> Save All Panels
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script type="module">
+      import '../assets/app.js';
+      
+      const API_BASE = 'https://nijikade-backend.vercel.app/api';
+      let currentCategory = 'scanlation';
+      let panels = [];
+      let editors = {}; // Store Quill editors by index
+      
+      window.switchCategory = (category) => {
+        currentCategory = category;
+        document.querySelectorAll('.category-tabs button').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.category === category);
+        });
+        loadPanels();
+      };
+      
+      window.loadPanels = async function() {
+        const listEl = document.getElementById('panelsList');
+        listEl.innerHTML = '<div class="loading">Loading...</div>';
+        editors = {};
+        
+        try {
+          const res = await fetch(`${API_BASE}/site/resources?category=${currentCategory}`);
+          const data = await res.json();
+          panels = data.panels || [];
+          renderPanels();
+        } catch (err) {
+          listEl.innerHTML = '<p style="color: red;">Failed to load</p>';
+        }
+      };
+      
+      function renderPanels() {
+        const listEl = document.getElementById('panelsList');
+        editors = {};
+        
+        if (!panels.length) {
+          listEl.innerHTML = '<p style="color: var(--text-muted);">No panels yet. Click "Add New Panel" to create one.</p>';
+          return;
+        }
+        
+        listEl.innerHTML = panels.map((panel, index) => `
+          <div class="panel-item" data-index="${index}">
+            <div class="panel-header">
+              <input type="text" class="panel-title-input" value="${escapeHtml(panel.title || '')}" placeholder="Panel Title..." data-title-input="${index}" />
+              <div class="panel-actions">
+                <button class="btn btn-ghost" onclick="movePanel(${index}, -1)" ${index === 0 ? 'disabled' : ''} title="Move Up">
+                  <i class="bi bi-arrow-up"></i>
+                </button>
+                <button class="btn btn-ghost" onclick="movePanel(${index}, 1)" ${index === panels.length - 1 ? 'disabled' : ''} title="Move Down">
+                  <i class="bi bi-arrow-down"></i>
+                </button>
+                <button class="btn btn-ghost" onclick="removePanel(${index})" title="Delete Panel">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="panel-editor" id="editor-${index}"></div>
+            </div>
+          </div>
+        `).join('');
+        
+        // Initialize Quill editors
+        panels.forEach((panel, index) => {
+          const editorEl = document.getElementById(`editor-${index}`);
+          const quill = new Quill(editorEl, {
+            theme: 'snow',
+            modules: {
+              toolbar: [
+                [{ header: [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ color: [] }, { background: [] }],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                ['blockquote', 'code-block'],
+                ['link', 'image'],
+                ['clean']
+              ]
+            }
+          });
+          
+          // Set content
+          if (panel.content) {
+            quill.root.innerHTML = panel.content;
+          }
+          
+          editors[index] = quill;
+        });
+      }
+      
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+      
+      window.addNewPanel = function() {
+        panels.push({ title: '', content: '' });
+        renderPanels();
+        // Scroll to new panel
+        setTimeout(() => {
+          const lastPanel = document.querySelector('.panel-item:last-child');
+          lastPanel?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          lastPanel?.querySelector('.panel-title-input')?.focus();
+        }, 100);
+      };
+      
+      window.removePanel = function(index) {
+        if (!confirm('Remove this panel?')) return;
+        panels.splice(index, 1);
+        renderPanels();
+      };
+      
+      window.movePanel = function(index, direction) {
+        // First, collect current data from inputs
+        collectPanelData();
+        
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= panels.length) return;
+        [panels[index], panels[newIndex]] = [panels[newIndex], panels[index]];
+        renderPanels();
+      };
+      
+      function collectPanelData() {
+        // Collect all data from inputs and editors
+        panels.forEach((panel, index) => {
+          const titleInput = document.querySelector(`[data-title-input="${index}"]`);
+          if (titleInput) {
+            panel.title = titleInput.value.trim();
+          }
+          if (editors[index]) {
+            panel.content = editors[index].root.innerHTML;
+          }
+        });
+      }
+      
+      window.saveAllPanels = async function() {
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('Not logged in');
+        
+        // Collect all data
+        collectPanelData();
+        
+        // Filter out empty panels
+        const validPanels = panels.filter(p => p.title || (p.content && p.content !== '<p><br></p>'));
+        
+        try {
+          const res = await fetch(`${API_BASE}/admin/resources?token=${token}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category: currentCategory, panels: validPanels })
+          });
+          if (res.ok) {
+            alert('Resources saved!');
+            panels = validPanels;
+            renderPanels();
+          } else {
+            const data = await res.json();
+            alert(data.error || 'Failed to save');
+          }
+        } catch (err) {
+          alert('Error saving');
+        }
+      };
+      
+      loadPanels();
+    </script>
+  </body>
+</html>

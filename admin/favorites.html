@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Favorites Editor · nijika.de Admin</title>
+    <link rel="stylesheet" href="./../assets/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+      .category-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+      .category-tabs button { padding: 12px 24px; font-size: 0.95rem; }
+      .category-tabs button.active { background: var(--primary); color: var(--bg); border-color: var(--primary); }
+      
+      .import-section {
+        background: var(--bg);
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .import-section h4 { margin-top: 0; color: var(--primary); }
+      .import-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+      .import-row .field { flex: 1; min-width: 200px; margin-bottom: 0; }
+      .import-progress { margin-top: 15px; display: none; }
+      .import-progress.show { display: block; }
+      .progress-bar { 
+        height: 8px; 
+        background: var(--bg-secondary); 
+        border-radius: 4px; 
+        overflow: hidden; 
+      }
+      .progress-fill { 
+        height: 100%; 
+        background: var(--primary); 
+        transition: width 0.3s; 
+        width: 0%;
+      }
+      .progress-text { font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; }
+      
+      .add-section {
+        background: var(--bg-secondary);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .add-section h4 { margin-top: 0; color: var(--text); margin-bottom: 15px; }
+      .add-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 15px;
+      }
+      .add-form-grid .field { margin-bottom: 0; }
+      .add-form-grid .field.full-width { grid-column: 1 / -1; }
+      .add-form-grid .field label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+      .add-form-grid .field input,
+      .add-form-grid .field select,
+      .add-form-grid .field textarea {
+        width: 100%;
+        padding: 10px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 0.95rem;
+        height: 44px;
+      }
+      .add-form-grid .field textarea {
+        height: auto;
+        min-height: 80px;
+      }
+      .add-form-grid .field input:focus,
+      .add-form-grid .field select:focus,
+      .add-form-grid .field textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      
+      .search-results {
+        max-height: 400px;
+        overflow-y: auto;
+        margin-top: 15px;
+        display: none;
+      }
+      .search-results.show { display: block; }
+      .search-result-item {
+        display: flex;
+        gap: 12px;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--bg-secondary);
+      }
+      .search-result-item:hover {
+        border-color: var(--primary);
+        background: var(--bg);
+      }
+      .search-result-img {
+        width: 50px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 4px;
+        background: var(--bg);
+      }
+      .search-result-info { flex: 1; }
+      .search-result-title { font-weight: 600; margin-bottom: 4px; }
+      .search-result-meta { font-size: 0.85rem; color: var(--text-muted); }
+      
+      .favorites-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .favorite-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .favorite-card-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        background: var(--bg);
+      }
+      .favorite-card-image.no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 3rem;
+      }
+      .favorite-card-body { padding: 12px; flex: 1; }
+      .favorite-card-title { 
+        font-weight: 600; 
+        margin-bottom: 5px; 
+        font-size: 0.95rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .favorite-card-meta { 
+        font-size: 0.8rem; 
+        color: var(--text-muted);
+        margin-bottom: 8px;
+      }
+      .favorite-card-meta span { margin-right: 10px; }
+      .favorite-card-status {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+      .favorite-card-status.completed { background: #2ecc71; color: #fff; }
+      .favorite-card-status.watching, .favorite-card-status.playing { background: var(--primary); color: var(--bg); }
+      .favorite-card-status.plan { background: var(--text-muted); color: var(--bg); }
+      .favorite-card-status.dropped { background: #e74c3c; color: #fff; }
+      .favorite-card-desc {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-top: 8px;
+      }
+      .favorite-card-actions {
+        padding: 10px 12px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 8px;
+      }
+      .favorite-card-actions button { flex: 1; padding: 6px; font-size: 0.8rem; }
+      
+      /* Edit Modal */
+      .edit-modal {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 20px;
+      }
+      .edit-modal.show { display: flex; }
+      .edit-modal-content {
+        background: var(--bg-secondary);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        width: 100%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 20px;
+      }
+      .edit-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .edit-modal-header h3 { margin: 0; }
+      
+      /* Search Results for Jikan */
+      .search-results {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-top: 10px;
+        display: none;
+      }
+      .search-results.show { display: block; }
+      .search-result-item {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .search-result-item:hover { background: var(--bg); }
+      .search-result-item:last-child { border-bottom: none; }
+      .search-result-img { width: 50px; height: 70px; object-fit: cover; border-radius: 4px; }
+      .search-result-info { flex: 1; }
+      .search-result-title { font-weight: 600; font-size: 0.9rem; }
+      .search-result-meta { font-size: 0.75rem; color: var(--text-muted); }
+    </style>
+  </head>
+  <body>
+    <!-- Color Picker Modal -->
+    <div class="color-picker-modal" data-color-modal>
+      <div class="color-picker-content">
+        <div class="color-picker-header">
+          <h3>Choose Your Color</h3>
+          <button class="color-picker-close" data-color-close>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="color-picker-options">
+          <button class="color-option" data-color="cyan" title="Cyan">
+            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
+            <span>Cyan</span>
+          </button>
+          <button class="color-option" data-color="pink" title="Pink">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
+            <span>Pink</span>
+          </button>
+          <button class="color-option" data-color="purple" title="Purple">
+            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
+            <span>Purple</span>
+          </button>
+          <button class="color-option" data-color="green" title="Green">
+            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
+            <span>Green</span>
+          </button>
+          <button class="color-option" data-color="orange" title="Orange">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
+            <span>Orange</span>
+          </button>
+          <button class="color-option" data-color="blue" title="Blue">
+            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
+            <span>Blue</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="edit-modal" id="editModal">
+      <div class="edit-modal-content">
+        <div class="edit-modal-header">
+          <h3>Edit Favorite</h3>
+          <button class="btn btn-ghost" onclick="closeEditModal()">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <form id="editForm" class="form">
+          <input type="hidden" id="editItemId">
+          <div class="field">
+            <label for="editTitle">Title</label>
+            <input type="text" id="editTitle" required />
+          </div>
+          <div class="field">
+            <label for="editImage">Image URL</label>
+            <input type="url" id="editImage" placeholder="https://..." />
+          </div>
+          <div class="field">
+            <label for="editStatus">Status</label>
+            <select id="editStatus">
+              <option value="completed">Completed</option>
+              <option value="watching">Watching/Playing</option>
+              <option value="plan">Plan to Watch/Play</option>
+              <option value="dropped">Dropped</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="editScore">Score (0-10)</label>
+            <input type="number" id="editScore" min="0" max="10" step="0.1" />
+          </div>
+          <div class="field">
+            <label for="editYear">Year</label>
+            <input type="number" id="editYear" min="1900" max="2100" />
+          </div>
+          <div class="field">
+            <label for="editDesc">Description</label>
+            <textarea id="editDesc" rows="3"></textarea>
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button type="button" class="btn" onclick="closeEditModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="neo-container">
+      <div class="site-banner">
+        <div class="brand">nijika.de</div>
+        <div class="header-controls">
+          <button class="color-picker-toggle" title="Change color" data-color-picker>
+            <i class="bi bi-palette"></i>
+          </button>
+          <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+            <i class="bi bi-brightness-high"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="neo-layout">
+        <aside class="neo-sidebar">
+          <div class="neo-box">
+            <div class="neo-header"><h3>Content</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./blogs.html">Blogs</a></li>
+                <li><a href="./stories.html">Stories</a></li>
+                <li><a href="./add-post.html">Add Post</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="neo-box">
+            <div class="neo-header"><h3>Site</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./status.html">Status Strip</a></li>
+                <li><a href="./now.html">Now Page</a></li>
+                <li><a href="./changelog.html">Changelog</a></li>
+                <li><a href="./resources.html">Resources</a></li>
+                <li><a href="./favorites.html">Favorites</a></li>
+                <li><a href="./settings.html">Settings</a></li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        <main class="neo-main">
+          <section class="neo-box">
+            <div class="neo-header"><h2><i class="bi bi-heart"></i> Favorites Editor</h2></div>
+            <div class="neo-content">
+              
+              <!-- Category Tabs -->
+              <div class="category-tabs">
+                <button class="btn active" data-category="anime" onclick="switchCategory('anime')">
+                  <i class="bi bi-play-circle"></i> Anime
+                </button>
+                <button class="btn" data-category="manga" onclick="switchCategory('manga')">
+                  <i class="bi bi-book"></i> Manga/LN
+                </button>
+                <button class="btn" data-category="characters" onclick="switchCategory('characters')">
+                  <i class="bi bi-person"></i> Characters
+                </button>
+                <button class="btn" data-category="games" onclick="switchCategory('games')">
+                  <i class="bi bi-controller"></i> Games
+                </button>
+              </div>
+
+              <!-- Import Section (for anime/manga/characters) -->
+              <div class="import-section" id="importSection" style="display: none;">
+                <h4><i class="bi bi-cloud-download"></i> Import from MyAnimeList</h4>
+                <p class="text-muted" style="margin-bottom: 15px;">
+                  Enter your MAL username to auto-import your <span id="importType">anime</span> list.
+                </p>
+                <div class="import-row">
+                  <div class="field" style="flex: 2;">
+                    <label for="malUsername">MAL Username</label>
+                    <input type="text" id="malUsername" placeholder="Your MyAnimeList username" />
+                  </div>
+                  <button class="btn btn-primary" onclick="importFromMAL()">
+                    <i class="bi bi-download"></i> Import
+                  </button>
+                </div>
+                <div class="import-progress" id="importProgress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                  </div>
+                  <div class="progress-text" id="progressText">Importing...</div>
+                </div>
+              </div>
+
+              <!-- Search Section (for all) -->
+              <div class="add-section">
+                <h4><i class="bi bi-search"></i> Search & Add</h4>
+                <div class="import-row">
+                  <div class="field" style="flex: 2;">
+                    <label for="searchQuery">Search <span id="searchType">games</span></label>
+                    <input type="text" id="searchQuery" placeholder="Search by title..." />
+                  </div>
+                  <button class="btn" onclick="searchJikan()">
+                    <i class="bi bi-search"></i> Search
+                  </button>
+                </div>
+                <div class="search-results" id="searchResults"></div>
+              </div>
+
+              <!-- Manual Add Section -->
+              <div class="add-section">
+                <h4><i class="bi bi-plus-circle"></i> Add Manually</h4>
+                <form id="addForm" class="add-form-grid">
+                  <div class="field">
+                    <label for="addTitle">Title *</label>
+                    <input type="text" id="addTitle" required />
+                  </div>
+                  <div class="field">
+                    <label for="addImage">Image URL</label>
+                    <input type="url" id="addImage" placeholder="https://..." />
+                  </div>
+                  <div class="field">
+                    <label for="addStatus">Status</label>
+                    <select id="addStatus">
+                      <option value="completed">Completed</option>
+                      <option value="watching">Watching/Playing</option>
+                      <option value="plan">Plan to Watch/Play</option>
+                      <option value="dropped">Dropped</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="addScore">Score (0-10)</label>
+                    <input type="number" id="addScore" min="0" max="10" step="0.1" placeholder="0.0" />
+                  </div>
+                  <div class="field">
+                    <label for="addYear">Year</label>
+                    <input type="number" id="addYear" min="1900" max="2100" placeholder="2024" />
+                  </div>
+                  <div class="field"></div>
+                  <div class="field full-width">
+                    <label for="addDesc">Description</label>
+                    <textarea id="addDesc" rows="3" placeholder="Optional description..."></textarea>
+                  </div>
+                  <div class="field full-width">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                      <i class="bi bi-plus-lg"></i> Add to Favorites
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Favorites List -->
+              <h4 style="margin-top: 30px;"><i class="bi bi-grid"></i> Current Favorites (<span id="favCount">0</span>)</h4>
+              <div class="favorites-list" id="favoritesList">
+                <div class="loading">Loading...</div>
+              </div>
+
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module">
+      import '../assets/app.js';
+      
+      const API_BASE = 'https://nijikade-backend.vercel.app/api';
+      const JIKAN_BASE = 'https://api.jikan.moe/v4';
+      
+      let currentCategory = 'anime';
+      let favorites = [];
+      let editingItem = null;
+      
+      // Category switch
+      window.switchCategory = (category) => {
+        currentCategory = category;
+        document.querySelectorAll('.category-tabs button').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.category === category);
+        });
+        
+        // Show/hide import section (only for anime/manga/characters)
+        const importSection = document.getElementById('importSection');
+        if (category === 'anime' || category === 'manga' || category === 'characters') {
+          importSection.style.display = 'block';
+          const typeMap = { anime: 'anime', manga: 'manga', characters: 'favorite characters' };
+          document.getElementById('importType').textContent = typeMap[category] || category;
+        } else {
+          importSection.style.display = 'none';
+        }
+        
+        // Update search type label
+        document.getElementById('searchType').textContent = category;
+        
+        // Clear search results
+        document.getElementById('searchResults').classList.remove('show');
+        document.getElementById('searchQuery').value = '';
+        
+        loadFavorites();
+      };
+      
+      // Load favorites
+      async function loadFavorites() {
+        const listEl = document.getElementById('favoritesList');
+        listEl.innerHTML = '<div class="loading">Loading...</div>';
+        
+        try {
+          const res = await fetch(`${API_BASE}/site/favorites?category=${currentCategory}`);
+          const data = await res.json();
+          favorites = data.items || [];
+          renderFavorites();
+        } catch (err) {
+          console.error(err);
+          listEl.innerHTML = '<p class="text-muted">Failed to load favorites.</p>';
+        }
+      }
+      
+      function renderFavorites() {
+        const listEl = document.getElementById('favoritesList');
+        document.getElementById('favCount').textContent = favorites.length;
+        
+        if (!favorites.length) {
+          listEl.innerHTML = '<p class="text-muted">No favorites yet. Add some above!</p>';
+          return;
+        }
+        
+        listEl.innerHTML = favorites.map(item => `
+          <div class="favorite-card" data-id="${item.id}">
+            ${item.image 
+              ? `<img src="${item.image}" class="favorite-card-image" alt="${escapeHtml(item.title)}" onerror="this.outerHTML='<div class=\\'favorite-card-image no-image\\'><i class=\\'bi bi-image\\'></i></div>'">`
+              : `<div class="favorite-card-image no-image"><i class="bi bi-image"></i></div>`
+            }
+            <div class="favorite-card-body">
+              <div class="favorite-card-title">${escapeHtml(item.title)}</div>
+              <div class="favorite-card-meta">
+                ${item.year ? `<span><i class="bi bi-calendar"></i> ${item.year}</span>` : ''}
+                ${item.score ? `<span><i class="bi bi-star-fill"></i> ${item.score}</span>` : ''}
+              </div>
+              ${item.status ? `<span class="favorite-card-status ${item.status}">${formatStatus(item.status)}</span>` : ''}
+              ${item.description ? `<div class="favorite-card-desc">${escapeHtml(item.description)}</div>` : ''}
+            </div>
+            <div class="favorite-card-actions">
+              <button class="btn btn-ghost" onclick="editFavorite('${item.id}')">
+                <i class="bi bi-pencil"></i> Edit
+              </button>
+              <button class="btn btn-ghost" onclick="deleteFavorite('${item.id}')">
+                <i class="bi bi-trash"></i> Delete
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+      
+      function formatStatus(status) {
+        const map = {
+          'completed': 'Completed',
+          'watching': 'Watching/Playing',
+          'plan': 'Plan to Watch/Play',
+          'dropped': 'Dropped'
+        };
+        return map[status] || status;
+      }
+      
+      // Add manually
+      document.getElementById('addForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('Not logged in');
+        
+        const item = {
+          title: document.getElementById('addTitle').value.trim(),
+          image: document.getElementById('addImage').value.trim() || null,
+          status: document.getElementById('addStatus').value,
+          score: parseFloat(document.getElementById('addScore').value) || null,
+          year: parseInt(document.getElementById('addYear').value) || null,
+          description: document.getElementById('addDesc').value.trim() || null
+        };
+        
+        if (!item.title) return alert('Title is required');
+        
+        try {
+          const res = await fetch(`${API_BASE}/admin/favorites?token=${token}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category: currentCategory, item })
+          });
+          
+          if (res.ok) {
+            const data = await res.json();
+            favorites.push(data.item);
+            renderFavorites();
+            e.target.reset();
+          } else {
+            alert('Failed to add');
+          }
+        } catch (err) {
+          alert('Error adding favorite');
+        }
+      });
+      
+      // Edit favorite
+      window.editFavorite = (id) => {
+        const item = favorites.find(f => f.id === id);
+        if (!item) return;
+        
+        editingItem = item;
+        document.getElementById('editItemId').value = id;
+        document.getElementById('editTitle').value = item.title || '';
+        document.getElementById('editImage').value = item.image || '';
+        document.getElementById('editStatus').value = item.status || 'completed';
+        document.getElementById('editScore').value = item.score || '';
+        document.getElementById('editYear').value = item.year || '';
+        document.getElementById('editDesc').value = item.description || '';
+        
+        document.getElementById('editModal').classList.add('show');
+      };
+      
+      window.closeEditModal = () => {
+        document.getElementById('editModal').classList.remove('show');
+        editingItem = null;
+      };
+      
+      document.getElementById('editForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('Not logged in');
+        
+        const itemId = document.getElementById('editItemId').value;
+        const updates = {
+          title: document.getElementById('editTitle').value.trim(),
+          image: document.getElementById('editImage').value.trim() || null,
+          status: document.getElementById('editStatus').value,
+          score: parseFloat(document.getElementById('editScore').value) || null,
+          year: parseInt(document.getElementById('editYear').value) || null,
+          description: document.getElementById('editDesc').value.trim() || null
+        };
+        
+        try {
+          const res = await fetch(`${API_BASE}/admin/favorites/item?token=${token}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category: currentCategory, itemId, updates })
+          });
+          
+          if (res.ok) {
+            const idx = favorites.findIndex(f => f.id === itemId);
+            if (idx !== -1) {
+              favorites[idx] = { ...favorites[idx], ...updates };
+            }
+            renderFavorites();
+            closeEditModal();
+          } else {
+            alert('Failed to update');
+          }
+        } catch (err) {
+          alert('Error updating favorite');
+        }
+      });
+      
+      // Delete favorite
+      window.deleteFavorite = async (id) => {
+        if (!confirm('Delete this favorite?')) return;
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('Not logged in');
+        
+        try {
+          const res = await fetch(`${API_BASE}/admin/favorites?token=${token}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category: currentCategory, itemId: id })
+          });
+          
+          if (res.ok) {
+            favorites = favorites.filter(f => f.id !== id);
+            renderFavorites();
+          } else {
+            alert('Failed to delete');
+          }
+        } catch (err) {
+          alert('Error deleting favorite');
+        }
+      };
+      
+      // Search Jikan API
+      window.searchJikan = async () => {
+        const query = document.getElementById('searchQuery').value.trim();
+        if (!query) return;
+        
+        const resultsEl = document.getElementById('searchResults');
+        resultsEl.innerHTML = '<div class="loading" style="padding: 20px;">Searching...</div>';
+        resultsEl.classList.add('show');
+        
+        try {
+          let url;
+          if (currentCategory === 'anime') {
+            url = `${JIKAN_BASE}/anime?q=${encodeURIComponent(query)}&limit=10`;
+          } else if (currentCategory === 'manga') {
+            url = `${JIKAN_BASE}/manga?q=${encodeURIComponent(query)}&limit=10`;
+          } else if (currentCategory === 'characters') {
+            url = `${JIKAN_BASE}/characters?q=${encodeURIComponent(query)}&limit=10`;
+          } else {
+            // Games - Jikan doesn't have games, so show manual add notice
+            resultsEl.innerHTML = '<p class="text-muted" style="padding: 15px;">Jikan API doesn\'t support games. Please add manually.</p>';
+            return;
+          }
+          
+          const res = await fetch(url);
+          const data = await res.json();
+          
+          if (!data.data || !data.data.length) {
+            resultsEl.innerHTML = '<p class="text-muted" style="padding: 15px;">No results found.</p>';
+            return;
+          }
+          
+          resultsEl.innerHTML = data.data.map(item => {
+            // Build itemData based on category
+            let itemData;
+            if (currentCategory === 'characters') {
+              itemData = {
+                title: item.name,
+                image: item.images?.jpg?.image_url,
+                year: null,
+                score: null,
+                description: item.about?.substring(0, 200),
+                mal_id: item.mal_id,
+                status: 'completed'
+              };
+            } else {
+              itemData = {
+                title: item.title,
+                image: item.images?.jpg?.image_url || item.images?.jpg?.large_image_url,
+                year: item.year || (item.aired?.from ? new Date(item.aired.from).getFullYear() : null) || (item.published?.from ? new Date(item.published.from).getFullYear() : null),
+                score: item.score,
+                description: item.synopsis?.substring(0, 200),
+                mal_id: item.mal_id,
+                status: item.status === 'Finished Airing' || item.status === 'Finished' ? 'completed' : 'watching'
+              };
+            }
+            
+            return `
+              <div class="search-result-item" onclick='addFromSearch(${JSON.stringify(itemData).replace(/'/g, "&apos;")})'>
+                <img src="${item.images?.jpg?.small_image_url || item.images?.jpg?.image_url || ''}" class="search-result-img" onerror="this.style.display='none'">
+                <div class="search-result-info">
+                  <div class="search-result-title">${escapeHtml(currentCategory === 'characters' ? item.name : item.title)}</div>
+                  <div class="search-result-meta">
+                    ${currentCategory === 'characters' 
+                      ? (item.favorites ? `${item.favorites} favorites` : '') 
+                      : `${item.year || ''} ${item.score ? `· ★${item.score}` : ''} · ${item.type || ''}`
+                    }
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+          
+        } catch (err) {
+          console.error(err);
+          resultsEl.innerHTML = '<p class="text-muted" style="padding: 15px;">Search failed. Try again.</p>';
+        }
+      };
+      
+      // Add from search result
+      window.addFromSearch = async (itemData) => {
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('Not logged in');
+        
+        // Check if already exists
+        if (favorites.some(f => f.mal_id === itemData.mal_id || f.title === itemData.title)) {
+          alert('This item is already in your favorites!');
+          return;
+        }
+        
+        try {
+          const res = await fetch(`${API_BASE}/admin/favorites?token=${token}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category: currentCategory, item: itemData })
+          });
+          
+          if (res.ok) {
+            const data = await res.json();
+            favorites.push(data.item);
+            renderFavorites();
+            document.getElementById('searchResults').classList.remove('show');
+            document.getElementById('searchQuery').value = '';
+          } else {
+            alert('Failed to add');
+          }
+        } catch (err) {
+          alert('Error adding favorite');
+        }
+      };
+      
+      // Import from MAL
+      window.importFromMAL = async () => {
+        const username = document.getElementById('malUsername').value.trim();
+        if (!username) return alert('Please enter your MAL username');
+        
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('Not logged in');
+        
+        const progressEl = document.getElementById('importProgress');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        
+        progressEl.classList.add('show');
+        progressFill.style.width = '0%';
+        progressText.textContent = 'Fetching list from MyAnimeList...';
+        
+        try {
+          // All categories use the /users/{username}/favorites endpoint
+          progressText.textContent = 'Fetching favorites from MyAnimeList...';
+          
+          const url = `${JIKAN_BASE}/users/${username}/favorites`;
+          const res = await fetch(url);
+          
+          if (!res.ok) {
+            if (res.status === 404) {
+              throw new Error(`User "${username}" not found. Make sure the username is correct and your MAL profile is public.`);
+            }
+            throw new Error(`Jikan API error (${res.status}). Please try again in a moment.`);
+          }
+          
+          const data = await res.json();
+          
+          // Get the appropriate array based on category
+          let items = [];
+          if (currentCategory === 'anime') {
+            items = data.data?.anime || [];
+          } else if (currentCategory === 'manga') {
+            items = data.data?.manga || [];
+          } else if (currentCategory === 'characters') {
+            items = data.data?.characters || [];
+          }
+          
+          if (!items.length) {
+            progressText.textContent = `No favorite ${currentCategory} found on your MAL profile.`;
+            setTimeout(() => progressEl.classList.remove('show'), 2000);
+            return;
+          }
+          
+          progressText.textContent = `Processing ${items.length} ${currentCategory}...`;
+          progressFill.style.width = '50%';
+          
+          // Convert to our format based on category
+          const newFavorites = items.map(item => {
+            if (currentCategory === 'characters') {
+              return {
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                title: item.name,
+                image: item.images?.jpg?.image_url,
+                year: null,
+                score: null,
+                mal_id: item.mal_id,
+                status: 'completed',
+                description: null
+              };
+            } else {
+              // anime or manga
+              return {
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                title: item.title,
+                image: item.images?.jpg?.image_url,
+                year: item.start_year || null,
+                score: null,
+                mal_id: item.mal_id,
+                status: 'completed',
+                description: null
+              };
+            }
+          });
+          
+          // Filter out duplicates
+          const existingIds = new Set(favorites.map(f => f.mal_id));
+          const uniqueNew = newFavorites.filter(f => !existingIds.has(f.mal_id));
+          
+          if (!uniqueNew.length) {
+            progressText.textContent = `All ${currentCategory} already in your favorites!`;
+            setTimeout(() => progressEl.classList.remove('show'), 2000);
+            return;
+          }
+          
+          // Merge with existing
+          const mergedFavorites = [...favorites, ...uniqueNew];
+          
+          progressText.textContent = `Saving ${uniqueNew.length} new ${currentCategory}...`;
+          progressFill.style.width = '75%';
+          
+          // Save to backend
+          const saveRes = await fetch(`${API_BASE}/admin/favorites?token=${token}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category: currentCategory, items: mergedFavorites })
+          });
+          
+          if (saveRes.ok) {
+            favorites = mergedFavorites;
+            renderFavorites();
+            progressFill.style.width = '100%';
+            progressText.textContent = `Successfully imported ${uniqueNew.length} ${currentCategory}!`;
+            setTimeout(() => progressEl.classList.remove('show'), 2000);
+          } else {
+            throw new Error('Failed to save to database');
+          }
+          
+        } catch (err) {
+          console.error(err);
+          progressText.textContent = `Error: ${err.message}`;
+          progressFill.style.width = '0%';
+          setTimeout(() => progressEl.classList.remove('show'), 3000);
+        }
+      };
+      
+      // Search on enter
+      document.getElementById('searchQuery').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          searchJikan();
+        }
+      });
+      
+      // Initialize
+      loadFavorites();
+    </script>
+  </body>
+</html>
