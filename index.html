@@ -350,7 +350,10 @@
 
         <!-- Mobile Shoutbox (visible only on mobile) -->
         <section class="neo-box scroll-animate mobile-shoutbox-section">
-          <div class="neo-header"><h2><i class="bi bi-chat-dots"></i> Chatbox</h2></div>
+          <div class="neo-header">
+            <h2><i class="bi bi-chat-dots"></i> Chatbox</h2>
+            <button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button>
+          </div>
           <div class="neo-content shoutbox-container">
             <div class="shoutbox-messages" id="mobileShoutboxMessages">
               <div class="shoutbox-loading">Loading messages...</div>
@@ -423,7 +426,10 @@
 
         <!-- Shoutbox Widget -->
         <div class="neo-box scroll-animate widget-shoutbox-sidebar">
-          <div class="neo-header"><h3><i class="bi bi-chat-dots"></i> Chatbox</h3></div>
+          <div class="neo-header">
+            <h3><i class="bi bi-chat-dots"></i> Chatbox</h3>
+            <button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button>
+          </div>
           <div class="neo-content shoutbox-container">
             <!-- Messages area -->
             <div class="shoutbox-messages" id="shoutboxMessages">
@@ -529,7 +535,10 @@
 
         <!-- Shoutbox Widget in Drawer -->
         <div class="more-drawer-section more-drawer-widget">
-          <h4><i class="bi bi-chat-dots"></i> Chatbox</h4>
+          <div class="drawer-widget-header">
+            <h4><i class="bi bi-chat-dots"></i> Chatbox</h4>
+            <button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button>
+          </div>
           <div class="drawer-shoutbox shoutbox-container">
             <div class="shoutbox-messages" id="drawerShoutboxMessages">
               <div class="shoutbox-loading">Loading messages...</div>
@@ -598,6 +607,26 @@
           <span class="now-label">Open to Collabs</span>
           <span class="now-value" id="nowCollabs"><i class="bi bi-question-circle"></i></span>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div class="admin-login-modal" id="adminLoginModal">
+    <div class="admin-login-overlay" onclick="closeAdminLogin()"></div>
+    <div class="admin-login-content">
+      <div class="admin-login-header">
+        <h3><i class="bi bi-shield-lock"></i> Admin Login</h3>
+        <button class="admin-login-close" onclick="closeAdminLogin()"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="admin-login-body">
+        <p>Login to moderate chatbox messages.</p>
+        <form autocomplete="on">
+          <input type="email" id="adminEmail" name="email" autocomplete="email" placeholder="Email..." onkeypress="if(event.key==='Enter'){event.preventDefault();document.getElementById('adminPassword').focus();}">
+          <input type="password" id="adminPassword" name="password" autocomplete="current-password" placeholder="Password..." onkeypress="if(event.key==='Enter'){event.preventDefault();submitAdminLogin();}">
+        </form>
+        <div class="admin-login-error" id="adminLoginError"></div>
+        <button class="admin-login-btn" onclick="submitAdminLogin()">Login</button>
       </div>
     </div>
   </div>

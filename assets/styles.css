@@ -768,6 +768,23 @@ ul {
   margin-left: auto;
 }
 
+.shoutbox-delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  opacity: 0.5;
+  transition: all 0.2s;
+  margin-left: 4px;
+}
+
+.shoutbox-delete-btn:hover {
+  color: #e74c3c;
+  opacity: 1;
+}
+
 .shoutbox-msg-text {
   color: var(--text);
   word-break: break-word;
@@ -909,6 +926,264 @@ ul {
   color: var(--text-muted);
   padding: 30px 10px;
   font-size: 0.85rem;
+}
+
+/* Shoutbox Admin Styles */
+.shoutbox-admin-toggle,
+.shoutbox-admin-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.shoutbox-admin-toggle:hover,
+.shoutbox-admin-btn:hover {
+  color: var(--primary);
+  opacity: 1;
+}
+
+.shoutbox-admin-toggle.active,
+.shoutbox-admin-btn.active {
+  color: var(--primary);
+  opacity: 1;
+}
+
+/* Make neo-header flex to keep admin btn inline */
+.widget-shoutbox-sidebar .neo-header,
+.mobile-shoutbox-section .neo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.widget-shoutbox-sidebar .neo-header h3,
+.mobile-shoutbox-section .neo-header h2 {
+  margin: 0;
+}
+
+/* Admin Login Modal */
+.admin-login-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-login-modal.active {
+  display: flex;
+}
+
+.admin-login-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.admin-login-content {
+  position: relative;
+  background: var(--card);
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  width: 320px;
+  max-width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  animation: modalSlideIn 0.2s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-login-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-login-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+
+.admin-login-header h3 i {
+  color: var(--primary);
+}
+
+.admin-login-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+
+.admin-login-close:hover {
+  color: var(--text);
+}
+
+.admin-login-body {
+  padding: 20px;
+}
+
+.admin-login-body p {
+  margin: 0 0 16px 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.admin-login-body input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.admin-login-body input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.admin-login-error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  min-height: 20px;
+}
+
+.admin-login-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--primary);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.admin-login-btn:hover {
+  opacity: 0.9;
+}
+
+.admin-login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.shoutbox-admin-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.shoutbox-admin-login-content {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  width: 300px;
+  max-width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.shoutbox-admin-login h4 {
+  margin: 0 0 16px 0;
+  color: var(--text);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shoutbox-admin-login input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text);
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.shoutbox-admin-login input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.shoutbox-admin-login-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.shoutbox-admin-login-btns button {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.shoutbox-admin-login-btns button:first-child {
+  background: var(--bg-secondary);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.shoutbox-admin-login-btns button:last-child {
+  background: var(--primary);
+  color: var(--bg);
+}
+
+.shoutbox-admin-login-btns button:hover {
+  opacity: 0.85;
 }
 
 /* Resources list compact */
@@ -3546,6 +3821,24 @@ ul {
 }
 
 .more-drawer-widget h4 i {
+  color: var(--primary);
+}
+
+.drawer-widget-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.drawer-widget-header h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.drawer-widget-header h4 i {
   color: var(--primary);
 }
 

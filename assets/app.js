@@ -1295,13 +1295,163 @@ function initShoutbox() {
   // Poll for new messages every 5 seconds
   shoutboxPollTimer = setInterval(loadShoutboxMessages, 5000);
   
+  // Check admin status on load
+  updateAdminButtons(isAdminLoggedIn());
+  
   // Make functions globally available
   window.joinShoutbox = joinShoutbox;
   window.changeShoutboxUser = changeShoutboxUser;
   window.sendShoutboxMessage = sendShoutboxMessage;
+  window.deleteShoutboxMsg = deleteShoutboxMsg;
+  window.toggleAdminMode = toggleAdminMode;
+  window.openAdminLogin = openAdminLogin;
+  window.closeAdminLogin = closeAdminLogin;
+  window.submitAdminLogin = submitAdminLogin;
+}
+
+// Check if user is logged in as admin
+function isAdminLoggedIn() {
+  // Check both sessionStorage (chatbox login) and localStorage (admin panel login)
+  return !!(sessionStorage.getItem('jwt') || localStorage.getItem('jwt'));
+}
+
+// Get the JWT token from either storage
+function getAdminToken() {
+  return sessionStorage.getItem('jwt') || localStorage.getItem('jwt');
+}
+
+// Open admin login modal
+function openAdminLogin() {
+  const modal = document.getElementById('adminLoginModal');
+  const emailInput = document.getElementById('adminEmail');
+  const passwordInput = document.getElementById('adminPassword');
+  const errorEl = document.getElementById('adminLoginError');
+  
+  if (modal) {
+    modal.classList.add('active');
+    if (emailInput) emailInput.value = '';
+    if (passwordInput) passwordInput.value = '';
+    if (emailInput) {
+      emailInput.focus();
+    }
+    if (errorEl) errorEl.textContent = '';
+  }
+}
+
+// Close admin login modal
+function closeAdminLogin() {
+  const modal = document.getElementById('adminLoginModal');
+  if (modal) modal.classList.remove('active');
+}
+
+// Submit admin login
+async function submitAdminLogin() {
+  const emailInput = document.getElementById('adminEmail');
+  const passwordInput = document.getElementById('adminPassword');
+  const errorEl = document.getElementById('adminLoginError');
+  const btn = document.querySelector('.admin-login-btn');
+  
+  const email = emailInput?.value.trim();
+  const password = passwordInput?.value;
+  
+  if (!email) {
+    if (errorEl) errorEl.textContent = 'Please enter your email';
+    emailInput?.focus();
+    return;
+  }
+  
+  if (!password) {
+    if (errorEl) errorEl.textContent = 'Please enter your password';
+    passwordInput?.focus();
+    return;
+  }
+  
+  if (btn) btn.disabled = true;
+  if (errorEl) errorEl.textContent = '';
+  
+  try {
+    const res = await fetch(`${API_BASE}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        email: email,
+        password: password 
+      })
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      sessionStorage.setItem('jwt', data.token);
+      closeAdminLogin();
+      updateAdminButtons(true);
+      loadShoutboxMessages();
+    } else {
+      if (errorEl) errorEl.textContent = 'Invalid password';
+    }
+  } catch (err) {
+    console.error('Login failed:', err);
+    if (errorEl) errorEl.textContent = 'Login failed. Please try again.';
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+// Update admin button appearance
+function updateAdminButtons(isAdmin) {
+  document.querySelectorAll('.shoutbox-admin-btn').forEach(btn => {
+    if (isAdmin) {
+      btn.classList.add('active');
+      btn.title = 'Logged in as admin (click to logout)';
+    } else {
+      btn.classList.remove('active');
+      btn.title = 'Admin login';
+    }
+  });
+}
+
+// Toggle admin mode
+function toggleAdminMode() {
+  if (isAdminLoggedIn()) {
+    // Log out - clear both storages
+    sessionStorage.removeItem('jwt');
+    localStorage.removeItem('jwt');
+    updateAdminButtons(false);
+    loadShoutboxMessages();
+  } else {
+    // Open login modal
+    openAdminLogin();
+  }
+}
+
+// Delete a shoutbox message (admin only)
+async function deleteShoutboxMsg(msgId) {
+  if (!isAdminLoggedIn()) {
+    openAdminLogin();
+    return;
+  }
+  
+  try {
+    const token = getAdminToken();
+    const res = await fetch(`${API_BASE}/admin/shoutbox/${msgId}?token=${token}`, {
+      method: 'DELETE'
+    });
+    
+    if (res.ok) {
+      loadShoutboxMessages();
+    } else {
+      const errorData = await res.json().catch(() => ({}));
+      console.error('Delete failed:', res.status, errorData);
+      alert('Failed to delete message: ' + (errorData.error || res.status));
+    }
+  } catch (err) {
+    console.error('Delete failed:', err);
+    alert('Failed to delete message: ' + err.message);
+  }
 }
 
 async function loadShoutboxMessages() {
+  const isAdmin = isAdminLoggedIn();
+  
   try {
     const res = await fetch(`${API_BASE}/site/shoutbox?limit=30`);
     const data = await res.json();
@@ -1320,10 +1470,11 @@ async function loadShoutboxMessages() {
           });
           
           return `
-            <div class="shoutbox-msg">
+            <div class="shoutbox-msg" data-msg-id="${msg.id}">
               <div class="shoutbox-msg-header">
                 <span class="shoutbox-msg-user" style="color: ${escapeHtml(msg.color)}">${escapeHtml(msg.username)}</span>
                 <span class="shoutbox-msg-time">${timeStr}</span>
+                ${isAdmin ? `<button class="shoutbox-delete-btn" onclick="deleteShoutboxMsg('${msg.id}')" title="Delete message"><i class="bi bi-trash"></i></button>` : ''}
               </div>
               <div class="shoutbox-msg-text">${escapeHtml(msg.message)}</div>
             </div>
