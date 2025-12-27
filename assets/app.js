@@ -335,7 +335,7 @@ export function initCarousel() {
       status: "Completed",
       rating: "8.18",
       bookmarks: "12.5k",
-      desc: "A romcom where the assertive Mabarai-san relentlessly 'hunts' the dense MC with hilarious, sweet moments."
+      desc: "A romcom where Mabarai-san (a vampire hunter) relentlessly teases the MC (a vampire)."
     },
     blacksmith: {
       title: "Kyuutei Kajishi no Shiawase na Nichijou (Happy Daily Life of a Court Blacksmith)",
@@ -343,7 +343,7 @@ export function initCarousel() {
       status: "Ongoing",
       rating: "7.93",
       bookmarks: "9.4k",
-      desc: "A talented blacksmith finds happiness forging for the court, with wholesome daily-life episodes."
+      desc: "A talented blacksmith finds happiness after being picked up by the daughter of a neighboring country."
     },
     contract: {
       title: "There Is a Lie in My Contract Marriage",
@@ -367,7 +367,7 @@ export function initCarousel() {
       status: "Ongoing",
       rating: "7.76",
       bookmarks: "6.8k",
-      desc: "A loner boy's life turns upside down when a 'forced' girlfriend barges in—cute chaos ensues."
+      desc: "A loner boy's life turns upside down when a 'forced' girlfriend temporarily barges in his life."
     },
     deathgame: {
       title: "Isekaigaeri no Moto Yuusha... Death Game ni Makikomaremashita",
@@ -375,7 +375,7 @@ export function initCarousel() {
       status: "Ongoing",
       rating: "7.68",
       bookmarks: "4.1k",
-      desc: "A returned overpowered hero is dragged into a modern death game—old skills, new rules, deadly stakes."
+      desc: "A returned stupidly overpowered hero is dragged into a modern death game."
     },
     finalmessage: {
       title: "Okuru Kotoba (Final Message)",
@@ -383,7 +383,7 @@ export function initCarousel() {
       status: "Completed",
       rating: "7.90",
       bookmarks: "1.2k",
-      desc: "A poignant one-shot about the words we leave behind and the people who carry them."
+      desc: "They say that a spirit sometimes appears on a certain crossing in town. One day, a high school boy named Sahara gets into an accident on that very crossing, causing his and his friends' lives to change forever."
     },
     shigure: {
       title: "Shigure-san Wants to Shine!",
@@ -391,7 +391,7 @@ export function initCarousel() {
       status: "Ongoing",
       rating: "7.81",
       bookmarks: "3.3k",
-      desc: "Shigure wants to stand out—expect antics, earnest growth, and lighthearted fun."
+      desc: "Two loner seatmates trying their best to 'shine'."
     },
     '80k': {
       title: "Saving 80,000 Gold in Another World for My Retirement",
@@ -399,7 +399,7 @@ export function initCarousel() {
       status: "Ongoing",
       rating: "7.85",
       bookmarks: "29.6k",
-      desc: "A resourceful girl exploits two worlds to build a retirement fund—smart and entertaining."
+      desc: "A resourceful girl exploits two worlds to build a retirement fund."
     },
     mmo: {
       title: "Retire Shita Ningyoushi no MMO Kikou Jojishi",
@@ -407,7 +407,7 @@ export function initCarousel() {
       status: "Ongoing",
       rating: "7.70",
       bookmarks: "1.8k",
-      desc: "A retired dollmaker chronicles cozy MMO adventures—crafting and exploration galore."
+      desc: "A retired top dollmaker with a broken hand learns about a VRMMO and proceeds to play doll pokemon using dolls with egos."
     }
   };
 
@@ -511,6 +511,8 @@ function initPage() {
   initRecentPosts();
   initMoreDrawer();
   initModals();
+  initShoutbox();
+  initPortfolio();
   
   // Initialize scroll animations after a short delay to let content render
   setTimeout(initScrollAnimations, 100);
@@ -652,11 +654,12 @@ async function initStatusStrip() {
 // ==========================================================================
 
 async function initDesktopWidgets() {
-  // Load Now widget
+  // Load Now widget (sidebar + drawer)
   try {
     const res = await fetch(`${API_BASE}/site/now`);
     const data = await res.json();
     
+    // Update sidebar widget
     const workingEl = document.getElementById('widgetWorkingOn');
     const learningEl = document.getElementById('widgetLearning');
     const collabsEl = document.getElementById('widgetCollabs');
@@ -668,29 +671,46 @@ async function initDesktopWidgets() {
         ? '<i class="bi bi-check-circle-fill" style="color: #2ecc71;"></i> Yes!'
         : '<i class="bi bi-x-circle-fill" style="color: #e74c3c;"></i> Not right now';
     }
+    
+    // Update drawer widget
+    const drawerWorkingEl = document.getElementById('drawerWorkingOn');
+    const drawerLearningEl = document.getElementById('drawerLearning');
+    const drawerCollabsEl = document.getElementById('drawerCollabs');
+    
+    if (drawerWorkingEl) drawerWorkingEl.textContent = data.working_on || 'Various projects';
+    if (drawerLearningEl) drawerLearningEl.textContent = data.learning || 'New things';
+    if (drawerCollabsEl) {
+      drawerCollabsEl.innerHTML = data.open_to_collabs 
+        ? '<i class="bi bi-check-circle-fill" style="color: #2ecc71;"></i> Yes!'
+        : '<i class="bi bi-x-circle-fill" style="color: #e74c3c;"></i> Not right now';
+    }
   } catch (err) {
     console.error('Failed to load Now widget:', err);
   }
   
-  // Load Changelog widget
+  // Load Changelog widget (sidebar + drawer)
   try {
     const res = await fetch(`${API_BASE}/site/changelog?limit=3`);
     const entries = await res.json();
-    const listEl = document.getElementById('widgetChangelog');
     
-    if (listEl) {
-      if (!entries.length) {
-        listEl.innerHTML = '<p class="loading-small">No updates yet.</p>';
-      } else {
-        listEl.innerHTML = entries.map(entry => `
+    const changelogHTML = !entries.length 
+      ? '<p class="loading-small">No updates yet.</p>'
+      : entries.map(entry => `
           <div class="changelog-widget-entry ${entry.pinned ? 'pinned' : ''}">
             <div class="date">${entry.date ? new Date(entry.date).toLocaleDateString() : ''}</div>
             ${entry.title ? `<div class="title">${entry.title}</div>` : ''}
             <div class="body">${entry.body}</div>
           </div>
         `).join('');
-      }
-    }
+    
+    // Update sidebar widget
+    const listEl = document.getElementById('widgetChangelog');
+    if (listEl) listEl.innerHTML = changelogHTML;
+    
+    // Update drawer widget
+    const drawerListEl = document.getElementById('drawerChangelog');
+    if (drawerListEl) drawerListEl.innerHTML = changelogHTML;
+    
   } catch (err) {
     console.error('Failed to load Changelog widget:', err);
   }
@@ -744,12 +764,16 @@ async function initMainWidgets() {
 async function initRecentPosts() {
   // Load Latest Blogs
   try {
-    const res = await fetch(`${API_BASE}/site/posts/latest?type=blog&limit=3`);
-    const posts = await res.json();
+    const res = await fetch(`${API_BASE}/site/posts/latest?type=blog&limit=1`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    console.log('Recent blogs response:', data);
+    // Handle both array and { posts: [...] } formats, and check for error response
+    const posts = data.error ? [] : (Array.isArray(data) ? data : (data.posts || []));
     const listEl = document.getElementById('recentBlogs');
     
     if (listEl) {
-      if (!posts.length) {
+      if (!posts || posts.length === 0) {
         listEl.innerHTML = '<p class="text-muted">No blog posts yet.</p>';
       } else {
         listEl.innerHTML = posts.map(post => `
@@ -769,12 +793,16 @@ async function initRecentPosts() {
   
   // Load Latest Stories
   try {
-    const res = await fetch(`${API_BASE}/site/posts/latest?type=story&limit=2`);
-    const posts = await res.json();
+    const res = await fetch(`${API_BASE}/site/posts/latest?type=story&limit=1`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    console.log('Recent stories response:', data);
+    // Handle both array and { posts: [...] } formats, and check for error response
+    const posts = data.error ? [] : (Array.isArray(data) ? data : (data.posts || []));
     const listEl = document.getElementById('recentStories');
     
     if (listEl) {
-      if (!posts.length) {
+      if (!posts || posts.length === 0) {
         listEl.innerHTML = '<p class="text-muted">No stories yet.</p>';
       } else {
         listEl.innerHTML = posts.map(post => `
@@ -945,7 +973,7 @@ async function loadFavorites(category) {
             ${item.year ? `<span><i class="bi bi-calendar"></i> ${item.year}</span>` : ''}
             ${item.score ? `<span><i class="bi bi-star-fill"></i> ${item.score}</span>` : ''}
           </div>
-          ${item.status ? `<span class="fav-item-status ${item.status}">${formatFavStatus(item.status)}</span>` : ''}
+          ${(item.status && category !== 'characters') ? `<span class="fav-item-status ${item.status}">${formatFavStatus(item.status)}</span>` : ''}
         </div>
       </div>
     `).join('');
@@ -1223,3 +1251,301 @@ function formatNumber(num) {
   if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
   return num.toString();
 }
+
+// ==========================================================================
+// SHOUTBOX
+// ==========================================================================
+
+let shoutboxUser = null;
+let shoutboxColor = '#6de6e2'; // Default to theme primary color
+let shoutboxPollTimer = null;
+
+// All shoutbox instances (sidebar, mobile, drawer)
+const shoutboxInstances = ['', 'mobile', 'drawer'];
+
+function initShoutbox() {
+  // Check if any shoutbox exists
+  const hasShoutbox = shoutboxInstances.some(prefix => {
+    const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
+    return document.getElementById(id);
+  });
+  
+  if (!hasShoutbox) return;
+  
+  // Check if user already has a saved username
+  const savedUser = localStorage.getItem('shoutboxUser');
+  const savedColor = localStorage.getItem('shoutboxColor');
+  
+  if (savedUser) {
+    shoutboxUser = savedUser;
+    shoutboxColor = savedColor || '#6de6e2';
+    showShoutboxInput();
+  } else {
+    // Set color picker to theme color on first load for all instances
+    shoutboxInstances.forEach(prefix => {
+      const colorId = prefix ? `${prefix}ShoutboxColor` : 'shoutboxColor';
+      const colorInput = document.getElementById(colorId);
+      if (colorInput) colorInput.value = '#6de6e2';
+    });
+  }
+  
+  // Load messages
+  loadShoutboxMessages();
+  
+  // Poll for new messages every 5 seconds
+  shoutboxPollTimer = setInterval(loadShoutboxMessages, 5000);
+  
+  // Make functions globally available
+  window.joinShoutbox = joinShoutbox;
+  window.changeShoutboxUser = changeShoutboxUser;
+  window.sendShoutboxMessage = sendShoutboxMessage;
+}
+
+async function loadShoutboxMessages() {
+  try {
+    const res = await fetch(`${API_BASE}/site/shoutbox?limit=30`);
+    const data = await res.json();
+    const messages = data.messages || [];
+    
+    const html = !messages.length 
+      ? '<div class="shoutbox-empty">No messages yet. Be the first to say hi!</div>'
+      : messages.map(msg => {
+          const time = new Date(msg.timestamp);
+          const timeStr = time.toLocaleString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            hour: 'numeric', 
+            minute: '2-digit',
+            hour12: true 
+          });
+          
+          return `
+            <div class="shoutbox-msg">
+              <div class="shoutbox-msg-header">
+                <span class="shoutbox-msg-user" style="color: ${escapeHtml(msg.color)}">${escapeHtml(msg.username)}</span>
+                <span class="shoutbox-msg-time">${timeStr}</span>
+              </div>
+              <div class="shoutbox-msg-text">${escapeHtml(msg.message)}</div>
+            </div>
+          `;
+        }).join('');
+    
+    // Update all instances
+    shoutboxInstances.forEach(prefix => {
+      const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
+      const messagesEl = document.getElementById(id);
+      if (messagesEl) {
+        messagesEl.innerHTML = html;
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+    });
+    
+  } catch (err) {
+    console.error('Failed to load shoutbox:', err);
+    shoutboxInstances.forEach(prefix => {
+      const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
+      const messagesEl = document.getElementById(id);
+      if (messagesEl) {
+        messagesEl.innerHTML = '<div class="shoutbox-loading">Failed to load messages</div>';
+      }
+    });
+  }
+}
+
+function joinShoutbox(source = '') {
+  const prefix = source ? `${source}Shoutbox` : 'shoutbox';
+  const usernameInput = document.getElementById(`${prefix}Username`);
+  const colorInput = document.getElementById(`${prefix}Color`);
+  
+  const username = usernameInput?.value.trim();
+  if (!username) {
+    usernameInput?.focus();
+    return;
+  }
+  
+  shoutboxUser = username;
+  shoutboxColor = colorInput?.value || '#6de6e2';
+  
+  // Save to localStorage
+  localStorage.setItem('shoutboxUser', shoutboxUser);
+  localStorage.setItem('shoutboxColor', shoutboxColor);
+  
+  showShoutboxInput();
+}
+
+function showShoutboxInput() {
+  // Update all instances
+  shoutboxInstances.forEach(prefix => {
+    const setupId = prefix ? `${prefix}ShoutboxSetup` : 'shoutboxSetup';
+    const inputId = prefix ? `${prefix}ShoutboxInput` : 'shoutboxInput';
+    const userId = prefix ? `${prefix}ShoutboxCurrentUser` : 'shoutboxCurrentUser';
+    
+    const setupEl = document.getElementById(setupId);
+    const inputEl = document.getElementById(inputId);
+    const currentUserEl = document.getElementById(userId);
+    
+    if (setupEl) setupEl.style.display = 'none';
+    if (inputEl) inputEl.style.display = 'flex';
+    if (currentUserEl) {
+      currentUserEl.textContent = shoutboxUser;
+      currentUserEl.style.color = shoutboxColor;
+    }
+  });
+}
+
+function changeShoutboxUser(source = '') {
+  // Update all instances
+  shoutboxInstances.forEach(prefix => {
+    const setupId = prefix ? `${prefix}ShoutboxSetup` : 'shoutboxSetup';
+    const inputId = prefix ? `${prefix}ShoutboxInput` : 'shoutboxInput';
+    const usernameId = prefix ? `${prefix}ShoutboxUsername` : 'shoutboxUsername';
+    const colorId = prefix ? `${prefix}ShoutboxColor` : 'shoutboxColor';
+    
+    const setupEl = document.getElementById(setupId);
+    const inputEl = document.getElementById(inputId);
+    const usernameInput = document.getElementById(usernameId);
+    const colorInput = document.getElementById(colorId);
+    
+    // Pre-fill current values
+    if (usernameInput) usernameInput.value = shoutboxUser || '';
+    if (colorInput) colorInput.value = shoutboxColor || '#6de6e2';
+    
+    if (setupEl) setupEl.style.display = 'flex';
+    if (inputEl) inputEl.style.display = 'none';
+  });
+}
+
+async function sendShoutboxMessage(source = '') {
+  const prefix = source ? `${source}Shoutbox` : 'shoutbox';
+  const messageInput = document.getElementById(`${prefix}Message`);
+  const message = messageInput?.value.trim();
+  
+  if (!message || !shoutboxUser) return;
+  
+  // Disable input while sending
+  if (messageInput) messageInput.disabled = true;
+  
+  try {
+    const res = await fetch(`${API_BASE}/site/shoutbox`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: shoutboxUser,
+        message: message,
+        color: shoutboxColor
+      })
+    });
+    
+    if (res.ok) {
+      // Clear all message inputs
+      shoutboxInstances.forEach(p => {
+        const msgId = p ? `${p}ShoutboxMessage` : 'shoutboxMessage';
+        const input = document.getElementById(msgId);
+        if (input) input.value = '';
+      });
+      // Immediately reload messages
+      await loadShoutboxMessages();
+    } else {
+      const data = await res.json();
+      alert(data.error || 'Failed to send message');
+    }
+  } catch (err) {
+    console.error('Failed to send message:', err);
+    alert('Failed to send message');
+  } finally {
+    if (messageInput) {
+      messageInput.disabled = false;
+      messageInput.focus();
+    }
+  }
+}
+
+// ============================================
+// Portfolio
+// ============================================
+let portfolioProjects = [];
+let portfolioPage = 0;
+const PORTFOLIO_PER_PAGE = 4;
+
+async function initPortfolio() {
+  const portfolioGrid = document.querySelector('#portfolioGrid');
+  if (!portfolioGrid) return;
+  
+  // Store original content as fallback
+  const fallbackHTML = portfolioGrid.innerHTML;
+  
+  try {
+    portfolioGrid.innerHTML = '<p style="text-align:center;color:var(--text-muted)">Loading projects...</p>';
+    
+    const res = await fetch(`${API_BASE}/site/projects`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    
+    const data = await res.json();
+    // Handle both { projects: [...] } and [...] formats
+    portfolioProjects = data.error ? [] : (Array.isArray(data) ? data : (data.projects || []));
+    
+    if (portfolioProjects.length === 0) {
+      portfolioGrid.innerHTML = fallbackHTML;
+      return;
+    }
+    
+    renderPortfolio();
+  } catch (err) {
+    console.error('Failed to load portfolio:', err);
+    portfolioGrid.innerHTML = fallbackHTML;
+  }
+}
+
+function renderPortfolio() {
+  const portfolioGrid = document.querySelector('#portfolioGrid');
+  if (!portfolioGrid) return;
+  
+  const totalPages = Math.ceil(portfolioProjects.length / PORTFOLIO_PER_PAGE);
+  const start = portfolioPage * PORTFOLIO_PER_PAGE;
+  const end = start + PORTFOLIO_PER_PAGE;
+  const pageProjects = portfolioProjects.slice(start, end);
+  
+  let html = pageProjects.map(p => `
+    <a href="${p.github_url}" class="portfolio-item" target="_blank">
+      <h4>${escapeHtml(p.name)}</h4>
+      <p>${escapeHtml(p.description || 'No description')}</p>
+      <div class="portfolio-meta">
+        ${p.language ? `<span class="language">${escapeHtml(p.language)}</span>` : ''}
+        <span class="stars">★ ${p.stars || 0}</span>
+        <span class="forks">⑂ ${p.forks || 0}</span>
+      </div>
+    </a>
+  `).join('');
+  
+  // Add pagination if needed
+  if (totalPages > 1) {
+    html += `
+      <div class="portfolio-pagination">
+        <button class="btn btn-ghost" onclick="portfolioPrev()" ${portfolioPage === 0 ? 'disabled' : ''}>
+          <i class="bi bi-chevron-left"></i> Prev
+        </button>
+        <span class="page-info">${portfolioPage + 1} / ${totalPages}</span>
+        <button class="btn btn-ghost" onclick="portfolioNext()" ${portfolioPage >= totalPages - 1 ? 'disabled' : ''}>
+          Next <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    `;
+  }
+  
+  portfolioGrid.innerHTML = html;
+}
+
+window.portfolioPrev = function() {
+  if (portfolioPage > 0) {
+    portfolioPage--;
+    renderPortfolio();
+  }
+};
+
+window.portfolioNext = function() {
+  const totalPages = Math.ceil(portfolioProjects.length / PORTFOLIO_PER_PAGE);
+  if (portfolioPage < totalPages - 1) {
+    portfolioPage++;
+    renderPortfolio();
+  }
+};

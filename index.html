@@ -55,7 +55,7 @@
     
     <!-- Site Banner/Header -->
     <div class="site-banner">
-      <div class="brand">nijika.de</div>
+      <a href="./" class="brand" style="text-decoration: none !important; color: var(--primary) !important;">nijika.de</a>
       <div class="header-controls">
         <button class="color-picker-toggle" title="Change color" data-color-picker>
           <i class="bi bi-palette"></i>
@@ -78,7 +78,7 @@
         </div>
         <div class="status-marquee">
           <div class="marquee-track" id="marqueeTrack">
-            <span class="marquee-text" id="marqueeText">Welcome to nijika.de! ✨</span>
+            <span class="marquee-text" id="marqueeText">Welcome to nijika.de!</span>
           </div>
         </div>
       </div>
@@ -117,6 +117,18 @@
           <button class="color-option" data-color="blue" title="Blue">
             <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
             <span>Blue</span>
+          </button>
+          <button class="color-option" data-color="red" title="Red">
+            <div class="color-preview" style="background: linear-gradient(135deg, #e74c3c, #ec7063);"></div>
+            <span>Red</span>
+          </button>
+          <button class="color-option" data-color="yellow" title="Yellow">
+            <div class="color-preview" style="background: linear-gradient(135deg, #f1c40f, #f7dc6f);"></div>
+            <span>Yellow</span>
+          </button>
+          <button class="color-option" data-color="teal" title="Teal">
+            <div class="color-preview" style="background: linear-gradient(135deg, #1abc9c, #48c9b0);"></div>
+            <span>Teal</span>
           </button>
         </div>
       </div>
@@ -294,41 +306,15 @@
           <div class="neo-header"><h2>Portfolio</h2></div>
           <div class="neo-content">
             <p class="text-muted mb-2">my work!</p>
-            <div class="neo-grid">
-              <a href="https://github.com/auroraongithub/osu-Offline-Switcher" target="_blank" class="neo-card">
-                <div class="title">osu-Offline-Switcher</div>
-                <div class="desc">github for osu! offline switcher.</div>
-                <div class="meta">
-                  <span><i class="bi bi-code"></i> C#</span>
-                  <span><i class="bi bi-star"></i> 1</span>
-                  <span><i class="bi bi-git"></i> 1</span>
-                </div>
-              </a>
-              <a href="https://github.com/auroraongithub/auroraongithub.github.io" target="_blank" class="neo-card">
-                <div class="title">auroraongithub.github.io</div>
-                <div class="desc">this website.</div>
-                <div class="meta">
-                  <span><i class="bi bi-code"></i> HTML, CSS, JS</span>
-                  <span><i class="bi bi-star"></i> 0</span>
-                  <span><i class="bi bi-git"></i> 0</span>
-                </div>
-              </a>
-              <a href="https://github.com/auroraongithubold.github.io" target="_blank" class="neo-card">
-                <div class="title">auroraongithubold.github.io</div>
-                <div class="desc">aurora.'s personal profile page.</div>
-                <div class="meta">
-                  <span><i class="bi bi-code"></i> HTML, CSS</span>
-                  <span><i class="bi bi-star"></i> 0</span>
-                  <span><i class="bi bi-git"></i> 0</span>
-                </div>
-              </a>
+            <div class="neo-grid" id="portfolioGrid">
+              <div class="loading-small" style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading projects...</div>
             </div>
           </div>
         </section>
 
-        <!-- ==================== RECENT / PROOF OF LIFE ==================== -->
+        <!-- ==================== RECENT ==================== -->
         <section class="neo-box scroll-animate" id="recent">
-          <div class="neo-header"><h2><i class="bi bi-clock-history"></i> Recent / Proof of Life</h2></div>
+          <div class="neo-header"><h2><i class="bi bi-clock-history"></i> Recent </h2></div>
           <div class="neo-content">
             <div class="recent-grid">
               
@@ -350,6 +336,41 @@
                 <a href="./stories.html" class="widget-link">View all stories <i class="bi bi-arrow-right"></i></a>
               </div>
               
+            </div>
+          </div>
+        </section>
+
+        <!-- Spotify Widget -->
+        <section class="neo-box scroll-animate" id="widgetSpotifyBox" style="display: none;">
+          <div class="neo-header"><h2><i class="bi bi-spotify"></i> Currently Listening</h2></div>
+          <div class="neo-content" style="padding: 15px;">
+            <iframe id="widgetSpotify" style="border-radius: 8px; border: none;" src="" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+        </section>
+
+        <!-- Mobile Shoutbox (visible only on mobile) -->
+        <section class="neo-box scroll-animate mobile-shoutbox-section">
+          <div class="neo-header"><h2><i class="bi bi-chat-dots"></i> Chatbox</h2></div>
+          <div class="neo-content shoutbox-container">
+            <div class="shoutbox-messages" id="mobileShoutboxMessages">
+              <div class="shoutbox-loading">Loading messages...</div>
+            </div>
+            <div class="shoutbox-setup" id="mobileShoutboxSetup">
+              <div class="shoutbox-setup-row">
+                <input type="color" id="mobileShoutboxColor" value="#6de6e2">
+                <input type="text" id="mobileShoutboxUsername" placeholder="Choose a username..." maxlength="30">
+              </div>
+              <button class="shoutbox-join-btn" onclick="joinShoutbox('mobile')">Join Chat</button>
+            </div>
+            <div class="shoutbox-input" id="mobileShoutboxInput" style="display: none;">
+              <div class="shoutbox-user-info">
+                <span id="mobileShoutboxCurrentUser"></span>
+                <button class="shoutbox-change-user" onclick="changeShoutboxUser('mobile')" title="Change username"><i class="bi bi-pencil"></i></button>
+              </div>
+              <div class="shoutbox-send-row">
+                <input type="text" id="mobileShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('mobile')">
+                <button class="shoutbox-send-btn" onclick="sendShoutboxMessage('mobile')"><i class="bi bi-send"></i></button>
+              </div>
             </div>
           </div>
         </section>
@@ -400,26 +421,35 @@
           </div>
         </div>
 
-        <!-- Spotify Widget -->
-        <div class="neo-box scroll-animate widget-spotify" id="widgetSpotifyBox" style="display: none;">
-          <div class="neo-header"><h3><i class="bi bi-spotify"></i> Listening</h3></div>
-          <div class="neo-content" style="padding: 0;">
-            <iframe id="widgetSpotify" style="border-radius: 8px; border: none;" src="" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-          </div>
-        </div>
-
         <!-- Shoutbox Widget -->
         <div class="neo-box scroll-animate widget-shoutbox-sidebar">
-          <div class="neo-header"><h3><i class="bi bi-chat-dots"></i> Shoutbox</h3></div>
-          <div class="neo-content" style="padding: 0; min-height: 200px;">
-            <iframe 
-              src="https://iframe.chat/embed?chat=nijikade" 
-              id="chattable" 
-              class="shoutbox-iframe" 
-              title="Shoutbox"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
-              loading="eager"
-            ></iframe>
+          <div class="neo-header"><h3><i class="bi bi-chat-dots"></i> Chatbox</h3></div>
+          <div class="neo-content shoutbox-container">
+            <!-- Messages area -->
+            <div class="shoutbox-messages" id="shoutboxMessages">
+              <div class="shoutbox-loading">Loading messages...</div>
+            </div>
+            
+            <!-- Username setup (shown if no username set) -->
+            <div class="shoutbox-setup" id="shoutboxSetup">
+              <div class="shoutbox-setup-row">
+                <input type="color" id="shoutboxColor" value="#6de6e2">
+                <input type="text" id="shoutboxUsername" placeholder="Choose a username..." maxlength="30">
+              </div>
+              <button class="shoutbox-join-btn" onclick="joinShoutbox()">Join Chat</button>
+            </div>
+            
+            <!-- Chat input (shown after joining) -->
+            <div class="shoutbox-input" id="shoutboxInput" style="display: none;">
+              <div class="shoutbox-user-info">
+                <span id="shoutboxCurrentUser"></span>
+                <button class="shoutbox-change-user" onclick="changeShoutboxUser()" title="Change username"><i class="bi bi-pencil"></i></button>
+              </div>
+              <div class="shoutbox-send-row">
+                <input type="text" id="shoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage()">
+                <button class="shoutbox-send-btn" onclick="sendShoutboxMessage()"><i class="bi bi-send"></i></button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -468,28 +498,81 @@
         <button class="more-drawer-close" data-more-close><i class="bi bi-x-lg"></i></button>
       </div>
       <div class="more-drawer-body">
-        <div class="more-drawer-section">
-          <h4>Widgets</h4>
-          <ul>
-            <li><a href="#" data-drawer-scroll="statusStrip"><i class="bi bi-broadcast"></i> Status</a></li>
-            <li><a href="#" data-now-modal><i class="bi bi-clock-history"></i> Now</a></li>
-            <li><a href="#" data-changelog-modal><i class="bi bi-list-check"></i> Changelog</a></li>
-          </ul>
+        
+        <!-- Now Widget in Drawer -->
+        <div class="more-drawer-section more-drawer-widget">
+          <h4><i class="bi bi-clock-history"></i> Now</h4>
+          <div class="drawer-now-widget">
+            <div class="now-widget-item">
+              <span class="now-widget-label">Working On</span>
+              <span class="now-widget-value" id="drawerWorkingOn">Loading...</span>
+            </div>
+            <div class="now-widget-item">
+              <span class="now-widget-label">Learning</span>
+              <span class="now-widget-value" id="drawerLearning">Loading...</span>
+            </div>
+            <div class="now-widget-item">
+              <span class="now-widget-label">Open to Collabs</span>
+              <span class="now-widget-value" id="drawerCollabs"><i class="bi bi-question-circle"></i></span>
+            </div>
+          </div>
         </div>
+
+        <!-- Changelog Widget in Drawer -->
+        <div class="more-drawer-section more-drawer-widget">
+          <h4><i class="bi bi-list-check"></i> Updates</h4>
+          <div class="drawer-changelog-list" id="drawerChangelog">
+            <div class="loading-small">Loading...</div>
+          </div>
+          <a href="./changelog.html" class="widget-link">View all updates <i class="bi bi-arrow-right"></i></a>
+        </div>
+
+        <!-- Shoutbox Widget in Drawer -->
+        <div class="more-drawer-section more-drawer-widget">
+          <h4><i class="bi bi-chat-dots"></i> Chatbox</h4>
+          <div class="drawer-shoutbox shoutbox-container">
+            <div class="shoutbox-messages" id="drawerShoutboxMessages">
+              <div class="shoutbox-loading">Loading messages...</div>
+            </div>
+            <div class="shoutbox-setup" id="drawerShoutboxSetup">
+              <div class="shoutbox-setup-row">
+                <input type="color" id="drawerShoutboxColor" value="#6de6e2">
+                <input type="text" id="drawerShoutboxUsername" placeholder="Choose a username..." maxlength="30">
+              </div>
+              <button class="shoutbox-join-btn" onclick="joinShoutbox('drawer')">Join Chat</button>
+            </div>
+            <div class="shoutbox-input" id="drawerShoutboxInput" style="display: none;">
+              <div class="shoutbox-user-info">
+                <span id="drawerShoutboxCurrentUser"></span>
+                <button class="shoutbox-change-user" onclick="changeShoutboxUser('drawer')" title="Change username"><i class="bi bi-pencil"></i></button>
+              </div>
+              <div class="shoutbox-send-row">
+                <input type="text" id="drawerShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('drawer')">
+                <button class="shoutbox-send-btn" onclick="sendShoutboxMessage('drawer')"><i class="bi bi-send"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resources in Drawer -->
         <div class="more-drawer-section">
-          <h4>Resources</h4>
+          <h4><i class="bi bi-book"></i> Resources</h4>
           <ul>
-            <li><a href="./resources.html?cat=scanlation"><i class="bi bi-book"></i> Scanlation Guide</a></li>
+            <li><a href="./resources.html?cat=scanlation"><i class="bi bi-translate"></i> Scanlation Guide</a></li>
             <li><a href="./resources.html?cat=youtube"><i class="bi bi-youtube"></i> YouTube Guide</a></li>
           </ul>
         </div>
+
+        <!-- Quick Links -->
         <div class="more-drawer-section">
-          <h4>Community</h4>
+          <h4>Quick Links</h4>
           <ul>
-            <li><a href="https://dsc.gg/evescans" target="_blank"><i class="bi bi-discord"></i> Discord</a></li>
+            <li><a href="#" data-drawer-scroll="statusStrip"><i class="bi bi-broadcast"></i> Status</a></li>
             <li><a href="#portfolio"><i class="bi bi-briefcase-fill"></i> Portfolio</a></li>
+            <li><a href="https://dsc.gg/evescans" target="_blank"><i class="bi bi-discord"></i> Discord</a></li>
           </ul>
         </div>
+
       </div>
     </div>
   </div>
@@ -534,17 +617,9 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://iframe.chat/scripts/main.min.js"></script>
   <script type="module">
     import { initCarousel } from './assets/app.js';
     window.addEventListener('load', initCarousel);
-    
-    // Initialize chattable
-    window.addEventListener('load', () => {
-      if (typeof chattable !== 'undefined') {
-        chattable.initialize();
-      }
-    });
   </script>
   <script src="./assets/app.js" type="module"></script>
 </body>

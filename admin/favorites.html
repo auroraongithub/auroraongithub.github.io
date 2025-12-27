@@ -362,6 +362,7 @@
                 <li><a href="./changelog.html">Changelog</a></li>
                 <li><a href="./resources.html">Resources</a></li>
                 <li><a href="./favorites.html">Favorites</a></li>
+                <li><a href="./portfolio.html">Portfolio</a></li>
                 <li><a href="./settings.html">Settings</a></li>
               </ul>
             </div>
@@ -555,7 +556,7 @@
                 ${item.year ? `<span><i class="bi bi-calendar"></i> ${item.year}</span>` : ''}
                 ${item.score ? `<span><i class="bi bi-star-fill"></i> ${item.score}</span>` : ''}
               </div>
-              ${item.status ? `<span class="favorite-card-status ${item.status}">${formatStatus(item.status)}</span>` : ''}
+              ${(item.status && currentCategory !== 'characters') ? `<span class="favorite-card-status ${item.status}">${formatStatus(item.status)}</span>` : ''}
               ${item.description ? `<div class="favorite-card-desc">${escapeHtml(item.description)}</div>` : ''}
             </div>
             <div class="favorite-card-actions">

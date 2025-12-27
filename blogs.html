@@ -16,7 +16,7 @@
     
     <!-- Site Banner/Header -->
     <div class="site-banner">
-      <div class="brand">nijika.de</div>
+      <a href="./" class="brand" style="text-decoration: none !important; color: var(--primary) !important;">nijika.de</a>
       <div class="header-controls">
         <button class="color-picker-toggle" title="Change color" data-color-picker>
           <i class="bi bi-palette"></i>
@@ -61,6 +61,36 @@
             <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
             <span>Blue</span>
           </button>
+          <button class="color-option" data-color="red" title="Red">
+            <div class="color-preview" style="background: linear-gradient(135deg, #e74c3c, #ec7063);"></div>
+            <span>Red</span>
+          </button>
+          <button class="color-option" data-color="yellow" title="Yellow">
+            <div class="color-preview" style="background: linear-gradient(135deg, #f1c40f, #f7dc6f);"></div>
+            <span>Yellow</span>
+          </button>
+          <button class="color-option" data-color="teal" title="Teal">
+            <div class="color-preview" style="background: linear-gradient(135deg, #1abc9c, #48c9b0);"></div>
+            <span>Teal</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Strip (CRT Effect) -->
+    <div class="status-strip-screen" id="statusStrip">
+      <div class="status-strip-content">
+        <div class="status-info">
+          <span class="status-feeling"><i class="bi bi-emoji-smile"></i> <span id="statusFeeling">Loading...</span></span>
+          <span class="status-divider">|</span>
+          <span class="status-doing"><i class="bi bi-activity"></i> <span id="statusDoing">Loading...</span></span>
+          <span class="status-divider hide-mobile">|</span>
+          <span class="status-updated hide-mobile"><i class="bi bi-clock"></i> <span id="statusUpdated">--</span></span>
+        </div>
+        <div class="status-marquee">
+          <div class="marquee-track" id="marqueeTrack">
+            <span class="marquee-text" id="marqueeText">Welcome to nijika.de! ✨</span>
+          </div>
         </div>
       </div>
     </div>
@@ -98,6 +128,52 @@
           </div>
         </div>
 
+        <!-- Scrollbox with images -->
+        <div class="neo-box scroll-animate">
+          <div class="neo-header"><h3>Gallery</h3></div>
+          <div class="neo-content">
+            <div class="neo-scrollbox">
+              <img src="./img/pfp.png" alt="Profile">
+              <img src="./img/topheader.png" alt="Profile">
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Images -->
+        <div class="neo-box scroll-animate">
+          <div class="neo-header"><h3>More</h3></div>
+          <div class="neo-content" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+            <img src="./img/igotaleek.gif" alt="I got a leek" style="width: 120px; border-radius: 4px;">
+            <img src="./img/2voca.jpg" alt="Vocaloid" style="width: 120px; border-radius: 4px;">
+            <img src="./img/0178-mikuwink2.gif" alt="Miku wink" style="width: 120px; border-radius: 4px;">
+          </div>
+        </div>
+
+        <!-- Stats Widget -->
+        <div class="neo-box scroll-animate">
+          <div class="neo-header"><h3><i class="bi bi-bar-chart"></i> Stats</h3></div>
+          <div class="neo-content">
+            <div class="stats-grid sidebar-stats">
+              <div class="stat-item">
+                <span class="stat-value" id="statProjects">--</span>
+                <span class="stat-label">Projects</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statPosts">--</span>
+                <span class="stat-label">Posts</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statVisitors">--</span>
+                <span class="stat-label">Online Now</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statPageviews">--</span>
+                <span class="stat-label">Total Visits</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </aside>
 
       <!-- ==================== MAIN CONTENT ==================== -->
@@ -131,6 +207,84 @@
         </div>
 
       </main>
+
+      <!-- ==================== RIGHT SIDEBAR (WIDGETS) ==================== -->
+      <aside class="neo-widgets">
+        
+        <!-- Now Widget -->
+        <div class="neo-box scroll-animate widget-now">
+          <div class="neo-header"><h3><i class="bi bi-clock-history"></i> Now</h3></div>
+          <div class="neo-content">
+            <div class="now-widget-item">
+              <span class="now-widget-label">Working On</span>
+              <span class="now-widget-value" id="widgetWorkingOn">Loading...</span>
+            </div>
+            <div class="now-widget-item">
+              <span class="now-widget-label">Learning</span>
+              <span class="now-widget-value" id="widgetLearning">Loading...</span>
+            </div>
+            <div class="now-widget-item">
+              <span class="now-widget-label">Open to Collabs</span>
+              <span class="now-widget-value" id="widgetCollabs"><i class="bi bi-question-circle"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Changelog Widget -->
+        <div class="neo-box scroll-animate widget-changelog">
+          <div class="neo-header"><h3><i class="bi bi-list-check"></i> Updates</h3></div>
+          <div class="neo-content">
+            <div class="changelog-widget-list" id="widgetChangelog">
+              <div class="loading-small">Loading...</div>
+            </div>
+            <a href="./changelog.html" class="widget-link" style="margin-top: 10px; display: block;">View all updates <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- Shoutbox Widget -->
+        <div class="neo-box scroll-animate widget-shoutbox-sidebar">
+          <div class="neo-header"><h3><i class="bi bi-chat-dots"></i> Chatbox</h3></div>
+          <div class="neo-content shoutbox-container">
+            <!-- Messages area -->
+            <div class="shoutbox-messages" id="shoutboxMessages">
+              <div class="shoutbox-loading">Loading messages...</div>
+            </div>
+            
+            <!-- Username setup (shown if no username set) -->
+            <div class="shoutbox-setup" id="shoutboxSetup">
+              <div class="shoutbox-setup-row">
+                <input type="color" id="shoutboxColor" value="#6de6e2">
+                <input type="text" id="shoutboxUsername" placeholder="Choose a username..." maxlength="30">
+              </div>
+              <button class="shoutbox-join-btn" onclick="joinShoutbox()">Join Chat</button>
+            </div>
+            
+            <!-- Chat input (shown after joining) -->
+            <div class="shoutbox-input" id="shoutboxInput" style="display: none;">
+              <div class="shoutbox-user-info">
+                <span id="shoutboxCurrentUser"></span>
+                <button class="shoutbox-change-user" onclick="changeShoutboxUser()" title="Change username"><i class="bi bi-pencil"></i></button>
+              </div>
+              <div class="shoutbox-send-row">
+                <input type="text" id="shoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage()">
+                <button class="shoutbox-send-btn" onclick="sendShoutboxMessage()"><i class="bi bi-send"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resources Quick Links -->
+        <div class="neo-box scroll-animate widget-resources">
+          <div class="neo-header"><h3><i class="bi bi-book"></i> Resources</h3></div>
+          <div class="neo-content">
+            <ul class="resources-list">
+              <li><a href="./resources.html?cat=scanlation"><i class="bi bi-translate"></i> Scanlation</a></li>
+              <li><a href="./resources.html?cat=youtube"><i class="bi bi-youtube"></i> YouTube</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </aside>
     </div>
 
     <!-- Footer -->
