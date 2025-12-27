@@ -262,9 +262,143 @@ export async function getPost() {
     // Update page title
     document.title = `${data.data.title} · nijika.de`;
     
+    // Store current post type for navigation
+    const postType = data.data.type || 'blog';
+    window.currentPostId = id;
+    window.currentPostType = postType;
+    
+    // Update "Back to" link based on post type
+    const backToList = document.getElementById('backToList');
+    if (backToList) {
+      const link = backToList.querySelector('a');
+      if (postType === 'story') {
+        link.href = './stories.html';
+        link.textContent = 'Back to Stories';
+      } else {
+        link.href = './blogs.html';
+        link.textContent = 'Back to Blogs';
+      }
+    }
+    
+    // Load kudos
+    loadKudos(id);
+    
+    // Load navigation (prev/next)
+    loadPostNavigation(id);
+    
   } catch (e) {
     titleEl.textContent = 'Failed to load';
     contentEl.innerHTML = '<p>Could not load the post. Please try again later.</p>';
+  }
+}
+
+// Load kudos count for a post
+async function loadKudos(postId) {
+  const kudosCountEl = document.getElementById('kudosCount');
+  const kudosBtn = document.getElementById('kudosBtn');
+  
+  if (!kudosCountEl) return;
+  
+  try {
+    const res = await fetch(`${API_BASE}/post/${postId}/kudos`);
+    const data = await res.json();
+    kudosCountEl.textContent = data.kudos || 0;
+    
+    // Check if user already liked this post
+    const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+    if (likedPosts.includes(postId) && kudosBtn) {
+      kudosBtn.classList.add('liked');
+    }
+  } catch (err) {
+    console.error('Failed to load kudos:', err);
+  }
+}
+
+// Give kudos to a post
+window.giveKudos = async function() {
+  const postId = window.currentPostId;
+  const kudosBtn = document.getElementById('kudosBtn');
+  const kudosCountEl = document.getElementById('kudosCount');
+  
+  if (!postId || !kudosBtn) return;
+  
+  // Check if already liked
+  const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+  if (likedPosts.includes(postId)) {
+    // Already liked - could show a message or just return
+    return;
+  }
+  
+  try {
+    const res = await fetch(`${API_BASE}/post/${postId}/kudos`, {
+      method: 'POST'
+    });
+    const data = await res.json();
+    
+    if (kudosCountEl) kudosCountEl.textContent = data.kudos;
+    kudosBtn.classList.add('liked');
+    
+    // Save to localStorage
+    likedPosts.push(postId);
+    localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
+    
+    // Animate
+    kudosBtn.style.transform = 'scale(1.1)';
+    setTimeout(() => { kudosBtn.style.transform = ''; }, 200);
+  } catch (err) {
+    console.error('Failed to give kudos:', err);
+  }
+};
+
+// Load post navigation (prev/next in same type)
+async function loadPostNavigation(postId) {
+  try {
+    const res = await fetch(`${API_BASE}/post/${postId}/navigation`);
+    const data = await res.json();
+    
+    const postType = data.type || 'blog';
+    const typeLabel = postType === 'story' ? 'Story' : 'Post';
+    
+    // Bottom navigation
+    const prevBtn = document.getElementById('prevPost');
+    const nextBtn = document.getElementById('nextPost');
+    
+    if (prevBtn && data.prev) {
+      prevBtn.href = `./post.html?id=${data.prev.id}`;
+      prevBtn.innerHTML = `<i class="bi bi-arrow-left"></i> Older ${typeLabel}`;
+      prevBtn.title = data.prev.title;
+      prevBtn.style.visibility = 'visible';
+    }
+    
+    if (nextBtn && data.next) {
+      nextBtn.href = `./post.html?id=${data.next.id}`;
+      nextBtn.innerHTML = `Newer ${typeLabel} <i class="bi bi-arrow-right"></i>`;
+      nextBtn.title = data.next.title;
+      nextBtn.style.visibility = 'visible';
+    }
+    
+    // Sidebar navigation
+    const prevSidebar = document.getElementById('prevPostSidebar');
+    const nextSidebar = document.getElementById('nextPostSidebar');
+    
+    if (prevSidebar && data.prev) {
+      const link = prevSidebar.querySelector('a');
+      link.href = `./post.html?id=${data.prev.id}`;
+      link.textContent = `← ${data.prev.title}`;
+      link.title = data.prev.title;
+      prevSidebar.style.display = 'list-item';
+    }
+    
+    if (nextSidebar && data.next) {
+      const link = nextSidebar.querySelector('a');
+      link.href = `./post.html?id=${data.next.id}`;
+      link.textContent = `${data.next.title} →`;
+      link.title = data.next.title;
+      nextSidebar.style.display = 'list-item';
+    }
+    
+  } catch (err) {
+    console.error('Failed to load post navigation:', err);
   }
 }
 
@@ -624,13 +758,39 @@ function initPetals() {
 
 const API_BASE = 'https://nijikade-backend.vercel.app/api';
 
+// Cache system to reduce API calls
+const apiCache = {
+  data: {},
+  get(key) {
+    const cached = this.data[key];
+    if (!cached) return null;
+    if (Date.now() - cached.timestamp > cached.ttl) {
+      delete this.data[key];
+      return null;
+    }
+    return cached.value;
+  },
+  set(key, value, ttl = 60000) {
+    this.data[key] = { value, timestamp: Date.now(), ttl };
+  }
+};
+
+async function cachedFetch(url, ttl = 60000) {
+  const cached = apiCache.get(url);
+  if (cached) return cached;
+  
+  const res = await fetch(url);
+  const data = await res.json();
+  apiCache.set(url, data, ttl);
+  return data;
+}
+
 async function initStatusStrip() {
   const statusStrip = document.getElementById('statusStrip');
   if (!statusStrip) return;
   
   try {
-    const res = await fetch(`${API_BASE}/site/status`);
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/status`, 300000); // 5 min cache
     
     const feelingEl = document.getElementById('statusFeeling');
     const doingEl = document.getElementById('statusDoing');
@@ -656,8 +816,7 @@ async function initStatusStrip() {
 async function initDesktopWidgets() {
   // Load Now widget (sidebar + drawer)
   try {
-    const res = await fetch(`${API_BASE}/site/now`);
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/now`, 120000); // 2 min cache
     
     // Update sidebar widget
     const workingEl = document.getElementById('widgetWorkingOn');
@@ -690,8 +849,7 @@ async function initDesktopWidgets() {
   
   // Load Changelog widget (sidebar + drawer)
   try {
-    const res = await fetch(`${API_BASE}/site/changelog?limit=1`);
-    const entries = await res.json();
+    const entries = await cachedFetch(`${API_BASE}/site/changelog?limit=1`, 60000); // 1 min cache
     
     const changelogHTML = !entries.length 
       ? '<p class="loading-small">No updates yet.</p>'
@@ -717,8 +875,7 @@ async function initDesktopWidgets() {
   
   // Load Spotify widget (right sidebar)
   try {
-    const res = await fetch(`${API_BASE}/site/settings`);
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/settings`, 600000); // 10 min cache
     
     if (data.spotify_embed_url) {
       const spotifyBox = document.getElementById('widgetSpotifyBox');
@@ -741,8 +898,7 @@ async function initDesktopWidgets() {
 async function initMainWidgets() {
   // Load Stats (for left sidebar)
   try {
-    const res = await fetch(`${API_BASE}/site/stats`);
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/stats`, 120000); // 2 min cache
     
     const projectsEl = document.getElementById('statProjects');
     const postsEl = document.getElementById('statPosts');
@@ -764,9 +920,8 @@ async function initMainWidgets() {
 async function initRecentPosts() {
   // Load Latest Blogs
   try {
-    const res = await fetch(`${API_BASE}/site/posts/latest?type=blog&limit=1`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/posts/latest?type=blog&limit=1`, 60000); // 1 min cache
+    if (data.error) throw new Error(data.error);
     console.log('Recent blogs response:', data);
     // Handle both array and { posts: [...] } formats, and check for error response
     const posts = data.error ? [] : (Array.isArray(data) ? data : (data.posts || []));
@@ -793,9 +948,8 @@ async function initRecentPosts() {
   
   // Load Latest Stories
   try {
-    const res = await fetch(`${API_BASE}/site/posts/latest?type=story&limit=1`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/posts/latest?type=story&limit=1`, 60000); // 1 min cache
+    if (data.error) throw new Error(data.error);
     console.log('Recent stories response:', data);
     // Handle both array and { posts: [...] } formats, and check for error response
     const posts = data.error ? [] : (Array.isArray(data) ? data : (data.posts || []));
@@ -952,8 +1106,7 @@ async function loadFavorites(category) {
   track.style.transform = 'translateX(0)';
   
   try {
-    const res = await fetch(`${API_BASE}/site/favorites?category=${category}`);
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/favorites?category=${category}`, 120000); // 2 min cache
     const items = data.items || [];
     
     if (!items.length) {
@@ -1063,8 +1216,7 @@ function initNowModal() {
       
       // Load data
       try {
-        const res = await fetch(`${API_BASE}/site/now`);
-        const data = await res.json();
+        const data = await cachedFetch(`${API_BASE}/site/now`, 120000); // 2 min cache
         
         document.getElementById('nowWorkingOn').textContent = data.working_on || 'Various projects';
         document.getElementById('nowLearning').textContent = data.learning || 'New things';
@@ -1109,8 +1261,7 @@ function initChangelogModal() {
       
       // Load data
       try {
-        const res = await fetch(`${API_BASE}/site/changelog?limit=5`);
-        const entries = await res.json();
+        const entries = await cachedFetch(`${API_BASE}/site/changelog?limit=5`, 60000); // 1 min cache
         
         if (!entries.length) {
           listEl.innerHTML = '<p style="color: var(--text-muted);">No updates yet.</p>';
@@ -1228,8 +1379,7 @@ function connectToVisitorStream() {
 
 async function pollVisitorCount() {
   try {
-    const res = await fetch(`${API_BASE}/site/visitors/stats`);
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/visitors/stats`, 30000); // 30 sec cache
     
     const visitorsEl = document.getElementById('statVisitors');
     const pageviewsEl = document.getElementById('statPageviews');
@@ -1237,12 +1387,12 @@ async function pollVisitorCount() {
     if (visitorsEl) visitorsEl.textContent = data.online || '0';
     if (pageviewsEl) pageviewsEl.textContent = formatNumber(data.total || 0);
     
-    // Poll every 10 seconds
-    setTimeout(pollVisitorCount, 10000);
+    // Poll every 30 seconds (cache reduces actual API calls)
+    setTimeout(pollVisitorCount, 30000);
   } catch (err) {
     console.error('Failed to fetch visitor stats:', err);
-    // Retry after 15 seconds on error
-    setTimeout(pollVisitorCount, 15000);
+    // Retry after 60 seconds on error
+    setTimeout(pollVisitorCount, 60000);
   }
 }
 
@@ -1292,8 +1442,8 @@ function initShoutbox() {
   // Load messages
   loadShoutboxMessages();
   
-  // Poll for new messages every 5 seconds
-  shoutboxPollTimer = setInterval(loadShoutboxMessages, 5000);
+  // Poll for new messages every 15 seconds (with 10 sec cache)
+  shoutboxPollTimer = setInterval(loadShoutboxMessages, 15000);
   
   // Check admin status on load
   updateAdminButtons(isAdminLoggedIn());
@@ -1453,8 +1603,7 @@ async function loadShoutboxMessages() {
   const isAdmin = isAdminLoggedIn();
   
   try {
-    const res = await fetch(`${API_BASE}/site/shoutbox?limit=30`);
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/shoutbox?limit=30`, 10000); // 10 sec cache
     const messages = data.messages || [];
     
     const html = !messages.length 
@@ -1628,10 +1777,7 @@ async function initPortfolio() {
   try {
     portfolioGrid.innerHTML = '<p style="text-align:center;color:var(--text-muted)">Loading projects...</p>';
     
-    const res = await fetch(`${API_BASE}/site/projects`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    
-    const data = await res.json();
+    const data = await cachedFetch(`${API_BASE}/site/projects`, 300000); // 5 min cache
     // Handle both { projects: [...] } and [...] formats
     portfolioProjects = data.error ? [] : (Array.isArray(data) ? data : (data.projects || []));
     

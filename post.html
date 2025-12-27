@@ -120,9 +120,9 @@
           <div class="neo-header"><h3>Post Nav</h3></div>
           <div class="neo-content">
             <ul>
-              <li><a href="./blogs.html">Back to Blogs</a></li>
-              <li id="prevPostSidebar" style="display:none;"><a href="#">Previous Post</a></li>
-              <li id="nextPostSidebar" style="display:none;"><a href="#">Next Post</a></li>
+              <li id="backToList"><a href="./blogs.html">Back to Blogs</a></li>
+              <li id="prevPostSidebar" style="display:none;"><a href="#">← Older Post</a></li>
+              <li id="nextPostSidebar" style="display:none;"><a href="#">Newer Post →</a></li>
             </ul>
           </div>
         </div>
@@ -187,12 +187,22 @@
           <div class="article-content" id="post-content">
             <div class="loading">Loading post content...</div>
           </div>
+          
+          <!-- Kudos/Like Section -->
+          <div class="post-kudos">
+            <button class="kudos-btn" id="kudosBtn" onclick="giveKudos()">
+              <i class="bi bi-heart"></i>
+              <span id="kudosCount">0</span>
+            </button>
+            <span class="kudos-label">Give kudos if you enjoyed this!</span>
+          </div>
+          
           <div class="post-nav">
             <a id="prevPost" class="btn btn-ghost" href="#" style="visibility:hidden;">
-              <i class="bi bi-arrow-left"></i> Previous
+              <i class="bi bi-arrow-left"></i> Older
             </a>
             <a id="nextPost" class="btn btn-ghost" href="#" style="visibility:hidden;">
-              Next <i class="bi bi-arrow-right"></i>
+              Newer <i class="bi bi-arrow-right"></i>
             </a>
           </div>
         </article>
