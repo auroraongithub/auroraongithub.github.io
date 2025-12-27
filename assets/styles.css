@@ -3144,6 +3144,93 @@ ul {
   }
 }
 
+/* About Contact Bar - horizontal layout below about */
+.about-contact-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.contact-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.contact-label i {
+  color: var(--primary);
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.contact-link:hover {
+  background: var(--primary);
+  color: var(--bg);
+  border-color: var(--primary);
+}
+
+.contact-link i {
+  font-size: 0.9rem;
+}
+
+.contact-link.discord:hover {
+  background: #5865F2;
+  border-color: #5865F2;
+}
+
+.contact-link.twitter:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+body.dark .contact-link.twitter:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+
+.contact-link.youtube:hover {
+  background: #FF0000;
+  color: #fff;
+  border-color: #FF0000;
+}
+
+.contact-link.email:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+@media (max-width: 500px) {
+  .about-contact-bar {
+    justify-content: center;
+  }
+  
+  .contact-label {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 4px;
+  }
+}
+
 /* ==========================================================================
    DISCORD BANNER
    ========================================================================== */
