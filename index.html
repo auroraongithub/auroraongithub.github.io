@@ -6,10 +6,17 @@
   <title>nijika.de</title>
   <meta name="description" content="roraosu's website - Scanlator, Gamer, Creator">
   <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+  
+  <!-- Preconnect to external resources for faster loading -->
+  <link rel="preconnect" href="https://nijikade-backend.vercel.app" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://cdn.ably.com" crossorigin>
+  <link rel="dns-prefetch" href="https://nijikade-backend.vercel.app">
+  
   <link rel="stylesheet" href="./assets/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <!-- Ably Realtime for Chat -->
-  <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
+  <script src="https://cdn.ably.com/lib/ably.min-1.js" defer></script>
   
   <script type="text/javascript">
   function tb8_makeArray(n){
@@ -174,8 +181,8 @@
           <div class="neo-header"><h3>Gallery</h3></div>
           <div class="neo-content">
             <div class="neo-scrollbox">
-              <img src="./img/pfp.png" alt="Profile">
-              <img src="./img/topheader.png" alt="Profile">
+              <img src="./img/pfp.png" alt="Profile" loading="lazy">
+              <img src="./img/topheader.png" alt="Profile" loading="lazy">
             </div>
           </div>
         </div>
@@ -184,9 +191,9 @@
         <div class="neo-box scroll-animate">
           <div class="neo-header"><h3>More</h3></div>
           <div class="neo-content" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-            <img src="./img/igotaleek.gif" alt="I got a leek" style="width: 120px; border-radius: 4px;">
-            <img src="./img/2voca.jpg" alt="Vocaloid" style="width: 120px; border-radius: 4px;">
-            <img src="./img/0178-mikuwink2.gif" alt="Miku wink" style="width: 120px; border-radius: 4px;">
+            <img src="./img/igotaleek.gif" alt="I got a leek" style="width: 120px; border-radius: 4px;" loading="lazy">
+            <img src="./img/2voca.jpg" alt="Vocaloid" style="width: 120px; border-radius: 4px;" loading="lazy">
+            <img src="./img/0178-mikuwink2.gif" alt="Miku wink" style="width: 120px; border-radius: 4px;" loading="lazy">
           </div>
         </div>
 

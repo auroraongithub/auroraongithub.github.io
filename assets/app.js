@@ -822,17 +822,64 @@ const apiCache = {
   },
   set(key, value, ttl = 60000) {
     this.data[key] = { value, timestamp: Date.now(), ttl };
+  },
+  // Clear all cache
+  clear() {
+    this.data = {};
   }
 };
 
+// Prevent duplicate in-flight requests
+const pendingRequests = {};
+
 async function cachedFetch(url, ttl = 60000) {
+  // Check cache first
   const cached = apiCache.get(url);
   if (cached) return cached;
   
-  const res = await fetch(url);
-  const data = await res.json();
-  apiCache.set(url, data, ttl);
-  return data;
+  // Check if request is already in flight
+  if (pendingRequests[url]) {
+    return pendingRequests[url];
+  }
+  
+  // Make the request and store the promise
+  pendingRequests[url] = (async () => {
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      apiCache.set(url, data, ttl);
+      return data;
+    } finally {
+      delete pendingRequests[url];
+    }
+  })();
+  
+  return pendingRequests[url];
+}
+
+// Bundle data cache - stores combined data from bundle endpoint
+let bundleData = null;
+let bundleTimestamp = 0;
+const BUNDLE_TTL = 120000; // 2 minutes
+
+// Fetch all main widget data in one request
+async function fetchBundle() {
+  // Check if bundle is still fresh
+  if (bundleData && Date.now() - bundleTimestamp < BUNDLE_TTL) {
+    return bundleData;
+  }
+  
+  try {
+    const res = await fetch(`${API_BASE}/site/bundle?include=status,now,changelog,stats,latestBlog,latestStory&changelogLimit=5`);
+    if (res.ok) {
+      bundleData = await res.json();
+      bundleTimestamp = Date.now();
+      return bundleData;
+    }
+  } catch (err) {
+    console.log('Bundle fetch failed, falling back to individual requests');
+  }
+  return null;
 }
 
 async function initStatusStrip() {
@@ -840,7 +887,9 @@ async function initStatusStrip() {
   if (!statusStrip) return;
   
   try {
-    const data = await cachedFetch(`${API_BASE}/site/status`, 300000); // 5 min cache
+    // Try to use bundle data first
+    const bundle = await fetchBundle();
+    const data = bundle?.status || await cachedFetch(`${API_BASE}/site/status`, 300000);
     
     const feelingEl = document.getElementById('statusFeeling');
     const doingEl = document.getElementById('statusDoing');
@@ -864,9 +913,13 @@ async function initStatusStrip() {
 // ==========================================================================
 
 async function initDesktopWidgets() {
+  // Try to fetch bundle first for efficiency
+  const bundle = await fetchBundle();
+  
   // Load Now widget (sidebar + drawer)
+  // Use bundle data if available, otherwise fetch individually
   try {
-    const data = await cachedFetch(`${API_BASE}/site/now`, 120000); // 2 min cache
+    const data = bundle?.now || await cachedFetch(`${API_BASE}/site/now`, 120000);
     
     // Update sidebar widget
     const workingEl = document.getElementById('widgetWorkingOn');
@@ -899,11 +952,11 @@ async function initDesktopWidgets() {
   
   // Load Changelog widget (sidebar + drawer)
   try {
-    const entries = await cachedFetch(`${API_BASE}/site/changelog?limit=1`, 60000); // 1 min cache
+    const entries = bundle?.changelog || await cachedFetch(`${API_BASE}/site/changelog?limit=1`, 60000);
     
     const changelogHTML = !entries.length 
       ? '<p class="loading-small">No updates yet.</p>'
-      : entries.map(entry => `
+      : entries.slice(0, 1).map(entry => `
           <div class="changelog-widget-entry ${entry.pinned ? 'pinned' : ''}">
             <div class="date">${entry.date ? new Date(entry.date).toLocaleDateString() : ''}</div>
             ${entry.title ? `<div class="title">${entry.title}</div>` : ''}
@@ -923,7 +976,7 @@ async function initDesktopWidgets() {
     console.error('Failed to load Changelog widget:', err);
   }
   
-  // Load Spotify widget (right sidebar)
+  // Load Spotify widget (right sidebar) - still use individual fetch since it's not critical
   try {
     const data = await cachedFetch(`${API_BASE}/site/settings`, 600000); // 10 min cache
     
@@ -946,15 +999,18 @@ async function initDesktopWidgets() {
 // ==========================================================================
 
 async function initMainWidgets() {
+  // Try to use bundle data first
+  const bundle = await fetchBundle();
+  
   // Load Stats (for left sidebar)
   try {
-    const data = await cachedFetch(`${API_BASE}/site/stats`, 120000); // 2 min cache
+    const data = bundle?.stats || await cachedFetch(`${API_BASE}/site/stats`, 120000);
     
     const projectsEl = document.getElementById('statProjects');
     const postsEl = document.getElementById('statPosts');
     
-    if (projectsEl) projectsEl.textContent = data.projects_count || '0';
-    if (postsEl) postsEl.textContent = data.posts_count || '0';
+    if (projectsEl) projectsEl.textContent = data.projects || data.projects_count || '0';
+    if (postsEl) postsEl.textContent = data.posts || data.posts_count || '0';
   } catch (err) {
     console.error('Failed to load stats:', err);
   }
@@ -968,15 +1024,22 @@ async function initMainWidgets() {
 // ==========================================================================
 
 async function initRecentPosts() {
+  // Try to use bundle data first
+  const bundle = await fetchBundle();
+  
   // Load Latest Blogs
   try {
-    const data = await cachedFetch(`${API_BASE}/site/posts/latest?type=blog&limit=1`, 60000); // 1 min cache
-    if (data.error) throw new Error(data.error);
-    console.log('Recent blogs response:', data);
-    // Handle both array and { posts: [...] } formats, and check for error response
-    const posts = data.error ? [] : (Array.isArray(data) ? data : (data.posts || []));
-    const listEl = document.getElementById('recentBlogs');
+    let posts = [];
+    if (bundle?.latestBlog) {
+      posts = [bundle.latestBlog];
+    } else {
+      const data = await cachedFetch(`${API_BASE}/site/posts/latest?type=blog&limit=1`, 60000);
+      if (!data.error) {
+        posts = Array.isArray(data) ? data : (data.posts || []);
+      }
+    }
     
+    const listEl = document.getElementById('recentBlogs');
     if (listEl) {
       if (!posts || posts.length === 0) {
         listEl.innerHTML = '<p class="text-muted">No blog posts yet.</p>';
@@ -998,13 +1061,17 @@ async function initRecentPosts() {
   
   // Load Latest Stories
   try {
-    const data = await cachedFetch(`${API_BASE}/site/posts/latest?type=story&limit=1`, 60000); // 1 min cache
-    if (data.error) throw new Error(data.error);
-    console.log('Recent stories response:', data);
-    // Handle both array and { posts: [...] } formats, and check for error response
-    const posts = data.error ? [] : (Array.isArray(data) ? data : (data.posts || []));
-    const listEl = document.getElementById('recentStories');
+    let posts = [];
+    if (bundle?.latestStory) {
+      posts = [bundle.latestStory];
+    } else {
+      const data = await cachedFetch(`${API_BASE}/site/posts/latest?type=story&limit=1`, 60000);
+      if (!data.error) {
+        posts = Array.isArray(data) ? data : (data.posts || []);
+      }
+    }
     
+    const listEl = document.getElementById('recentStories');
     if (listEl) {
       if (!posts || posts.length === 0) {
         listEl.innerHTML = '<p class="text-muted">No stories yet.</p>';
@@ -1375,8 +1442,8 @@ function initVisitorTracking() {
   // Register visitor and start tracking
   registerVisitor();
   
-  // Heartbeat every 25 seconds to keep session alive (expires after 60s of inactivity)
-  heartbeatInterval = setInterval(sendHeartbeat, 25000);
+  // Heartbeat every 45 seconds to keep session alive (expires after 90s of inactivity)
+  heartbeatInterval = setInterval(sendHeartbeat, 45000);
   
   // Connect to real-time updates
   connectToVisitorStream();
@@ -1423,13 +1490,13 @@ async function sendHeartbeat() {
 }
 
 function connectToVisitorStream() {
-  // Use long-polling instead of SSE for better compatibility
+  // Use long-polling with extended intervals
   pollVisitorCount();
 }
 
 async function pollVisitorCount() {
   try {
-    const data = await cachedFetch(`${API_BASE}/site/visitors/stats`, 30000); // 30 sec cache
+    const data = await cachedFetch(`${API_BASE}/site/visitors/stats`, 60000); // 1 min cache
     
     const visitorsEl = document.getElementById('statVisitors');
     const pageviewsEl = document.getElementById('statPageviews');
@@ -1437,12 +1504,12 @@ async function pollVisitorCount() {
     if (visitorsEl) visitorsEl.textContent = data.online || '0';
     if (pageviewsEl) pageviewsEl.textContent = formatNumber(data.total || 0);
     
-    // Poll every 30 seconds (cache reduces actual API calls)
-    setTimeout(pollVisitorCount, 30000);
+    // Poll every 60 seconds (cache reduces actual API calls)
+    setTimeout(pollVisitorCount, 60000);
   } catch (err) {
     console.error('Failed to fetch visitor stats:', err);
-    // Retry after 60 seconds on error
-    setTimeout(pollVisitorCount, 60000);
+    // Retry after 90 seconds on error
+    setTimeout(pollVisitorCount, 90000);
   }
 }
 
