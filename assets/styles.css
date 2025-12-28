@@ -666,9 +666,9 @@ ul {
   overflow-x: hidden;
 }
 
-/* Make sidebar boxes scrollable */
+/* Make sidebar boxes scrollable - viewport responsive */
 .neo-sidebar .neo-box .neo-content {
-  max-height: 140px;
+  max-height: clamp(80px, 15vh, 140px);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -704,28 +704,43 @@ ul {
   overflow-x: hidden;
 }
 
+/* Make widget boxes content scrollable */
+.neo-widgets .neo-box .neo-content {
+  max-height: clamp(100px, 18vh, 180px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 /* Shoutbox sidebar widget */
 .widget-shoutbox-sidebar .shoutbox-iframe,
 .widget-shoutbox-sidebar #chattable {
   width: 100%;
-  height: 300px;
-  min-height: 300px;
+  height: clamp(180px, 30vh, 300px);
+  min-height: 150px;
   border: none;
   border-radius: 0 0 8px 8px;
   display: block;
   background: var(--bg);
 }
 
+/* Shoutbox container needs special handling - override generic widget max-height */
+.widget-shoutbox-sidebar .neo-content.shoutbox-container {
+  max-height: none;
+  overflow: visible;
+}
+
 /* Custom Shoutbox */
 .shoutbox-container {
   display: flex;
   flex-direction: column;
-  height: 320px;
+  height: clamp(180px, 32vh, 320px);
+  min-height: 150px;
   padding: 0 !important;
 }
 
 .shoutbox-messages {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 50px;
   overflow-y: auto;
   padding: 10px;
   display: flex;
@@ -797,6 +812,7 @@ ul {
   flex-direction: column;
   gap: 8px;
   background: var(--bg-secondary);
+  flex-shrink: 0;
 }
 
 .shoutbox-setup-row {
@@ -864,6 +880,7 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .shoutbox-user-info {
@@ -4299,5 +4316,86 @@ body.dark .contact-link.twitter:hover {
 @media (min-width: 769px) {
   .more-drawer {
     display: none;
+  }
+}
+
+/* ==========================================================================
+   SHORT VIEWPORT HEIGHT ADJUSTMENTS
+   ========================================================================== */
+
+/* For medium-short screens (around 800px height) */
+@media (max-height: 850px) {
+  .neo-widgets .neo-box .neo-content {
+    max-height: clamp(90px, 15vh, 150px);
+  }
+  
+  .shoutbox-container {
+    height: clamp(160px, 25vh, 280px);
+  }
+}
+
+/* For shorter screens (laptops, smaller monitors) */
+@media (max-height: 700px) {
+  .neo-sidebar .neo-box .neo-content {
+    max-height: 80px;
+  }
+  
+  .neo-widgets .neo-box .neo-content {
+    max-height: 120px;
+  }
+  
+  .shoutbox-container {
+    height: clamp(140px, 28vh, 220px);
+    min-height: 130px;
+  }
+  
+  .shoutbox-messages {
+    min-height: 60px;
+  }
+  
+  .widget-shoutbox-sidebar .shoutbox-iframe,
+  .widget-shoutbox-sidebar #chattable {
+    height: clamp(120px, 25vh, 200px);
+    min-height: 120px;
+  }
+  
+  .neo-sidebar,
+  .neo-widgets {
+    gap: 6px;
+  }
+  
+  .neo-box {
+    margin-bottom: 6px;
+  }
+  
+  .neo-header {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .neo-content {
+    padding: 8px 12px;
+  }
+}
+
+/* For very short screens */
+@media (max-height: 550px) {
+  .neo-sidebar .neo-box .neo-content {
+    max-height: 60px;
+  }
+  
+  .neo-widgets .neo-box .neo-content {
+    max-height: 80px;
+  }
+  
+  .shoutbox-container {
+    height: 140px;
+    min-height: 120px;
+  }
+  
+  .widget-shoutbox-sidebar .shoutbox-iframe,
+  .widget-shoutbox-sidebar #chattable {
+    height: 120px;
+    min-height: 100px;
   }
 }
