@@ -199,10 +199,10 @@
           
           <div class="post-nav">
             <a id="prevPost" class="btn btn-ghost" href="#" style="visibility:hidden;">
-              <i class="bi bi-arrow-left"></i> Older
+              <i class="bi bi-arrow-left"></i> Newer
             </a>
             <a id="nextPost" class="btn btn-ghost" href="#" style="visibility:hidden;">
-              Newer <i class="bi bi-arrow-right"></i>
+              Older <i class="bi bi-arrow-right"></i>
             </a>
           </div>
         </article>
@@ -316,7 +316,7 @@
     import { getPost } from './assets/app.js';
     
     async function load() {
-      // Load post
+      // Load post (this also handles navigation via loadPostNavigation)
       await getPost();
       
       // Compute reading time
@@ -324,41 +324,10 @@
       const meta = document.querySelector('#meta');
       const words = (content?.innerText || '').trim().split(/\s+/).length;
       const minutes = Math.max(1, Math.round(words / 200));
-      const date = new Date().toISOString().slice(0, 10);
-      meta.innerHTML = `<i class="bi bi-clock"></i> ${minutes} min read · <i class="bi bi-calendar3"></i> ${date}`;
       
-      // Fetch list for prev/next indexing
-      const res = await fetch('https://nijikade-backend.vercel.app/api/post?type=blog');
-      const data = await res.json();
-      const list = (data.posts || []).flatMap(g => g.posts);
-      const url = new URL(window.location.href);
-      const id = url.searchParams.get('id');
-      const idx = list.findIndex(p => String(p.id) === String(id));
-      
-      const prev = list[idx - 1];
-      const next = list[idx + 1];
-      
-      // Bottom nav buttons
-      const prevBtn = document.querySelector('#prevPost');
-      const nextBtn = document.querySelector('#nextPost');
-      
-      // Sidebar nav items
-      const prevSidebar = document.querySelector('#prevPostSidebar');
-      const nextSidebar = document.querySelector('#nextPostSidebar');
-      
-      if (prev) {
-        prevBtn.href = `./post.html?id=${prev.id}`;
-        prevBtn.style.visibility = 'visible';
-        prevSidebar.style.display = 'block';
-        prevSidebar.querySelector('a').href = `./post.html?id=${prev.id}`;
-      }
-      
-      if (next) {
-        nextBtn.href = `./post.html?id=${next.id}`;
-        nextBtn.style.visibility = 'visible';
-        nextSidebar.style.display = 'block';
-        nextSidebar.querySelector('a').href = `./post.html?id=${next.id}`;
-      }
+      // Get date from the loaded post if available
+      const postDate = document.title.includes('·') ? '' : '';
+      meta.innerHTML = `<i class="bi bi-clock"></i> ${minutes} min read`;
     }
     
     load();

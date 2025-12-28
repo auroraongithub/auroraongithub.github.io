@@ -353,48 +353,98 @@ window.giveKudos = async function() {
 // Load post navigation (prev/next in same type)
 async function loadPostNavigation(postId) {
   try {
-    const res = await fetch(`${API_BASE}/post/${postId}/navigation`);
-    const data = await res.json();
+    // Try the navigation API first
+    let data = null;
+    try {
+      const res = await fetch(`${API_BASE}/post/${postId}/navigation`);
+      if (res.ok) {
+        data = await res.json();
+        console.log('Navigation API data:', data);
+      }
+    } catch (apiErr) {
+      console.log('Navigation API not available, using fallback');
+    }
+    
+    // If API didn't work or returned error, use fallback
+    if (!data || data.error) {
+      console.log('Using fallback navigation method');
+      // Get current post type
+      const postType = window.currentPostType || 'blog';
+      
+      // Fetch all posts of this type
+      const postsRes = await fetch(`${API_BASE}/post?type=${postType}`);
+      const postsData = await postsRes.json();
+      
+      // Flatten posts from grouped by year format
+      const allPosts = (postsData.posts || []).flatMap(g => g.posts);
+      
+      // Posts come sorted desc (newest first), so we reverse for chronological order
+      const posts = allPosts.reverse();
+      
+      // Find current post index
+      const currentIndex = posts.findIndex(p => String(p.id) === String(postId));
+      
+      if (currentIndex !== -1) {
+        data = {
+          type: postType,
+          prev: currentIndex > 0 ? posts[currentIndex - 1] : null,
+          next: currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null
+        };
+        console.log('Fallback navigation data:', data);
+      } else {
+        console.log('Could not find post in list');
+        return;
+      }
+    }
     
     const postType = data.type || 'blog';
     const typeLabel = postType === 'story' ? 'Story' : 'Post';
     
     // Bottom navigation
-    const prevBtn = document.getElementById('prevPost');
-    const nextBtn = document.getElementById('nextPost');
+    // Left button = Newer (data.next), Right button = Older (data.prev)
+    const prevBtn = document.getElementById('prevPost'); // Left button
+    const nextBtn = document.getElementById('nextPost'); // Right button
     
-    if (prevBtn && data.prev) {
-      prevBtn.href = `./post.html?id=${data.prev.id}`;
-      prevBtn.innerHTML = `<i class="bi bi-arrow-left"></i> Older ${typeLabel}`;
-      prevBtn.title = data.prev.title;
+    // Left button shows NEWER post (data.next)
+    if (prevBtn && data.next) {
+      prevBtn.href = `./post.html?id=${data.next.id}`;
+      prevBtn.innerHTML = `<i class="bi bi-arrow-left"></i> Newer ${typeLabel}`;
+      prevBtn.title = data.next.title;
       prevBtn.style.visibility = 'visible';
     }
     
-    if (nextBtn && data.next) {
-      nextBtn.href = `./post.html?id=${data.next.id}`;
-      nextBtn.innerHTML = `Newer ${typeLabel} <i class="bi bi-arrow-right"></i>`;
-      nextBtn.title = data.next.title;
+    // Right button shows OLDER post (data.prev)
+    if (nextBtn && data.prev) {
+      nextBtn.href = `./post.html?id=${data.prev.id}`;
+      nextBtn.innerHTML = `Older ${typeLabel} <i class="bi bi-arrow-right"></i>`;
+      nextBtn.title = data.prev.title;
       nextBtn.style.visibility = 'visible';
     }
     
     // Sidebar navigation
-    const prevSidebar = document.getElementById('prevPostSidebar');
-    const nextSidebar = document.getElementById('nextPostSidebar');
+    const prevSidebar = document.getElementById('prevPostSidebar'); // Shows older
+    const nextSidebar = document.getElementById('nextPostSidebar'); // Shows newer
     
+    // prevSidebar shows OLDER (data.prev)
     if (prevSidebar && data.prev) {
       const link = prevSidebar.querySelector('a');
-      link.href = `./post.html?id=${data.prev.id}`;
-      link.textContent = `← ${data.prev.title}`;
-      link.title = data.prev.title;
-      prevSidebar.style.display = 'list-item';
+      if (link) {
+        link.href = `./post.html?id=${data.prev.id}`;
+        link.textContent = `← Older: ${data.prev.title}`;
+        link.title = data.prev.title;
+        prevSidebar.style.display = 'list-item';
+      }
     }
     
+    // nextSidebar shows NEWER (data.next)
     if (nextSidebar && data.next) {
       const link = nextSidebar.querySelector('a');
-      link.href = `./post.html?id=${data.next.id}`;
-      link.textContent = `${data.next.title} →`;
-      link.title = data.next.title;
-      nextSidebar.style.display = 'list-item';
+      if (link) {
+        link.href = `./post.html?id=${data.next.id}`;
+        link.textContent = `Newer: ${data.next.title} →`;
+        link.title = data.next.title;
+        nextSidebar.style.display = 'list-item';
+      }
     }
     
   } catch (err) {
