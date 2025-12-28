@@ -928,6 +928,98 @@ ul {
   font-size: 0.85rem;
 }
 
+/* Admin rainbow username */
+.admin-rainbow {
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+.admin-rainbow span {
+  display: inline-block;
+}
+
+/* Admin rainbow in input area */
+.admin-rainbow-input {
+  font-weight: 700;
+  display: inline-flex;
+  gap: 0;
+}
+
+.admin-rainbow-input span {
+  display: inline-block;
+}
+
+.admin-icon {
+  color: gold;
+  font-size: 0.75em;
+  margin-right: 2px;
+  text-shadow: 0 0 5px gold;
+}
+
+/* Emoji picker button */
+.shoutbox-emoji-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px 10px;
+  font-size: 1rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.shoutbox-emoji-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Emoji picker container */
+.emoji-picker-container {
+  position: relative;
+  margin-top: 8px;
+}
+
+/* Custom emoji picker grid */
+.custom-emoji-picker {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  padding: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.custom-emoji-option {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.custom-emoji-option:hover {
+  background: var(--primary);
+  transform: scale(1.15);
+}
+
+/* Chat emoji in messages */
+.chat-emoji {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin: 0 2px;
+  display: inline-block;
+}
+
 /* Shoutbox Admin Styles */
 .shoutbox-admin-toggle,
 .shoutbox-admin-btn {

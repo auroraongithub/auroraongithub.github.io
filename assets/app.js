@@ -1403,15 +1403,25 @@ function formatNumber(num) {
 }
 
 // ==========================================================================
-// SHOUTBOX
+// SHOUTBOX WITH ABLY REAL-TIME
 // ==========================================================================
 
 let shoutboxUser = null;
 let shoutboxColor = '#6de6e2'; // Default to theme primary color
-let shoutboxPollTimer = null;
+let ablyClient = null;
+let chatChannel = null;
+let shoutboxMessages = []; // Local message cache
+
+// Admin config
+const ADMIN_USERNAME = 'aurora';
+const ADMIN_COLOR = 'rainbow'; // Special flag for rainbow effect
 
 // All shoutbox instances (sidebar, mobile, drawer)
 const shoutboxInstances = ['', 'mobile', 'drawer'];
+
+// Rainbow colors for admin name animation
+const rainbowColors = ["#ff0000", "#ff5500", "#ffaa00", "#ffff00", "#aaff00", "#55ff00", "#00ff00", "#00ff55", "#00ffaa", "#00ffff", "#00aaff", "#0055ff", "#0000ff", "#5500ff", "#aa00ff", "#ff00ff", "#ff00aa", "#ff0055"];
+let rainbowInterval = null;
 
 function initShoutbox() {
   // Check if any shoutbox exists
@@ -1439,14 +1449,17 @@ function initShoutbox() {
     });
   }
   
-  // Load messages
-  loadShoutboxMessages();
+  // Initialize Ably
+  initAbly();
   
-  // Poll for new messages every 15 seconds (with 10 sec cache)
-  shoutboxPollTimer = setInterval(loadShoutboxMessages, 15000);
+  // Load message history from backend (one-time)
+  loadMessageHistory();
   
   // Check admin status on load
   updateAdminButtons(isAdminLoggedIn());
+  
+  // Setup emoji pickers
+  setupEmojiPickers();
   
   // Make functions globally available
   window.joinShoutbox = joinShoutbox;
@@ -1457,6 +1470,150 @@ function initShoutbox() {
   window.openAdminLogin = openAdminLogin;
   window.closeAdminLogin = closeAdminLogin;
   window.submitAdminLogin = submitAdminLogin;
+  window.toggleEmojiPicker = toggleEmojiPicker;
+}
+
+// Initialize Ably real-time connection
+function initAbly() {
+  try {
+    // Using the public subscribe key
+    ablyClient = new Ably.Realtime('n02Veg.q8RTcA:dGXZAbNs4sibJ6mTELpZoUhT5ZdGqvW_1LH6aPdnmMs');
+    
+    ablyClient.connection.on('connected', () => {
+      console.log('Connected to Ably');
+      subscribeToChat();
+    });
+    
+    ablyClient.connection.on('failed', (err) => {
+      console.error('Ably connection failed:', err);
+    });
+  } catch (err) {
+    console.error('Failed to initialize Ably:', err);
+  }
+}
+
+// Subscribe to chat channel
+function subscribeToChat() {
+  chatChannel = ablyClient.channels.get('nijikade-chat');
+  
+  // Listen for new messages
+  chatChannel.subscribe('message', (msg) => {
+    const data = msg.data;
+    addMessageToUI(data);
+  });
+  
+  // Listen for delete events
+  chatChannel.subscribe('delete', (msg) => {
+    const msgId = msg.data.id;
+    removeMessageFromUI(msgId);
+  });
+}
+
+// Load message history from backend (one-time on page load)
+async function loadMessageHistory() {
+  try {
+    const res = await fetch(`${API_BASE}/site/shoutbox?limit=30`);
+    const data = await res.json();
+    shoutboxMessages = data.messages || [];
+    renderAllMessages();
+  } catch (err) {
+    console.error('Failed to load message history:', err);
+    shoutboxInstances.forEach(prefix => {
+      const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
+      const messagesEl = document.getElementById(id);
+      if (messagesEl) {
+        messagesEl.innerHTML = '<div class="shoutbox-loading">Failed to load messages</div>';
+      }
+    });
+  }
+}
+
+// Add a new message to the UI
+function addMessageToUI(msg) {
+  // Add to local cache
+  shoutboxMessages.push(msg);
+  
+  // Keep only last 50 messages locally
+  if (shoutboxMessages.length > 50) {
+    shoutboxMessages.shift();
+  }
+  
+  renderAllMessages();
+}
+
+// Remove a message from UI (when deleted)
+function removeMessageFromUI(msgId) {
+  shoutboxMessages = shoutboxMessages.filter(m => m.id !== msgId);
+  renderAllMessages();
+}
+
+// Render all messages to all shoutbox instances
+function renderAllMessages() {
+  const isAdmin = isAdminLoggedIn();
+  
+  const html = !shoutboxMessages.length 
+    ? '<div class="shoutbox-empty">No messages yet. Be the first to say hi!</div>'
+    : shoutboxMessages.map(msg => {
+        const time = new Date(msg.timestamp);
+        const timeStr = time.toLocaleString('en-US', { 
+          month: 'short', 
+          day: 'numeric', 
+          hour: 'numeric', 
+          minute: '2-digit',
+          hour12: true 
+        });
+        
+        // Only show rainbow if message has isAdmin flag (sent while logged in as admin)
+        const isAdminMessage = msg.isAdmin === true;
+        const userClass = isAdminMessage ? 'shoutbox-msg-user admin-rainbow' : 'shoutbox-msg-user';
+        const userStyle = isAdminMessage ? '' : `style="color: ${escapeHtml(msg.color)}"`;
+        const adminIcon = isAdminMessage ? '<i class="bi bi-star-fill admin-icon"></i> ' : '';
+        
+        return `
+          <div class="shoutbox-msg" data-msg-id="${msg.id}">
+            <div class="shoutbox-msg-header">
+              <span class="${userClass}" ${userStyle} data-username="${escapeHtml(msg.username)}">${adminIcon}${escapeHtml(msg.username)}</span>
+              <span class="shoutbox-msg-time">${timeStr}</span>
+              ${isAdmin ? `<button class="shoutbox-delete-btn" onclick="deleteShoutboxMsg('${msg.id}')" title="Delete message"><i class="bi bi-trash"></i></button>` : ''}
+            </div>
+            <div class="shoutbox-msg-text">${parseCustomEmojis(escapeHtml(msg.message))}</div>
+          </div>
+        `;
+      }).join('');
+  
+  // Update all instances
+  shoutboxInstances.forEach(prefix => {
+    const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
+    const messagesEl = document.getElementById(id);
+    if (messagesEl) {
+      messagesEl.innerHTML = html;
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+  });
+  
+  // Start rainbow animation for admin names
+  startRainbowAnimation();
+}
+
+// Rainbow text animation for admin username
+function startRainbowAnimation() {
+  if (rainbowInterval) clearInterval(rainbowInterval);
+  
+  let colorIndex = 0;
+  rainbowInterval = setInterval(() => {
+    document.querySelectorAll('.admin-rainbow').forEach(el => {
+      const username = el.getAttribute('data-username') || '';
+      let html = '';
+      for (let i = 0; i < username.length; i++) {
+        const color = rainbowColors[(i + colorIndex) % rainbowColors.length];
+        html += `<span style="color: ${color}; text-shadow: ${color} 0px 0px 3px;">${username.charAt(i)}</span>`;
+      }
+      // Keep the admin icon
+      html = '<i class="bi bi-star-fill admin-icon"></i> ' + html;
+      el.innerHTML = html;
+    });
+    colorIndex++;
+  }, 100);
 }
 
 // Check if user is logged in as admin
@@ -1534,9 +1691,15 @@ async function submitAdminLogin() {
       sessionStorage.setItem('jwt', data.token);
       closeAdminLogin();
       updateAdminButtons(true);
-      loadShoutboxMessages();
+      
+      // Auto-set username to 'aurora' when admin logs in
+      shoutboxUser = ADMIN_USERNAME;
+      localStorage.setItem('shoutboxUser', shoutboxUser);
+      showShoutboxInput();
+      
+      renderAllMessages(); // Re-render to show delete buttons
     } else {
-      if (errorEl) errorEl.textContent = 'Invalid password';
+      if (errorEl) errorEl.textContent = 'Invalid credentials';
     }
   } catch (err) {
     console.error('Login failed:', err);
@@ -1566,7 +1729,7 @@ function toggleAdminMode() {
     sessionStorage.removeItem('jwt');
     localStorage.removeItem('jwt');
     updateAdminButtons(false);
-    loadShoutboxMessages();
+    renderAllMessages(); // Re-render to hide delete buttons
   } else {
     // Open login modal
     openAdminLogin();
@@ -1587,7 +1750,13 @@ async function deleteShoutboxMsg(msgId) {
     });
     
     if (res.ok) {
-      loadShoutboxMessages();
+      // Remove from local cache immediately
+      removeMessageFromUI(msgId);
+      
+      // Publish delete event to Ably so other clients remove it too
+      if (chatChannel) {
+        chatChannel.publish('delete', { id: msgId });
+      }
     } else {
       const errorData = await res.json().catch(() => ({}));
       console.error('Delete failed:', res.status, errorData);
@@ -1596,59 +1765,6 @@ async function deleteShoutboxMsg(msgId) {
   } catch (err) {
     console.error('Delete failed:', err);
     alert('Failed to delete message: ' + err.message);
-  }
-}
-
-async function loadShoutboxMessages() {
-  const isAdmin = isAdminLoggedIn();
-  
-  try {
-    const data = await cachedFetch(`${API_BASE}/site/shoutbox?limit=30`, 10000); // 10 sec cache
-    const messages = data.messages || [];
-    
-    const html = !messages.length 
-      ? '<div class="shoutbox-empty">No messages yet. Be the first to say hi!</div>'
-      : messages.map(msg => {
-          const time = new Date(msg.timestamp);
-          const timeStr = time.toLocaleString('en-US', { 
-            month: 'short', 
-            day: 'numeric', 
-            hour: 'numeric', 
-            minute: '2-digit',
-            hour12: true 
-          });
-          
-          return `
-            <div class="shoutbox-msg" data-msg-id="${msg.id}">
-              <div class="shoutbox-msg-header">
-                <span class="shoutbox-msg-user" style="color: ${escapeHtml(msg.color)}">${escapeHtml(msg.username)}</span>
-                <span class="shoutbox-msg-time">${timeStr}</span>
-                ${isAdmin ? `<button class="shoutbox-delete-btn" onclick="deleteShoutboxMsg('${msg.id}')" title="Delete message"><i class="bi bi-trash"></i></button>` : ''}
-              </div>
-              <div class="shoutbox-msg-text">${escapeHtml(msg.message)}</div>
-            </div>
-          `;
-        }).join('');
-    
-    // Update all instances
-    shoutboxInstances.forEach(prefix => {
-      const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
-      const messagesEl = document.getElementById(id);
-      if (messagesEl) {
-        messagesEl.innerHTML = html;
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-      }
-    });
-    
-  } catch (err) {
-    console.error('Failed to load shoutbox:', err);
-    shoutboxInstances.forEach(prefix => {
-      const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
-      const messagesEl = document.getElementById(id);
-      if (messagesEl) {
-        messagesEl.innerHTML = '<div class="shoutbox-loading">Failed to load messages</div>';
-      }
-    });
   }
 }
 
@@ -1674,6 +1790,14 @@ function joinShoutbox(source = '') {
 }
 
 function showShoutboxInput() {
+  const isAdmin = isAdminLoggedIn();
+  
+  // If admin is logged in, auto-set username to 'aurora'
+  if (isAdmin && shoutboxUser !== ADMIN_USERNAME) {
+    shoutboxUser = ADMIN_USERNAME;
+    localStorage.setItem('shoutboxUser', shoutboxUser);
+  }
+  
   // Update all instances
   shoutboxInstances.forEach(prefix => {
     const setupId = prefix ? `${prefix}ShoutboxSetup` : 'shoutboxSetup';
@@ -1687,10 +1811,38 @@ function showShoutboxInput() {
     if (setupEl) setupEl.style.display = 'none';
     if (inputEl) inputEl.style.display = 'flex';
     if (currentUserEl) {
-      currentUserEl.textContent = shoutboxUser;
-      currentUserEl.style.color = shoutboxColor;
+      // If admin, show rainbow animated name
+      if (isAdmin && shoutboxUser.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
+        currentUserEl.classList.add('admin-rainbow-input');
+        currentUserEl.setAttribute('data-username', shoutboxUser);
+        startInputRainbowAnimation();
+      } else {
+        currentUserEl.classList.remove('admin-rainbow-input');
+        currentUserEl.textContent = shoutboxUser;
+        currentUserEl.style.color = shoutboxColor;
+      }
     }
   });
+}
+
+// Rainbow animation for input area username
+let inputRainbowInterval = null;
+function startInputRainbowAnimation() {
+  if (inputRainbowInterval) clearInterval(inputRainbowInterval);
+  
+  let colorIndex = 0;
+  inputRainbowInterval = setInterval(() => {
+    document.querySelectorAll('.admin-rainbow-input').forEach(el => {
+      const username = el.getAttribute('data-username') || ADMIN_USERNAME;
+      let html = '';
+      for (let i = 0; i < username.length; i++) {
+        const color = rainbowColors[(i + colorIndex) % rainbowColors.length];
+        html += `<span style="color: ${color}; text-shadow: ${color} 0px 0px 3px;">${username.charAt(i)}</span>`;
+      }
+      el.innerHTML = html;
+    });
+    colorIndex++;
+  }, 100);
 }
 
 function changeShoutboxUser(source = '') {
@@ -1725,26 +1877,41 @@ async function sendShoutboxMessage(source = '') {
   // Disable input while sending
   if (messageInput) messageInput.disabled = true;
   
+  // Close emoji picker if open
+  const pickerContainerId = source ? `${source}EmojiPickerContainer` : 'emojiPickerContainer';
+  const pickerContainer = document.getElementById(pickerContainerId);
+  if (pickerContainer) pickerContainer.style.display = 'none';
+  
   try {
+    // Check if user is logged in as admin
+    const sendingAsAdmin = isAdminLoggedIn() && shoutboxUser.toLowerCase() === ADMIN_USERNAME.toLowerCase();
+    
+    // Send to backend to store in Firestore
     const res = await fetch(`${API_BASE}/site/shoutbox`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         username: shoutboxUser,
         message: message,
-        color: shoutboxColor
+        color: shoutboxColor,
+        isAdmin: sendingAsAdmin
       })
     });
     
     if (res.ok) {
+      const data = await res.json();
+      
       // Clear all message inputs
       shoutboxInstances.forEach(p => {
         const msgId = p ? `${p}ShoutboxMessage` : 'shoutboxMessage';
         const input = document.getElementById(msgId);
         if (input) input.value = '';
       });
-      // Immediately reload messages
-      await loadShoutboxMessages();
+      
+      // Publish to Ably for real-time delivery to all clients
+      if (chatChannel && data.message) {
+        chatChannel.publish('message', data.message);
+      }
     } else {
       const data = await res.json();
       alert(data.error || 'Failed to send message');
@@ -1757,6 +1924,116 @@ async function sendShoutboxMessage(source = '') {
       messageInput.disabled = false;
       messageInput.focus();
     }
+  }
+}
+
+// Setup emoji pickers for all instances
+// Custom emoji list - extracted from img/emojis folder
+const customEmojis = [
+  { name: 'encoreexcited', file: '1899-encoreexcited.png' },
+  { name: 'baizhialert', file: '2305-baizhialert.png' },
+  { name: 'baizhipat', file: '2305-baizhipat.png' },
+  { name: 'nowords', file: '27020-nowords.png' },
+  { name: 'cookie', file: '29913-cookie.png' },
+  { name: 'snicker', file: '30807-snicker.png' },
+  { name: 'suspicious', file: '34928-suspicious.png' },
+  { name: 'salute', file: '35744-salute.png' },
+  { name: 'drool', file: '36175-drool.png' },
+  { name: 'desperate', file: '37802-desperate.png' },
+  { name: 'shades', file: '38741-shades.png' },
+  { name: 'shrug', file: '40335-shrug.png' },
+  { name: 'lingyangwhat', file: '4260-lingyangwhat.png' },
+  { name: 'linyangget', file: '4260-linyangget.png' },
+  { name: 'unamused', file: '42837-unamused.png' },
+  { name: 'goofy', file: '46615-goofy.png' },
+  { name: 'chixiacry', file: '4836-chixiacry.png' },
+  { name: 'regret', file: '58272-regret.png' },
+  { name: 'yangyanglove', file: '5982-yangyanglove.png' },
+  { name: 'argue', file: '60413-argue.png' },
+  { name: 'yangyanghappy', file: '6788-yangyanghappy.png' },
+  { name: 'think', file: '69470-think.png' },
+  { name: 'tears', file: '72467-tears.png' },
+  { name: 'hesitant', file: '72568-hesitant.png' },
+  { name: 'jianxinehe', file: '7356-jianxinehe.png' },
+  { name: 'scared', file: '73697-scared.png' },
+  { name: 'yangyangded', file: '7552-yangyangded.png' },
+  { name: 'annoyed', file: '77556-annoyed.png' },
+  { name: 'fistshake', file: '77867-fistshake.png' },
+  { name: 'yangyangsus', file: '7817-yangyangsus.png' },
+  { name: 'shy', file: '7938-shy.png' },
+  { name: 'verinaok', file: '7973-verinaok.png' },
+  { name: 'yangyangapprove', file: '8350-yangyangapprove.png' },
+  { name: 'plead', file: '84145-plead.png' },
+  { name: 'laugh', file: '87893-laugh.png' },
+  { name: 'devious', file: '9057-devious.png' },
+  { name: 'gasp', file: '9137-gasp.png' },
+  { name: 'baizhiangry', file: '9174-baizhiangry.png' },
+  { name: 'blank', file: '91810-blank.png' },
+  { name: 'party', file: '91838-party.png' },
+  { name: 'yangyangstonks', file: '9288-yangyangstonks.png' },
+  { name: 'thumbsup', file: '92984-thumbsup.png' },
+  { name: 'army', file: '94610-army.png' },
+  { name: 'beg', file: '96763-beg.png' },
+  { name: 'zani', file: '97212-zani.png' }
+];
+
+function setupEmojiPickers() {
+  shoutboxInstances.forEach(prefix => {
+    const containerId = prefix ? `${prefix}EmojiPickerContainer` : 'emojiPickerContainer';
+    const pickerId = prefix ? `${prefix}CustomEmojiPicker` : 'customEmojiPicker';
+    const container = document.getElementById(containerId);
+    const picker = document.getElementById(pickerId);
+    if (!container || !picker) return;
+    
+    // Build the custom emoji grid
+    picker.innerHTML = customEmojis.map(emoji => `
+      <img 
+        src="img/emojis/${emoji.file}" 
+        alt=":${emoji.name}:" 
+        title=":${emoji.name}:" 
+        class="custom-emoji-option"
+        data-emoji-name="${emoji.name}"
+      />
+    `).join('');
+    
+    // Add click handlers for each emoji
+    picker.querySelectorAll('.custom-emoji-option').forEach(img => {
+      img.addEventListener('click', () => {
+        const emojiCode = `:${img.dataset.emojiName}:`;
+        const msgId = prefix ? `${prefix}ShoutboxMessage` : 'shoutboxMessage';
+        const messageInput = document.getElementById(msgId);
+        if (messageInput) {
+          const start = messageInput.selectionStart;
+          const end = messageInput.selectionEnd;
+          const text = messageInput.value;
+          messageInput.value = text.substring(0, start) + emojiCode + text.substring(end);
+          messageInput.selectionStart = messageInput.selectionEnd = start + emojiCode.length;
+          messageInput.focus();
+        }
+        // Hide picker after selection
+        container.style.display = 'none';
+      });
+    });
+  });
+}
+
+// Convert emoji codes like :laugh: to <img> tags
+function parseCustomEmojis(text) {
+  return text.replace(/:([a-zA-Z0-9_]+):/g, (match, name) => {
+    const emoji = customEmojis.find(e => e.name === name);
+    if (emoji) {
+      return `<img src="img/emojis/${emoji.file}" alt=":${name}:" title=":${name}:" class="chat-emoji" />`;
+    }
+    return match; // Return original if no match
+  });
+}
+
+// Toggle emoji picker visibility
+function toggleEmojiPicker(source = '') {
+  const containerId = source ? `${source}EmojiPickerContainer` : 'emojiPickerContainer';
+  const container = document.getElementById(containerId);
+  if (container) {
+    container.style.display = container.style.display === 'none' ? 'block' : 'none';
   }
 }
 

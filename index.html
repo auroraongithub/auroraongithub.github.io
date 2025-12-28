@@ -8,6 +8,8 @@
   <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
   <link rel="stylesheet" href="./assets/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Ably Realtime for Chat -->
+  <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
   
   <script type="text/javascript">
   function tb8_makeArray(n){
@@ -377,8 +379,12 @@
                 <button class="shoutbox-change-user" onclick="changeShoutboxUser('mobile')" title="Change username"><i class="bi bi-pencil"></i></button>
               </div>
               <div class="shoutbox-send-row">
+                <button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker('mobile')" title="Add emoji"><i class="bi bi-emoji-smile"></i></button>
                 <input type="text" id="mobileShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('mobile')">
                 <button class="shoutbox-send-btn" onclick="sendShoutboxMessage('mobile')"><i class="bi bi-send"></i></button>
+              </div>
+              <div class="emoji-picker-container" id="mobileEmojiPickerContainer" style="display: none;">
+                <div class="custom-emoji-picker" id="mobileCustomEmojiPicker"></div>
               </div>
             </div>
           </div>
@@ -458,8 +464,12 @@
                 <button class="shoutbox-change-user" onclick="changeShoutboxUser()" title="Change username"><i class="bi bi-pencil"></i></button>
               </div>
               <div class="shoutbox-send-row">
+                <button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker()" title="Add emoji"><i class="bi bi-emoji-smile"></i></button>
                 <input type="text" id="shoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage()">
                 <button class="shoutbox-send-btn" onclick="sendShoutboxMessage()"><i class="bi bi-send"></i></button>
+              </div>
+              <div class="emoji-picker-container" id="emojiPickerContainer" style="display: none;">
+                <div class="custom-emoji-picker" id="customEmojiPicker"></div>
               </div>
             </div>
           </div>
@@ -562,8 +572,12 @@
                 <button class="shoutbox-change-user" onclick="changeShoutboxUser('drawer')" title="Change username"><i class="bi bi-pencil"></i></button>
               </div>
               <div class="shoutbox-send-row">
+                <button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker('drawer')" title="Add emoji"><i class="bi bi-emoji-smile"></i></button>
                 <input type="text" id="drawerShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('drawer')">
                 <button class="shoutbox-send-btn" onclick="sendShoutboxMessage('drawer')"><i class="bi bi-send"></i></button>
+              </div>
+              <div class="emoji-picker-container" id="drawerEmojiPickerContainer" style="display: none;">
+                <div class="custom-emoji-picker" id="drawerCustomEmojiPicker"></div>
               </div>
             </div>
           </div>
