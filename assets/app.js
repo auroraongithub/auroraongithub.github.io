@@ -748,6 +748,11 @@ function initPetals() {
     );
   }
   
+  function elementPastBottom(el) {
+    const rect = el.getBoundingClientRect();
+    return rect.top > (window.innerHeight || document.documentElement.clientHeight);
+  }
+  
   function createPetal() {
     if (!animationId) return;
     
@@ -779,15 +784,16 @@ function initPetals() {
     petal.style.left = `${Math.random() * document.documentElement.clientWidth - 100}px`;
     petal.style.marginTop = `${-(Math.floor(Math.random() * 20) + 15)}px`;
     
-    // Remove petal when animation ends
+    // Remove petal when fall animation ends (petal reached bottom)
     petal.addEventListener('animationend', function(e) {
-      if (e.animationName === 'fall' && !elementInViewport(this)) {
+      if (e.animationName === 'fall') {
         this.remove();
       }
     });
     
+    // Remove petal if it goes past the viewport bottom during blow/sway
     petal.addEventListener('animationiteration', function(e) {
-      if ((options.blowAnimations.includes(e.animationName) || options.swayAnimations.includes(e.animationName)) && !elementInViewport(this)) {
+      if ((options.blowAnimations.includes(e.animationName) || options.swayAnimations.includes(e.animationName)) && elementPastBottom(this)) {
         this.remove();
       }
     });

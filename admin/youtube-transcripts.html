@@ -1,0 +1,2468 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YouTube Transcripts · nijika.de</title>
+    <link rel="stylesheet" href="./../assets/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+      /* Page-specific styles only */
+      .transcript-layout {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 20px;
+        min-height: 600px;
+      }
+      
+      @media (max-width: 1000px) {
+        .transcript-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+      
+      .input-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .url-input {
+        width: 100%;
+        min-height: 100px;
+        padding: 12px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: monospace;
+        font-size: 0.9rem;
+        resize: vertical;
+      }
+      
+      .url-input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      
+      .stats-row {
+        display: flex;
+        gap: 10px;
+      }
+      
+      .stat-box {
+        flex: 1;
+        padding: 12px;
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        text-align: center;
+      }
+      
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary);
+      }
+      
+      .stat-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+      
+      .transcript-list-container {
+        flex: 1;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        max-height: 400px;
+      }
+      
+      .list-header {
+        padding: 10px 15px;
+        background: var(--gradient);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      
+      .list-header h4 {
+        margin: 0;
+        color: #fff;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .filter-btns {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      
+      .filter-btn {
+        padding: 3px 8px;
+        border: none;
+        border-radius: 4px;
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      
+      .filter-btn:hover {
+        background: rgba(255,255,255,0.3);
+      }
+      
+      .filter-btn.active {
+        background: rgba(255,255,255,0.4);
+      }
+      
+      .transcript-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+      }
+      
+      .transcript-item {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        border: 2px solid var(--border-light);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .transcript-item:hover {
+        border-color: var(--primary);
+        background: var(--bg-elev);
+      }
+      
+      .transcript-item.active {
+        border-color: var(--primary);
+        background: var(--card);
+      }
+      
+      .transcript-thumb {
+        width: 80px;
+        height: 45px;
+        border-radius: 4px;
+        object-fit: cover;
+        background: var(--border-light);
+      }
+      
+      .transcript-info {
+        flex: 1;
+        min-width: 0;
+      }
+      
+      .transcript-title {
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 4px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      .transcript-meta {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-size: 0.75rem;
+      }
+      
+      .status-badge {
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      
+      .status-pending {
+        background: rgba(241, 196, 15, 0.2);
+        color: #f1c40f;
+      }
+      
+      .status-ongoing {
+        background: rgba(52, 152, 219, 0.2);
+        color: #3498db;
+      }
+      
+      .status-done {
+        background: rgba(46, 204, 113, 0.2);
+        color: #2ecc71;
+      }
+      
+      .no-cc {
+        color: #e74c3c;
+      }
+      
+      /* Editor Panel */
+      .editor-panel {
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .editor-header {
+        padding: 12px 15px;
+        background: var(--card);
+        border-bottom: 2px solid var(--border);
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      
+      .editor-title-input {
+        flex: 1;
+        min-width: 200px;
+        padding: 8px 12px;
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 0.95rem;
+      }
+      
+      .editor-title-input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      
+      .editor-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      
+      .word-count {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        padding: 4px 8px;
+        background: var(--bg);
+        border-radius: 4px;
+      }
+      
+      .split-editor {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 400px;
+      }
+      
+      @media (max-width: 800px) {
+        .split-editor {
+          grid-template-columns: 1fr;
+        }
+      }
+      
+      .editor-pane {
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--border);
+      }
+      
+      .editor-pane:last-child {
+        border-right: none;
+      }
+      
+      .pane-header {
+        padding: 8px 15px;
+        background: var(--bg-elev);
+        border-bottom: 1px solid var(--border);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .pane-header i {
+        color: var(--primary);
+      }
+      
+      .transcript-textarea {
+        flex: 1;
+        width: 100%;
+        padding: 15px;
+        border: none;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 0.9rem;
+        line-height: 1.8;
+        resize: none;
+        min-height: 350px;
+      }
+      
+      .transcript-textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+      }
+      
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        text-align: center;
+        color: var(--text-muted);
+      }
+      
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+      }
+      
+      .empty-state h4 {
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      
+      .progress-bar {
+        height: 4px;
+        background: var(--border-light);
+        border-radius: 2px;
+        margin-top: 10px;
+        overflow: hidden;
+      }
+      
+      .progress-fill {
+        height: 100%;
+        background: var(--gradient);
+        width: 0%;
+        transition: width 0.3s;
+      }
+      
+      .status-msg {
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-top: 10px;
+        font-size: 0.85rem;
+        display: none;
+      }
+      
+      .status-msg.success {
+        display: block;
+        background: rgba(46, 204, 113, 0.15);
+        color: #2ecc71;
+        border: 1px solid rgba(46, 204, 113, 0.3);
+      }
+      
+      .status-msg.error {
+        display: block;
+        background: rgba(231, 76, 60, 0.15);
+        color: #e74c3c;
+        border: 1px solid rgba(231, 76, 60, 0.3);
+      }
+      
+      .status-msg.info {
+        display: block;
+        background: rgba(52, 152, 219, 0.15);
+        color: #3498db;
+        border: 1px solid rgba(52, 152, 219, 0.3);
+      }
+      
+      /* Expanded Mode - hides sidebar and expands main */
+      body.expanded-mode .neo-sidebar {
+        display: none;
+      }
+      
+      body.expanded-mode .neo-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      body.expanded-mode .neo-main {
+        max-width: 100%;
+      }
+      
+      body.expanded-mode .neo-box > .neo-header,
+      body.expanded-mode .neo-box > .neo-content > .transcript-layout {
+        display: none;
+      }
+      
+      body.expanded-mode .site-banner {
+        display: none;
+      }
+      
+      body.expanded-mode .neo-container {
+        padding: 0;
+        max-width: 100%;
+      }
+      
+      body.expanded-mode .neo-box {
+        border: none;
+        border-radius: 0;
+      }
+      
+      body.expanded-mode .neo-content {
+        padding: 0;
+      }
+      
+      /* Expanded Editor - now part of the page flow */
+      .expanded-editor-wrapper {
+        display: none;
+        flex-direction: column;
+        height: 100vh;
+        min-height: 600px;
+      }
+      
+      body.expanded-mode .expanded-editor-wrapper {
+        display: flex;
+      }
+      
+      .expanded-header {
+        padding: 12px 20px;
+        background: var(--gradient);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      .expanded-header h3 {
+        margin: 0;
+        color: #fff;
+        font-size: 1rem;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .expanded-header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      
+      .expanded-header .btn {
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: none;
+      }
+      
+      .expanded-header .btn:hover {
+        background: rgba(255,255,255,0.3);
+      }
+      
+      .expanded-body {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 240px 1fr 380px;
+        gap: 0;
+        min-height: 0;
+        overflow: hidden;
+      }
+      
+      /* Expanded Transcript Sidebar */
+      .expanded-sidebar {
+        display: flex;
+        flex-direction: column;
+        background: var(--card);
+        border-right: 2px solid var(--border);
+        overflow: hidden;
+      }
+      
+      .expanded-sidebar-header {
+        padding: 12px 16px;
+        background: var(--gradient);
+        border-bottom: 2px solid var(--border);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+      }
+      
+      .expanded-sidebar-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+      }
+      
+      .expanded-sidebar-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        margin-bottom: 4px;
+        background: var(--bg);
+        border: 2px solid transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      
+      .expanded-sidebar-item:hover {
+        background: var(--bg-elev);
+        border-color: var(--border);
+      }
+      
+      .expanded-sidebar-item.active {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--border);
+      }
+      
+      .expanded-sidebar-item img {
+        width: 48px;
+        height: 27px;
+        object-fit: cover;
+        border-radius: 3px;
+      }
+      
+      .expanded-sidebar-item .item-info {
+        flex: 1;
+        min-width: 0;
+      }
+      
+      .expanded-sidebar-item .item-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .expanded-sidebar-item .item-status {
+        font-size: 0.65rem;
+        margin-top: 2px;
+        opacity: 0.8;
+      }
+      
+      @media (max-width: 1100px) {
+        .expanded-body {
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr auto;
+        }
+        .expanded-sidebar {
+          display: none;
+        }
+      }
+      
+      .expanded-transcripts {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        overflow-y: auto;
+        background: var(--bg);
+      }
+      
+      .expanded-pane {
+        display: flex;
+        flex-direction: column;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        flex: 1;
+        min-height: 200px;
+      }
+      
+      .expanded-pane .pane-header {
+        padding: 10px 15px;
+        background: var(--bg-elev);
+        border-bottom: 1px solid var(--border);
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .expanded-pane .pane-header i {
+        color: var(--primary);
+      }
+      
+      .expanded-pane textarea {
+        flex: 1;
+        width: 100%;
+        padding: 15px;
+        border: none;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 0.95rem;
+        line-height: 1.8;
+        resize: none;
+        min-height: 150px;
+      }
+      
+      .expanded-pane textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+      }
+      
+      /* AI Chat Panel */
+      .ai-chat-panel {
+        display: flex;
+        flex-direction: column;
+        background: var(--card);
+        border-left: 2px solid var(--border);
+        overflow: hidden;
+      }
+      
+      @media (max-width: 1100px) {
+        .ai-chat-panel {
+          border-left: none;
+          border-top: 2px solid var(--border);
+          max-height: 350px;
+        }
+      }
+      
+      .ai-chat-header {
+        padding: 12px 15px;
+        background: var(--gradient);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .ai-chat-header h4 {
+        margin: 0;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .ai-chat-header h4 i {
+        color: #fff;
+      }
+      
+      .ai-chat-header-actions {
+        display: flex;
+        gap: 8px;
+      }
+      
+      .ai-chat-header .btn-icon {
+        padding: 6px 8px;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+      
+      .ai-chat-header .btn-icon:hover {
+        background: rgba(255,255,255,0.3);
+      }
+      
+      .ai-chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .ai-message {
+        max-width: 90%;
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        word-wrap: break-word;
+      }
+      
+      .ai-message.user {
+        align-self: flex-end;
+        background: var(--primary);
+        color: #000;
+        border-bottom-right-radius: 4px;
+      }
+      
+      .ai-message.assistant {
+        align-self: flex-start;
+        background: var(--bg-elev);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-bottom-left-radius: 4px;
+      }
+      
+      .ai-message.system {
+        align-self: center;
+        background: transparent;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        padding: 5px 10px;
+      }
+      
+      .ai-message-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 6px;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      
+      .ai-message:hover .ai-message-actions {
+        opacity: 1;
+      }
+      
+      .ai-message-actions button {
+        background: transparent;
+        border: none;
+        color: inherit;
+        opacity: 0.6;
+        cursor: pointer;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+      }
+      
+      .ai-message-actions button:hover {
+        opacity: 1;
+      }
+      
+      .ai-chat-input-area {
+        padding: 12px 15px;
+        border-top: 1px solid var(--border);
+        background: var(--bg);
+      }
+      
+      .ai-chat-input-row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+      }
+      
+      .ai-chat-input {
+        flex: 1;
+        padding: 10px 14px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        color: var(--text);
+        font-size: 0.9rem;
+        resize: none;
+        min-height: 42px;
+        max-height: 120px;
+        line-height: 1.4;
+      }
+      
+      .ai-chat-input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      
+      .ai-chat-send {
+        padding: 10px 16px;
+        background: var(--gradient);
+        border: none;
+        border-radius: 8px;
+        color: #000;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      
+      .ai-chat-send:hover {
+        opacity: 0.9;
+      }
+      
+      .ai-chat-send:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      
+      .ai-quick-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+      
+      .ai-quick-btn {
+        padding: 6px 12px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .ai-quick-btn:hover {
+        border-color: var(--primary);
+        color: var(--text);
+      }
+      
+      .ai-typing-indicator {
+        display: flex;
+        gap: 4px;
+        padding: 10px 14px;
+        align-self: flex-start;
+      }
+      
+      .ai-typing-indicator span {
+        width: 8px;
+        height: 8px;
+        background: var(--text-muted);
+        border-radius: 50%;
+        animation: typing 1.4s infinite ease-in-out;
+      }
+      
+      .ai-typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      
+      .ai-typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      
+      @keyframes typing {
+        0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+        30% { transform: translateY(-4px); opacity: 1; }
+      }
+      
+      /* Checkpoint divider */
+      .ai-checkpoint {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        margin: 8px 0;
+      }
+      
+      .ai-checkpoint-line {
+        flex: 1;
+        height: 1px;
+        background: var(--primary);
+        opacity: 0.5;
+      }
+      
+      .ai-checkpoint-label {
+        font-size: 0.7rem;
+        color: var(--primary);
+        background: var(--bg);
+        padding: 4px 10px;
+        border-radius: 12px;
+        border: 1px solid var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .ai-checkpoint-label:hover {
+        background: var(--primary);
+        color: #000;
+      }
+      
+      .ai-checkpoint-label i {
+        font-size: 0.65rem;
+      }
+      
+      /* Add checkpoint button */
+      .ai-add-checkpoint {
+        padding: 4px 8px;
+        background: transparent;
+        border: 1px dashed var(--border);
+        border-radius: 4px;
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        cursor: pointer;
+        margin: 5px 0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        align-self: center;
+      }
+      
+      .ai-add-checkpoint:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+      
+      /* Expand button */
+      .btn-expand {
+        padding: 6px 10px;
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      
+      .btn-expand:hover {
+        background: var(--bg);
+        color: var(--text);
+        border-color: var(--primary);
+      }
+      
+      /* AI Settings Modal */
+      .ai-settings-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 10001;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      
+      .ai-settings-overlay.active {
+        display: flex;
+      }
+      
+      .ai-settings-container {
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        width: 100%;
+        max-width: 700px;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow-hover);
+      }
+      
+      .ai-settings-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+        background: var(--gradient);
+      }
+      
+      .ai-settings-header h3 {
+        margin: 0;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .ai-settings-header .btn-icon {
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: none;
+      }
+      
+      .ai-settings-header .btn-icon:hover {
+        background: rgba(255,255,255,0.3);
+      }
+      
+      .ai-settings-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .ai-settings-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .ai-settings-group label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .ai-settings-group label small {
+        font-weight: 400;
+        color: var(--text-muted);
+      }
+      
+      .ai-settings-group textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: 12px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        background: var(--background);
+        color: var(--text);
+        font-size: 0.85rem;
+        font-family: 'JetBrains Mono', monospace;
+        resize: vertical;
+        line-height: 1.5;
+      }
+      
+      .ai-settings-group textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      
+      .ai-settings-group select {
+        padding: 10px 14px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        background-color: var(--card);
+        color: var(--text);
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+      
+      .ai-settings-group select:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      
+      .ai-settings-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 16px 20px;
+        border-top: 2px solid var(--border);
+        background: var(--surface);
+      }
+      
+      .ai-settings-footer .btn {
+        padding: 10px 20px;
+      }
+      
+      .ai-settings-info {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        background: var(--background);
+        padding: 12px;
+        border-radius: 8px;
+        border-left: 3px solid var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Color Picker Modal -->
+    <div class="color-picker-modal" data-color-modal>
+      <div class="color-picker-content">
+        <div class="color-picker-header">
+          <h3>Choose Your Color</h3>
+          <button class="color-picker-close" data-color-close>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="color-picker-options">
+          <button class="color-option" data-color="cyan" title="Cyan">
+            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
+            <span>Cyan</span>
+          </button>
+          <button class="color-option" data-color="pink" title="Pink">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
+            <span>Pink</span>
+          </button>
+          <button class="color-option" data-color="purple" title="Purple">
+            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
+            <span>Purple</span>
+          </button>
+          <button class="color-option" data-color="green" title="Green">
+            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
+            <span>Green</span>
+          </button>
+          <button class="color-option" data-color="orange" title="Orange">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
+            <span>Orange</span>
+          </button>
+          <button class="color-option" data-color="blue" title="Blue">
+            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
+            <span>Blue</span>
+          </button>
+          <button class="color-option" data-color="red" title="Red">
+            <div class="color-preview" style="background: linear-gradient(135deg, #e74c3c, #ec7063);"></div>
+            <span>Red</span>
+          </button>
+          <button class="color-option" data-color="yellow" title="Yellow">
+            <div class="color-preview" style="background: linear-gradient(135deg, #f1c40f, #f7dc6f);"></div>
+            <span>Yellow</span>
+          </button>
+          <button class="color-option" data-color="teal" title="Teal">
+            <div class="color-preview" style="background: linear-gradient(135deg, #1abc9c, #48c9b0);"></div>
+            <span>Teal</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="neo-container">
+      <!-- Site Banner/Header -->
+      <div class="site-banner">
+        <div class="brand">nijika.de</div>
+        <div class="header-controls">
+          <button class="color-picker-toggle" title="Change color" data-color-picker>
+            <i class="bi bi-palette"></i>
+          </button>
+          <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+            <i class="bi bi-brightness-high"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="neo-layout">
+        <aside class="neo-sidebar">
+          <div class="neo-box">
+            <div class="neo-header"><h3>Content</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./blogs.html">Blogs</a></li>
+                <li><a href="./stories.html">Stories</a></li>
+                <li><a href="./add-post.html">Add Post</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="neo-box">
+            <div class="neo-header"><h3>Site</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./status.html">Status Strip</a></li>
+                <li><a href="./now.html">Now Page</a></li>
+                <li><a href="./changelog.html">Changelog</a></li>
+                <li><a href="./resources.html">Resources</a></li>
+                <li><a href="./favorites.html">Favorites</a></li>
+                <li><a href="./portfolio.html">Portfolio</a></li>
+                <li><a href="./settings.html">Settings</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="neo-box">
+            <div class="neo-header"><h3>YouTube CMS</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./youtube-research.html"><i class="bi bi-youtube"></i> Research</a></li>
+                <li><a href="./youtube-transcripts.html" class="active"><i class="bi bi-card-text"></i> Transcripts</a></li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        <main class="neo-main">
+          <section class="neo-box">
+            <div class="neo-header">
+              <h2><i class="bi bi-card-text"></i> YouTube Transcript Extractor</h2>
+            </div>
+            <div class="neo-content">
+              <div class="transcript-layout">
+                <!-- Left Panel -->
+                <div class="input-panel">
+                  <!-- URL Input -->
+                  <div>
+                    <label style="font-weight: 600; margin-bottom: 8px; display: block;">
+                      <i class="bi bi-link-45deg"></i> Add Videos
+                    </label>
+                    <textarea 
+                      class="url-input" 
+                      id="url-input" 
+                      placeholder="Paste YouTube URLs here (one per line)&#10;&#10;https://youtube.com/watch?v=...&#10;https://youtu.be/...&#10;https://youtube.com/shorts/..."
+                    ></textarea>
+                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                      <button class="btn btn-primary" style="flex: 1;" onclick="extractTranscripts()">
+                        <i class="bi bi-download"></i> Extract
+                      </button>
+                      <button class="btn btn-secondary" style="flex: 1;" onclick="createBlankTranscript()">
+                        <i class="bi bi-plus-lg"></i> Create Blank
+                      </button>
+                    </div>
+                    <div class="status-msg" id="extract-status"></div>
+                    <div class="progress-bar" id="progress-bar" style="display: none;">
+                      <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                  </div>
+                  
+                  <!-- Stats -->
+                  <div class="stats-row">
+                    <div class="stat-box">
+                      <div class="stat-value" id="stat-total">0</div>
+                      <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-box">
+                      <div class="stat-value" id="stat-pending">0</div>
+                      <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-box">
+                      <div class="stat-value" id="stat-ongoing">0</div>
+                      <div class="stat-label">Ongoing</div>
+                    </div>
+                    <div class="stat-box">
+                      <div class="stat-value" id="stat-done">0</div>
+                      <div class="stat-label">Done</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Transcript List -->
+                  <div class="transcript-list-container">
+                    <div class="list-header">
+                      <h4><i class="bi bi-list-ul"></i> Transcripts</h4>
+                      <div class="filter-btns">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="pending">Pending</button>
+                        <button class="filter-btn" data-filter="ongoing">Ongoing</button>
+                        <button class="filter-btn" data-filter="done">Done</button>
+                      </div>
+                    </div>
+                    <div class="transcript-list" id="transcript-list">
+                      <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <h4>No Transcripts Yet</h4>
+                        <p>Paste YouTube URLs above to extract transcripts</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Right Panel: Editor -->
+                <div class="editor-panel">
+                  <div class="editor-header">
+                    <input 
+                      type="text" 
+                      class="editor-title-input" 
+                      id="editor-title" 
+                      placeholder="Video Title (click a transcript to edit)" 
+                      disabled
+                    />
+                    <div class="editor-actions">
+                      <span class="word-count" id="word-count">0 words</span>
+                      <button class="btn-expand" id="btn-expand" onclick="openExpandedEditor()" title="Expand Editor">
+                        <i class="bi bi-arrows-fullscreen"></i>
+                      </button>
+                      <button class="btn btn-ghost" id="btn-mark-done" onclick="toggleStatus()" disabled>
+                        <i class="bi bi-check-circle"></i> Done
+                      </button>
+                      <button class="btn btn-primary" id="btn-save" onclick="saveTranscript()" disabled>
+                        <i class="bi bi-save"></i> Save
+                      </button>
+                      <button class="btn btn-ghost" id="btn-delete" onclick="deleteTranscript()" disabled style="color: #e74c3c;">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="split-editor">
+                    <div class="editor-pane">
+                      <div class="pane-header">
+                        <i class="bi bi-file-text"></i> Original Transcript
+                        <span style="margin-left: auto; font-size: 0.7rem; color: var(--text-muted);">(editable)</span>
+                      </div>
+                      <textarea 
+                        class="transcript-textarea" 
+                        id="original-transcript" 
+                        placeholder="Original transcript will appear here..."
+                        disabled
+                      ></textarea>
+                    </div>
+                    <div class="editor-pane">
+                      <div class="pane-header">
+                        <i class="bi bi-pencil-square"></i> Your Version
+                      </div>
+                      <textarea 
+                        class="transcript-textarea" 
+                        id="edited-transcript" 
+                        placeholder="Edit your version of the transcript here..."
+                        disabled
+                        oninput="updateWordCount()"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Expanded Editor (shown when in expanded mode) -->
+              <div class="expanded-editor-wrapper" id="expanded-editor-wrapper">
+                <div class="expanded-header">
+                  <h3 id="expanded-title">Video Title</h3>
+                  <div class="expanded-header-actions">
+                    <span class="word-count" id="expanded-word-count">0 words</span>
+                    <button class="btn" id="expanded-mark-done" onclick="toggleStatusFromExpanded()">
+                      <i class="bi bi-check-circle"></i> Done
+                    </button>
+                    <button class="btn" id="expanded-save-btn" onclick="saveFromExpanded()">
+                      <i class="bi bi-save"></i> Save
+                    </button>
+                    <button class="btn" onclick="closeExpandedEditor()">
+                      <i class="bi bi-x-lg"></i> Close
+                    </button>
+                  </div>
+                </div>
+                <div class="expanded-body">
+                  <!-- Transcript Sidebar -->
+                  <div class="expanded-sidebar">
+                    <div class="expanded-sidebar-header">
+                      <i class="bi bi-list-ul"></i> Transcripts
+                    </div>
+                    <div class="expanded-sidebar-list" id="expanded-sidebar-list">
+                      <!-- Populated by JS -->
+                    </div>
+                  </div>
+                  
+                  <div class="expanded-transcripts">
+                    <!-- Original Transcript -->
+                    <div class="expanded-pane">
+                      <div class="pane-header">
+                        <i class="bi bi-file-text"></i> Original Transcript
+                      </div>
+                      <textarea 
+                        id="expanded-original" 
+                        placeholder="Original transcript will appear here..."
+                      ></textarea>
+                    </div>
+                    <!-- Your Version -->
+                    <div class="expanded-pane">
+                      <div class="pane-header">
+                        <i class="bi bi-pencil-square"></i> Your Version
+                        <span style="margin-left: auto; font-size: 0.75rem; color: var(--text-muted);">AI output will appear here</span>
+                      </div>
+                      <textarea 
+                        id="expanded-edited" 
+                        placeholder="Edit your version of the transcript here..."
+                        oninput="updateExpandedWordCount()"
+                      ></textarea>
+                    </div>
+                  </div>
+                  
+                  <!-- AI Chat Panel -->
+                  <div class="ai-chat-panel">
+                    <div class="ai-chat-header">
+                      <h4><i class="bi bi-robot"></i> AI Assistant</h4>
+                      <div class="ai-chat-header-actions">
+                        <button class="btn-icon" onclick="addCheckpoint()" title="Add Checkpoint">
+                          <i class="bi bi-flag"></i>
+                        </button>
+                        <button class="btn-icon" onclick="openAISettings()" title="AI Settings">
+                          <i class="bi bi-gear"></i>
+                        </button>
+                        <button class="btn-icon" onclick="clearChat()" title="Clear Chat">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="ai-chat-messages" id="ai-chat-messages">
+                      <div class="ai-message system">
+                        Select a transcript and use the quick actions or type a message to start.
+                      </div>
+                    </div>
+                    <div class="ai-chat-input-area">
+                      <div class="ai-chat-input-row">
+                        <textarea 
+                          class="ai-chat-input" 
+                          id="ai-chat-input" 
+                          placeholder="Ask AI to revise, improve, or rewrite..."
+                          rows="1"
+                          onkeydown="handleChatKeydown(event)"
+                          oninput="autoResizeChatInput(this)"
+                        ></textarea>
+                        <button class="ai-chat-send" id="ai-chat-send" onclick="sendChatMessage()">
+                          <i class="bi bi-send"></i>
+                        </button>
+                      </div>
+                      <div class="ai-quick-actions">
+                        <button class="ai-quick-btn" onclick="quickAction('rewrite')">
+                          <i class="bi bi-arrow-repeat"></i> Rewrite Script
+                        </button>
+                        <button class="ai-quick-btn" onclick="quickAction('hook')">
+                          <i class="bi bi-lightning"></i> Better Hook
+                        </button>
+                        <button class="ai-quick-btn" onclick="quickAction('shorter')">
+                          <i class="bi bi-scissors"></i> Make Shorter
+                        </button>
+                        <button class="ai-quick-btn" onclick="quickAction('punchier')">
+                          <i class="bi bi-fire"></i> More Punchy
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- AI Settings Modal -->
+    <div class="ai-settings-overlay" id="ai-settings-overlay">
+      <div class="ai-settings-container">
+        <div class="ai-settings-header">
+          <h3><i class="bi bi-gear"></i> AI Settings</h3>
+          <button class="btn-icon" onclick="closeAISettings()" title="Close">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="ai-settings-body">
+          <div class="ai-settings-info">
+            <strong>Note:</strong> Changes here are stored locally and override the backend defaults. Reset to restore server-side prompts.
+          </div>
+          
+          <div class="ai-settings-group">
+            <label>
+              <i class="bi bi-cpu"></i> Model
+            </label>
+            <select id="ai-model-select">
+              <option value="openai/gpt-4o">GPT-4o (Default)</option>
+              <option value="openai/gpt-4.1">GPT-4.1</option>
+              <option value="openai/gpt-4.1-mini">GPT-4.1 Mini</option>
+              <option value="openai/gpt-5.2">GPT-5.2</option>
+              <option value="anthropic/claude-sonnet-4">Claude Sonnet 4</option>
+              <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+              <option value="anthropic/claude-haiku-4.5">Claude Haiku 4.5</option>
+              <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash</option>
+            </select>
+          </div>
+          
+          <div class="ai-settings-group">
+            <label>
+              <i class="bi bi-chat-square-text"></i> System Prompt
+              <small>(Defines the AI's persona)</small>
+            </label>
+            <textarea id="ai-system-prompt" rows="8" placeholder="Enter custom system prompt..."></textarea>
+          </div>
+          
+          <div class="ai-settings-group">
+            <label>
+              <i class="bi bi-lightbulb"></i> Memories
+              <small>(Style rules and preferences)</small>
+            </label>
+            <textarea id="ai-memories" rows="10" placeholder="Enter style rules and preferences..."></textarea>
+          </div>
+        </div>
+        <div class="ai-settings-footer">
+          <button class="btn btn-ghost" onclick="resetAISettings()">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset to Default
+          </button>
+          <button class="btn btn-primary" onclick="saveAISettings()">
+            <i class="bi bi-check-lg"></i> Save Settings
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import '../assets/app.js';
+      
+      // Make functions globally available
+      window.extractTranscripts = extractTranscripts;
+      window.createBlankTranscript = createBlankTranscript;
+      window.selectTranscript = selectTranscript;
+      window.toggleStatus = toggleStatus;
+      window.saveTranscript = saveTranscript;
+      window.deleteTranscript = deleteTranscript;
+      window.updateWordCount = updateWordCount;
+      window.openExpandedEditor = openExpandedEditor;
+      window.closeExpandedEditor = closeExpandedEditor;
+      window.saveFromExpanded = saveFromExpanded;
+      window.updateExpandedWordCount = updateExpandedWordCount;
+      window.sendChatMessage = sendChatMessage;
+      window.handleChatKeydown = handleChatKeydown;
+      window.autoResizeChatInput = autoResizeChatInput;
+      window.quickAction = quickAction;
+      window.clearChat = clearChat;
+      window.openAISettings = openAISettings;
+      window.closeAISettings = closeAISettings;
+      window.saveAISettings = saveAISettings;
+      window.resetAISettings = resetAISettings;
+      window.addCheckpoint = addCheckpoint;
+      window.revertToCheckpoint = revertToCheckpoint;
+      window.toggleStatusFromExpanded = toggleStatusFromExpanded;
+      window.selectTranscriptFromExpanded = selectTranscriptFromExpanded;
+      
+      // API Configuration
+      const API_BASE = 'https://nijikade-backend.vercel.app/api';
+      const token = localStorage.getItem('jwt') || sessionStorage.getItem('jwt');
+      
+      let transcripts = [];
+      let currentTranscript = null;
+      let currentFilter = 'all';
+      
+      // AI Chat state
+      let chatHistory = []; // Each item: { role, content, isCheckpoint?, checkpointId? }
+      let isAIProcessing = false;
+      let checkpointCounter = 0;
+      
+      // Check auth
+      if (!token) {
+        window.location.href = './login.html';
+      }
+      
+      // API helper
+      async function api(endpoint, options = {}) {
+        const url = `${API_BASE}${endpoint}${endpoint.includes('?') ? '&' : '?'}token=${token}`;
+        const res = await fetch(url, {
+          ...options,
+          headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+          }
+        });
+        return res;
+      }
+      
+      // Extract video ID from URL
+      function extractVideoId(url) {
+        const patterns = [
+          /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+          /^([a-zA-Z0-9_-]{11})$/
+        ];
+        for (const pattern of patterns) {
+          const match = url.trim().match(pattern);
+          if (match) return match[1];
+        }
+        return null;
+      }
+      
+      // Extract transcripts
+      async function extractTranscripts() {
+        const input = document.getElementById('url-input').value;
+        const urls = input.split('\n').filter(u => u.trim());
+        
+        if (urls.length === 0) {
+          showStatus('extract-status', 'Please enter at least one YouTube URL', 'error');
+          return;
+        }
+        
+        const videoIds = [];
+        for (const url of urls) {
+          const id = extractVideoId(url);
+          if (id && !transcripts.find(t => t.videoId === id)) {
+            videoIds.push(id);
+          }
+        }
+        
+        if (videoIds.length === 0) {
+          showStatus('extract-status', 'No new valid YouTube URLs found', 'error');
+          return;
+        }
+        
+        showStatus('extract-status', `Extracting ${videoIds.length} transcript(s)...`, 'info');
+        showProgress(true);
+        
+        let success = 0;
+        let failed = 0;
+        
+        for (let i = 0; i < videoIds.length; i++) {
+          const videoId = videoIds[i];
+          updateProgress((i + 1) / videoIds.length * 100);
+          
+          try {
+            // Get transcript from API
+            const transcriptRes = await api(`/youtube/transcript?videoId=${videoId}`);
+            const data = await transcriptRes.json();
+            
+            // Save to Firestore
+            const saveRes = await api('/youtube/transcripts', {
+              method: 'POST',
+              body: JSON.stringify({
+                videoId,
+                originalTitle: data.title || `Video ${videoId}`,
+                customTitle: '',
+                originalTranscript: data.transcript || '',
+                editedTranscript: '',
+                thumbnail: data.thumbnail || `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
+                status: 'pending',
+                hasTranscript: !!data.transcript && !data.placeholder
+              })
+            });
+            
+            if (saveRes.ok) {
+              success++;
+            } else {
+              failed++;
+            }
+          } catch (err) {
+            console.error('Error extracting transcript:', err);
+            failed++;
+          }
+        }
+        
+        showProgress(false);
+        
+        if (success > 0) {
+          showStatus('extract-status', `Added ${success} transcript(s)${failed > 0 ? `, ${failed} failed` : ''}`, 'success');
+          document.getElementById('url-input').value = '';
+          loadTranscripts();
+        } else {
+          showStatus('extract-status', 'Failed to extract transcripts. Check console for errors.', 'error');
+        }
+      }
+      
+      // Create blank transcript
+      async function createBlankTranscript() {
+        const title = prompt('Enter a title for the new transcript:', 'Untitled Script');
+        if (!title) return;
+        
+        try {
+          // Generate a unique ID for blank transcripts
+          const blankId = 'blank_' + Date.now().toString(36);
+          
+          const res = await api('/youtube/transcripts', {
+            method: 'POST',
+            body: JSON.stringify({
+              videoId: blankId,
+              originalTitle: title,
+              customTitle: '',
+              originalTranscript: '',
+              editedTranscript: '',
+              thumbnail: '',
+              status: 'pending',
+              hasTranscript: true
+            })
+          });
+          
+          if (res.ok) {
+            showStatus('extract-status', 'Blank transcript created!', 'success');
+            await loadTranscripts();
+            
+            // Select the newly created transcript
+            const data = await res.json();
+            if (data.id) {
+              const newTranscript = transcripts.find(t => t.id === data.id);
+              if (newTranscript) {
+                selectTranscript(newTranscript);
+              }
+            }
+          } else {
+            showStatus('extract-status', 'Failed to create transcript', 'error');
+          }
+        } catch (err) {
+          console.error('Error creating blank transcript:', err);
+          showStatus('extract-status', 'Error creating transcript', 'error');
+        }
+      }
+      
+      // Load transcripts
+      async function loadTranscripts() {
+        try {
+          const res = await api('/youtube/transcripts');
+          if (res.ok) {
+            const data = await res.json();
+            transcripts = Array.isArray(data) ? data : (data.transcripts || []);
+            updateStats();
+            renderList();
+          }
+        } catch (err) {
+          console.error('Error loading transcripts:', err);
+        }
+      }
+      
+      // Update stats
+      function updateStats() {
+        const total = transcripts.length;
+        const pending = transcripts.filter(t => t.status === 'pending').length;
+        const ongoing = transcripts.filter(t => t.status === 'ongoing').length;
+        const done = transcripts.filter(t => t.status === 'done').length;
+        document.getElementById('stat-total').textContent = total;
+        document.getElementById('stat-pending').textContent = pending;
+        document.getElementById('stat-ongoing').textContent = ongoing;
+        document.getElementById('stat-done').textContent = done;
+      }
+      
+      // Render list
+      function renderList() {
+        const container = document.getElementById('transcript-list');
+        let filtered = transcripts;
+        
+        if (currentFilter === 'pending') {
+          filtered = transcripts.filter(t => t.status === 'pending');
+        } else if (currentFilter === 'ongoing') {
+          filtered = transcripts.filter(t => t.status === 'ongoing');
+        } else if (currentFilter === 'done') {
+          filtered = transcripts.filter(t => t.status === 'done');
+        }
+        
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="bi bi-inbox"></i>
+              <h4>No Transcripts</h4>
+              <p>${currentFilter === 'all' ? 'Paste YouTube URLs above' : `No ${currentFilter} transcripts`}</p>
+            </div>
+          `;
+          return;
+        }
+        
+        container.innerHTML = filtered.map(t => {
+          const isBlank = t.videoId?.startsWith('blank_');
+          const thumbHtml = isBlank 
+            ? `<div class="transcript-thumb" style="display:flex;align-items:center;justify-content:center;background:var(--bg-elev);"><i class="bi bi-file-text" style="font-size:1.2rem;opacity:0.5;"></i></div>`
+            : `<img class="transcript-thumb" src="${t.thumbnail}" alt="" onerror="this.src='https://via.placeholder.com/80x45?text=No'" />`;
+          
+          return `
+            <div class="transcript-item ${currentTranscript?.id === t.id ? 'active' : ''}" onclick="selectTranscript('${t.id}')">
+              ${thumbHtml}
+              <div class="transcript-info">
+                <div class="transcript-title">${t.customTitle || t.originalTitle || 'Untitled'}</div>
+                <div class="transcript-meta">
+                  <span class="status-badge status-${t.status}">${t.status}</span>
+                  ${!t.hasTranscript && !isBlank ? '<span class="no-cc"><i class="bi bi-exclamation-circle"></i> No CC</span>' : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      // Select transcript
+      function selectTranscript(id) {
+        currentTranscript = transcripts.find(t => t.id === id);
+        if (!currentTranscript) return;
+        
+        document.getElementById('editor-title').value = currentTranscript.customTitle || currentTranscript.originalTitle || '';
+        document.getElementById('editor-title').disabled = false;
+        document.getElementById('original-transcript').value = currentTranscript.originalTranscript || '';
+        document.getElementById('original-transcript').disabled = false;
+        document.getElementById('edited-transcript').value = currentTranscript.editedTranscript || '';
+        document.getElementById('edited-transcript').disabled = false;
+        document.getElementById('btn-save').disabled = false;
+        document.getElementById('btn-delete').disabled = false;
+        document.getElementById('btn-mark-done').disabled = false;
+        
+        updateMarkDoneBtn();
+        updateWordCount();
+        renderList();
+      }
+      
+      // Update mark done button
+      function updateMarkDoneBtn() {
+        const btn = document.getElementById('btn-mark-done');
+        if (currentTranscript?.status === 'pending') {
+          btn.innerHTML = '<i class="bi bi-arrow-right-circle"></i> Ongoing';
+        } else if (currentTranscript?.status === 'ongoing') {
+          btn.innerHTML = '<i class="bi bi-check-circle"></i> Done';
+        } else {
+          btn.innerHTML = '<i class="bi bi-arrow-counterclockwise"></i> Pending';
+        }
+      }
+      
+      // Toggle status (cycles: pending -> ongoing -> done -> pending)
+      async function toggleStatus() {
+        if (!currentTranscript) return;
+        let newStatus;
+        if (currentTranscript.status === 'pending') {
+          newStatus = 'ongoing';
+        } else if (currentTranscript.status === 'ongoing') {
+          newStatus = 'done';
+        } else {
+          newStatus = 'pending';
+        }
+        
+        try {
+          const res = await api(`/youtube/transcripts/${currentTranscript.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ status: newStatus })
+          });
+          
+          if (res.ok) {
+            currentTranscript.status = newStatus;
+            updateMarkDoneBtn();
+            updateStats();
+            renderList();
+          }
+        } catch (err) {
+          console.error('Error updating status:', err);
+        }
+      }
+      
+      // Save transcript
+      async function saveTranscript() {
+        if (!currentTranscript) return;
+        
+        const customTitle = document.getElementById('editor-title').value;
+        const originalTranscript = document.getElementById('original-transcript').value;
+        const editedTranscript = document.getElementById('edited-transcript').value;
+        
+        try {
+          const res = await api(`/youtube/transcripts/${currentTranscript.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ customTitle, originalTranscript, editedTranscript })
+          });
+          
+          if (res.ok) {
+            currentTranscript.customTitle = customTitle;
+            currentTranscript.originalTranscript = originalTranscript;
+            currentTranscript.editedTranscript = editedTranscript;
+            renderList();
+            
+            const btn = document.getElementById('btn-save');
+            btn.innerHTML = '<i class="bi bi-check"></i> Saved!';
+            setTimeout(() => {
+              btn.innerHTML = '<i class="bi bi-save"></i> Save';
+            }, 1500);
+          }
+        } catch (err) {
+          console.error('Error saving:', err);
+        }
+      }
+      
+      // Delete transcript
+      async function deleteTranscript() {
+        if (!currentTranscript) return;
+        if (!confirm('Delete this transcript?')) return;
+        
+        try {
+          const res = await api(`/youtube/transcripts/${currentTranscript.id}`, {
+            method: 'DELETE'
+          });
+          
+          if (res.ok) {
+            transcripts = transcripts.filter(t => t.id !== currentTranscript.id);
+            currentTranscript = null;
+            
+            document.getElementById('editor-title').value = '';
+            document.getElementById('editor-title').disabled = true;
+            document.getElementById('original-transcript').value = '';
+            document.getElementById('original-transcript').disabled = true;
+            document.getElementById('edited-transcript').value = '';
+            document.getElementById('edited-transcript').disabled = true;
+            document.getElementById('btn-save').disabled = true;
+            document.getElementById('btn-delete').disabled = true;
+            document.getElementById('btn-mark-done').disabled = true;
+            
+            updateStats();
+            renderList();
+          }
+        } catch (err) {
+          console.error('Error deleting:', err);
+        }
+      }
+      
+      // Update word count
+      function updateWordCount() {
+        const text = document.getElementById('edited-transcript').value;
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        document.getElementById('word-count').textContent = `${words} words`;
+      }
+      
+      // Show status
+      function showStatus(id, msg, type) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.className = `status-msg ${type}`;
+      }
+      
+      // Progress bar
+      function showProgress(show) {
+        document.getElementById('progress-bar').style.display = show ? 'block' : 'none';
+        if (!show) document.getElementById('progress-fill').style.width = '0%';
+      }
+      
+      function updateProgress(pct) {
+        document.getElementById('progress-fill').style.width = `${pct}%`;
+      }
+      
+      // ========================================
+      // EXPANDED EDITOR FUNCTIONS
+      // ========================================
+      
+      function openExpandedEditor() {
+        if (!currentTranscript) {
+          alert('Please select a transcript first');
+          return;
+        }
+        
+        document.getElementById('expanded-title').textContent = currentTranscript.customTitle || currentTranscript.originalTitle || 'Untitled';
+        document.getElementById('expanded-original').value = document.getElementById('original-transcript').value || '';
+        document.getElementById('expanded-edited').value = document.getElementById('edited-transcript').value || '';
+        
+        updateExpandedWordCount();
+        updateExpandedMarkDoneBtn();
+        renderExpandedSidebar();
+        
+        // Toggle expanded mode on body
+        document.body.classList.add('expanded-mode');
+        
+        // Reset chat for new session if needed
+        if (chatHistory.length === 0) {
+          renderChatMessages();
+        }
+      }
+      
+      // Render expanded sidebar transcript list
+      function renderExpandedSidebar() {
+        const container = document.getElementById('expanded-sidebar-list');
+        let filtered = transcripts;
+        
+        if (currentFilter === 'pending') {
+          filtered = transcripts.filter(t => t.status === 'pending');
+        } else if (currentFilter === 'ongoing') {
+          filtered = transcripts.filter(t => t.status === 'ongoing');
+        } else if (currentFilter === 'done') {
+          filtered = transcripts.filter(t => t.status === 'done');
+        }
+        
+        if (filtered.length === 0) {
+          container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">No transcripts</div>';
+          return;
+        }
+        
+        container.innerHTML = filtered.map(t => {
+          let statusText = 'Pending';
+          if (t.status === 'ongoing') statusText = '⏳ Ongoing';
+          else if (t.status === 'done') statusText = '✓ Done';
+          
+          return `
+            <div class="expanded-sidebar-item ${currentTranscript?.id === t.id ? 'active' : ''}" onclick="selectTranscriptFromExpanded('${t.id}')">
+              <img src="${t.thumbnail}" alt="" onerror="this.src='https://via.placeholder.com/48x27?text=No'" />
+              <div class="item-info">
+                <div class="item-title">${t.customTitle || t.originalTitle || 'Untitled'}</div>
+                <div class="item-status">${statusText}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      // Select transcript from expanded sidebar
+      function selectTranscriptFromExpanded(id) {
+        // Save current work before switching
+        if (currentTranscript) {
+          const expandedOriginal = document.getElementById('expanded-original').value;
+          const expandedEdited = document.getElementById('expanded-edited').value;
+          document.getElementById('original-transcript').value = expandedOriginal;
+          document.getElementById('edited-transcript').value = expandedEdited;
+          // Optionally auto-save here
+        }
+        
+        // Switch to new transcript
+        selectTranscript(id);
+        
+        // Update expanded view
+        document.getElementById('expanded-title').textContent = currentTranscript.customTitle || currentTranscript.originalTitle || 'Untitled';
+        document.getElementById('expanded-original').value = currentTranscript.originalTranscript || '';
+        document.getElementById('expanded-edited').value = currentTranscript.editedTranscript || '';
+        
+        updateExpandedWordCount();
+        updateExpandedMarkDoneBtn();
+        renderExpandedSidebar();
+        
+        // Clear chat for new transcript
+        chatHistory = [];
+        checkpointCounter = 0;
+        renderChatMessages();
+      }
+      
+      // Update expanded mark done button
+      function updateExpandedMarkDoneBtn() {
+        const btn = document.getElementById('expanded-mark-done');
+        if (currentTranscript?.status === 'pending') {
+          btn.innerHTML = '<i class="bi bi-arrow-right-circle"></i> Ongoing';
+        } else if (currentTranscript?.status === 'ongoing') {
+          btn.innerHTML = '<i class="bi bi-check-circle"></i> Done';
+        } else {
+          btn.innerHTML = '<i class="bi bi-arrow-counterclockwise"></i> Pending';
+        }
+      }
+      
+      // Toggle status from expanded view
+      async function toggleStatusFromExpanded() {
+        await toggleStatus();
+        updateExpandedMarkDoneBtn();
+        renderExpandedSidebar();
+      }
+      
+      function closeExpandedEditor() {
+        // Remove expanded mode from body
+        document.body.classList.remove('expanded-mode');
+        
+        // Sync edited content back to main editor
+        const expandedOriginal = document.getElementById('expanded-original').value;
+        const expandedEdited = document.getElementById('expanded-edited').value;
+        document.getElementById('original-transcript').value = expandedOriginal;
+        document.getElementById('edited-transcript').value = expandedEdited;
+        updateWordCount();
+      }
+      
+      async function saveFromExpanded() {
+        // Sync to main editor first
+        document.getElementById('original-transcript').value = document.getElementById('expanded-original').value;
+        document.getElementById('edited-transcript').value = document.getElementById('expanded-edited').value;
+        
+        // Save and show feedback on expanded save button
+        const btn = document.getElementById('expanded-save-btn');
+        const originalHTML = btn.innerHTML;
+        
+        try {
+          await saveTranscript();
+          btn.innerHTML = '<i class="bi bi-check"></i> Saved!';
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+          }, 1500);
+        } catch (err) {
+          btn.innerHTML = '<i class="bi bi-x"></i> Error';
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+          }, 1500);
+        }
+      }
+      
+      function updateExpandedWordCount() {
+        const text = document.getElementById('expanded-edited').value;
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        document.getElementById('expanded-word-count').textContent = `${words} words`;
+      }
+      
+      // ========================================
+      // AI CHAT FUNCTIONS
+      // ========================================
+      
+      function renderChatMessages() {
+        const container = document.getElementById('ai-chat-messages');
+        
+        if (chatHistory.length === 0) {
+          container.innerHTML = `
+            <div class="ai-message system">
+              Select a transcript and use the quick actions or type a message to start.
+            </div>
+          `;
+          return;
+        }
+        
+        let html = '';
+        
+        chatHistory.forEach((msg, idx) => {
+          // Render checkpoint divider
+          if (msg.isCheckpoint) {
+            html += `
+              <div class="ai-checkpoint">
+                <div class="ai-checkpoint-line"></div>
+                <div class="ai-checkpoint-label" onclick="revertToCheckpoint(${idx})" title="Revert to this checkpoint and continue from here">
+                  <i class="bi bi-flag-fill"></i> Checkpoint ${msg.checkpointId}
+                  <i class="bi bi-arrow-counterclockwise"></i>
+                </div>
+                <div class="ai-checkpoint-line"></div>
+              </div>
+            `;
+            return;
+          }
+          
+          // Render message
+          html += `
+            <div class="ai-message ${msg.role}">
+              ${escapeHtml(msg.content)}
+              ${msg.role === 'user' ? `
+                <div class="ai-message-actions">
+                  <button onclick="editMessage(${idx})" title="Edit & regenerate"><i class="bi bi-pencil"></i></button>
+                  <button onclick="addCheckpointAfter(${idx})" title="Add checkpoint after this"><i class="bi bi-flag"></i></button>
+                </div>
+              ` : `
+                <div class="ai-message-actions">
+                  <button onclick="copyToVersion(${idx})" title="Copy to Your Version"><i class="bi bi-clipboard"></i></button>
+                  <button onclick="addCheckpointAfter(${idx})" title="Add checkpoint after this"><i class="bi bi-flag"></i></button>
+                </div>
+              `}
+            </div>
+          `;
+        });
+        
+        container.innerHTML = html;
+        container.scrollTop = container.scrollHeight;
+      }
+      
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML.replace(/\n/g, '<br>');
+      }
+      
+      function addMessage(role, content) {
+        chatHistory.push({ role, content });
+        renderChatMessages();
+      }
+      
+      function addCheckpoint() {
+        checkpointCounter++;
+        chatHistory.push({ isCheckpoint: true, checkpointId: checkpointCounter });
+        renderChatMessages();
+      }
+      
+      window.addCheckpointAfter = function(idx) {
+        checkpointCounter++;
+        chatHistory.splice(idx + 1, 0, { isCheckpoint: true, checkpointId: checkpointCounter });
+        renderChatMessages();
+      };
+      
+      function revertToCheckpoint(idx) {
+        if (!confirm('Revert to this checkpoint? Messages after this will be removed.')) return;
+        
+        // Keep everything up to and including the checkpoint
+        chatHistory = chatHistory.slice(0, idx + 1);
+        renderChatMessages();
+      }
+      
+      window.copyToVersion = function(idx) {
+        const msg = chatHistory[idx];
+        if (msg && msg.role === 'assistant') {
+          document.getElementById('expanded-edited').value = msg.content;
+          updateExpandedWordCount();
+          
+          // Visual feedback
+          const msgEl = document.querySelectorAll('.ai-message')[idx];
+          if (msgEl) {
+            msgEl.style.borderColor = 'var(--primary)';
+            setTimeout(() => { msgEl.style.borderColor = ''; }, 500);
+          }
+        }
+      };
+      
+      function showTypingIndicator() {
+        const container = document.getElementById('ai-chat-messages');
+        const indicator = document.createElement('div');
+        indicator.className = 'ai-typing-indicator';
+        indicator.id = 'typing-indicator';
+        indicator.innerHTML = '<span></span><span></span><span></span>';
+        container.appendChild(indicator);
+        container.scrollTop = container.scrollHeight;
+      }
+      
+      function hideTypingIndicator() {
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) indicator.remove();
+      }
+      
+      async function sendChatMessage() {
+        const input = document.getElementById('ai-chat-input');
+        const message = input.value.trim();
+        
+        if (!message || isAIProcessing) return;
+        
+        addMessage('user', message);
+        input.value = '';
+        autoResizeChatInput(input);
+        
+        await processAIRequest(message);
+      }
+      
+      function handleChatKeydown(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendChatMessage();
+        }
+      }
+      
+      function autoResizeChatInput(el) {
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+      }
+      
+      async function quickAction(action) {
+        if (isAIProcessing) return;
+        
+        const originalTranscript = document.getElementById('expanded-original').value;
+        const currentVersion = document.getElementById('expanded-edited').value;
+        
+        let message = '';
+        switch (action) {
+          case 'rewrite':
+            message = `Rewrite the following YouTube transcript into a YouTube Shorts script:\n\n${originalTranscript}\n\nRules:\n- Match the exact style defined in the custom instruction\n- Preserve only the core information\n- Completely rewrite the delivery to match the system style\n- Increase aggression, humor, and pacing\n- Add a strong hook\n- Length: 100–175 words`;
+            break;
+          case 'hook':
+            message = `The current script is:\n\n${currentVersion || originalTranscript}\n\nRewrite with a stronger, more aggressive hook. Keep the same content but make the opening 1-2 lines way more attention-grabbing and vague (don't reveal the point immediately).`;
+            break;
+          case 'shorter':
+            message = `The current script is:\n\n${currentVersion || originalTranscript}\n\nMake this shorter and punchier. Cut any filler, combine sentences, remove redundancy. Target 100-150 words while keeping all key information.`;
+            break;
+          case 'punchier':
+            message = `The current script is:\n\n${currentVersion || originalTranscript}\n\nMake this more punchy and aggressive. Faster pacing, more attitude, stronger word choices. Keep the same information but deliver it with more energy.`;
+            break;
+        }
+        
+        addMessage('user', message);
+        await processAIRequest(message);
+      }
+      
+      async function processAIRequest(userMessage) {
+        isAIProcessing = true;
+        document.getElementById('ai-chat-send').disabled = true;
+        showTypingIndicator();
+        
+        try {
+          // Filter out checkpoints from history for API call
+          const historyForApi = chatHistory
+            .slice(0, -1) // Exclude the message we just added
+            .filter(msg => !msg.isCheckpoint);
+          
+          // Build request with optional custom settings
+          const requestBody = {
+            message: userMessage,
+            history: historyForApi,
+            originalTranscript: document.getElementById('expanded-original').value,
+            currentVersion: document.getElementById('expanded-edited').value
+          };
+          
+          // Add custom settings if user has overridden them
+          if (aiSettings.model && aiSettings.model !== 'openai/gpt-4o') {
+            requestBody.model = aiSettings.model;
+          }
+          if (aiSettings.systemPrompt) {
+            requestBody.systemPrompt = aiSettings.systemPrompt;
+          }
+          if (aiSettings.memories) {
+            requestBody.memories = aiSettings.memories;
+          }
+          
+          const response = await api('/youtube/ai-chat', {
+            method: 'POST',
+            body: JSON.stringify(requestBody)
+          });
+          
+          hideTypingIndicator();
+          
+          if (response.ok) {
+            const data = await response.json();
+            addMessage('assistant', data.response);
+            
+            // Auto-add checkpoint after each AI response
+            addCheckpoint();
+            
+            // If AI returned a script, update the "Your Version" textarea
+            if (data.script) {
+              document.getElementById('expanded-edited').value = data.script;
+              updateExpandedWordCount();
+            }
+          } else {
+            const err = await response.json().catch(() => ({}));
+            addMessage('assistant', `Error: ${err.error || 'Failed to get AI response. Make sure the AI backend is configured.'}`);
+          }
+        } catch (err) {
+          hideTypingIndicator();
+          addMessage('assistant', `Error: ${err.message}`);
+        }
+        
+        isAIProcessing = false;
+        document.getElementById('ai-chat-send').disabled = false;
+      }
+      
+      function clearChat() {
+        if (confirm('Clear chat history?')) {
+          chatHistory = [];
+          checkpointCounter = 0;
+          renderChatMessages();
+        }
+      }
+      
+      // ========================================
+      // AI SETTINGS FUNCTIONS
+      // ========================================
+      
+      // Default values (will be loaded from backend on first use)
+      const DEFAULT_SYSTEM_PROMPT = `You are a YouTube Shorts scriptwriter with a fast, chaotic, sarcastic Minecraft commentary style.
+
+VOICE & ATTITUDE:
+- Confident, opinionated, and slightly unhinged
+- Sounds like an experienced player annoyed that people don't know this already
+- Talks directly to the viewer
+- Frequently argues with imaginary people using mock hostility for humor
+
+HOOK RULES:
+- Start with an aggressive or contrarian hook in the first 1–2 lines
+- Hooks may accuse the viewer, debunk a common belief, or make a bold claim
+- Hooks should feel urgent, click-worthy, and confident
+- Hooks MUST be more vague, not mentioning the point of the video
+
+WRITING STYLE:
+- Very fast pacing
+- Complete sentences instead of one-liners
+- Line break after a complete sentence
+- Make a "nerd" make a counter-explanation and cut him off mid-explanation for comedic effect
+- Use phrases like "You might think…", "But here's the thing…" when appropriate.
+- Be humorous but only when appropriate and do it only once in the whole script. (eg. "NUH UH", "YUH UH")
+
+STRUCTURE:
+- Explanation first, entertainment second
+- Explain mechanics quickly without sounding educational
+- Assume the viewer is competent
+- End once the point has been sent across
+
+CONSTRAINTS:
+- Length: 100–175 words
+- No emojis
+- No disclaimers
+- No polite or neutral phrasing
+- Avoid generic AI language
+- Capitalization only for emphasis (sparingly)
+
+You are not teaching politely — you are entertaining aggressively while being correct.`;
+
+      const DEFAULT_MEMORIES = `SCRIPTWRITING MEMORIES & STYLE RULES:
+
+=== SOLUTION REVEALS & STRUCTURE ===
+When introducing a solution, use a segue like "Because not only…" to frame value first, and do NOT hint at the specific mechanical payoff (e.g., mining fatigue interaction) before the explicit reveal line; keep capability spoilers out of the buildup.
+
+=== FLOW & PACING ===
+- Prefer pronouns ("it," "them") over repetitive noun phrases once the object is established.
+- Avoid redundant reinforcement lines once a mechanic has already been clearly demonstrated.
+- When revealing a solution, front-load accessibility and cost framing *before* the full mechanical payoff to maintain retention.
+- Order explanations so the viewer understands why a tool is appealing *before* learning exactly how it's used, preventing early swipe-off.
+- Prefer combining closely related sentences into one continuous sentence to maintain nonstop information flow; avoid unnecessary hard stops that break pacing.
+- When describing mechanics, connect actions and timings smoothly (e.g., "lock on and then charge for two seconds" without awkward comma breaks).
+
+=== WORD CHOICES & PHRASING ===
+- Reuse stronger, concrete verbs already established (e.g., "melt") instead of weakening or abstract phrasing.
+- Never use cringe comparisons or metaphors like "not magic"; keep explanations grounded in Minecraft-mechanics language only.
+- Avoid filler clarifications or side comments that delay information delivery (e.g., "relax," "not for griefing").
+- Ensure all figurative language still reflects realistic in-game behavior and resources; never imply impossible or misleading mechanics (e.g., "stacks" from desert temples, hauling slime blocks underwater).
+- When presenting TNT or similar tools, emphasize practical placement and removal advantages under mining fatigue, framing them as easy, accessible, and mechanically sound options without exaggeration.
+
+=== THINGS TO AVOID ===
+- Avoid unnecessary filler lines
+- Avoid hints at payoff early in hooks
+- Avoid phrases like "the game lets them cheat," "not magic," "easy, clean, repeatable," and one-shot ending lines
+- Format the interrupting "nerd" voice explicitly (e.g., "Nerd:")
+- Prefer playful interruptions like "NUH UH" over serious shut-downs
+- Use phrasing like "This is where X comes in" instead of blunt reveals
+- Avoid unrealistic scenarios players wouldn't do
+- When presenting a solution, make it look especially good by highlighting accessibility and cost-effectiveness (e.g., TNT from desert temples, cheaper than slime blocks) without invalidating other options
+
+=== PERSONAL PREFERENCES ===
+- Prefers concise endings without extra victory lines
+- Dislikes list-style one-liners, wants full sentences over fragments
+- Prefers realistic in-game scenarios
+- Specific word choices: use "ever" for sass, "apparently" over "turns out"
+- Avoids unnecessary jokes or filler phrases
+- Wants Minecraft-mechanics-accurate phrasing
+- Avoid weak hooks that sound like secondary lines
+- Build up before revealing the core mechanic instead of stating it immediately
+- Avoid excessive one-liners—prefer full sentences where appropriate
+- Remove unnecessary joke lines that don't add information or pacing
+- Avoid repetitive phrasing like multiple "this is why" lines in a row
+- Tighten endings to be stronger and more polished rather than stretched with filler
+
+=== ACCURACY ===
+All Minecraft facts must be verified and fact-checked before presenting them.`;
+
+      // AI Settings state
+      let aiSettings = {
+        model: localStorage.getItem('ai_model') || 'openai/gpt-4o',
+        systemPrompt: localStorage.getItem('ai_system_prompt') || '',
+        memories: localStorage.getItem('ai_memories') || ''
+      };
+      
+      function openAISettings() {
+        const overlay = document.getElementById('ai-settings-overlay');
+        
+        // Load current values into form
+        document.getElementById('ai-model-select').value = aiSettings.model;
+        document.getElementById('ai-system-prompt').value = aiSettings.systemPrompt || DEFAULT_SYSTEM_PROMPT;
+        document.getElementById('ai-memories').value = aiSettings.memories || DEFAULT_MEMORIES;
+        
+        overlay.classList.add('active');
+      }
+      
+      function closeAISettings() {
+        document.getElementById('ai-settings-overlay').classList.remove('active');
+      }
+      
+      function saveAISettings() {
+        const model = document.getElementById('ai-model-select').value;
+        const systemPrompt = document.getElementById('ai-system-prompt').value.trim();
+        const memories = document.getElementById('ai-memories').value.trim();
+        
+        // Save to state and localStorage
+        aiSettings.model = model;
+        aiSettings.systemPrompt = systemPrompt;
+        aiSettings.memories = memories;
+        
+        localStorage.setItem('ai_model', model);
+        localStorage.setItem('ai_system_prompt', systemPrompt);
+        localStorage.setItem('ai_memories', memories);
+        
+        closeAISettings();
+        
+        // Visual feedback
+        const btn = document.querySelector('.ai-settings-footer .btn-primary');
+        btn.innerHTML = '<i class="bi bi-check"></i> Saved!';
+        setTimeout(() => {
+          btn.innerHTML = '<i class="bi bi-check-lg"></i> Save Settings';
+        }, 1500);
+      }
+      
+      function resetAISettings() {
+        if (!confirm('Reset to default prompts? Your custom settings will be cleared.')) return;
+        
+        // Clear localStorage
+        localStorage.removeItem('ai_model');
+        localStorage.removeItem('ai_system_prompt');
+        localStorage.removeItem('ai_memories');
+        
+        // Reset state
+        aiSettings = {
+          model: 'openai/gpt-4o',
+          systemPrompt: '',
+          memories: ''
+        };
+        
+        // Update form
+        document.getElementById('ai-model-select').value = 'openai/gpt-4o';
+        document.getElementById('ai-system-prompt').value = DEFAULT_SYSTEM_PROMPT;
+        document.getElementById('ai-memories').value = DEFAULT_MEMORIES;
+      }
+      
+      // Click outside to close AI settings
+      document.getElementById('ai-settings-overlay').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeAISettings();
+        }
+      });
+      
+      window.editMessage = function(idx) {
+        const msg = chatHistory[idx];
+        if (msg.role !== 'user') return;
+        
+        const newContent = prompt('Edit message:', msg.content);
+        if (newContent && newContent !== msg.content) {
+          // Truncate history from this point and re-add edited message
+          chatHistory = chatHistory.slice(0, idx);
+          addMessage('user', newContent);
+          processAIRequest(newContent);
+        }
+      };
+      
+      // ========================================
+      // FILTER BUTTONS
+      // ========================================
+      
+      // Filter buttons
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          renderList();
+        });
+      });
+      
+      // Load on start
+      loadTranscripts();
+    </script>
+  </body>
+</html>

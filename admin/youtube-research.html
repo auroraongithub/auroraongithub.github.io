@@ -1,0 +1,1986 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YouTube Shorts Research · nijika.de</title>
+    <link rel="stylesheet" href="./../assets/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+      /* Compact Dashboard styles */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .stat-card {
+        background: var(--surface);
+        border: 2px solid var(--accent);
+        border-radius: 6px;
+        padding: 0.6rem;
+        text-align: center;
+      }
+      
+      .stat-card h4 {
+        margin: 0 0 0.3rem 0;
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+      }
+      
+      .stat-card .value {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: var(--accent);
+      }
+      
+      .stat-card .sub {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+      }
+      
+      /* Tab Navigation - Compact */
+      .tab-nav {
+        display: flex;
+        gap: 0.3rem;
+        margin-bottom: 0.8rem;
+        flex-wrap: wrap;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0.4rem;
+      }
+      
+      .tab-btn {
+        padding: 0.4rem 0.7rem;
+        border: none;
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+        border-radius: 4px 4px 0 0;
+        font-size: 0.8rem;
+        transition: all 0.2s;
+      }
+      
+      .tab-btn:hover {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      
+      .tab-btn.active {
+        background: var(--accent);
+        color: var(--bg);
+        font-weight: bold;
+      }
+      
+      .tab-content {
+        display: none;
+      }
+      
+      .tab-content.active {
+        display: block;
+      }
+      
+      /* Search & Filters - Compact */
+      .search-bar {
+        display: flex;
+        gap: 0.4rem;
+        margin-bottom: 0.8rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      
+      .search-bar input,
+      .search-bar select {
+        padding: 0.4rem 0.6rem;
+        border: 2px solid var(--border);
+        border-radius: 4px;
+        background: var(--surface);
+        color: var(--text);
+        font-size: 0.85rem;
+      }
+      
+      .search-bar select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ff6b9d' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+        padding-right: 1.8rem;
+        min-width: 100px;
+        color-scheme: dark;
+      }
+      
+      .search-bar select option {
+        background-color: #1a1a1a;
+        color: #fff;
+      }
+      
+      /* Force dark mode for select dropdowns */
+      html[data-theme="dark"] select,
+      html[data-theme="dark"] select option {
+        background-color: #1a1a1a !important;
+        color: #fff !important;
+      }
+      
+      .search-bar input:focus,
+      .search-bar select:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+      
+      .search-bar input[type="text"],
+      .search-bar input[type="number"] {
+        flex: 1;
+        min-width: 150px;
+      }
+      
+      .search-bar input[type="number"] {
+        width: 70px;
+        min-width: 70px;
+        flex: 0;
+      }
+      
+      .search-bar .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+      }
+      
+      /* Video Cards - Compact Shorts-focused with Overlay */
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 0.6rem;
+      }
+      
+      .video-card {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+      }
+      
+      .video-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      }
+      
+      .video-card.outlier {
+        box-shadow: 0 0 0 2px #f1c40f, 0 0 12px rgba(241, 196, 15, 0.4);
+      }
+      
+      .video-card .thumbnail {
+        width: 100%;
+        aspect-ratio: 9/16;
+        object-fit: cover;
+        display: block;
+      }
+      
+      .video-card.landscape .thumbnail {
+        aspect-ratio: 16/9;
+      }
+      
+      .video-card .overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.9));
+        padding: 2rem 0.5rem 0.5rem;
+        color: #fff;
+      }
+      
+      .video-card .title {
+        font-weight: bold;
+        margin-bottom: 0.2rem;
+        font-size: 0.75rem;
+        line-height: 1.2;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      .video-card .title a {
+        color: #fff;
+        text-decoration: none;
+      }
+      
+      .video-card .title a:hover {
+        color: var(--accent);
+      }
+      
+      .video-card .channel {
+        font-size: 0.65rem;
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 0.2rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .video-card .channel:hover {
+        color: var(--accent);
+      }
+      
+      .video-card .stats {
+        display: flex;
+        gap: 0.4rem;
+        font-size: 0.6rem;
+        color: rgba(255,255,255,0.6);
+        flex-wrap: wrap;
+      }
+      
+      .video-card .stats span {
+        display: flex;
+        align-items: center;
+        gap: 0.15rem;
+      }
+      
+      .video-card .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 0.3rem;
+      }
+      
+      .video-card .badges {
+        display: flex;
+        gap: 0.2rem;
+      }
+      
+      .video-card .badge {
+        display: inline-block;
+        padding: 0.1rem 0.3rem;
+        border-radius: 3px;
+        font-size: 0.55rem;
+        font-weight: bold;
+      }
+      
+      .video-card .badge.outlier {
+        background: #f1c40f;
+        color: #000;
+      }
+      
+      .video-card .badge.short {
+        background: #e74c3c;
+        color: #fff;
+      }
+      
+      .video-card .badge.new {
+        background: #2ecc71;
+        color: #fff;
+      }
+      
+      .video-card .badge.skipped {
+        background: #95a5a6;
+        color: #fff;
+      }
+      
+      .video-card .actions {
+        display: flex;
+        gap: 0.2rem;
+      }
+      
+      .video-card .btn-icon {
+        padding: 0.15rem 0.3rem;
+        font-size: 0.65rem;
+        border: none;
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: background 0.2s;
+      }
+      
+      .video-card .btn-icon:hover {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      
+      /* Niche Analysis - Compact */
+      .niche-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .metric-box {
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        padding: 0.5rem;
+        text-align: center;
+      }
+      
+      .metric-box .label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 0.2rem;
+      }
+      
+      .metric-box .value {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--accent);
+      }
+      
+      .metric-box .score {
+        font-size: 1.4rem;
+      }
+      
+      .metric-box .score.good { color: #2ecc71; }
+      .metric-box .score.medium { color: #f1c40f; }
+      .metric-box .score.bad { color: #e74c3c; }
+      
+      /* Tags - Compact */
+      .tag-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        margin-top: 0.5rem;
+      }
+      
+      .tag {
+        padding: 0.2rem 0.5rem;
+        background: var(--surface);
+        border: 1px solid var(--accent);
+        border-radius: 12px;
+        font-size: 0.7rem;
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .tag:hover {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      
+      .tag .count {
+        background: var(--accent);
+        color: var(--bg);
+        padding: 0.05rem 0.3rem;
+        border-radius: 8px;
+        margin-left: 0.2rem;
+        font-size: 0.6rem;
+      }
+      
+      /* Recommended Section */
+      .recommended-section {
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        padding: 0.6rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .recommended-section h4 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      
+      .recommended-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      
+      .recommendation-chip {
+        padding: 0.3rem 0.6rem;
+        background: var(--bg);
+        border: 1px solid var(--accent);
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      
+      .recommendation-chip:hover {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      
+      .recommendation-chip i {
+        font-size: 0.65rem;
+      }
+      
+      /* Ideas List - Compact */
+      .idea-item {
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        padding: 0.6rem;
+        margin-bottom: 0.4rem;
+        display: flex;
+        gap: 0.6rem;
+        align-items: flex-start;
+      }
+      
+      .idea-item.new {
+        border-left: 3px solid #2ecc71;
+      }
+      
+      .idea-item.skipped {
+        border-left: 3px solid #95a5a6;
+        opacity: 0.7;
+      }
+      
+      .idea-item .thumb {
+        width: 60px;
+        aspect-ratio: 9/16;
+        object-fit: cover;
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+      
+      .idea-item .info {
+        flex: 1;
+        min-width: 0;
+      }
+      
+      .idea-item .info h4 {
+        margin: 0 0 0.2rem 0;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .idea-item .info p {
+        margin: 0;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+      }
+      
+      .idea-item .actions {
+        display: flex;
+        gap: 0.3rem;
+      }
+      
+      /* Saved Items - Compact */
+      .saved-list {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      
+      .saved-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+      
+      .saved-item:hover {
+        background: var(--surface);
+      }
+      
+      .saved-item .info {
+        flex: 1;
+        min-width: 0;
+      }
+      
+      .saved-item .title {
+        font-weight: bold;
+        margin-bottom: 0.1rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .saved-item .meta {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+      }
+      
+      /* Loading - Compact */
+      .loading-spinner {
+        text-align: center;
+        padding: 1.5rem;
+        color: var(--text-muted);
+      }
+      
+      .loading-spinner i {
+        font-size: 1.5rem;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Empty State - Compact */
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-muted);
+      }
+      
+      .empty-state i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.5;
+      }
+      
+      .empty-state p {
+        margin: 0.3rem 0;
+        font-size: 0.85rem;
+      }
+      
+      /* Channel Input - Compact */
+      .channel-input-group {
+        display: flex;
+        gap: 0.4rem;
+        margin-bottom: 0.6rem;
+      }
+      
+      .channel-input-group input {
+        flex: 1;
+        padding: 0.4rem 0.6rem;
+        border: 2px solid var(--border);
+        border-radius: 4px;
+        background: var(--surface);
+        color: var(--text);
+        font-size: 0.85rem;
+      }
+      
+      /* Results Summary - Compact */
+      .results-summary {
+        background: var(--surface);
+        border: 2px solid var(--accent);
+        border-radius: 6px;
+        padding: 0.6rem;
+        margin-bottom: 0.8rem;
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        text-align: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      
+      .results-summary .item {
+        flex: 0 0 auto;
+        min-width: 70px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      
+      .results-summary .item h4 {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+      }
+      
+      .results-summary .item .num {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--accent);
+      }
+      
+      /* Threshold input styling */
+      .threshold-group {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      
+      .threshold-group input {
+        width: 50px;
+        text-align: center;
+      }
+      
+      .threshold-group span {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      
+      /* Related Channels Section */
+      .related-channels {
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        padding: 0.6rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .related-channels h4 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      
+      .related-channels .channel-list {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      
+      .channel-chip {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.25rem 0.5rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.75rem;
+      }
+      
+      .channel-chip:hover {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--bg);
+      }
+      
+      .channel-chip img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+      }
+      
+      .channel-chip .subs {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-left: 0.2rem;
+      }
+      
+      .channel-chip:hover .subs {
+        color: var(--bg);
+      }
+      
+      /* Load More Button */
+      .load-more {
+        text-align: center;
+        padding: 1rem;
+        margin-top: 0.5rem;
+      }
+      
+      .load-more .btn {
+        padding: 0.5rem 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Color Picker Modal -->
+    <div class="color-picker-modal" data-color-modal>
+      <div class="color-picker-content">
+        <div class="color-picker-header">
+          <h3>Choose Your Color</h3>
+          <button class="color-picker-close" data-color-close>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="color-picker-options">
+          <button class="color-option" data-color="cyan" title="Cyan (Current)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
+            <span>Cyan</span>
+          </button>
+          <button class="color-option" data-color="pink" title="Pink (Original)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
+            <span>Pink</span>
+          </button>
+          <button class="color-option" data-color="purple" title="Purple">
+            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
+            <span>Purple</span>
+          </button>
+          <button class="color-option" data-color="green" title="Green">
+            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
+            <span>Green</span>
+          </button>
+          <button class="color-option" data-color="orange" title="Orange">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
+            <span>Orange</span>
+          </button>
+          <button class="color-option" data-color="blue" title="Blue">
+            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
+            <span>Blue</span>
+          </button>
+          <button class="color-option" data-color="red" title="Red">
+            <div class="color-preview" style="background: linear-gradient(135deg, #e74c3c, #ec7063);"></div>
+            <span>Red</span>
+          </button>
+          <button class="color-option" data-color="yellow" title="Yellow">
+            <div class="color-preview" style="background: linear-gradient(135deg, #f1c40f, #f7dc6f);"></div>
+            <span>Yellow</span>
+          </button>
+          <button class="color-option" data-color="teal" title="Teal">
+            <div class="color-preview" style="background: linear-gradient(135deg, #1abc9c, #48c9b0);"></div>
+            <span>Teal</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="neo-container">
+      <!-- Site Banner/Header -->
+      <div class="site-banner">
+        <div class="brand">nijika.de</div>
+        <div class="header-controls">
+          <button class="color-picker-toggle" title="Change color" data-color-picker>
+            <i class="bi bi-palette"></i>
+          </button>
+          <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+            <i class="bi bi-brightness-high"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="neo-layout">
+        <aside class="neo-sidebar">
+          <div class="neo-box">
+            <div class="neo-header"><h3>Content</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./blogs.html">Blogs</a></li>
+                <li><a href="./stories.html">Stories</a></li>
+                <li><a href="./add-post.html">Add Post</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="neo-box">
+            <div class="neo-header"><h3>Site</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./status.html">Status Strip</a></li>
+                <li><a href="./now.html">Now Page</a></li>
+                <li><a href="./changelog.html">Changelog</a></li>
+                <li><a href="./resources.html">Resources</a></li>
+                <li><a href="./favorites.html">Favorites</a></li>
+                <li><a href="./portfolio.html">Portfolio</a></li>
+                <li><a href="./settings.html">Settings</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="neo-box">
+            <div class="neo-header"><h3>YouTube CMS</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./youtube-research.html" class="active"><i class="bi bi-youtube"></i> Research</a></li>
+                <li><a href="./youtube-transcripts.html"><i class="bi bi-card-text"></i> Transcripts</a></li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        <main class="neo-main">
+          <section class="neo-box">
+            <div class="neo-header">
+              <h2><i class="bi bi-youtube"></i> YouTube Shorts Research</h2>
+            </div>
+            <div class="neo-content">
+              <!-- Tab Navigation -->
+              <div class="tab-nav">
+                <button class="tab-btn active" data-tab="search"><i class="bi bi-search"></i> Search</button>
+                <button class="tab-btn" data-tab="trending"><i class="bi bi-fire"></i> Trending</button>
+                <button class="tab-btn" data-tab="niche"><i class="bi bi-bar-chart"></i> Niche</button>
+                <button class="tab-btn" data-tab="outliers"><i class="bi bi-lightning"></i> Outliers</button>
+                <button class="tab-btn" data-tab="channel"><i class="bi bi-person-video3"></i> Channel</button>
+                <button class="tab-btn" data-tab="ideas"><i class="bi bi-lightbulb"></i> Ideas</button>
+                <button class="tab-btn" data-tab="discover"><i class="bi bi-shuffle"></i> Discover</button>
+                <button class="tab-btn" data-tab="saved"><i class="bi bi-bookmark"></i> Saved</button>
+              </div>
+
+              <!-- Search Tab -->
+              <div class="tab-content active" id="tab-search">
+                <div class="recommended-section">
+                  <h4><i class="bi bi-stars"></i> Trending Topics</h4>
+                  <div class="recommended-list" id="search-recommendations">
+                    <div class="recommendation-chip" onclick="quickSearch('viral trends 2025')">
+                      <i class="bi bi-fire"></i> Viral Trends 2025
+                    </div>
+                    <div class="recommendation-chip" onclick="quickSearch('life hacks')">
+                      <i class="bi bi-lightbulb"></i> Life Hacks
+                    </div>
+                    <div class="recommendation-chip" onclick="quickSearch('satisfying videos')">
+                      <i class="bi bi-emoji-smile"></i> Satisfying
+                    </div>
+                    <div class="recommendation-chip" onclick="quickSearch('before and after')">
+                      <i class="bi bi-arrow-left-right"></i> Before & After
+                    </div>
+                    <div class="recommendation-chip" onclick="quickSearch('funny moments')">
+                      <i class="bi bi-emoji-laughing"></i> Funny Moments
+                    </div>
+                    <div class="recommendation-chip" onclick="quickSearch('ASMR')">
+                      <i class="bi bi-mic"></i> ASMR
+                    </div>
+                  </div>
+                </div>
+                <div class="search-bar">
+                  <input type="text" id="search-query" placeholder="Search Shorts topics..." />
+                  <select id="search-order">
+                    <option value="date" selected>Recent</option>
+                    <option value="relevance">Relevance</option>
+                    <option value="viewCount">Views</option>
+                    <option value="rating">Rating</option>
+                  </select>
+                  <select id="search-duration">
+                    <option value="short">Shorts Only</option>
+                    <option value="">Any Duration</option>
+                    <option value="medium">Medium</option>
+                    <option value="long">Long</option>
+                  </select>
+                  <select id="search-time">
+                    <option value="week">Past Week</option>
+                    <option value="month">Past Month</option>
+                    <option value="3months">Past 3 Months</option>
+                    <option value="year">Past Year</option>
+                    <option value="">All Time</option>
+                  </select>
+                  <button class="btn" id="search-btn"><i class="bi bi-search"></i> Search</button>
+                </div>
+                <div id="search-related-channels" class="related-channels" style="display: none;"></div>
+                <div id="search-results" class="video-grid">
+                  <div class="empty-state">
+                    <i class="bi bi-search"></i>
+                    <p>Search for Shorts topics</p>
+                  </div>
+                </div>
+                <div id="search-load-more" class="load-more" style="display: none;">
+                  <button class="btn btn-ghost" id="search-load-more-btn"><i class="bi bi-arrow-down-circle"></i> Load More</button>
+                </div>
+              </div>
+
+              <!-- Trending Tab -->
+              <div class="tab-content" id="tab-trending">
+                <div class="search-bar">
+                  <input type="text" id="trending-search" placeholder="Filter trending..." />
+                  <select id="trending-region">
+                    <option value="US">United States</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="PH">Philippines</option>
+                    <option value="JP">Japan</option>
+                    <option value="KR">South Korea</option>
+                    <option value="IN">India</option>
+                    <option value="BR">Brazil</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
+                  </select>
+                  <select id="trending-category">
+                    <option value="">All Categories</option>
+                  </select>
+                  <button class="btn" id="trending-btn"><i class="bi bi-fire"></i> Load Trending</button>
+                </div>
+                <div id="trending-tags" class="tag-cloud" style="display: none; margin-bottom: 0.8rem;"></div>
+                <div id="trending-results" class="video-grid">
+                  <div class="empty-state">
+                    <i class="bi bi-fire"></i>
+                    <p>Click "Load Trending" to see trending videos</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Niche Analysis Tab -->
+              <div class="tab-content" id="tab-niche">
+                <div class="recommended-section">
+                  <h4><i class="bi bi-stars"></i> Recommended Niches</h4>
+                  <div class="recommended-list" id="niche-recommendations">
+                    <div class="recommendation-chip" onclick="analyzeRecommendedNiche('AI automation')">
+                      <i class="bi bi-robot"></i> AI automation
+                    </div>
+                    <div class="recommendation-chip" onclick="analyzeRecommendedNiche('productivity tips')">
+                      <i class="bi bi-lightning"></i> Productivity
+                    </div>
+                    <div class="recommendation-chip" onclick="analyzeRecommendedNiche('side hustle')">
+                      <i class="bi bi-cash-stack"></i> Side Hustle
+                    </div>
+                    <div class="recommendation-chip" onclick="analyzeRecommendedNiche('tech reviews')">
+                      <i class="bi bi-phone"></i> Tech Reviews
+                    </div>
+                    <div class="recommendation-chip" onclick="analyzeRecommendedNiche('travel vlog')">
+                      <i class="bi bi-globe"></i> Travel
+                    </div>
+                    <div class="recommendation-chip" onclick="analyzeRecommendedNiche('fitness workout')">
+                      <i class="bi bi-heart-pulse"></i> Fitness
+                    </div>
+                    <div class="recommendation-chip" onclick="analyzeRecommendedNiche('cooking recipes')">
+                      <i class="bi bi-egg-fried"></i> Cooking
+                    </div>
+                    <div class="recommendation-chip" onclick="analyzeRecommendedNiche('gaming tips')">
+                      <i class="bi bi-controller"></i> Gaming
+                    </div>
+                  </div>
+                </div>
+                <div class="search-bar">
+                  <input type="text" id="niche-query" placeholder="Enter a niche/keyword to analyze..." />
+                  <button class="btn" id="niche-btn"><i class="bi bi-bar-chart"></i> Analyze Niche</button>
+                  <button class="btn btn-ghost" id="save-niche-btn"><i class="bi bi-bookmark-plus"></i> Track Niche</button>
+                </div>
+                <div id="niche-related-channels" class="related-channels" style="display: none;"></div>
+                <div id="niche-results">
+                  <div class="empty-state">
+                    <i class="bi bi-bar-chart"></i>
+                    <p>Enter a niche to analyze competition and potential</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Outliers Tab -->
+              <div class="tab-content" id="tab-outliers">
+                <div class="recommended-section">
+                  <h4><i class="bi bi-stars"></i> Popular Outlier Searches</h4>
+                  <div class="recommended-list" id="outlier-recommendations">
+                    <div class="recommendation-chip" onclick="findRecommendedOutliers('minecraft')">
+                      <i class="bi bi-controller"></i> Minecraft
+                    </div>
+                    <div class="recommendation-chip" onclick="findRecommendedOutliers('fortnite')">
+                      <i class="bi bi-trophy"></i> Fortnite
+                    </div>
+                    <div class="recommendation-chip" onclick="findRecommendedOutliers('makeup tutorial')">
+                      <i class="bi bi-palette"></i> Makeup
+                    </div>
+                    <div class="recommendation-chip" onclick="findRecommendedOutliers('reaction videos')">
+                      <i class="bi bi-emoji-surprise"></i> Reactions
+                    </div>
+                    <div class="recommendation-chip" onclick="findRecommendedOutliers('meme compilation')">
+                      <i class="bi bi-collection"></i> Memes
+                    </div>
+                    <div class="recommendation-chip" onclick="findRecommendedOutliers('prank videos')">
+                      <i class="bi bi-balloon"></i> Pranks
+                    </div>
+                  </div>
+                </div>
+                <div class="search-bar">
+                  <input type="text" id="outlier-query" placeholder="Enter niche to find viral Shorts..." />
+                  <div class="threshold-group">
+                    <input type="number" id="outlier-threshold" value="3" min="1.5" max="50" step="0.5" />
+                    <span>x median</span>
+                  </div>
+                  <button class="btn" id="outlier-btn"><i class="bi bi-lightning"></i> Find Outliers</button>
+                </div>
+                <div id="outlier-results" class="video-grid">
+                  <div class="empty-state">
+                    <i class="bi bi-lightning"></i>
+                    <p>Find viral Shorts in any niche</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Channel Tab -->
+              <div class="tab-content" id="tab-channel">
+                <div class="search-bar">
+                  <input type="text" id="channel-id" placeholder="Channel URL, @handle, or ID..." />
+                  <select id="channel-type">
+                    <option value="shorts">Shorts Only</option>
+                    <option value="all">All Videos</option>
+                    <option value="long">Long Only</option>
+                  </select>
+                  <button class="btn" id="channel-btn"><i class="bi bi-person-video3"></i> Analyze</button>
+                </div>
+                <div id="channel-info"></div>
+                <div id="channel-related" class="related-channels" style="display: none;"></div>
+                <div id="channel-results" class="video-grid">
+                  <div class="empty-state">
+                    <i class="bi bi-person-video3"></i>
+                    <p>Enter channel URL or @handle</p>
+                  </div>
+                </div>
+                <div id="channel-load-more" class="load-more" style="display: none;">
+                  <button class="btn btn-ghost" id="channel-load-more-btn"><i class="bi bi-arrow-down-circle"></i> Load More</button>
+                </div>
+              </div>
+
+              <!-- Idea Taker Tab -->
+              <div class="tab-content" id="tab-ideas">
+                <p style="margin-bottom: 0.6rem; color: var(--text-muted); font-size: 0.8rem;">
+                  <i class="bi bi-info-circle"></i> Compare another channel's Shorts to yours to find new ideas.
+                </p>
+                <div class="channel-input-group">
+                  <input type="text" id="source-channel" placeholder="Source channel (URL, @handle, or ID)" />
+                </div>
+                <div class="channel-input-group">
+                  <input type="text" id="my-channel" placeholder="Your channel (URL, @handle, or ID)" />
+                </div>
+                <button class="btn" id="compare-btn"><i class="bi bi-shuffle"></i> Compare & Find Ideas</button>
+                <div id="ideas-results" style="margin-top: 0.8rem;">
+                  <div class="empty-state">
+                    <i class="bi bi-lightbulb"></i>
+                    <p>Enter channels to compare</p>
+                    <p style="font-size: 0.75rem;">AI comparison coming soon!</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Random Shorts Discovery Tab -->
+              <div class="tab-content" id="tab-discover">
+                <p style="margin-bottom: 0.6rem; color: var(--text-muted); font-size: 0.8rem;">
+                  <i class="bi bi-shuffle"></i> Discover random viral Shorts from various niches, just like scrolling through YouTube Shorts incognito.
+                </p>
+                <div class="search-bar">
+                  <select id="discover-category">
+                    <option value="">All Categories</option>
+                    <option value="trending">Trending Now</option>
+                    <option value="comedy">Comedy</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="music">Music</option>
+                    <option value="sports">Sports</option>
+                    <option value="education">Education</option>
+                    <option value="tech">Technology</option>
+                    <option value="food">Food & Cooking</option>
+                    <option value="fitness">Fitness</option>
+                    <option value="diy">DIY & Crafts</option>
+                  </select>
+                  <select id="discover-region">
+                    <option value="US">United States</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="PH">Philippines</option>
+                    <option value="JP">Japan</option>
+                    <option value="KR">South Korea</option>
+                    <option value="IN">India</option>
+                    <option value="BR">Brazil</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
+                  </select>
+                  <button class="btn" id="discover-refresh-btn"><i class="bi bi-arrow-clockwise"></i> Discover New</button>
+                </div>
+                <div id="discover-results" class="video-grid">
+                  <div class="empty-state">
+                    <i class="bi bi-shuffle"></i>
+                    <p>Click "Discover New" to find random Shorts</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Saved Tab -->
+              <div class="tab-content" id="tab-saved">
+                <div class="tab-nav" style="margin-bottom: 1rem;">
+                  <button class="tab-btn active" data-subtab="saved-ideas"><i class="bi bi-lightbulb"></i> Ideas</button>
+                  <button class="tab-btn" data-subtab="saved-niches"><i class="bi bi-bar-chart"></i> Niches</button>
+                  <button class="tab-btn" data-subtab="saved-research"><i class="bi bi-folder"></i> Research</button>
+                </div>
+                
+                <div class="subtab-content active" id="subtab-saved-ideas">
+                  <div id="saved-ideas-list" class="saved-list">
+                    <div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Loading...</p></div>
+                  </div>
+                </div>
+                
+                <div class="subtab-content" id="subtab-saved-niches" style="display: none;">
+                  <div id="saved-niches-list" class="saved-list">
+                    <div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Loading...</p></div>
+                  </div>
+                </div>
+                
+                <div class="subtab-content" id="subtab-saved-research" style="display: none;">
+                  <div id="saved-research-list" class="saved-list">
+                    <div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Loading...</p></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module">
+      import '../assets/app.js';
+      
+      const API_BASE = 'https://nijikade-backend.vercel.app/api';
+      let token = localStorage.getItem('jwt') || sessionStorage.getItem('jwt');
+      
+      if (!token) {
+        window.location.href = './login.html';
+      }
+      
+      // ==========================================================================
+      // HELPER FUNCTIONS
+      // ==========================================================================
+      
+      async function apiCall(endpoint, options = {}) {
+        const url = `${API_BASE}${endpoint}${endpoint.includes('?') ? '&' : '?'}token=${token}`;
+        const res = await fetch(url, {
+          ...options,
+          headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+          }
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || 'API request failed');
+        }
+        return res.json();
+      }
+      
+      function formatNumber(num) {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num.toString();
+      }
+      
+      function timeAgo(date) {
+        const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+        if (seconds < 60) return seconds + 's ago';
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return minutes + 'm ago';
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return hours + 'h ago';
+        const days = Math.floor(hours / 24);
+        if (days < 30) return days + 'd ago';
+        const months = Math.floor(days / 30);
+        if (months < 12) return months + 'mo ago';
+        return Math.floor(months / 12) + 'y ago';
+      }
+      
+      function createVideoCard(video) {
+        const thumb = video.thumbnails?.medium?.url || video.thumbnails?.default?.url || '';
+        const isOutlier = video.isOutlier || video.outlierScore >= 2;
+        const isShort = video.isShort;
+        const cardClass = isShort === false ? 'landscape' : '';
+        const escapedTitle = video.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        const escapedChannel = (video.channelTitle || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        
+        return `
+          <div class="video-card ${isOutlier ? 'outlier' : ''} ${cardClass}" data-video-id="${video.id}">
+            <a href="https://youtube.com/${isShort ? 'shorts/' : 'watch?v='}${video.id}" target="_blank">
+              <img class="thumbnail" src="${thumb}" alt="${video.title}" loading="lazy" />
+            </a>
+            <div class="overlay">
+              <div class="title">
+                <a href="https://youtube.com/${isShort ? 'shorts/' : 'watch?v='}${video.id}" target="_blank">${video.title}</a>
+              </div>
+              <div class="channel" data-channel-id="${video.channelId || ''}" onclick="event.stopPropagation(); searchChannel('${video.channelId || ''}')">${video.channelTitle || ''}</div>
+              <div class="stats">
+                <span><i class="bi bi-eye"></i> ${formatNumber(video.stats?.views || 0)}</span>
+                <span><i class="bi bi-hand-thumbs-up"></i> ${formatNumber(video.stats?.likes || 0)}</span>
+                <span><i class="bi bi-clock"></i> ${video.publishedAt ? timeAgo(video.publishedAt) : ''}</span>
+              </div>
+              <div class="card-footer">
+                <div class="badges">
+                  ${isOutlier ? `<span class="badge outlier">🔥 ${video.outlierScore}x</span>` : ''}
+                  ${isShort ? '<span class="badge short">Short</span>' : ''}
+                </div>
+                <div class="actions">
+                  <button class="btn-icon" title="Find Similar" onclick="event.stopPropagation(); findSimilar('${escapedTitle}')">
+                    <i class="bi bi-search-heart"></i>
+                  </button>
+                  <button class="btn-icon" title="Save Idea" onclick="event.stopPropagation(); saveIdea('${video.id}', '${escapedTitle}', '${escapedChannel}')">
+                    <i class="bi bi-bookmark-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Find similar videos function
+      window.findSimilar = function(title) {
+        // Extract key words from title (remove common words)
+        const stopWords = ['the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'and', 'but', 'or', 'nor', 'for', 'yet', 'so', 'to', 'of', 'in', 'on', 'at', 'by', 'with', 'from', 'up', 'down', 'out', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'not', 'only', 'own', 'same', 'than', 'too', 'very', 'just', 'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'you', 'your', 'he', 'him', 'his', 'she', 'her', 'it', 'its', 'they', 'them', 'their', 'this', 'that', 'these', 'those', 'what', 'which', 'who', 'whom'];
+        const words = title.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(w => w.length > 2 && !stopWords.includes(w));
+        const searchQuery = words.slice(0, 4).join(' ');
+        
+        // Switch to search tab and search
+        document.querySelector('[data-tab="search"]').click();
+        document.getElementById('search-query').value = searchQuery;
+        document.getElementById('search-btn').click();
+      };
+      
+      // Click on channel name to search channel
+      window.searchChannel = function(channelId) {
+        if (!channelId) return;
+        document.querySelector('[data-tab="channel"]').click();
+        document.getElementById('channel-id').value = channelId;
+        document.getElementById('channel-btn').click();
+      };
+      
+      // ==========================================================================
+      // TAB NAVIGATION
+      // ==========================================================================
+      
+      // Track which tabs have been auto-loaded
+      const autoLoadedTabs = new Set();
+      
+      document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn[data-tab]').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          
+          btn.classList.add('active');
+          const tabName = btn.dataset.tab;
+          document.getElementById('tab-' + tabName).classList.add('active');
+          
+          // Auto-load tabs that don't require user input on first visit
+          if (!autoLoadedTabs.has(tabName)) {
+            autoLoadedTabs.add(tabName);
+            
+            switch(tabName) {
+              case 'trending':
+                document.getElementById('trending-btn').click();
+                break;
+              case 'discover':
+                document.getElementById('discover-refresh-btn').click();
+                break;
+            }
+          }
+        });
+      });
+      
+      // Subtab navigation for Saved tab
+      document.querySelectorAll('.tab-btn[data-subtab]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn[data-subtab]').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.subtab-content').forEach(c => c.style.display = 'none');
+          
+          btn.classList.add('active');
+          document.getElementById('subtab-' + btn.dataset.subtab).style.display = 'block';
+        });
+      });
+      
+      // ==========================================================================
+      // SEARCH FUNCTIONALITY
+      // ==========================================================================
+      
+      // State for pagination
+      let searchState = { query: '', pageToken: null, videos: [] };
+      
+      async function performSearch(append = false) {
+        const query = document.getElementById('search-query').value.trim();
+        if (!query) return alert('Please enter a search query');
+        
+        const order = document.getElementById('search-order').value;
+        const duration = document.getElementById('search-duration').value;
+        const timeFilter = document.getElementById('search-time').value;
+        const resultsDiv = document.getElementById('search-results');
+        const loadMoreDiv = document.getElementById('search-load-more');
+        const relatedDiv = document.getElementById('search-related-channels');
+        
+        if (!append) {
+          resultsDiv.innerHTML = '<div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Searching...</p></div>';
+          searchState = { query, pageToken: null, videos: [] };
+          loadMoreDiv.style.display = 'none';
+          relatedDiv.style.display = 'none';
+        }
+        
+        try {
+          const params = new URLSearchParams({ q: query, order, maxResults: 25 });
+          if (duration) params.append('videoDuration', duration);
+          if (searchState.pageToken && append) params.append('pageToken', searchState.pageToken);
+          
+          // Time filter
+          if (timeFilter) {
+            const now = new Date();
+            let publishedAfter;
+            switch(timeFilter) {
+              case 'week': publishedAfter = new Date(now - 7 * 24 * 60 * 60 * 1000); break;
+              case 'month': publishedAfter = new Date(now - 30 * 24 * 60 * 60 * 1000); break;
+              case '3months': publishedAfter = new Date(now - 90 * 24 * 60 * 60 * 1000); break;
+              case 'year': publishedAfter = new Date(now - 365 * 24 * 60 * 60 * 1000); break;
+            }
+            if (publishedAfter) params.append('publishedAfter', publishedAfter.toISOString());
+          }
+          
+          const data = await apiCall(`/youtube/search?${params}`);
+          
+          // Store pagination state
+          searchState.pageToken = data.nextPageToken || null;
+          searchState.videos = append ? [...searchState.videos, ...data.videos] : data.videos;
+          
+          if (searchState.videos.length === 0) {
+            resultsDiv.innerHTML = '<div class="empty-state"><i class="bi bi-search"></i><p>No results found</p></div>';
+            return;
+          }
+          
+          resultsDiv.innerHTML = searchState.videos.map(createVideoCard).join('');
+          
+          // Show/hide load more button
+          loadMoreDiv.style.display = searchState.pageToken ? 'block' : 'none';
+          
+          // Fetch and show related channels (only on first search)
+          if (!append) {
+            fetchRelatedChannels(query, relatedDiv);
+          }
+        } catch (err) {
+          resultsDiv.innerHTML = `<div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p>Error: ${err.message}</p></div>`;
+        }
+      }
+      
+      document.getElementById('search-btn').addEventListener('click', () => performSearch(false));
+      document.getElementById('search-load-more-btn').addEventListener('click', () => performSearch(true));
+      
+      // Enter key to search
+      document.getElementById('search-query').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('search-btn').click();
+      });
+      
+      // ==========================================================================
+      // TRENDING FUNCTIONALITY
+      // ==========================================================================
+      
+      // Store trending videos for filtering
+      let trendingState = { videos: [], filtered: [] };
+      
+      // Load categories
+      async function loadCategories() {
+        try {
+          const data = await apiCall('/youtube/categories?regionCode=US');
+          const select = document.getElementById('trending-category');
+          data.categories.forEach(cat => {
+            if (cat.assignable) {
+              const option = document.createElement('option');
+              option.value = cat.id;
+              option.textContent = cat.title;
+              select.appendChild(option);
+            }
+          });
+        } catch (err) {
+          console.error('Failed to load categories:', err);
+        }
+      }
+      
+      document.getElementById('trending-btn').addEventListener('click', async () => {
+        const region = document.getElementById('trending-region').value;
+        const category = document.getElementById('trending-category').value;
+        const resultsDiv = document.getElementById('trending-results');
+        const tagsDiv = document.getElementById('trending-tags');
+        
+        resultsDiv.innerHTML = '<div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Loading trending...</p></div>';
+        tagsDiv.style.display = 'none';
+        
+        try {
+          const params = new URLSearchParams({ regionCode: region, maxResults: 50 });
+          if (category) params.append('categoryId', category);
+          
+          const data = await apiCall(`/youtube/trending?${params}`);
+          
+          if (data.videos.length === 0) {
+            resultsDiv.innerHTML = '<div class="empty-state"><i class="bi bi-fire"></i><p>No trending videos found</p></div>';
+            return;
+          }
+          
+          // Store videos for filtering
+          trendingState.videos = data.videos;
+          trendingState.filtered = data.videos;
+          
+          resultsDiv.innerHTML = data.videos.map(createVideoCard).join('');
+          
+          // Extract and show top tags from trending videos
+          const allTags = data.videos.flatMap(v => v.tags || []);
+          const tagCounts = {};
+          allTags.forEach(tag => {
+            const lowerTag = tag.toLowerCase();
+            tagCounts[lowerTag] = (tagCounts[lowerTag] || 0) + 1;
+          });
+          const topTags = Object.entries(tagCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 15);
+          
+          if (topTags.length > 0) {
+            tagsDiv.innerHTML = `<h4>Trending Tags</h4>` + topTags.map(([tag, count]) => 
+              `<span class="tag" onclick="searchTrendingTag('${tag.replace(/'/g, "\\'")}')">${tag}<span class="count">${count}</span></span>`
+            ).join('');
+            tagsDiv.style.display = 'block';
+          }
+        } catch (err) {
+          resultsDiv.innerHTML = `<div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p>Error: ${err.message}</p></div>`;
+        }
+      });
+      
+      // Search within trending or trigger a full search
+      window.searchTrendingTag = function(tag) {
+        // Go to search tab and search for this tag
+        document.querySelector('[data-tab="search"]').click();
+        document.getElementById('search-query').value = tag;
+        document.getElementById('search-btn').click();
+      };
+      
+      // Filter trending by search input
+      document.getElementById('trending-search').addEventListener('input', (e) => {
+        const filter = e.target.value.toLowerCase().trim();
+        const resultsDiv = document.getElementById('trending-results');
+        
+        if (!filter) {
+          trendingState.filtered = trendingState.videos;
+        } else {
+          trendingState.filtered = trendingState.videos.filter(v => 
+            v.title.toLowerCase().includes(filter) ||
+            (v.channelTitle || '').toLowerCase().includes(filter) ||
+            (v.tags || []).some(t => t.toLowerCase().includes(filter))
+          );
+        }
+        
+        if (trendingState.filtered.length === 0) {
+          resultsDiv.innerHTML = '<div class="empty-state"><i class="bi bi-filter"></i><p>No matches found</p></div>';
+        } else {
+          resultsDiv.innerHTML = trendingState.filtered.map(createVideoCard).join('');
+        }
+      });
+      
+      // ==========================================================================
+      // RELATED CHANNELS HELPER
+      // ==========================================================================
+      
+      async function fetchRelatedChannels(query, container) {
+        try {
+          // Search for channels related to the query
+          const data = await apiCall(`/youtube/related-channels?q=${encodeURIComponent(query)}&maxResults=8`);
+          
+          if (data.channels && data.channels.length > 0) {
+            container.innerHTML = `
+              <h4><i class="bi bi-people"></i> Related Channels</h4>
+              <div class="channel-list">
+                ${data.channels.map(ch => `
+                  <div class="channel-chip" onclick="searchChannel('${ch.id}')">
+                    <img src="${ch.thumbnails?.default?.url || ''}" alt="${ch.title}" />
+                    <span>${ch.title}</span>
+                    <span class="subs">${formatNumber(ch.stats?.subscribers || 0)}</span>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+            container.style.display = 'block';
+          }
+        } catch (err) {
+          console.error('Failed to fetch related channels:', err);
+        }
+      }
+      
+      // ==========================================================================
+      // NICHE ANALYSIS FUNCTIONALITY
+      // ==========================================================================
+      
+      document.getElementById('niche-btn').addEventListener('click', async () => {
+        const query = document.getElementById('niche-query').value.trim();
+        if (!query) return alert('Please enter a niche/keyword');
+        
+        const resultsDiv = document.getElementById('niche-results');
+        const relatedDiv = document.getElementById('niche-related-channels');
+        resultsDiv.innerHTML = '<div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Analyzing niche...</p></div>';
+        relatedDiv.style.display = 'none';
+        
+        try {
+          const data = await apiCall(`/youtube/niche-analysis?q=${encodeURIComponent(query)}`);
+          
+          const scoreClass = (score) => score >= 60 ? 'good' : score >= 40 ? 'medium' : 'bad';
+          
+          resultsDiv.innerHTML = `
+            <div class="niche-metrics">
+              <div class="metric-box">
+                <div class="label">Opportunity Score</div>
+                <div class="value score ${scoreClass(data.metrics.opportunityScore)}">${data.metrics.opportunityScore}</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Competition</div>
+                <div class="value score ${scoreClass(100 - data.metrics.competitionScore)}">${data.metrics.competitionScore}</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Potential</div>
+                <div class="value score ${scoreClass(data.metrics.potentialScore)}">${data.metrics.potentialScore}</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Recent Videos (30d)</div>
+                <div class="value">${formatNumber(data.metrics.totalRecentVideos)}</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Avg Recent Views</div>
+                <div class="value">${formatNumber(data.metrics.avgRecentViews)}</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Avg Top Views</div>
+                <div class="value">${formatNumber(data.metrics.avgTopViews)}</div>
+              </div>
+            </div>
+            
+            <h4>Top Tags in This Niche</h4>
+            <div class="tag-cloud">
+              ${data.topTags.map(t => `<span class="tag" onclick="searchTag('${t.tag.replace(/'/g, "\\'")}')">${t.tag}<span class="count">${t.count}</span></span>`).join('')}
+            </div>
+            
+            <h4 style="margin-top: 1.5rem;">Top Videos</h4>
+            <div class="video-grid">
+              ${data.topVideos.map(createVideoCard).join('')}
+            </div>
+          `;
+          
+          // Store current analysis for saving
+          window.currentNicheAnalysis = data;
+          
+          // Fetch related channels
+          fetchRelatedChannels(query, relatedDiv);
+        } catch (err) {
+          resultsDiv.innerHTML = `<div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p>Error: ${err.message}</p></div>`;
+        }
+      });
+      
+      // Click tag to search
+      window.searchTag = function(tag) {
+        document.querySelector('[data-tab="search"]').click();
+        document.getElementById('search-query').value = tag;
+        document.getElementById('search-btn').click();
+      };
+      
+      document.getElementById('niche-query').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('niche-btn').click();
+      });
+      
+      document.getElementById('save-niche-btn').addEventListener('click', async () => {
+        const query = document.getElementById('niche-query').value.trim();
+        if (!query || !window.currentNicheAnalysis) {
+          return alert('Please analyze a niche first');
+        }
+        
+        try {
+          await apiCall('/youtube/niches', {
+            method: 'POST',
+            body: JSON.stringify({
+              name: query,
+              keywords: window.currentNicheAnalysis.topTags.map(t => t.tag),
+              metrics: window.currentNicheAnalysis.metrics
+            })
+          });
+          alert('Niche saved for tracking!');
+        } catch (err) {
+          alert('Error saving niche: ' + err.message);
+        }
+      });
+      
+      // ==========================================================================
+      // OUTLIERS FUNCTIONALITY
+      // ==========================================================================
+      
+      document.getElementById('outlier-btn').addEventListener('click', async () => {
+        const query = document.getElementById('outlier-query').value.trim();
+        if (!query) return alert('Please enter a niche/keyword');
+        
+        const threshold = document.getElementById('outlier-threshold').value;
+        const resultsDiv = document.getElementById('outlier-results');
+        
+        resultsDiv.innerHTML = '<div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Finding outliers...</p></div>';
+        
+        try {
+          const data = await apiCall(`/youtube/outliers?q=${encodeURIComponent(query)}&threshold=${threshold}`);
+          
+          if (data.outliers.length === 0) {
+            resultsDiv.innerHTML = `<div class="empty-state"><i class="bi bi-lightning"></i><p>No outliers found at ${threshold}x threshold. Try lowering it.</p></div>`;
+            return;
+          }
+          
+          resultsDiv.innerHTML = `
+            <div class="results-summary">
+              <div class="item"><h4>Median Views</h4><div class="num">${formatNumber(data.medianViews)}</div></div>
+              <div class="item"><h4>Threshold</h4><div class="num">${data.threshold}x</div></div>
+              <div class="item"><h4>Outliers Found</h4><div class="num">${data.outlierCount}</div></div>
+            </div>
+            ${data.outliers.map(createVideoCard).join('')}
+          `;
+        } catch (err) {
+          resultsDiv.innerHTML = `<div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p>Error: ${err.message}</p></div>`;
+        }
+      });
+      
+      document.getElementById('outlier-query').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('outlier-btn').click();
+      });
+      
+      // ==========================================================================
+      // CHANNEL ANALYSIS FUNCTIONALITY
+      // ==========================================================================
+      
+      // State for channel pagination
+      let channelState = { channelId: '', type: '', pageToken: null, videos: [], channel: null };
+      
+      async function loadChannelVideos(append = false) {
+        const channelId = document.getElementById('channel-id').value.trim();
+        if (!channelId) return alert('Please enter a channel ID');
+        
+        const type = document.getElementById('channel-type').value;
+        const infoDiv = document.getElementById('channel-info');
+        const resultsDiv = document.getElementById('channel-results');
+        const relatedDiv = document.getElementById('channel-related');
+        const loadMoreDiv = document.getElementById('channel-load-more');
+        
+        if (!append) {
+          infoDiv.innerHTML = '';
+          resultsDiv.innerHTML = '<div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Analyzing channel...</p></div>';
+          relatedDiv.style.display = 'none';
+          loadMoreDiv.style.display = 'none';
+          channelState = { channelId, type, pageToken: null, videos: [], channel: null };
+        }
+        
+        try {
+          // Get channel info (only on first load)
+          if (!append) {
+            const channelData = await apiCall(`/youtube/channel?id=${encodeURIComponent(channelId)}`);
+            channelState.channel = channelData.channel;
+            
+            infoDiv.innerHTML = `
+              <div class="results-summary" style="margin-bottom: 1rem;">
+                <div class="item">
+                  <img src="${channelState.channel.thumbnails?.default?.url || ''}" style="width: 60px; border-radius: 50%; margin-bottom: 0.5rem;" />
+                  <h4>${channelState.channel.title}</h4>
+                </div>
+                <div class="item"><h4>Subscribers</h4><div class="num">${formatNumber(channelState.channel.stats.subscribers)}</div></div>
+                <div class="item"><h4>Videos</h4><div class="num">${formatNumber(channelState.channel.stats.videoCount)}</div></div>
+                <div class="item"><h4>Total Views</h4><div class="num">${formatNumber(channelState.channel.stats.viewCount)}</div></div>
+              </div>
+            `;
+            
+            // Fetch related channels based on channel name/niche
+            fetchRelatedChannels(channelState.channel.title, relatedDiv);
+          }
+          
+          // Get channel videos
+          const params = new URLSearchParams({
+            channelId: encodeURIComponent(channelId),
+            type,
+            maxResults: 25
+          });
+          if (channelState.pageToken && append) params.append('pageToken', channelState.pageToken);
+          
+          const videosData = await apiCall(`/youtube/channel-videos?${params}`);
+          
+          // Store state
+          channelState.pageToken = videosData.nextPageToken || null;
+          channelState.videos = append ? [...channelState.videos, ...videosData.videos] : videosData.videos;
+          
+          if (channelState.videos.length === 0) {
+            resultsDiv.innerHTML = '<div class="empty-state"><i class="bi bi-camera-video-off"></i><p>No videos found</p></div>';
+            return;
+          }
+          
+          resultsDiv.innerHTML = `
+            <div class="results-summary">
+              <div class="item"><h4>Videos Shown</h4><div class="num">${channelState.videos.length}</div></div>
+              <div class="item"><h4>Avg Views</h4><div class="num">${formatNumber(videosData.averages?.views || 0)}</div></div>
+              <div class="item"><h4>Avg Engagement</h4><div class="num">${videosData.averages?.engagement || 0}%</div></div>
+            </div>
+            ${channelState.videos.map(createVideoCard).join('')}
+          `;
+          
+          // Show/hide load more
+          loadMoreDiv.style.display = channelState.pageToken ? 'block' : 'none';
+        } catch (err) {
+          infoDiv.innerHTML = '';
+          resultsDiv.innerHTML = `<div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p>Error: ${err.message}</p></div>`;
+        }
+      }
+      
+      document.getElementById('channel-btn').addEventListener('click', () => loadChannelVideos(false));
+      document.getElementById('channel-load-more-btn').addEventListener('click', () => loadChannelVideos(true));
+      
+      // ==========================================================================
+      // IDEA TAKER FUNCTIONALITY
+      // ==========================================================================
+      
+      document.getElementById('compare-btn').addEventListener('click', async () => {
+        const sourceChannel = document.getElementById('source-channel').value.trim();
+        const myChannel = document.getElementById('my-channel').value.trim();
+        
+        if (!sourceChannel || !myChannel) {
+          return alert('Please enter both channel IDs');
+        }
+        
+        const resultsDiv = document.getElementById('ideas-results');
+        resultsDiv.innerHTML = '<div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Comparing channels...</p></div>';
+        
+        try {
+          const data = await apiCall('/youtube/idea-compare', {
+            method: 'POST',
+            body: JSON.stringify({
+              sourceChannelId: sourceChannel,
+              myChannelId: myChannel
+            })
+          });
+          
+          resultsDiv.innerHTML = `
+            <div class="results-summary">
+              <div class="item"><h4>Total Videos</h4><div class="num">${data.summary.total}</div></div>
+              <div class="item"><h4>New Ideas</h4><div class="num" style="color: #2ecc71;">${data.summary.new}</div></div>
+              <div class="item"><h4>Already Done</h4><div class="num" style="color: #95a5a6;">${data.summary.skipped}</div></div>
+            </div>
+            
+            <h4 style="margin: 1rem 0;"><i class="bi bi-lightbulb" style="color: #2ecc71;"></i> New Ideas (${data.newIdeas.length})</h4>
+            ${data.newIdeas.map(idea => `
+              <div class="idea-item new">
+                <img class="thumb" src="${idea.thumbnail || ''}" alt="${idea.title}" loading="lazy" />
+                <div class="info">
+                  <h4><a href="https://youtube.com/watch?v=${idea.id}" target="_blank">${idea.title}</a></h4>
+                  <p>${timeAgo(idea.publishedAt)}</p>
+                </div>
+                <div class="actions">
+                  <button class="btn btn-sm" onclick="saveIdea('${idea.id}', '${idea.title.replace(/'/g, "\\'")}', '${sourceChannel}')">
+                    <i class="bi bi-bookmark-plus"></i> Save
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+            
+            <h4 style="margin: 1rem 0;"><i class="bi bi-check-circle" style="color: #95a5a6;"></i> Already Done (${data.skippedIdeas.length})</h4>
+            ${data.skippedIdeas.map(idea => `
+              <div class="idea-item skipped">
+                <img class="thumb" src="${idea.thumbnail || ''}" alt="${idea.title}" loading="lazy" />
+                <div class="info">
+                  <h4>${idea.title}</h4>
+                  <p>Similar to: ${idea.similarTo || 'N/A'}</p>
+                </div>
+              </div>
+            `).join('')}
+            
+            <p style="margin-top: 1rem; padding: 1rem; background: var(--surface); border-radius: 8px; font-size: 0.85rem; color: var(--text-muted);">
+              <i class="bi bi-robot"></i> <strong>AI Note:</strong> ${data.aiMessage}
+            </p>
+          `;
+        } catch (err) {
+          resultsDiv.innerHTML = `<div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p>Error: ${err.message}</p></div>`;
+        }
+      });
+      
+      // ==========================================================================
+      // SAVE FUNCTIONS
+      // ==========================================================================
+      
+      window.saveIdea = async function(videoId, title, sourceChannel) {
+        try {
+          await apiCall('/youtube/ideas', {
+            method: 'POST',
+            body: JSON.stringify({
+              videoId,
+              title,
+              sourceChannel,
+              status: 'pending'
+            })
+          });
+          alert('Idea saved!');
+        } catch (err) {
+          alert('Error saving idea: ' + err.message);
+        }
+      };
+      
+      // ==========================================================================
+      // LOAD SAVED DATA
+      // ==========================================================================
+      
+      async function loadSavedIdeas() {
+        const container = document.getElementById('saved-ideas-list');
+        try {
+          const data = await apiCall('/youtube/ideas');
+          
+          if (data.ideas.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="bi bi-bookmark"></i><p>No saved ideas yet</p></div>';
+            return;
+          }
+          
+          container.innerHTML = data.ideas.map(idea => `
+            <div class="saved-item">
+              <div class="info">
+                <div class="title">${idea.title}</div>
+                <div class="meta">
+                  ${idea.sourceChannel ? `Source: ${idea.sourceChannel} · ` : ''}
+                  Status: ${idea.status} · 
+                  ${idea.createdAt ? timeAgo(idea.createdAt) : ''}
+                </div>
+              </div>
+              <div>
+                <button class="btn btn-ghost btn-sm" onclick="deleteIdea('${idea.id}')">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          `).join('');
+        } catch (err) {
+          container.innerHTML = `<div class="empty-state"><p>Error: ${err.message}</p></div>`;
+        }
+      }
+      
+      async function loadSavedNiches() {
+        const container = document.getElementById('saved-niches-list');
+        try {
+          const data = await apiCall('/youtube/niches');
+          
+          if (data.niches.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="bi bi-bookmark"></i><p>No tracked niches yet</p></div>';
+            return;
+          }
+          
+          container.innerHTML = data.niches.map(niche => `
+            <div class="saved-item">
+              <div class="info">
+                <div class="title">${niche.name}</div>
+                <div class="meta">
+                  Opportunity: ${niche.metrics?.opportunityScore || 'N/A'} · 
+                  ${niche.createdAt ? timeAgo(niche.createdAt) : ''}
+                </div>
+              </div>
+              <div>
+                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('niche-query').value='${niche.name}'; document.querySelector('[data-tab=niche]').click();">
+                  <i class="bi bi-arrow-repeat"></i>
+                </button>
+                <button class="btn btn-ghost btn-sm" onclick="deleteNiche('${niche.id}')">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          `).join('');
+        } catch (err) {
+          container.innerHTML = `<div class="empty-state"><p>Error: ${err.message}</p></div>`;
+        }
+      }
+      
+      async function loadSavedResearch() {
+        const container = document.getElementById('saved-research-list');
+        try {
+          const data = await apiCall('/youtube/research');
+          
+          if (data.research.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="bi bi-bookmark"></i><p>No saved research yet</p></div>';
+            return;
+          }
+          
+          container.innerHTML = data.research.map(r => `
+            <div class="saved-item">
+              <div class="info">
+                <div class="title">${r.title}</div>
+                <div class="meta">
+                  Query: ${r.query} · Type: ${r.type} · 
+                  ${r.createdAt ? timeAgo(r.createdAt) : ''}
+                </div>
+              </div>
+              <div>
+                <button class="btn btn-ghost btn-sm" onclick="deleteResearch('${r.id}')">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          `).join('');
+        } catch (err) {
+          container.innerHTML = `<div class="empty-state"><p>Error: ${err.message}</p></div>`;
+        }
+      }
+      
+      window.deleteIdea = async function(id) {
+        if (!confirm('Delete this idea?')) return;
+        try {
+          await apiCall(`/youtube/ideas/${id}`, { method: 'DELETE' });
+          loadSavedIdeas();
+        } catch (err) {
+          alert('Error: ' + err.message);
+        }
+      };
+      
+      window.deleteNiche = async function(id) {
+        if (!confirm('Delete this niche?')) return;
+        try {
+          await apiCall(`/youtube/niches/${id}`, { method: 'DELETE' });
+          loadSavedNiches();
+        } catch (err) {
+          alert('Error: ' + err.message);
+        }
+      };
+      
+      window.deleteResearch = async function(id) {
+        if (!confirm('Delete this research?')) return;
+        try {
+          await apiCall(`/youtube/research/${id}`, { method: 'DELETE' });
+          loadSavedResearch();
+        } catch (err) {
+          alert('Error: ' + err.message);
+        }
+      };
+      
+      // ==========================================================================
+      // RECOMMENDATION FUNCTIONS
+      // ==========================================================================
+      
+      // Quick search from recommendations
+      window.quickSearch = function(query) {
+        document.getElementById('search-query').value = query;
+        document.getElementById('search-btn').click();
+      };
+      
+      // Analyze recommended niche
+      window.analyzeRecommendedNiche = function(niche) {
+        document.getElementById('niche-query').value = niche;
+        document.getElementById('niche-btn').click();
+      };
+      
+      // Find recommended outliers
+      window.findRecommendedOutliers = function(query) {
+        document.getElementById('outlier-query').value = query;
+        document.getElementById('outlier-btn').click();
+      };
+      
+      // ==========================================================================
+      // RANDOM SHORTS DISCOVERY
+      // ==========================================================================
+      
+      const categoryKeywords = {
+        'trending': '',
+        'comedy': 'funny comedy memes',
+        'gaming': 'gaming gameplay',
+        'music': 'music song',
+        'sports': 'sports highlights',
+        'education': 'tutorial learn education',
+        'tech': 'technology tech gadgets',
+        'food': 'cooking recipe food',
+        'fitness': 'workout fitness gym',
+        'diy': 'diy crafts howto'
+      };
+      
+      document.getElementById('discover-refresh-btn').addEventListener('click', async () => {
+        const category = document.getElementById('discover-category').value;
+        const region = document.getElementById('discover-region').value;
+        const resultsDiv = document.getElementById('discover-results');
+        
+        resultsDiv.innerHTML = '<div class="loading-spinner"><i class="bi bi-arrow-clockwise"></i><p>Discovering Shorts...</p></div>';
+        
+        try {
+          let videos = [];
+          
+          if (category === 'trending' || category === '') {
+            // Get trending shorts
+            const data = await apiCall(`/youtube/trending?regionCode=${region}&maxResults=50`);
+            // Filter only shorts
+            videos = data.videos.filter(v => v.isShort === true);
+          } else {
+            // Search for category-specific shorts
+            const keyword = categoryKeywords[category] || category;
+            const data = await apiCall(`/youtube/search?q=${encodeURIComponent(keyword + ' shorts')}&order=viewCount&videoDuration=short&maxResults=50&regionCode=${region}`);
+            videos = data.videos;
+          }
+          
+          if (videos.length === 0) {
+            resultsDiv.innerHTML = '<div class="empty-state"><i class="bi bi-shuffle"></i><p>No Shorts found. Try another category.</p></div>';
+            return;
+          }
+          
+          // Shuffle and pick random shorts (like infinite scroll simulation)
+          const shuffled = videos.sort(() => Math.random() - 0.5);
+          const randomShorts = shuffled.slice(0, 12);
+          
+          resultsDiv.innerHTML = randomShorts.map(createVideoCard).join('');
+        } catch (err) {
+          resultsDiv.innerHTML = `<div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p>Error: ${err.message}</p></div>`;
+        }
+      });
+      
+      // ==========================================================================
+      // INIT
+      // ==========================================================================
+      
+      loadCategories();
+      loadSavedIdeas();
+      loadSavedNiches();
+      loadSavedResearch();
+    </script>
+  </body>
+</html>
