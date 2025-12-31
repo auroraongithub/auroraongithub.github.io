@@ -796,25 +796,30 @@
       
       .ai-quick-actions {
         display: flex;
-        gap: 8px;
-        margin-top: 10px;
-        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 8px;
+        flex-wrap: nowrap;
       }
       
       .ai-quick-btn {
-        padding: 6px 12px;
+        padding: 3px 6px;
         background: var(--card);
         border: 1px solid var(--border);
-        border-radius: 6px;
+        border-radius: 4px;
         color: var(--text-muted);
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         cursor: pointer;
         transition: all 0.2s;
+        white-space: nowrap;
       }
       
       .ai-quick-btn:hover {
         border-color: var(--primary);
         color: var(--text);
+      }
+      
+      .ai-quick-btn i {
+        font-size: 0.6rem;
       }
       
       .ai-typing-indicator {
@@ -1065,6 +1070,151 @@
         padding: 12px;
         border-radius: 8px;
         border-left: 3px solid var(--primary);
+      }
+      
+      /* B-Roll Table Styles */
+      .broll-table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin-top: 8px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+      
+      .broll-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.75rem;
+        background: var(--card);
+      }
+      
+      .broll-table th {
+        background: var(--gradient);
+        color: #fff;
+        padding: 8px 10px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .broll-table th:first-child {
+        width: 40%;
+      }
+      
+      .broll-table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+        line-height: 1.4;
+        color: var(--text);
+      }
+      
+      .broll-table tr:nth-child(even) td {
+        background: var(--bg-elev);
+      }
+      
+      .broll-table tr:last-child td {
+        border-bottom: none;
+      }
+      
+      /* Ensure table renders properly in AI chat messages */
+      .ai-message .broll-table-container {
+        margin: 8px 0 4px 0;
+      }
+      
+      /* Chat Tabs */
+      .ai-chat-tabs {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 10px;
+        background: var(--bg-elev);
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+      }
+      
+      .chat-tabs-list {
+        display: flex;
+        gap: 4px;
+        flex: 1;
+        overflow-x: auto;
+      }
+      
+      .chat-tab {
+        padding: 4px 8px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.2s;
+      }
+      
+      .chat-tab:hover {
+        border-color: var(--primary);
+        color: var(--text);
+      }
+      
+      .chat-tab.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #000;
+      }
+      
+      .chat-tab .close-tab {
+        opacity: 0.6;
+        font-size: 0.6rem;
+        padding: 0 2px;
+      }
+      
+      .chat-tab .close-tab:hover {
+        opacity: 1;
+      }
+      
+      .chat-tab-new {
+        padding: 4px 6px;
+        background: transparent;
+        border: 1px dashed var(--border);
+        border-radius: 4px;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 0.7rem;
+      }
+      
+      .chat-tab-new:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+      
+      /* Load More Messages */
+      .chat-load-more {
+        text-align: center;
+        padding: 8px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 8px;
+      }
+      
+      .chat-load-more button {
+        padding: 4px 10px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .chat-load-more button:hover {
+        border-color: var(--primary);
+        color: var(--text);
       }
     </style>
   </head>
@@ -1368,7 +1518,18 @@
                         </button>
                       </div>
                     </div>
+                    <div class="ai-chat-tabs" id="ai-chat-tabs">
+                      <div class="chat-tabs-list" id="chat-tabs-list">
+                        <!-- Tabs populated by JS -->
+                      </div>
+                      <button class="chat-tab-new" onclick="createNewChatTab()" title="New Chat">
+                        <i class="bi bi-plus"></i>
+                      </button>
+                    </div>
                     <div class="ai-chat-messages" id="ai-chat-messages">
+                      <div class="chat-load-more" id="chat-load-more" style="display: none;">
+                        <button onclick="loadOlderMessages()"><i class="bi bi-arrow-up"></i> Load older messages</button>
+                      </div>
                       <div class="ai-message system">
                         Select a transcript and use the quick actions or type a message to start.
                       </div>
@@ -1389,16 +1550,19 @@
                       </div>
                       <div class="ai-quick-actions">
                         <button class="ai-quick-btn" onclick="quickAction('rewrite')">
-                          <i class="bi bi-arrow-repeat"></i> Rewrite Script
+                          <i class="bi bi-arrow-repeat"></i> Rewrite
                         </button>
                         <button class="ai-quick-btn" onclick="quickAction('hook')">
-                          <i class="bi bi-lightning"></i> Better Hook
+                          <i class="bi bi-lightning"></i> Hook
                         </button>
                         <button class="ai-quick-btn" onclick="quickAction('shorter')">
-                          <i class="bi bi-scissors"></i> Make Shorter
+                          <i class="bi bi-scissors"></i> Shorter
                         </button>
                         <button class="ai-quick-btn" onclick="quickAction('punchier')">
-                          <i class="bi bi-fire"></i> More Punchy
+                          <i class="bi bi-fire"></i> Punchy
+                        </button>
+                        <button class="ai-quick-btn" onclick="generateBroll()">
+                          <i class="bi bi-camera-video"></i> B-Roll
                         </button>
                       </div>
                     </div>
@@ -1430,13 +1594,13 @@
               <i class="bi bi-cpu"></i> Model
             </label>
             <select id="ai-model-select">
-              <option value="openai/gpt-4o">GPT-4o (Default)</option>
+              <option value="anthropic/claude-haiku-4.5">Claude Haiku 4.5 (Default)</option>
+              <option value="openai/gpt-4o">GPT-4o</option>
               <option value="openai/gpt-4.1">GPT-4.1</option>
               <option value="openai/gpt-4.1-mini">GPT-4.1 Mini</option>
               <option value="openai/gpt-5.2">GPT-5.2</option>
               <option value="anthropic/claude-sonnet-4">Claude Sonnet 4</option>
               <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-              <option value="anthropic/claude-haiku-4.5">Claude Haiku 4.5</option>
               <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash</option>
             </select>
           </div>
@@ -1487,6 +1651,7 @@
       window.handleChatKeydown = handleChatKeydown;
       window.autoResizeChatInput = autoResizeChatInput;
       window.quickAction = quickAction;
+      window.generateBroll = generateBroll;
       window.clearChat = clearChat;
       window.openAISettings = openAISettings;
       window.closeAISettings = closeAISettings;
@@ -1496,6 +1661,10 @@
       window.revertToCheckpoint = revertToCheckpoint;
       window.toggleStatusFromExpanded = toggleStatusFromExpanded;
       window.selectTranscriptFromExpanded = selectTranscriptFromExpanded;
+      window.createNewChatTab = createNewChatTab;
+      window.switchChatTab = switchChatTab;
+      window.closeChatTab = closeChatTab;
+      window.loadOlderMessages = loadOlderMessages;
       
       // API Configuration
       const API_BASE = 'https://nijikade-backend.vercel.app/api';
@@ -1505,10 +1674,17 @@
       let currentTranscript = null;
       let currentFilter = 'all';
       
-      // AI Chat state
-      let chatHistory = []; // Each item: { role, content, isCheckpoint?, checkpointId? }
+      // AI Chat state - now per-transcript with tabs
+      let chatHistory = []; // Current active tab's messages (loaded portion)
+      let fullChatHistory = []; // Full history for current tab
       let isAIProcessing = false;
       let checkpointCounter = 0;
+      
+      // Chat tabs state
+      let chatTabs = {}; // { transcriptId: { tabs: [{id, name, messages}], activeTabId } }
+      let currentTabId = null;
+      const MESSAGES_PER_PAGE = 20; // How many messages to show initially
+      let loadedMessageCount = 0; // How many messages are currently loaded
       
       // Check auth
       if (!token) {
@@ -1901,10 +2077,9 @@
         // Toggle expanded mode on body
         document.body.classList.add('expanded-mode');
         
-        // Reset chat for new session if needed
-        if (chatHistory.length === 0) {
-          renderChatMessages();
-        }
+        // Load chat tabs for this transcript
+        loadChatTabsForTranscript(currentTranscript.id);
+        renderChatMessages();
       }
       
       // Render expanded sidebar transcript list
@@ -1944,13 +2119,13 @@
       
       // Select transcript from expanded sidebar
       function selectTranscriptFromExpanded(id) {
-        // Save current work before switching
+        // Save current work and chat before switching
         if (currentTranscript) {
           const expandedOriginal = document.getElementById('expanded-original').value;
           const expandedEdited = document.getElementById('expanded-edited').value;
           document.getElementById('original-transcript').value = expandedOriginal;
           document.getElementById('edited-transcript').value = expandedEdited;
-          // Optionally auto-save here
+          saveChatTabsForTranscript();
         }
         
         // Switch to new transcript
@@ -1965,9 +2140,8 @@
         updateExpandedMarkDoneBtn();
         renderExpandedSidebar();
         
-        // Clear chat for new transcript
-        chatHistory = [];
-        checkpointCounter = 0;
+        // Load chat tabs for new transcript
+        loadChatTabsForTranscript(currentTranscript.id);
         renderChatMessages();
       }
       
@@ -1991,6 +2165,9 @@
       }
       
       function closeExpandedEditor() {
+        // Save chat tabs before closing
+        saveChatTabsForTranscript();
+        
         // Remove expanded mode from body
         document.body.classList.remove('expanded-mode');
         
@@ -2035,11 +2212,193 @@
       // AI CHAT FUNCTIONS
       // ========================================
       
+      // Chat storage key helper
+      function getChatStorageKey(transcriptId) {
+        return `chat_tabs_${transcriptId}`;
+      }
+      
+      // Load chat tabs for a transcript from localStorage
+      function loadChatTabsForTranscript(transcriptId) {
+        if (!transcriptId) return;
+        
+        const stored = localStorage.getItem(getChatStorageKey(transcriptId));
+        if (stored) {
+          try {
+            chatTabs[transcriptId] = JSON.parse(stored);
+          } catch (e) {
+            chatTabs[transcriptId] = null;
+          }
+        }
+        
+        // Initialize if not exists
+        if (!chatTabs[transcriptId]) {
+          chatTabs[transcriptId] = {
+            tabs: [{ id: 'tab_1', name: 'Chat 1', messages: [], checkpointCounter: 0 }],
+            activeTabId: 'tab_1'
+          };
+        }
+        
+        currentTabId = chatTabs[transcriptId].activeTabId;
+        loadCurrentTab();
+        renderChatTabs();
+      }
+      
+      // Save chat tabs for current transcript to localStorage
+      function saveChatTabsForTranscript() {
+        if (!currentTranscript) return;
+        
+        // Update current tab's messages before saving
+        const tabData = chatTabs[currentTranscript.id];
+        if (tabData) {
+          const tab = tabData.tabs.find(t => t.id === currentTabId);
+          if (tab) {
+            tab.messages = fullChatHistory;
+            tab.checkpointCounter = checkpointCounter;
+          }
+          localStorage.setItem(getChatStorageKey(currentTranscript.id), JSON.stringify(tabData));
+        }
+      }
+      
+      // Load current tab's messages
+      function loadCurrentTab() {
+        if (!currentTranscript || !chatTabs[currentTranscript.id]) return;
+        
+        const tabData = chatTabs[currentTranscript.id];
+        const tab = tabData.tabs.find(t => t.id === currentTabId);
+        
+        if (tab) {
+          fullChatHistory = tab.messages || [];
+          checkpointCounter = tab.checkpointCounter || 0;
+          
+          // Load only recent messages initially
+          loadedMessageCount = Math.min(MESSAGES_PER_PAGE, fullChatHistory.length);
+          chatHistory = fullChatHistory.slice(-loadedMessageCount);
+        } else {
+          fullChatHistory = [];
+          chatHistory = [];
+          checkpointCounter = 0;
+          loadedMessageCount = 0;
+        }
+      }
+      
+      // Render chat tabs
+      function renderChatTabs() {
+        const container = document.getElementById('chat-tabs-list');
+        if (!currentTranscript || !chatTabs[currentTranscript.id]) {
+          container.innerHTML = '';
+          return;
+        }
+        
+        const tabData = chatTabs[currentTranscript.id];
+        container.innerHTML = tabData.tabs.map(tab => `
+          <div class="chat-tab ${tab.id === currentTabId ? 'active' : ''}" onclick="switchChatTab('${tab.id}')">
+            <span>${tab.name}</span>
+            ${tabData.tabs.length > 1 ? `<span class="close-tab" onclick="event.stopPropagation(); closeChatTab('${tab.id}')"><i class="bi bi-x"></i></span>` : ''}
+          </div>
+        `).join('');
+      }
+      
+      // Create new chat tab
+      function createNewChatTab() {
+        if (!currentTranscript) return;
+        
+        // Save current tab first
+        saveChatTabsForTranscript();
+        
+        const tabData = chatTabs[currentTranscript.id];
+        const newTabId = 'tab_' + Date.now();
+        const newTabNum = tabData.tabs.length + 1;
+        
+        tabData.tabs.push({
+          id: newTabId,
+          name: `Chat ${newTabNum}`,
+          messages: [],
+          checkpointCounter: 0
+        });
+        
+        tabData.activeTabId = newTabId;
+        currentTabId = newTabId;
+        
+        fullChatHistory = [];
+        chatHistory = [];
+        checkpointCounter = 0;
+        loadedMessageCount = 0;
+        
+        saveChatTabsForTranscript();
+        renderChatTabs();
+        renderChatMessages();
+      }
+      
+      // Switch to a chat tab
+      function switchChatTab(tabId) {
+        if (!currentTranscript || tabId === currentTabId) return;
+        
+        // Save current tab
+        saveChatTabsForTranscript();
+        
+        const tabData = chatTabs[currentTranscript.id];
+        tabData.activeTabId = tabId;
+        currentTabId = tabId;
+        
+        loadCurrentTab();
+        renderChatTabs();
+        renderChatMessages();
+      }
+      
+      // Close a chat tab
+      function closeChatTab(tabId) {
+        if (!currentTranscript) return;
+        
+        const tabData = chatTabs[currentTranscript.id];
+        if (tabData.tabs.length <= 1) return; // Don't close last tab
+        
+        const idx = tabData.tabs.findIndex(t => t.id === tabId);
+        if (idx === -1) return;
+        
+        tabData.tabs.splice(idx, 1);
+        
+        // If closing active tab, switch to another
+        if (currentTabId === tabId) {
+          currentTabId = tabData.tabs[Math.max(0, idx - 1)].id;
+          tabData.activeTabId = currentTabId;
+          loadCurrentTab();
+        }
+        
+        saveChatTabsForTranscript();
+        renderChatTabs();
+        renderChatMessages();
+      }
+      
+      // Load older messages when scrolling up
+      function loadOlderMessages() {
+        if (loadedMessageCount >= fullChatHistory.length) return;
+        
+        const additionalMessages = Math.min(MESSAGES_PER_PAGE, fullChatHistory.length - loadedMessageCount);
+        loadedMessageCount += additionalMessages;
+        
+        // Get messages from the beginning
+        chatHistory = fullChatHistory.slice(-loadedMessageCount);
+        
+        renderChatMessages();
+        
+        // Scroll to maintain position (scroll down a bit so user sees loaded content)
+        const container = document.getElementById('ai-chat-messages');
+        container.scrollTop = 100;
+      }
+      
       function renderChatMessages() {
         const container = document.getElementById('ai-chat-messages');
+        const loadMoreBtn = document.getElementById('chat-load-more');
+        
+        // Show/hide load more button
+        const hasMoreMessages = fullChatHistory.length > loadedMessageCount;
+        if (loadMoreBtn) {
+          loadMoreBtn.style.display = hasMoreMessages ? 'block' : 'none';
+        }
         
         if (chatHistory.length === 0) {
           container.innerHTML = `
+            ${hasMoreMessages ? '<div class="chat-load-more" id="chat-load-more"><button onclick="loadOlderMessages()"><i class="bi bi-arrow-up"></i> Load older messages</button></div>' : ''}
             <div class="ai-message system">
               Select a transcript and use the quick actions or type a message to start.
             </div>
@@ -2047,9 +2406,14 @@
           return;
         }
         
-        let html = '';
+        // Calculate the actual index offset for messages
+        const indexOffset = fullChatHistory.length - chatHistory.length;
         
-        chatHistory.forEach((msg, idx) => {
+        let html = hasMoreMessages ? '<div class="chat-load-more"><button onclick="loadOlderMessages()"><i class="bi bi-arrow-up"></i> Load older messages</button></div>' : '';
+        
+        chatHistory.forEach((msg, localIdx) => {
+          const idx = indexOffset + localIdx; // Actual index in fullChatHistory
+          
           // Render checkpoint divider
           if (msg.isCheckpoint) {
             html += `
@@ -2066,9 +2430,10 @@
           }
           
           // Render message
+          const displayContent = msg.isHtml ? msg.content : escapeHtml(msg.content);
           html += `
             <div class="ai-message ${msg.role}">
-              ${escapeHtml(msg.content)}
+              ${displayContent}
               ${msg.role === 'user' ? `
                 <div class="ai-message-actions">
                   <button onclick="editMessage(${idx})" title="Edit & regenerate"><i class="bi bi-pencil"></i></button>
@@ -2094,42 +2459,60 @@
         return div.innerHTML.replace(/\n/g, '<br>');
       }
       
-      function addMessage(role, content) {
-        chatHistory.push({ role, content });
+      function addMessage(role, content, isHtml = false) {
+        const msg = { role, content, isHtml };
+        chatHistory.push(msg);
+        fullChatHistory.push(msg);
+        loadedMessageCount = chatHistory.length;
+        saveChatTabsForTranscript();
         renderChatMessages();
       }
       
       function addCheckpoint() {
         checkpointCounter++;
-        chatHistory.push({ isCheckpoint: true, checkpointId: checkpointCounter });
+        const checkpoint = { isCheckpoint: true, checkpointId: checkpointCounter };
+        chatHistory.push(checkpoint);
+        fullChatHistory.push(checkpoint);
+        loadedMessageCount = chatHistory.length;
+        saveChatTabsForTranscript();
         renderChatMessages();
       }
       
       window.addCheckpointAfter = function(idx) {
         checkpointCounter++;
-        chatHistory.splice(idx + 1, 0, { isCheckpoint: true, checkpointId: checkpointCounter });
+        const checkpoint = { isCheckpoint: true, checkpointId: checkpointCounter };
+        fullChatHistory.splice(idx + 1, 0, checkpoint);
+        // Reload visible messages
+        chatHistory = fullChatHistory.slice(-loadedMessageCount);
+        saveChatTabsForTranscript();
         renderChatMessages();
       };
       
       function revertToCheckpoint(idx) {
         if (!confirm('Revert to this checkpoint? Messages after this will be removed.')) return;
         
-        // Keep everything up to and including the checkpoint
-        chatHistory = chatHistory.slice(0, idx + 1);
+        // Keep everything up to and including the checkpoint in full history
+        fullChatHistory = fullChatHistory.slice(0, idx + 1);
+        loadedMessageCount = Math.min(MESSAGES_PER_PAGE, fullChatHistory.length);
+        chatHistory = fullChatHistory.slice(-loadedMessageCount);
+        saveChatTabsForTranscript();
         renderChatMessages();
       }
       
       window.copyToVersion = function(idx) {
-        const msg = chatHistory[idx];
+        const msg = fullChatHistory[idx];
         if (msg && msg.role === 'assistant') {
           document.getElementById('expanded-edited').value = msg.content;
           updateExpandedWordCount();
           
-          // Visual feedback
-          const msgEl = document.querySelectorAll('.ai-message')[idx];
-          if (msgEl) {
-            msgEl.style.borderColor = 'var(--primary)';
-            setTimeout(() => { msgEl.style.borderColor = ''; }, 500);
+          // Visual feedback - find the element in the visible list
+          const localIdx = idx - (fullChatHistory.length - chatHistory.length);
+          if (localIdx >= 0) {
+            const msgEl = document.querySelectorAll('.ai-message')[localIdx];
+            if (msgEl) {
+              msgEl.style.borderColor = 'var(--primary)';
+              setTimeout(() => { msgEl.style.borderColor = ''; }, 500);
+            }
           }
         }
       };
@@ -2200,14 +2583,124 @@
         await processAIRequest(message);
       }
       
+      async function generateBroll() {
+        if (isAIProcessing) return;
+        
+        const currentVersion = document.getElementById('expanded-edited').value;
+        const originalTranscript = document.getElementById('expanded-original').value;
+        
+        const scriptToUse = currentVersion || originalTranscript;
+        
+        if (!scriptToUse.trim()) {
+          addMessage('assistant', 'No script found. Please write or generate a script in "Your Version" first.');
+          return;
+        }
+        
+        const brollPrompt = `Analyze the following YouTube Shorts script and suggest B-roll footage for each segment. Break down the script into natural visual segments where cuts/transitions make sense.
+
+SCRIPT:
+${scriptToUse}
+
+INSTRUCTIONS:
+- Split the each sentence into segments at natural breaking points (phrase, clause, or visual change)
+- Each segment should be a small part that can have ONE piece of B-roll
+- Suggest ONLY pure vanilla Minecraft footage with minimal/no editing
+- Be specific about what to show (e.g., "show enchanting table with max level enchant applied" not just "enchanting")
+- Include simple camera work that's in-game (zoom in subject with crouch walk, 3rd person (F5 view) talking to camera, pan camera, hold still)
+- Suggest direct gameplay actions: mining, crafting, fighting, opening menus, reading tooltips, etc.
+- Avoid effects, overlays, or heavy editing - just raw Minecraft footage
+- "NUH UH" or "YUH UH" should be a quick zoom-in to character face
+- Consider pacing: faster segments get quick cuts, explanation segments can be slower/steady
+
+RESPOND IN THIS EXACT FORMAT (use | as delimiter):
+SEGMENT | B-ROLL SUGGESTION
+[exact phrase from script] | [b-roll with vanilla minecraft footage]
+[next phrase] | [b-roll idea]
+...
+
+Only output the table rows, no other text. Start with the first segment.`;
+
+        addMessage('user', 'Generate B-Roll suggestions for current script');
+        
+        isAIProcessing = true;
+        document.getElementById('ai-chat-send').disabled = true;
+        showTypingIndicator();
+        
+        try {
+          const requestBody = {
+            message: brollPrompt,
+            history: [],
+            originalTranscript: originalTranscript,
+            currentVersion: currentVersion
+          };
+          
+          // Use the selected model
+          if (aiSettings.model) {
+            requestBody.model = aiSettings.model;
+          }
+          
+          const response = await api('/youtube/ai-chat', {
+            method: 'POST',
+            body: JSON.stringify(requestBody)
+          });
+          
+          hideTypingIndicator();
+          
+          if (response.ok) {
+            const data = await response.json();
+            // Format the response as a nice table
+            const formattedResponse = formatBrollTable(data.response);
+            addMessage('assistant', formattedResponse, true); // true = isHTML
+          } else {
+            const err = await response.json().catch(() => ({}));
+            addMessage('assistant', `Error: ${err.error || 'Failed to generate B-roll suggestions.'}`);
+          }
+        } catch (err) {
+          hideTypingIndicator();
+          addMessage('assistant', `Error: ${err.message}`);
+        }
+        
+        isAIProcessing = false;
+        document.getElementById('ai-chat-send').disabled = false;
+      }
+      
+      function formatBrollTable(response) {
+        const lines = response.trim().split('\n').filter(line => line.includes('|'));
+        
+        if (lines.length === 0) {
+          return response; // Return raw if no table format detected
+        }
+        
+        // Simple HTML escape without newline conversion
+        const escapeTableCell = (text) => {
+          const div = document.createElement('div');
+          div.textContent = text;
+          return div.innerHTML;
+        };
+        
+        let html = '<div class="broll-table-container"><table class="broll-table">';
+        html += '<thead><tr><th>Script Segment</th><th>B-Roll Suggestion</th></tr></thead>';
+        html += '<tbody>';
+        
+        for (const line of lines) {
+          const parts = line.split('|').map(p => p.trim());
+          if (parts.length >= 2 && !parts[0].toUpperCase().includes('SEGMENT')) {
+            html += `<tr><td>${escapeTableCell(parts[0])}</td><td>${escapeTableCell(parts[1])}</td></tr>`;
+          }
+        }
+        
+        html += '</tbody></table></div>';
+        return html;
+      }
+      
       async function processAIRequest(userMessage) {
         isAIProcessing = true;
         document.getElementById('ai-chat-send').disabled = true;
         showTypingIndicator();
         
         try {
-          // Filter out checkpoints from history for API call
-          const historyForApi = chatHistory
+          // Filter out checkpoints from full history for API call
+          const historyForApi = fullChatHistory
             .slice(0, -1) // Exclude the message we just added
             .filter(msg => !msg.isCheckpoint);
           
@@ -2220,7 +2713,7 @@
           };
           
           // Add custom settings if user has overridden them
-          if (aiSettings.model && aiSettings.model !== 'openai/gpt-4o') {
+          if (aiSettings.model && aiSettings.model !== 'anthropic/claude-haiku-4.5') {
             requestBody.model = aiSettings.model;
           }
           if (aiSettings.systemPrompt) {
@@ -2263,9 +2756,12 @@
       }
       
       function clearChat() {
-        if (confirm('Clear chat history?')) {
+        if (confirm('Clear chat history for this tab?')) {
           chatHistory = [];
+          fullChatHistory = [];
           checkpointCounter = 0;
+          loadedMessageCount = 0;
+          saveChatTabsForTranscript();
           renderChatMessages();
         }
       }
@@ -2416,13 +2912,13 @@ All Minecraft facts must be verified and fact-checked before presenting them.`;
         
         // Reset state
         aiSettings = {
-          model: 'openai/gpt-4o',
+          model: 'anthropic/claude-haiku-4.5',
           systemPrompt: '',
           memories: ''
         };
         
         // Update form
-        document.getElementById('ai-model-select').value = 'openai/gpt-4o';
+        document.getElementById('ai-model-select').value = 'anthropic/claude-haiku-4.5';
         document.getElementById('ai-system-prompt').value = DEFAULT_SYSTEM_PROMPT;
         document.getElementById('ai-memories').value = DEFAULT_MEMORIES;
       }
@@ -2435,13 +2931,15 @@ All Minecraft facts must be verified and fact-checked before presenting them.`;
       });
       
       window.editMessage = function(idx) {
-        const msg = chatHistory[idx];
-        if (msg.role !== 'user') return;
+        const msg = fullChatHistory[idx];
+        if (!msg || msg.role !== 'user') return;
         
         const newContent = prompt('Edit message:', msg.content);
         if (newContent && newContent !== msg.content) {
-          // Truncate history from this point and re-add edited message
-          chatHistory = chatHistory.slice(0, idx);
+          // Truncate full history from this point and re-add edited message
+          fullChatHistory = fullChatHistory.slice(0, idx);
+          loadedMessageCount = Math.min(MESSAGES_PER_PAGE, fullChatHistory.length);
+          chatHistory = fullChatHistory.slice(-loadedMessageCount);
           addMessage('user', newContent);
           processAIRequest(newContent);
         }
