@@ -153,10 +153,25 @@
             [{ align: [] }],
             ['blockquote','code-block'],
             ['link','image','video','formula'],
-            ['clean']
+            ['clean', 'embedImage']
           ]
         }
       });
+      // Custom embed image button
+      const embedBtn = document.createElement('button');
+      embedBtn.className = 'ql-embedImage';
+      embedBtn.innerHTML = '<i class="bi bi-link"></i>';
+      embedBtn.title = 'Embed Image via URL';
+      embedBtn.onclick = () => {
+        const url = prompt('Enter image URL:');
+        if (url) {
+          const range = quill.getSelection();
+          quill.insertText(range.index, '\n');
+          quill.insertEmbed(range.index + 1, 'image', url);
+          quill.insertText(range.index + 2, '\n');
+        }
+      };
+      document.querySelector('.ql-toolbar .ql-formats').appendChild(embedBtn);
       async function getPostData() {
         const url = new URL(window.location.href);
         const id = url.searchParams.get('id');
