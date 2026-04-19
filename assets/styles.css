@@ -4495,24 +4495,47 @@ body.dark .contact-link.twitter:hover {
   }
 }
 
-/* For very short screens */
-@media (max-height: 550px) {
-  .neo-sidebar .neo-box .neo-content {
-    max-height: 60px;
-  }
-  
-  .neo-widgets .neo-box .neo-content {
-    max-height: 80px;
-  }
-  
-  .shoutbox-container {
-    height: 140px;
-    min-height: 120px;
-  }
-  
-  .widget-shoutbox-sidebar .shoutbox-iframe,
-  .widget-shoutbox-sidebar #chattable {
-    height: 120px;
-    min-height: 100px;
-  }
+/* ==================== IMAGE LIGHTBOX ==================== */
+.lightbox-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 10000;
+  cursor: zoom-out;
+  align-items: center;
+  justify-content: center;
+  animation: lightbox-fade-in 0.2s ease;
+}
+.lightbox-overlay.active { display: flex; }
+.lightbox-overlay img {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+  cursor: grab;
+  transition: transform 0.1s ease-out;
+  transform-origin: center center;
+}
+.lightbox-overlay img.dragging { cursor: grabbing; transition: none; }
+.lightbox-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  background: rgba(255,255,255,0.1);
+  border: none; color: white;
+  font-size: 28px; width: 44px; height: 44px;
+  border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.25); }
+.lightbox-hint {
+  position: absolute;
+  bottom: 20px; left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.6); font-size: 13px; pointer-events: none;
+}
+@keyframes lightbox-fade-in {
+  from { opacity: 0; } to { opacity: 1; }
 }

@@ -129,7 +129,55 @@
       import '../assets/app.js';
       import('../assets/app.js').then(m=>m.getPost());
     </script>
-  </body>
+  <!-- Image Lightbox -->
+<div class="lightbox-overlay" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()"><i class="bi bi-x"></i></button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-hint">Scroll to zoom · Click outside to close</div>
+</div>
+<script>
+(function() {
+  const overlay = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  if (!overlay || !img) return;
+  let scale = 1, isDragging = false, startX, startY, translateX = 0, translateY = 0;
+  document.querySelector('#post-content')?.addEventListener('click', (e) => {
+    if (e.target.tagName === 'IMG') {
+      img.src = e.target.src; img.alt = e.target.alt || '';
+      scale = 1; translateX = 0; translateY = 0;
+      img.style.transform = 'scale(1) translate(0, 0)';
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  });
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    scale = 1; translateX = 0; translateY = 0;
+  }
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay || e.target.classList.contains('lightbox-close') || e.target.closest('.lightbox-close')) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox(); });
+  overlay.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const rect = img.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left - rect.width / 2;
+    const mouseY = e.clientY - rect.top - rect.height / 2;
+    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+    scale = Math.min(Math.max(scale * zoomFactor, 0.5), 5);
+    translateX -= mouseX * (zoomFactor - 1);
+    translateY -= mouseY * (zoomFactor - 1);
+    img.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+  }, { passive: false });
+  img.addEventListener('mousedown', (e) => {
+    if (scale > 1) { isDragging = true; startX = e.clientX - translateX; startY = e.clientY - translateY; img.classList.add('dragging'); }
+  });
+  document.addEventListener('mousemove', (e) => { if (isDragging) { translateX = e.clientX - startX; translateY = e.clientY - startY; img.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`; } });
+  document.addEventListener('mouseup', () => { isDragging = false; img.classList.remove('dragging'); });
+})();
+</script>
+</body>
 </html>
 
 
