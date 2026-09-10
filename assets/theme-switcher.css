@@ -23,30 +23,17 @@
   transform: translateY(0);
 }
 
+/* Keep the theme-aware top strip, but remove its label entirely. */
 .color-picker-header {
   display: block;
   margin: 0;
-  padding: 9px 12px;
+  height: 16px;
+  padding: 0;
   background: var(--primary);
   border-bottom: 2px solid var(--border);
-  text-align: center;
 }
 
-.color-picker-header h3 {
-  margin: 0;
-  color: #fff;
-  font-size: 0;
-  line-height: 1.2;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.16);
-}
-
-.color-picker-header h3::before {
-  content: "✦  Theme Switcher  ✦";
-  font-size: 0.95rem;
-  font-weight: 700;
-}
-
+.color-picker-header h3,
 .color-picker-close {
   display: none !important;
 }
@@ -54,7 +41,7 @@
 .color-picker-content::before {
   content: "Pick a theme:";
   display: block;
-  padding: 14px 16px 8px;
+  padding: 14px 16px 10px;
   color: var(--text);
   font-size: 0.9rem;
   font-weight: 700;
@@ -63,75 +50,67 @@
 .color-picker-options {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 9px;
+  gap: 12px;
   padding: 0 16px 16px;
 }
 
-.color-option {
+/* The button itself is now just a click target: no card background, border, or shadow. */
+.color-option,
+.color-option:hover,
+.color-option.active {
   position: relative;
   min-width: 0;
-  padding: 7px 4px 6px;
-  gap: 5px;
-  background: var(--bg);
-  border: 1px solid var(--border-light);
-  border-radius: 0;
-  box-shadow: 2px 2px 0 var(--border-light);
-  transition: transform 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
-}
-
-.color-option:hover {
-  background: var(--card);
-  border-color: var(--primary);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 var(--border-light);
-}
-
-.color-option.active {
-  background: var(--card);
-  border-color: var(--primary-dark);
-  box-shadow:
-    0 0 0 2px var(--card),
-    0 0 0 4px var(--primary),
-    3px 3px 0 var(--border-light);
-}
-
-.color-option.active::after {
-  content: "◆";
-  position: absolute;
-  top: -8px;
-  right: -6px;
+  min-height: 48px;
+  padding: 4px;
   display: grid;
   place-items: center;
-  width: 16px;
-  height: 16px;
-  color: var(--primary-dark);
-  background: var(--card);
-  font-size: 0.62rem;
-  line-height: 1;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+  transition: none;
 }
 
+.color-option::after,
+.color-option.active::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Hide the color names; native title tooltips still identify each swatch on hover. */
+.color-option span {
+  display: none !important;
+}
+
+/* Move the old-web drop shadow onto the color square itself. */
 .color-preview {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 0;
   border: 1px solid rgba(0, 0, 0, 0.45);
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.65), inset -1px -1px 0 rgba(0,0,0,0.12);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.65),
+    inset -1px -1px 0 rgba(0,0,0,0.12),
+    3px 3px 0 var(--border-light);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, outline-color 0.1s ease;
 }
 
-.color-option span {
-  max-width: 100%;
-  color: var(--text-muted);
-  font-size: 0.65rem;
-  font-weight: 600;
-  line-height: 1.15;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.color-option:hover .color-preview {
+  transform: translate(-1px, -1px);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.65),
+    inset -1px -1px 0 rgba(0,0,0,0.12),
+    4px 4px 0 var(--border-light);
 }
 
-.color-option.active span {
-  color: var(--primary-dark);
-  font-weight: 700;
+.color-option.active .color-preview {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.65),
+    inset -1px -1px 0 rgba(0,0,0,0.12),
+    4px 4px 0 var(--border-light);
 }
 
 .theme-switcher-mode {
@@ -174,6 +153,11 @@
   font-weight: 700;
 }
 
+/* Light/dark mode now lives in the switcher, so hide the duplicate banner control. */
+.site-banner .theme-toggle {
+  display: none !important;
+}
+
 [data-theme="dark"] .color-picker-content {
   box-shadow: 5px 5px 0 var(--border-light);
 }
@@ -189,12 +173,12 @@
 
   .color-picker-options {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
+    gap: 12px;
     padding: 0 14px 15px;
   }
 
   .color-picker-content::before {
-    padding: 12px 14px 8px;
+    padding: 12px 14px 10px;
   }
 
   .color-preview {
