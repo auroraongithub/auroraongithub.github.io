@@ -4,25 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>elythria.dev</title>
-  <meta name="description" content="roraosu's website - Scanlator, Gamer, Creator">
+  <meta name="description" content="Sean 'Aurora' Vinluan — content, operations, research, and technical support portfolio.">
   <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
-  
-  <!-- Preconnect to external resources for faster loading -->
   <link rel="preconnect" href="https://nijikade-backend.vercel.app" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://cdn.ably.com" crossorigin>
   <link rel="dns-prefetch" href="https://nijikade-backend.vercel.app">
-  
   <link rel="stylesheet" href="./assets/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <!-- Ably Realtime for Chat -->
   <script src="https://cdn.ably.com/lib/ably.min-1.js" defer></script>
-  
   <script type="text/javascript">
-  function tb8_makeArray(n){
-    this.length = n;
-    return this.length;
-  }
+  function tb8_makeArray(n){ this.length = n; return this.length; }
   tb8_messages = new tb8_makeArray(3);
   tb8_messages[0] = "elythria.dev";
   tb8_messages[1] = "elythria.dev";
@@ -41,14 +33,9 @@
     document.title = tb8_tekst;
     tb8_sp=tb8_speed;
     tb8_i++;
-    if (tb8_i==tb8_messages[tb8_currMsg].length){
-      tb8_currMsg++; tb8_i=0; tb8_tekst="";tb8_sp=tb8_delay;
-    }
+    if (tb8_i==tb8_messages[tb8_currMsg].length){ tb8_currMsg++; tb8_i=0; tb8_tekst="";tb8_sp=tb8_delay; }
     if (tb8_currMsg == tb8_messages.length){
-      if ((tb8_rptType == 'finite') && (tb8_counter==tb8_rptNbr)){
-        clearTimeout(tb8_TID);
-        return;
-      }
+      if ((tb8_rptType == 'finite') && (tb8_counter==tb8_rptNbr)){ clearTimeout(tb8_TID); return; }
       tb8_counter++;
       tb8_currMsg = 0;
     }
@@ -58,24 +45,15 @@
   </script>
 </head>
 <body>
-
-  <!-- ==================== MAIN CONTAINER ==================== -->
   <div class="neo-container">
-    
-    <!-- Site Banner/Header -->
     <div class="site-banner">
       <a href="./" class="brand" style="text-decoration: none !important; color: var(--primary) !important;">elythria.dev</a>
       <div class="header-controls">
-        <button class="color-picker-toggle" title="Change color" data-color-picker>
-          <i class="bi bi-palette"></i>
-        </button>
-        <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
-          <i class="bi bi-brightness-high"></i>
-        </button>
+        <button class="color-picker-toggle" title="Change color" data-color-picker><i class="bi bi-palette"></i></button>
+        <button class="theme-toggle" title="Toggle theme" data-toggle-theme><i class="bi bi-brightness-high"></i></button>
       </div>
     </div>
 
-    <!-- Status Strip (CRT Effect) -->
     <div class="status-strip-screen" id="statusStrip">
       <div class="status-strip-content">
         <div class="status-info">
@@ -85,109 +63,57 @@
           <span class="status-divider hide-mobile">|</span>
           <span class="status-updated hide-mobile"><i class="bi bi-clock"></i> <span id="statusUpdated">--</span></span>
         </div>
-        <div class="status-marquee">
-          <div class="marquee-track" id="marqueeTrack">
-            <span class="marquee-text" id="marqueeText">Welcome to elythria.dev!</span>
-          </div>
-        </div>
+        <div class="status-marquee"><div class="marquee-track" id="marqueeTrack"><span class="marquee-text" id="marqueeText">Welcome to elythria.dev!</span></div></div>
       </div>
     </div>
 
-    <!-- Color Picker Modal -->
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
-        <div class="color-picker-header">
-          <h3>Choose Your Color</h3>
-          <button class="color-picker-close" data-color-close>
-            <i class="bi bi-x-lg"></i>
-          </button>
-        </div>
+        <div class="color-picker-header"><h3>Choose Your Color</h3><button class="color-picker-close" data-color-close><i class="bi bi-x-lg"></i></button></div>
         <div class="color-picker-options">
-          <button class="color-option" data-color="cyan" title="Cyan (Current)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
-            <span>Cyan</span>
-          </button>
-          <button class="color-option" data-color="pink" title="Pink (Original)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
-            <span>Pink</span>
-          </button>
-          <button class="color-option" data-color="purple" title="Purple">
-            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
-            <span>Purple</span>
-          </button>
-          <button class="color-option" data-color="green" title="Green">
-            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
-            <span>Green</span>
-          </button>
-          <button class="color-option" data-color="orange" title="Orange">
-            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
-            <span>Orange</span>
-          </button>
-          <button class="color-option" data-color="blue" title="Blue">
-            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
-            <span>Blue</span>
-          </button>
-          <button class="color-option" data-color="red" title="Red">
-            <div class="color-preview" style="background: linear-gradient(135deg, #e74c3c, #ec7063);"></div>
-            <span>Red</span>
-          </button>
-          <button class="color-option" data-color="yellow" title="Yellow">
-            <div class="color-preview" style="background: linear-gradient(135deg, #f1c40f, #f7dc6f);"></div>
-            <span>Yellow</span>
-          </button>
-          <button class="color-option" data-color="teal" title="Teal">
-            <div class="color-preview" style="background: linear-gradient(135deg, #1abc9c, #48c9b0);"></div>
-            <span>Teal</span>
-          </button>
+          <button class="color-option" data-color="cyan" title="Cyan (Current)"><div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div><span>Cyan</span></button>
+          <button class="color-option" data-color="pink" title="Pink (Original)"><div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div><span>Pink</span></button>
+          <button class="color-option" data-color="purple" title="Purple"><div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div><span>Purple</span></button>
+          <button class="color-option" data-color="green" title="Green"><div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div><span>Green</span></button>
+          <button class="color-option" data-color="orange" title="Orange"><div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div><span>Orange</span></button>
+          <button class="color-option" data-color="blue" title="Blue"><div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div><span>Blue</span></button>
+          <button class="color-option" data-color="red" title="Red"><div class="color-preview" style="background: linear-gradient(135deg, #e74c3c, #ec7063);"></div><span>Red</span></button>
+          <button class="color-option" data-color="yellow" title="Yellow"><div class="color-preview" style="background: linear-gradient(135deg, #f1c40f, #f7dc6f);"></div><span>Yellow</span></button>
+          <button class="color-option" data-color="teal" title="Teal"><div class="color-preview" style="background: linear-gradient(135deg, #1abc9c, #48c9b0);"></div><span>Teal</span></button>
         </div>
       </div>
     </div>
 
-    <!-- Layout: Sidebar + Main -->
     <div class="neo-layout">
-      
-      <!-- ==================== SIDEBAR ==================== -->
       <aside class="neo-sidebar">
-        
-        <!-- Navigation Box -->
         <div class="neo-box scroll-animate">
           <div class="neo-header"><h3>Navigate</h3></div>
-          <div class="neo-content">
-            <ul>
-              <li><a href="./">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#portfolio">Portfolio</a></li>
-              <li><a href="./blogs.html">Blogs</a></li>
-              <li><a href="./stories.html">Stories</a></li>
-            </ul>
-          </div>
+          <div class="neo-content"><ul>
+            <li><a href="./">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#services">What I Do</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="./blogs.html">Blogs</a></li>
+            <li><a href="./stories.html">Stories</a></li>
+          </ul></div>
         </div>
 
-        <!-- Links Box -->
         <div class="neo-box scroll-animate">
-          <div class="neo-header"><h3>Links</h3></div>
-          <div class="neo-content">
-            <ul>
-              <li><a href="https://x.com/_kuzuminn" target="_blank">X (Twitter)</a></li>
-              <li><a href="https://youtube.com/@pmuaurora" target="_blank">YouTube</a></li>
-              <li><a href="https://github.com/auroraongithub" target="_blank">GitHub</a></li>
-              <li><a href="mailto:aurorashorts.forbusiness@gmail.com">Email</a></li>
-            </ul>
-          </div>
+          <div class="neo-header"><h3>Professional Links</h3></div>
+          <div class="neo-content"><ul>
+            <li><a href="https://github.com/auroraongithub" target="_blank">GitHub</a></li>
+            <li><a href="https://youtube.com/@pmuaurora" target="_blank">YouTube</a></li>
+            <li><a href="mailto:aurorashorts.forbusiness@gmail.com">Email</a></li>
+            <li><a href="https://x.com/_kuzuminn" target="_blank">X (Twitter)</a></li>
+          </ul></div>
         </div>
 
-        <!-- Scrollbox with images -->
         <div class="neo-box scroll-animate">
           <div class="neo-header"><h3>Gallery</h3></div>
-          <div class="neo-content">
-            <div class="neo-scrollbox">
-              <img src="./img/pfp.png" alt="Profile" loading="lazy">
-              <img src="./img/topheader.png" alt="Profile" loading="lazy">
-            </div>
-          </div>
+          <div class="neo-content"><div class="neo-scrollbox"><img src="./img/pfp.png" alt="Profile" loading="lazy"><img src="./img/topheader.png" alt="Profile" loading="lazy"></div></div>
         </div>
 
-        <!-- Additional Images -->
         <div class="neo-box scroll-animate">
           <div class="neo-header"><h3>More</h3></div>
           <div class="neo-content" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
@@ -198,486 +124,186 @@
           </div>
         </div>
 
-        <!-- Stats Widget -->
         <div class="neo-box scroll-animate">
           <div class="neo-header"><h3><i class="bi bi-bar-chart"></i> Stats</h3></div>
-          <div class="neo-content">
-            <div class="stats-grid sidebar-stats">
-              <div class="stat-item">
-                <span class="stat-value" id="statProjects">--</span>
-                <span class="stat-label">Projects</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="statPosts">--</span>
-                <span class="stat-label">Posts</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="statVisitors">--</span>
-                <span class="stat-label">Online Now</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="statPageviews">--</span>
-                <span class="stat-label">Total Visits</span>
-              </div>
-            </div>
-          </div>
+          <div class="neo-content"><div class="stats-grid sidebar-stats">
+            <div class="stat-item"><span class="stat-value" id="statProjects">--</span><span class="stat-label">Projects</span></div>
+            <div class="stat-item"><span class="stat-value" id="statPosts">--</span><span class="stat-label">Posts</span></div>
+            <div class="stat-item"><span class="stat-value" id="statVisitors">--</span><span class="stat-label">Online Now</span></div>
+            <div class="stat-item"><span class="stat-value" id="statPageviews">--</span><span class="stat-label">Total Visits</span></div>
+          </div></div>
         </div>
-
       </aside>
 
-      <!-- ==================== MAIN CONTENT ==================== -->
       <main class="neo-main">
-        
-        <!-- Hero Section -->
-        <div class="neo-hero scroll-animate">
-          <img class="avatar" src="./img/aboutme.gif" alt="About Me">
-        </div>
+        <div class="neo-hero scroll-animate"><img class="avatar" src="./img/aboutme.gif" alt="About Me"></div>
 
-        <!-- About Section -->
         <section id="about" class="neo-box scroll-animate">
           <div class="neo-header"><h2>About Me</h2></div>
           <div class="neo-content">
             <div class="about-grid">
               <img src="./img/pfp.png" alt="Aurora">
               <div>
-                <h3 style="margin-top: 0;">aurora · Creator, Scanlator</h3>
-                <p>I am a hobbyist coder and I also design for projects for myself or ones that I find interesting. I usually create designs in photoshop and code sites when I have nothing to do.</p>
-                <p>I'm a pretty competitive gamer. You can find me the most in osu! and Valorant.</p>
+                <h3 style="margin-top: 0;">Sean “Aurora” Vinluan · Content, Operations & Technical Support</h3>
+                <p>I'm a Computer Science student and online creator with hands-on experience in content strategy, research, digital operations, ecommerce support, and technical problem-solving. I work comfortably across creative and technical tasks, especially when a project needs someone who can figure things out independently and turn messy information into something usable.</p>
+                <p>My background includes running content pipelines, researching topics and competitors, organizing workflows, supporting online-business tasks, troubleshooting web tools, and building or maintaining personal web projects. Outside work, I'm usually playing osu! or Valorant.</p>
               </div>
             </div>
             <div class="about-contact-bar">
               <span class="contact-label"><i class="bi bi-envelope"></i> Contact:</span>
-              <a href="https://discord.com/users/izaurora" target="_blank" class="contact-link discord"><i class="bi bi-discord"></i> izaurora</a>
-              <a href="https://x.com/_kuzuminn" target="_blank" class="contact-link twitter"><i class="bi bi-twitter-x"></i> @_kuzuminn</a>
-              <a href="https://youtube.com/@pmuaurora" target="_blank" class="contact-link youtube"><i class="bi bi-youtube"></i> @pmuaurora</a>
+              <a href="https://github.com/auroraongithub" target="_blank" class="contact-link"><i class="bi bi-github"></i> GitHub</a>
+              <a href="https://youtube.com/@pmuaurora" target="_blank" class="contact-link youtube"><i class="bi bi-youtube"></i> YouTube</a>
               <a href="mailto:aurorashorts.forbusiness@gmail.com" class="contact-link email"><i class="bi bi-envelope-fill"></i> Email</a>
+              <a href="https://x.com/_kuzuminn" target="_blank" class="contact-link twitter"><i class="bi bi-twitter-x"></i> @_kuzuminn</a>
             </div>
           </div>
         </section>
 
-        <!-- Manga Carousel Section -->
-        <section class="neo-box scroll-animate">
-          <div class="neo-header"><h2>Our Group's Mangas</h2></div>
+        <section id="results" class="neo-box scroll-animate">
+          <div class="neo-header"><h2><i class="bi bi-graph-up-arrow"></i> Selected Results</h2></div>
           <div class="neo-content">
-            <p class="text-muted mb-2">All series that our group worked on</p>
+            <div class="stats-grid">
+              <div class="stat-item"><span class="stat-value">8.5K+</span><span class="stat-label">YouTube subscribers</span></div>
+              <div class="stat-item"><span class="stat-value">6M+</span><span class="stat-label">Shorts views on one launch</span></div>
+              <div class="stat-item"><span class="stat-value">2M+</span><span class="stat-label">Shorts views on another launch</span></div>
+              <div class="stat-item"><span class="stat-value">680K</span><span class="stat-label">Monthly views on edited client content</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="services" class="neo-box scroll-animate">
+          <div class="neo-header"><h2><i class="bi bi-tools"></i> What I Can Help With</h2></div>
+          <div class="neo-content">
+            <div class="recent-grid">
+              <div class="recent-panel"><h3><i class="bi bi-megaphone"></i> Content & Social</h3><p>Content research, scripting, hooks, titles, platform adaptation, short-form strategy, community awareness, and performance-focused content review.</p></div>
+              <div class="recent-panel"><h3><i class="bi bi-kanban"></i> Research & Operations</h3><p>Online research, spreadsheets, task tracking, file organization, documentation, competitor research, basic reporting, and repeatable workflow support.</p></div>
+              <div class="recent-panel"><h3><i class="bi bi-bag"></i> Ecommerce Support</h3><p>Product research, listing and catalog support, Etsy and online-business workflows, process organization, and detail-focused admin work.</p></div>
+              <div class="recent-panel"><h3><i class="bi bi-code-slash"></i> Technical & Web</h3><p>Web tools, Git/GitHub, troubleshooting, APIs, basic development, Linux/server work, automation, and learning unfamiliar platforms quickly.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="portfolio" class="neo-box scroll-animate">
+          <div class="neo-header"><h2>Featured Work</h2></div>
+          <div class="neo-content">
+            <p class="text-muted mb-2">Selected projects and work.</p>
+            <div class="neo-grid" id="portfolioGrid"><div class="loading-small" style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading projects...</div></div>
+          </div>
+        </section>
+
+        <section class="neo-box scroll-animate">
+          <div class="neo-header"><h2>Publishing & Localization Work</h2></div>
+          <div class="neo-content">
+            <p class="text-muted mb-2">Series supported through remote publishing, localization, editing, quality-control, and release workflows.</p>
             <div class="neo-carousel">
-              <div class="carousel-viewport">
-                <div class="carousel-track" id="seriesTrack">
-                  <a class="carousel-item" data-series="mabarai" href="https://mangadex.org/title/4db9c1e8-243b-4f73-95e8-ea29f632f456/mabarai-san-wa-boku-wo-karitai" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/Xokjrz1g" alt="Mabarai-san Hunts Me Down"></a>
-                  <a class="carousel-item" data-series="blacksmith" href="https://mangadex.org/title/4bdeff13-b1fb-4fd8-9a9f-56d2d885c2c7/kyuutei-kajishi-no-shiawase-na-nichijou-black-na-shokuba-wo-tsuihou-saretaga-ringoku-de-koushaku" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/kDWy1Q5D" alt="Happy Daily Life of a Court Blacksmith"></a>
-                  <a class="carousel-item" data-series="contract" href="https://mangadex.org/title/72fe5a3b-a69b-4f74-af4e-9d679b28b750/there-is-a-lie-in-my-contract-marriage" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/YCcLn58Y" alt="There Is a Lie in My Contract Marriage"></a>
-                  <a class="carousel-item" data-series="kobayashi" href="https://mangadex.org/title/a944aace-6f03-4298-b864-aee895acab28/endo-and-kobayashi-s-live-commentary-on-the-villainess" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/ciVSQwrK" alt="Endo and Kobayashi's Live Commentary on the Villainess"></a>
-                  <a class="carousel-item" data-series="forcedgf" href="https://mangadex.org/title/fc7e628c-6c26-497a-b17d-dfea90b44652/bocchi-no-boku-ni-kyousei-kanojo-ga-yattekita" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/iUZa6NKv" alt="I'm a Loner and My Girlfriend Came to Me by Force"></a>
-                  <a class="carousel-item" data-series="deathgame" href="https://mangadex.org/title/720466f8-2eee-43a5-893b-67f9190c04ae/isekaigaeri-no-moto-yuusha-desuga-death-game-ni-makikomare-mashita" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/Qf5k02iY" alt="A Former Hero Returning From Another World Gets Involved in a Death Game"></a>
-                  <a class="carousel-item" data-series="finalmessage" href="https://mangadex.org/title/d21daa0a-0abc-45c4-b9b1-d3456ba884d5/okuru-kotoba" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/POLDhgtZ" alt="Final Message"></a>
-                  <a class="carousel-item" data-series="shigure" href="https://mangadex.org/title/a476ce7f-2fb8-4f6f-8337-fa62ce5034fb/shigure-san-wants-to-shine" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/EuNjtaDy" alt="Shigure-San Wants to Shine!"></a>
-                  <a class="carousel-item" data-series="80k" href="https://mangadex.org/title/89ed3ec2-ebe6-4d6b-92eb-d753a8bb365e/saving-80-000-gold-in-another-world-for-my-retirement" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/94S9tuew" alt="Saving 80,000 Gold Coins in the Different World for My Old Age"></a>
-                  <a class="carousel-item" data-series="mmo" href="https://mangadex.org/title/b5ef1317-7c35-411a-b33b-f588c2f76940/retire-shita-ningyoushi-no-mmo-kikou-jojishi" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/hwpT2eim" alt="Retire Shita Ningyoushi no MMO Kikou Jojishi"></a>
-                </div>
-              </div>
+              <div class="carousel-viewport"><div class="carousel-track" id="seriesTrack">
+                <a class="carousel-item" data-series="mabarai" href="https://mangadex.org/title/4db9c1e8-243b-4f73-95e8-ea29f632f456/mabarai-san-wa-boku-wo-karitai" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/Xokjrz1g" alt="Mabarai-san Hunts Me Down"></a>
+                <a class="carousel-item" data-series="blacksmith" href="https://mangadex.org/title/4bdeff13-b1fb-4fd8-9a9f-56d2d885c2c7/kyuutei-kajishi-no-shiawase-na-nichijou-black-na-shokuba-wo-tsuihou-saretaga-ringoku-de-koushaku" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/kDWy1Q5D" alt="Happy Daily Life of a Court Blacksmith"></a>
+                <a class="carousel-item" data-series="contract" href="https://mangadex.org/title/72fe5a3b-a69b-4f74-af4e-9d679b28b750/there-is-a-lie-in-my-contract-marriage" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/YCcLn58Y" alt="There Is a Lie in My Contract Marriage"></a>
+                <a class="carousel-item" data-series="kobayashi" href="https://mangadex.org/title/a944aace-6f03-4298-b864-aee895acab28/endo-and-kobayashi-s-live-commentary-on-the-villainess" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/ciVSQwrK" alt="Endo and Kobayashi's Live Commentary on the Villainess"></a>
+                <a class="carousel-item" data-series="forcedgf" href="https://mangadex.org/title/fc7e628c-6c26-497a-b17d-dfea90b44652/bocchi-no-boku-ni-kyousei-kanojo-ga-yattekita" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/iUZa6NKv" alt="I'm a Loner and My Girlfriend Came to Me by Force"></a>
+                <a class="carousel-item" data-series="deathgame" href="https://mangadex.org/title/720466f8-2eee-43a5-893b-67f9190c04ae/isekaigaeri-no-moto-yuusha-desuga-death-game-ni-makikomare-mashita" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/Qf5k02iY" alt="A Former Hero Returning From Another World Gets Involved in a Death Game"></a>
+                <a class="carousel-item" data-series="finalmessage" href="https://mangadex.org/title/d21daa0a-0abc-45c4-b9b1-d3456ba884d5/okuru-kotoba" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/POLDhgtZ" alt="Final Message"></a>
+                <a class="carousel-item" data-series="shigure" href="https://mangadex.org/title/a476ce7f-2fb8-4f6f-8337-fa62ce5034fb/shigure-san-wants-to-shine" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/EuNjtaDy" alt="Shigure-San Wants to Shine!"></a>
+                <a class="carousel-item" data-series="80k" href="https://mangadex.org/title/89ed3ec2-ebe6-4d6b-92eb-d753a8bb365e/saving-80-000-gold-in-another-world-for-my-retirement" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/94S9tuew" alt="Saving 80,000 Gold Coins in the Different World for My Old Age"></a>
+                <a class="carousel-item" data-series="mmo" href="https://mangadex.org/title/b5ef1317-7c35-411a-b33b-f588c2f76940/retire-shita-ningyoushi-no-mmo-kikou-jojishi" target="_blank" rel="noopener"><img src="https://roraosu.s-ul.eu/hwpT2eim" alt="Retire Shita Ningyoushi no MMO Kikou Jojishi"></a>
+              </div></div>
               <button class="carousel-ctrl carousel-prev" data-carousel-prev aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
               <button class="carousel-ctrl carousel-next" data-carousel-next aria-label="Next"><i class="bi bi-chevron-right"></i></button>
             </div>
           </div>
         </section>
-        
-        <!-- Hover card outside carousel viewport -->
         <div class="hover-card" id="seriesHover"></div>
 
-        <!-- ==================== FAVORITES SECTION ==================== -->
         <section class="neo-box scroll-animate" id="favorites">
           <div class="neo-header"><h2><i class="bi bi-heart"></i> Favorites</h2></div>
           <div class="neo-content">
-            <!-- Category Tabs -->
             <div class="favorites-tabs">
-              <button class="fav-tab active" data-category="anime" onclick="switchFavoritesTab('anime')">
-                <i class="bi bi-play-circle"></i> Anime
-              </button>
-              <button class="fav-tab" data-category="manga" onclick="switchFavoritesTab('manga')">
-                <i class="bi bi-book"></i> Manga/LN
-              </button>
-              <button class="fav-tab" data-category="characters" onclick="switchFavoritesTab('characters')">
-                <i class="bi bi-person"></i> Characters
-              </button>
-              <button class="fav-tab" data-category="games" onclick="switchFavoritesTab('games')">
-                <i class="bi bi-controller"></i> Games
-              </button>
+              <button class="fav-tab active" data-category="anime" onclick="switchFavoritesTab('anime')"><i class="bi bi-play-circle"></i> Anime</button>
+              <button class="fav-tab" data-category="manga" onclick="switchFavoritesTab('manga')"><i class="bi bi-book"></i> Manga/LN</button>
+              <button class="fav-tab" data-category="characters" onclick="switchFavoritesTab('characters')"><i class="bi bi-person"></i> Characters</button>
+              <button class="fav-tab" data-category="games" onclick="switchFavoritesTab('games')"><i class="bi bi-controller"></i> Games</button>
             </div>
-            
-            <!-- Favorites Carousel -->
             <div class="neo-carousel favorites-carousel">
-              <div class="carousel-viewport">
-                <div class="carousel-track" id="favoritesTrack">
-                  <div class="loading-small" style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading favorites...</div>
-                </div>
-              </div>
+              <div class="carousel-viewport"><div class="carousel-track" id="favoritesTrack"><div class="loading-small" style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading favorites...</div></div></div>
               <button class="carousel-ctrl carousel-prev" data-fav-carousel-prev aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
               <button class="carousel-ctrl carousel-next" data-fav-carousel-next aria-label="Next"><i class="bi bi-chevron-right"></i></button>
             </div>
           </div>
         </section>
 
-        <!-- Portfolio Section -->
-        <section id="portfolio" class="neo-box scroll-animate">
-          <div class="neo-header"><h2>Portfolio</h2></div>
-          <div class="neo-content">
-            <p class="text-muted mb-2">my work!</p>
-            <div class="neo-grid" id="portfolioGrid">
-              <div class="loading-small" style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading projects...</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ==================== RECENT ==================== -->
         <section class="neo-box scroll-animate" id="recent">
           <div class="neo-header"><h2><i class="bi bi-clock-history"></i> Recent </h2></div>
-          <div class="neo-content">
-            <div class="recent-grid">
-              
-              <!-- Latest Blog Posts -->
-              <div class="recent-panel">
-                <h3><i class="bi bi-journal-text"></i> Latest Blog Posts</h3>
-                <div class="recent-list" id="recentBlogs">
-                  <div class="loading-small">Loading...</div>
-                </div>
-                <a href="./blogs.html" class="widget-link">View all blogs <i class="bi bi-arrow-right"></i></a>
-              </div>
-              
-              <!-- Latest Stories -->
-              <div class="recent-panel">
-                <h3><i class="bi bi-book"></i> Latest Stories</h3>
-                <div class="recent-list" id="recentStories">
-                  <div class="loading-small">Loading...</div>
-                </div>
-                <a href="./stories.html" class="widget-link">View all stories <i class="bi bi-arrow-right"></i></a>
-              </div>
-              
-            </div>
-          </div>
+          <div class="neo-content"><div class="recent-grid">
+            <div class="recent-panel"><h3><i class="bi bi-journal-text"></i> Latest Blog Posts</h3><div class="recent-list" id="recentBlogs"><div class="loading-small">Loading...</div></div><a href="./blogs.html" class="widget-link">View all blogs <i class="bi bi-arrow-right"></i></a></div>
+            <div class="recent-panel"><h3><i class="bi bi-book"></i> Latest Stories</h3><div class="recent-list" id="recentStories"><div class="loading-small">Loading...</div></div><a href="./stories.html" class="widget-link">View all stories <i class="bi bi-arrow-right"></i></a></div>
+          </div></div>
         </section>
 
-        <!-- Spotify Widget -->
         <section class="neo-box scroll-animate" id="widgetSpotifyBox" style="display: none;">
           <div class="neo-header"><h2><i class="bi bi-spotify"></i> Currently Listening</h2></div>
-          <div class="neo-content" style="padding: 15px;">
-            <iframe id="widgetSpotify" style="border-radius: 8px; border: none;" src="" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-          </div>
+          <div class="neo-content" style="padding: 15px;"><iframe id="widgetSpotify" style="border-radius: 8px; border: none;" src="" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
         </section>
 
-        <!-- Mobile Shoutbox (visible only on mobile) -->
         <section class="neo-box scroll-animate mobile-shoutbox-section">
-          <div class="neo-header">
-            <h2><i class="bi bi-chat-dots"></i> Chatbox</h2>
-            <button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button>
-          </div>
+          <div class="neo-header"><h2><i class="bi bi-chat-dots"></i> Chatbox</h2><button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button></div>
           <div class="neo-content shoutbox-container">
-            <div class="shoutbox-messages" id="mobileShoutboxMessages">
-              <div class="shoutbox-loading">Loading messages...</div>
-            </div>
-            <div class="shoutbox-setup" id="mobileShoutboxSetup">
-              <div class="shoutbox-setup-row">
-                <input type="color" id="mobileShoutboxColor" value="#6de6e2">
-                <input type="text" id="mobileShoutboxUsername" placeholder="Choose a username..." maxlength="30">
-              </div>
-              <button class="shoutbox-join-btn" onclick="joinShoutbox('mobile')">Join Chat</button>
-            </div>
-            <div class="shoutbox-input" id="mobileShoutboxInput" style="display: none;">
-              <div class="shoutbox-user-info">
-                <span id="mobileShoutboxCurrentUser"></span>
-                <button class="shoutbox-change-user" onclick="changeShoutboxUser('mobile')" title="Change username"><i class="bi bi-pencil"></i></button>
-              </div>
-              <div class="shoutbox-send-row">
-                <button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker('mobile')" title="Add emoji"><i class="bi bi-emoji-smile"></i></button>
-                <input type="text" id="mobileShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('mobile')">
-                <button class="shoutbox-send-btn" onclick="sendShoutboxMessage('mobile')"><i class="bi bi-send"></i></button>
-              </div>
-              <div class="emoji-picker-container" id="mobileEmojiPickerContainer" style="display: none;">
-                <div class="custom-emoji-picker" id="mobileCustomEmojiPicker"></div>
-              </div>
-            </div>
+            <div class="shoutbox-messages" id="mobileShoutboxMessages"><div class="shoutbox-loading">Loading messages...</div></div>
+            <div class="shoutbox-setup" id="mobileShoutboxSetup"><div class="shoutbox-setup-row"><input type="color" id="mobileShoutboxColor" value="#6de6e2"><input type="text" id="mobileShoutboxUsername" placeholder="Choose a username..." maxlength="30"></div><button class="shoutbox-join-btn" onclick="joinShoutbox('mobile')">Join Chat</button></div>
+            <div class="shoutbox-input" id="mobileShoutboxInput" style="display: none;"><div class="shoutbox-user-info"><span id="mobileShoutboxCurrentUser"></span><button class="shoutbox-change-user" onclick="changeShoutboxUser('mobile')" title="Change username"><i class="bi bi-pencil"></i></button></div><div class="shoutbox-send-row"><button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker('mobile')" title="Add emoji"><i class="bi bi-emoji-smile"></i></button><input type="text" id="mobileShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('mobile')"><button class="shoutbox-send-btn" onclick="sendShoutboxMessage('mobile')"><i class="bi bi-send"></i></button></div><div class="emoji-picker-container" id="mobileEmojiPickerContainer" style="display: none;"><div class="custom-emoji-picker" id="mobileCustomEmojiPicker"></div></div></div>
           </div>
         </section>
 
-        <!-- Discord Section -->
         <section class="neo-box scroll-animate">
-          <div class="neo-header"><h2>Join Us!</h2></div>
-          <div class="neo-content discord-banner">
-            <h3>Join our Discord Server!</h3>
-            <a href="https://dsc.gg/evescans" target="_blank">
-              <img src="https://imgur-archive.ppy.sh/discord/915843559830204416-954686279314989056-ESBANNER.png?width=1080&height=270" alt="Discord Server Banner">
-            </a>
-          </div>
+          <div class="neo-header"><h2>Community</h2></div>
+          <div class="neo-content discord-banner"><h3>Join our Discord Server!</h3><a href="https://dsc.gg/evescans" target="_blank"><img src="https://imgur-archive.ppy.sh/discord/915843559830204416-954686279314989056-ESBANNER.png?width=1080&height=270" alt="Discord Server Banner"></a></div>
         </section>
-
       </main>
 
-      <!-- ==================== RIGHT SIDEBAR (WIDGETS) ==================== -->
       <aside class="neo-widgets">
-        
-        <!-- Now Widget -->
-        <div class="neo-box scroll-animate widget-now">
-          <div class="neo-header"><h3><i class="bi bi-clock-history"></i> Now</h3></div>
-          <div class="neo-content">
-            <div class="now-widget-item">
-              <span class="now-widget-label">Working On</span>
-              <span class="now-widget-value" id="widgetWorkingOn">Loading...</span>
-            </div>
-            <div class="now-widget-item">
-              <span class="now-widget-label">Learning</span>
-              <span class="now-widget-value" id="widgetLearning">Loading...</span>
-            </div>
-            <div class="now-widget-item">
-              <span class="now-widget-label">Open to Collabs</span>
-              <span class="now-widget-value" id="widgetCollabs"><i class="bi bi-question-circle"></i></span>
-            </div>
-          </div>
-        </div>
+        <div class="neo-box scroll-animate widget-now"><div class="neo-header"><h3><i class="bi bi-clock-history"></i> Now</h3></div><div class="neo-content"><div class="now-widget-item"><span class="now-widget-label">Working On</span><span class="now-widget-value" id="widgetWorkingOn">Loading...</span></div><div class="now-widget-item"><span class="now-widget-label">Learning</span><span class="now-widget-value" id="widgetLearning">Loading...</span></div><div class="now-widget-item"><span class="now-widget-label">Open to Collabs</span><span class="now-widget-value" id="widgetCollabs"><i class="bi bi-question-circle"></i></span></div></div></div>
 
-        <!-- Changelog Widget -->
-        <div class="neo-box scroll-animate widget-changelog">
-          <div class="neo-header"><h3><i class="bi bi-list-check"></i> Updates</h3></div>
-          <div class="neo-content">
-            <div class="changelog-widget-list" id="widgetChangelog">
-              <div class="loading-small">Loading...</div>
-            </div>
-            <a href="./changelog.html" class="widget-link" style="margin-top: 10px; display: block;">View all updates <i class="bi bi-arrow-right"></i></a>
-          </div>
-        </div>
+        <div class="neo-box scroll-animate widget-changelog"><div class="neo-header"><h3><i class="bi bi-list-check"></i> Updates</h3></div><div class="neo-content"><div class="changelog-widget-list" id="widgetChangelog"><div class="loading-small">Loading...</div></div><a href="./changelog.html" class="widget-link" style="margin-top: 10px; display: block;">View all updates <i class="bi bi-arrow-right"></i></a></div></div>
 
-        <!-- Shoutbox Widget -->
         <div class="neo-box scroll-animate widget-shoutbox-sidebar">
-          <div class="neo-header">
-            <h3><i class="bi bi-chat-dots"></i> Chatbox</h3>
-            <button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button>
-          </div>
+          <div class="neo-header"><h3><i class="bi bi-chat-dots"></i> Chatbox</h3><button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button></div>
           <div class="neo-content shoutbox-container">
-            <!-- Messages area -->
-            <div class="shoutbox-messages" id="shoutboxMessages">
-              <div class="shoutbox-loading">Loading messages...</div>
-            </div>
-            
-            <!-- Username setup (shown if no username set) -->
-            <div class="shoutbox-setup" id="shoutboxSetup">
-              <div class="shoutbox-setup-row">
-                <input type="color" id="shoutboxColor" value="#6de6e2">
-                <input type="text" id="shoutboxUsername" placeholder="Choose a username..." maxlength="30">
-              </div>
-              <button class="shoutbox-join-btn" onclick="joinShoutbox()">Join Chat</button>
-            </div>
-            
-            <!-- Chat input (shown after joining) -->
-            <div class="shoutbox-input" id="shoutboxInput" style="display: none;">
-              <div class="shoutbox-user-info">
-                <span id="shoutboxCurrentUser"></span>
-                <button class="shoutbox-change-user" onclick="changeShoutboxUser()" title="Change username"><i class="bi bi-pencil"></i></button>
-              </div>
-              <div class="shoutbox-send-row">
-                <button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker()" title="Add emoji"><i class="bi bi-emoji-smile"></i></button>
-                <input type="text" id="shoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage()">
-                <button class="shoutbox-send-btn" onclick="sendShoutboxMessage()"><i class="bi bi-send"></i></button>
-              </div>
-              <div class="emoji-picker-container" id="emojiPickerContainer" style="display: none;">
-                <div class="custom-emoji-picker" id="customEmojiPicker"></div>
-              </div>
-            </div>
+            <div class="shoutbox-messages" id="shoutboxMessages"><div class="shoutbox-loading">Loading messages...</div></div>
+            <div class="shoutbox-setup" id="shoutboxSetup"><div class="shoutbox-setup-row"><input type="color" id="shoutboxColor" value="#6de6e2"><input type="text" id="shoutboxUsername" placeholder="Choose a username..." maxlength="30"></div><button class="shoutbox-join-btn" onclick="joinShoutbox()">Join Chat</button></div>
+            <div class="shoutbox-input" id="shoutboxInput" style="display: none;"><div class="shoutbox-user-info"><span id="shoutboxCurrentUser"></span><button class="shoutbox-change-user" onclick="changeShoutboxUser()" title="Change username"><i class="bi bi-pencil"></i></button></div><div class="shoutbox-send-row"><button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker()" title="Add emoji"><i class="bi bi-emoji-smile"></i></button><input type="text" id="shoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage()"><button class="shoutbox-send-btn" onclick="sendShoutboxMessage()"><i class="bi bi-send"></i></button></div><div class="emoji-picker-container" id="emojiPickerContainer" style="display: none;"><div class="custom-emoji-picker" id="customEmojiPicker"></div></div></div>
           </div>
         </div>
 
-        <!-- Resources Quick Links -->
-        <div class="neo-box scroll-animate widget-resources">
-          <div class="neo-header"><h3><i class="bi bi-book"></i> Resources</h3></div>
-          <div class="neo-content">
-            <ul class="resources-list">
-              <li><a href="./resources.html?cat=scanlation"><i class="bi bi-translate"></i> Scanlation</a></li>
-              <li><a href="./resources.html?cat=youtube"><i class="bi bi-youtube"></i> YouTube</a></li>
-            </ul>
-          </div>
-        </div>
-
+        <div class="neo-box scroll-animate widget-resources"><div class="neo-header"><h3><i class="bi bi-book"></i> Resources</h3></div><div class="neo-content"><ul class="resources-list"><li><a href="./resources.html?cat=scanlation"><i class="bi bi-translate"></i> Scanlation</a></li><li><a href="./resources.html?cat=youtube"><i class="bi bi-youtube"></i> YouTube</a></li></ul></div></div>
       </aside>
     </div>
 
-    <!-- Footer -->
-    <div class="neo-footer">
-      <a href="https://x.com/_kuzuminn" target="_blank">X (Twitter)</a> · 
-      <a href="https://youtube.com/@pmuaurora" target="_blank">YouTube</a> · 
-      <a href="mailto:aurorashorts.forbusiness@gmail.com">Email</a>
-      <br>
-      © 2026 elythria.dev
-    </div>
-
+    <div class="neo-footer"><a href="https://github.com/auroraongithub" target="_blank">GitHub</a> · <a href="https://youtube.com/@pmuaurora" target="_blank">YouTube</a> · <a href="mailto:aurorashorts.forbusiness@gmail.com">Email</a><br>© 2026 elythria.dev</div>
   </div>
 
-  <!-- ==================== MOBILE BOTTOM NAV ==================== -->
-  <nav class="mobile-bottom-nav">
-    <ul>
-      <li><a href="./" class="active"><i class="bi bi-house-fill"></i><span>Home</span></a></li>
-      <li><a href="#about"><i class="bi bi-person-fill"></i><span>About</span></a></li>
-      <li><a href="./blogs.html"><i class="bi bi-journal-text"></i><span>Blogs</span></a></li>
-      <li><a href="./stories.html"><i class="bi bi-book-fill"></i><span>Stories</span></a></li>
-      <li><a href="#" data-more-toggle><i class="bi bi-grid-fill"></i><span>More</span></a></li>
-    </ul>
-  </nav>
+  <nav class="mobile-bottom-nav"><ul><li><a href="./" class="active"><i class="bi bi-house-fill"></i><span>Home</span></a></li><li><a href="#about"><i class="bi bi-person-fill"></i><span>About</span></a></li><li><a href="#portfolio"><i class="bi bi-briefcase-fill"></i><span>Work</span></a></li><li><a href="./blogs.html"><i class="bi bi-journal-text"></i><span>Blogs</span></a></li><li><a href="#" data-more-toggle><i class="bi bi-grid-fill"></i><span>More</span></a></li></ul></nav>
 
-  <!-- More Drawer (Mobile) -->
   <div class="more-drawer" id="moreDrawer">
     <div class="more-drawer-overlay" data-more-close></div>
     <div class="more-drawer-content">
-      <div class="more-drawer-header">
-        <h3>More</h3>
-        <button class="more-drawer-close" data-more-close><i class="bi bi-x-lg"></i></button>
-      </div>
+      <div class="more-drawer-header"><h3>More</h3><button class="more-drawer-close" data-more-close><i class="bi bi-x-lg"></i></button></div>
       <div class="more-drawer-body">
-        
-        <!-- Now Widget in Drawer -->
-        <div class="more-drawer-section more-drawer-widget">
-          <h4><i class="bi bi-clock-history"></i> Now</h4>
-          <div class="drawer-now-widget">
-            <div class="now-widget-item">
-              <span class="now-widget-label">Working On</span>
-              <span class="now-widget-value" id="drawerWorkingOn">Loading...</span>
-            </div>
-            <div class="now-widget-item">
-              <span class="now-widget-label">Learning</span>
-              <span class="now-widget-value" id="drawerLearning">Loading...</span>
-            </div>
-            <div class="now-widget-item">
-              <span class="now-widget-label">Open to Collabs</span>
-              <span class="now-widget-value" id="drawerCollabs"><i class="bi bi-question-circle"></i></span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Changelog Widget in Drawer -->
-        <div class="more-drawer-section more-drawer-widget">
-          <h4><i class="bi bi-list-check"></i> Updates</h4>
-          <div class="drawer-changelog-list" id="drawerChangelog">
-            <div class="loading-small">Loading...</div>
-          </div>
-          <a href="./changelog.html" class="widget-link">View all updates <i class="bi bi-arrow-right"></i></a>
-        </div>
-
-        <!-- Shoutbox Widget in Drawer -->
-        <div class="more-drawer-section more-drawer-widget">
-          <div class="drawer-widget-header">
-            <h4><i class="bi bi-chat-dots"></i> Chatbox</h4>
-            <button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button>
-          </div>
-          <div class="drawer-shoutbox shoutbox-container">
-            <div class="shoutbox-messages" id="drawerShoutboxMessages">
-              <div class="shoutbox-loading">Loading messages...</div>
-            </div>
-            <div class="shoutbox-setup" id="drawerShoutboxSetup">
-              <div class="shoutbox-setup-row">
-                <input type="color" id="drawerShoutboxColor" value="#6de6e2">
-                <input type="text" id="drawerShoutboxUsername" placeholder="Choose a username..." maxlength="30">
-              </div>
-              <button class="shoutbox-join-btn" onclick="joinShoutbox('drawer')">Join Chat</button>
-            </div>
-            <div class="shoutbox-input" id="drawerShoutboxInput" style="display: none;">
-              <div class="shoutbox-user-info">
-                <span id="drawerShoutboxCurrentUser"></span>
-                <button class="shoutbox-change-user" onclick="changeShoutboxUser('drawer')" title="Change username"><i class="bi bi-pencil"></i></button>
-              </div>
-              <div class="shoutbox-send-row">
-                <button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker('drawer')" title="Add emoji"><i class="bi bi-emoji-smile"></i></button>
-                <input type="text" id="drawerShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('drawer')">
-                <button class="shoutbox-send-btn" onclick="sendShoutboxMessage('drawer')"><i class="bi bi-send"></i></button>
-              </div>
-              <div class="emoji-picker-container" id="drawerEmojiPickerContainer" style="display: none;">
-                <div class="custom-emoji-picker" id="drawerCustomEmojiPicker"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Resources in Drawer -->
-        <div class="more-drawer-section">
-          <h4><i class="bi bi-book"></i> Resources</h4>
-          <ul>
-            <li><a href="./resources.html?cat=scanlation"><i class="bi bi-translate"></i> Scanlation Guide</a></li>
-            <li><a href="./resources.html?cat=youtube"><i class="bi bi-youtube"></i> YouTube Guide</a></li>
-          </ul>
-        </div>
-
-        <!-- Quick Links -->
-        <div class="more-drawer-section">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="#" data-drawer-scroll="statusStrip"><i class="bi bi-broadcast"></i> Status</a></li>
-            <li><a href="#portfolio"><i class="bi bi-briefcase-fill"></i> Portfolio</a></li>
-            <li><a href="https://dsc.gg/evescans" target="_blank"><i class="bi bi-discord"></i> Discord</a></li>
-          </ul>
-        </div>
-
+        <div class="more-drawer-section more-drawer-widget"><h4><i class="bi bi-clock-history"></i> Now</h4><div class="drawer-now-widget"><div class="now-widget-item"><span class="now-widget-label">Working On</span><span class="now-widget-value" id="drawerWorkingOn">Loading...</span></div><div class="now-widget-item"><span class="now-widget-label">Learning</span><span class="now-widget-value" id="drawerLearning">Loading...</span></div><div class="now-widget-item"><span class="now-widget-label">Open to Collabs</span><span class="now-widget-value" id="drawerCollabs"><i class="bi bi-question-circle"></i></span></div></div></div>
+        <div class="more-drawer-section more-drawer-widget"><h4><i class="bi bi-list-check"></i> Updates</h4><div class="drawer-changelog-list" id="drawerChangelog"><div class="loading-small">Loading...</div></div><a href="./changelog.html" class="widget-link">View all updates <i class="bi bi-arrow-right"></i></a></div>
+        <div class="more-drawer-section more-drawer-widget"><div class="drawer-widget-header"><h4><i class="bi bi-chat-dots"></i> Chatbox</h4><button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button></div><div class="drawer-shoutbox shoutbox-container"><div class="shoutbox-messages" id="drawerShoutboxMessages"><div class="shoutbox-loading">Loading messages...</div></div><div class="shoutbox-setup" id="drawerShoutboxSetup"><div class="shoutbox-setup-row"><input type="color" id="drawerShoutboxColor" value="#6de6e2"><input type="text" id="drawerShoutboxUsername" placeholder="Choose a username..." maxlength="30"></div><button class="shoutbox-join-btn" onclick="joinShoutbox('drawer')">Join Chat</button></div><div class="shoutbox-input" id="drawerShoutboxInput" style="display: none;"><div class="shoutbox-user-info"><span id="drawerShoutboxCurrentUser"></span><button class="shoutbox-change-user" onclick="changeShoutboxUser('drawer')" title="Change username"><i class="bi bi-pencil"></i></button></div><div class="shoutbox-send-row"><button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker('drawer')" title="Add emoji"><i class="bi bi-emoji-smile"></i></button><input type="text" id="drawerShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('drawer')"><button class="shoutbox-send-btn" onclick="sendShoutboxMessage('drawer')"><i class="bi bi-send"></i></button></div><div class="emoji-picker-container" id="drawerEmojiPickerContainer" style="display: none;"><div class="custom-emoji-picker" id="drawerCustomEmojiPicker"></div></div></div></div></div>
+        <div class="more-drawer-section"><h4><i class="bi bi-book"></i> Resources</h4><ul><li><a href="./resources.html?cat=scanlation"><i class="bi bi-translate"></i> Scanlation Guide</a></li><li><a href="./resources.html?cat=youtube"><i class="bi bi-youtube"></i> YouTube Guide</a></li></ul></div>
+        <div class="more-drawer-section"><h4>Quick Links</h4><ul><li><a href="#" data-drawer-scroll="statusStrip"><i class="bi bi-broadcast"></i> Status</a></li><li><a href="#portfolio"><i class="bi bi-briefcase-fill"></i> Portfolio</a></li><li><a href="https://github.com/auroraongithub" target="_blank"><i class="bi bi-github"></i> GitHub</a></li></ul></div>
       </div>
     </div>
   </div>
 
-  <!-- Now Modal -->
-  <div class="now-modal" id="nowModal">
-    <div class="now-modal-overlay" data-now-close></div>
-    <div class="now-modal-content">
-      <div class="now-modal-header">
-        <h3><i class="bi bi-clock-history"></i> What I'm Up To</h3>
-        <button class="now-modal-close" data-now-close><i class="bi bi-x-lg"></i></button>
-      </div>
-      <div class="now-modal-body">
-        <div class="now-item">
-          <span class="now-label">Working On</span>
-          <span class="now-value" id="nowWorkingOn">Loading...</span>
-        </div>
-        <div class="now-item">
-          <span class="now-label">Learning</span>
-          <span class="now-value" id="nowLearning">Loading...</span>
-        </div>
-        <div class="now-item">
-          <span class="now-label">Open to Collabs</span>
-          <span class="now-value" id="nowCollabs"><i class="bi bi-question-circle"></i></span>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="now-modal" id="nowModal"><div class="now-modal-overlay" data-now-close></div><div class="now-modal-content"><div class="now-modal-header"><h3><i class="bi bi-clock-history"></i> What I'm Up To</h3><button class="now-modal-close" data-now-close><i class="bi bi-x-lg"></i></button></div><div class="now-modal-body"><div class="now-item"><span class="now-label">Working On</span><span class="now-value" id="nowWorkingOn">Loading...</span></div><div class="now-item"><span class="now-label">Learning</span><span class="now-value" id="nowLearning">Loading...</span></div><div class="now-item"><span class="now-label">Open to Collabs</span><span class="now-value" id="nowCollabs"><i class="bi bi-question-circle"></i></span></div></div></div></div>
 
-  <!-- Admin Login Modal -->
-  <div class="admin-login-modal" id="adminLoginModal">
-    <div class="admin-login-overlay" onclick="closeAdminLogin()"></div>
-    <div class="admin-login-content">
-      <div class="admin-login-header">
-        <h3><i class="bi bi-shield-lock"></i> Admin Login</h3>
-        <button class="admin-login-close" onclick="closeAdminLogin()"><i class="bi bi-x-lg"></i></button>
-      </div>
-      <div class="admin-login-body">
-        <p>Login to moderate chatbox messages.</p>
-        <form autocomplete="on">
-          <input type="email" id="adminEmail" name="email" autocomplete="email" placeholder="Email..." onkeypress="if(event.key==='Enter'){event.preventDefault();document.getElementById('adminPassword').focus();}">
-          <input type="password" id="adminPassword" name="password" autocomplete="current-password" placeholder="Password..." onkeypress="if(event.key==='Enter'){event.preventDefault();submitAdminLogin();}">
-        </form>
-        <div class="admin-login-error" id="adminLoginError"></div>
-        <button class="admin-login-btn" onclick="submitAdminLogin()">Login</button>
-      </div>
-    </div>
-  </div>
+  <div class="admin-login-modal" id="adminLoginModal"><div class="admin-login-overlay" onclick="closeAdminLogin()"></div><div class="admin-login-content"><div class="admin-login-header"><h3><i class="bi bi-shield-lock"></i> Admin Login</h3><button class="admin-login-close" onclick="closeAdminLogin()"><i class="bi bi-x-lg"></i></button></div><div class="admin-login-body"><p>Login to moderate chatbox messages.</p><form autocomplete="on"><input type="email" id="adminEmail" name="email" autocomplete="email" placeholder="Email..." onkeypress="if(event.key==='Enter'){event.preventDefault();document.getElementById('adminPassword').focus();}"><input type="password" id="adminPassword" name="password" autocomplete="current-password" placeholder="Password..." onkeypress="if(event.key==='Enter'){event.preventDefault();submitAdminLogin();}"></form><div class="admin-login-error" id="adminLoginError"></div><button class="admin-login-btn" onclick="submitAdminLogin()">Login</button></div></div></div>
 
-  <!-- Changelog Modal -->
-  <div class="changelog-modal" id="changelogModal">
-    <div class="changelog-modal-overlay" data-changelog-close></div>
-    <div class="changelog-modal-content">
-      <div class="changelog-modal-header">
-        <h3><i class="bi bi-list-check"></i> Changelog</h3>
-        <button class="changelog-modal-close" data-changelog-close><i class="bi bi-x-lg"></i></button>
-      </div>
-      <div class="changelog-modal-body" id="changelogList">
-        <div class="loading"><i class="bi bi-arrow-repeat spin"></i> Loading...</div>
-      </div>
-    </div>
-  </div>
+  <div class="changelog-modal" id="changelogModal"><div class="changelog-modal-overlay" data-changelog-close></div><div class="changelog-modal-content"><div class="changelog-modal-header"><h3><i class="bi bi-list-check"></i> Changelog</h3><button class="changelog-modal-close" data-changelog-close><i class="bi bi-x-lg"></i></button></div><div class="changelog-modal-body" id="changelogList"><div class="loading"><i class="bi bi-arrow-repeat spin"></i> Loading...</div></div></div></div>
 
-  <!-- Scripts -->
-  <script type="module">
-    import { initCarousel } from './assets/app.js';
-    window.addEventListener('load', initCarousel);
-  </script>
+  <script type="module">import { initCarousel } from './assets/app.js'; window.addEventListener('load', initCarousel);</script>
   <script src="./assets/app.js" type="module"></script>
 </body>
 </html>
