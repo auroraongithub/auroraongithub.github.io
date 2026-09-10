@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>elythria.dev</title>
-  <meta name="description" content="Sean 'Aurora' Vinluan — content, operations, research, and technical support portfolio.">
+  <meta name="description" content="aurora — creator, builder, and technically-minded online operator.">
   <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
   <link rel="preconnect" href="https://nijikade-backend.vercel.app" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -12,6 +12,9 @@
   <link rel="dns-prefetch" href="https://nijikade-backend.vercel.app">
   <link rel="stylesheet" href="./assets/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    .proof-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.proof-card{position:relative;overflow:hidden;background:var(--card);border:2px solid var(--border);padding:18px;box-shadow:var(--shadow);transition:transform .2s ease,box-shadow .2s ease}.proof-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}.proof-card:before{content:"";position:absolute;top:0;left:0;width:100%;height:5px;background:var(--gradient)}.proof-kicker{display:block;font-size:.76rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}.proof-value{display:block;font-size:2rem;line-height:1;font-weight:700;color:var(--primary-dark);margin-bottom:8px}.proof-detail{margin:0;color:var(--text);line-height:1.45}.capability-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.capability-card{background:var(--gradient-subtle);border:1px solid var(--border-light);padding:18px;box-shadow:var(--shadow);position:relative}.capability-title{display:flex;align-items:center;gap:10px;margin:0 0 10px}.capability-icon{width:36px;height:36px;display:grid;place-items:center;background:var(--card);border:1px solid var(--border);color:var(--primary-dark);font-size:1.05rem}.capability-card p{margin:0 0 12px;color:var(--text-muted);line-height:1.5}.capability-tags{display:flex;flex-wrap:wrap;gap:7px}.capability-tag{font-size:.76rem;padding:4px 8px;background:var(--card);border:1px solid var(--border-light);color:var(--text)}@media(max-width:760px){.proof-grid,.capability-grid{grid-template-columns:1fr}.proof-value{font-size:1.7rem}}
+  </style>
   <script src="https://cdn.ably.com/lib/ably.min-1.js" defer></script>
   <script type="text/javascript">
   function tb8_makeArray(n){ this.length = n; return this.length; }
@@ -91,7 +94,7 @@
           <div class="neo-content"><ul>
             <li><a href="./">Home</a></li>
             <li><a href="#about">About</a></li>
-            <li><a href="#results">Results</a></li>
+            <li><a href="#results">Proof of Work</a></li>
             <li><a href="#services">What I Do</a></li>
             <li><a href="#portfolio">Portfolio</a></li>
             <li><a href="./blogs.html">Blogs</a></li>
@@ -144,9 +147,9 @@
             <div class="about-grid">
               <img src="./img/pfp.png" alt="Aurora">
               <div>
-                <h3 style="margin-top: 0;">Sean “Aurora” Vinluan · Content, Operations & Technical Support</h3>
-                <p>I'm a Computer Science student and online creator with hands-on experience in content strategy, research, digital operations, ecommerce support, and technical problem-solving. I work comfortably across creative and technical tasks, especially when a project needs someone who can figure things out independently and turn messy information into something usable.</p>
-                <p>My background includes running content pipelines, researching topics and competitors, organizing workflows, supporting online-business tasks, troubleshooting web tools, and building or maintaining personal web projects. Outside work, I'm usually playing osu! or Valorant.</p>
+                <h3 style="margin-top: 0;">aurora · creator, builder, and terminally online problem solver</h3>
+                <p>I make internet stuff, overthink why content works, automate boring things, and poke at websites until they behave. I'm a CS student who's comfortable jumping between creative work, research, online operations, and technical problems without needing everything spelled out.</p>
+                <p>Usually somewhere between YouTube, code, osu!, and whatever rabbit hole I decided was worth learning that week.</p>
               </div>
             </div>
             <div class="about-contact-bar">
@@ -160,13 +163,12 @@
         </section>
 
         <section id="results" class="neo-box scroll-animate">
-          <div class="neo-header"><h2><i class="bi bi-graph-up-arrow"></i> Selected Results</h2></div>
+          <div class="neo-header"><h2><i class="bi bi-lightning-charge"></i> Proof of Work</h2></div>
           <div class="neo-content">
-            <div class="stats-grid">
-              <div class="stat-item"><span class="stat-value">8.5K+</span><span class="stat-label">YouTube subscribers</span></div>
-              <div class="stat-item"><span class="stat-value">6M+</span><span class="stat-label">Shorts views on one launch</span></div>
-              <div class="stat-item"><span class="stat-value">2M+</span><span class="stat-label">Shorts views on another launch</span></div>
-              <div class="stat-item"><span class="stat-value">680K</span><span class="stat-label">Monthly views on edited client content</span></div>
+            <div class="proof-grid">
+              <article class="proof-card"><span class="proof-kicker">Channel launch</span><span class="proof-value">6M+</span><p class="proof-detail">Shorts views generated on one channel within two weeks of launch.</p></article>
+              <article class="proof-card"><span class="proof-kicker">Another launch</span><span class="proof-value">2M+</span><p class="proof-detail">Shorts views on a separate channel, also within its first two weeks.</p></article>
+              <article class="proof-card"><span class="proof-kicker">Client content</span><span class="proof-value">680K</span><p class="proof-detail">Approx. monthly views on content I edited for a TikTok creator.</p></article>
             </div>
           </div>
         </section>
@@ -174,11 +176,11 @@
         <section id="services" class="neo-box scroll-animate">
           <div class="neo-header"><h2><i class="bi bi-tools"></i> What I Can Help With</h2></div>
           <div class="neo-content">
-            <div class="recent-grid">
-              <div class="recent-panel"><h3><i class="bi bi-megaphone"></i> Content & Social</h3><p>Content research, scripting, hooks, titles, platform adaptation, short-form strategy, community awareness, and performance-focused content review.</p></div>
-              <div class="recent-panel"><h3><i class="bi bi-kanban"></i> Research & Operations</h3><p>Online research, spreadsheets, task tracking, file organization, documentation, competitor research, basic reporting, and repeatable workflow support.</p></div>
-              <div class="recent-panel"><h3><i class="bi bi-bag"></i> Ecommerce Support</h3><p>Product research, listing and catalog support, Etsy and online-business workflows, process organization, and detail-focused admin work.</p></div>
-              <div class="recent-panel"><h3><i class="bi bi-code-slash"></i> Technical & Web</h3><p>Web tools, Git/GitHub, troubleshooting, APIs, basic development, Linux/server work, automation, and learning unfamiliar platforms quickly.</p></div>
+            <div class="capability-grid">
+              <article class="capability-card"><h3 class="capability-title"><span class="capability-icon"><i class="bi bi-megaphone"></i></span>Content & Audience</h3><p>Finding the angle, tightening the idea, and understanding why people would actually keep watching.</p><div class="capability-tags"><span class="capability-tag">research</span><span class="capability-tag">scripts</span><span class="capability-tag">hooks</span><span class="capability-tag">titles</span><span class="capability-tag">retention</span><span class="capability-tag">platform adaptation</span></div></article>
+              <article class="capability-card"><h3 class="capability-title"><span class="capability-icon"><i class="bi bi-kanban"></i></span>Research & Online Ops</h3><p>Taking messy information or repetitive work and turning it into something organized, trackable, and usable.</p><div class="capability-tags"><span class="capability-tag">web research</span><span class="capability-tag">spreadsheets</span><span class="capability-tag">documentation</span><span class="capability-tag">competitor research</span><span class="capability-tag">workflow organization</span></div></article>
+              <article class="capability-card"><h3 class="capability-title"><span class="capability-icon"><i class="bi bi-bag"></i></span>Creator & Ecommerce Support</h3><p>Useful behind-the-scenes work for creators and online businesses, without pretending every task needs a strategy deck.</p><div class="capability-tags"><span class="capability-tag">product research</span><span class="capability-tag">listings</span><span class="capability-tag">Etsy workflows</span><span class="capability-tag">content support</span><span class="capability-tag">process cleanup</span></div></article>
+              <article class="capability-card"><h3 class="capability-title"><span class="capability-icon"><i class="bi bi-terminal"></i></span>Technical Problem Solving</h3><p>I like the stuff that starts with “why is this broken?” and ends with an actual fix instead of fifteen tabs of guesses.</p><div class="capability-tags"><span class="capability-tag">web troubleshooting</span><span class="capability-tag">APIs</span><span class="capability-tag">automation</span><span class="capability-tag">Linux / servers</span><span class="capability-tag">web projects</span><span class="capability-tag">root-cause debugging</span></div></article>
             </div>
           </div>
         </section>
