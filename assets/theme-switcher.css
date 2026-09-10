@@ -1,0 +1,164 @@
+/* Neocities-style theme switcher override */
+.color-picker-modal {
+  background: rgba(0, 0, 0, 0.38);
+  backdrop-filter: none;
+  transition: opacity 0.16s ease;
+  padding: 16px;
+}
+
+.color-picker-content {
+  width: min(430px, calc(100vw - 32px));
+  max-width: 430px;
+  padding: 0;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 0;
+  box-shadow: 5px 5px 0 var(--border-light);
+  transform: translateY(8px);
+  transition: transform 0.16s ease;
+  overflow: hidden;
+}
+
+.color-picker-modal.active .color-picker-content {
+  transform: translateY(0);
+}
+
+.color-picker-header {
+  display: block;
+  margin: 0;
+  padding: 9px 12px;
+  background: var(--primary);
+  border-bottom: 2px solid var(--border);
+  text-align: center;
+}
+
+.color-picker-header h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 0;
+  line-height: 1.2;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.16);
+}
+
+.color-picker-header h3::before {
+  content: "✦  Theme Switcher  ✦";
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.color-picker-close {
+  display: none !important;
+}
+
+.color-picker-content::before {
+  content: "Pick a theme:";
+  display: block;
+  padding: 14px 16px 8px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.color-picker-options {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 9px;
+  padding: 0 16px 16px;
+}
+
+.color-option {
+  position: relative;
+  min-width: 0;
+  padding: 7px 4px 6px;
+  gap: 5px;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 var(--border-light);
+  transition: transform 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+}
+
+.color-option:hover {
+  background: var(--card);
+  border-color: var(--primary);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--border-light);
+}
+
+.color-option.active {
+  background: var(--card);
+  border-color: var(--primary-dark);
+  box-shadow:
+    0 0 0 2px var(--card),
+    0 0 0 4px var(--primary),
+    3px 3px 0 var(--border-light);
+}
+
+.color-option.active::after {
+  content: "◆";
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: var(--primary-dark);
+  background: var(--card);
+  font-size: 0.62rem;
+  line-height: 1;
+}
+
+.color-preview {
+  width: 38px;
+  height: 38px;
+  border-radius: 0;
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.65), inset -1px -1px 0 rgba(0,0,0,0.12);
+}
+
+.color-option span {
+  max-width: 100%;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.color-option.active span {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+[data-theme="dark"] .color-picker-content {
+  box-shadow: 5px 5px 0 var(--border-light);
+}
+
+[data-theme="dark"] .color-preview {
+  border-color: rgba(255,255,255,0.38);
+}
+
+@media (max-width: 500px) {
+  .color-picker-content {
+    width: min(360px, calc(100vw - 24px));
+  }
+
+  .color-picker-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    padding: 0 14px 15px;
+  }
+
+  .color-picker-content::before {
+    padding: 12px 14px 8px;
+  }
+
+  .color-preview {
+    width: 42px;
+    height: 42px;
+  }
+}
