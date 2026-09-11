@@ -2457,17 +2457,17 @@ ul {
   margin-bottom: 4px;
 }
 
-.neo-sidebar .neo-content a {
+.neo-sidebar .neo-content ul a {
   display: block;
   padding: 4px 8px;
   border-radius: 4px;
   color: var(--primary);
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.neo-sidebar .neo-content a:hover {
+.neo-sidebar .neo-content ul a:hover {
   background: var(--border-light);
-  padding-left: 12px;
+  padding-left: 8px;
 }
 
 .neo-sidebar .neo-content a::before {
