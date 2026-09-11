@@ -684,10 +684,16 @@ ul {
   height: 0;
 }
 
-/* Let the left rail scroll as one column so card contents can size naturally. */
+/* Keep each left-rail card at its own size while its content scrolls internally. */
 .neo-sidebar .neo-box .neo-content {
-  max-height: none;
-  overflow: visible;
+  max-height: clamp(80px, 15vh, 140px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.neo-sidebar > .neo-box {
+  flex: 0 0 auto;
+  min-width: 0;
 }
 
 /* Smaller font for sidebar navigation */
@@ -4762,7 +4768,7 @@ body.dark .contact-link.twitter:hover {
 /* For shorter screens (laptops, smaller monitors) */
 @media (max-height: 700px) {
   .neo-sidebar .neo-box .neo-content {
-    max-height: none;
+    max-height: 80px;
   }
   
   .neo-widgets .neo-box .neo-content {
