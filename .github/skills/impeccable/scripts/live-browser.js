@@ -9117,7 +9117,24 @@ void main() {
     if (savedState !== 'GENERATING' && savedState !== 'CYCLING') return false;
 
     const serverSession = findActiveSessionSummary(saved, activeSessions);
-    if (Array.isArray(activeSessions) && activeSessions.length > 0 && !serverSession) {
+    if (Array.isArray(activeSessions) && !serverSession) {
+      // The helper is authoritative once its connected snapshot arrives. A
+      // browser-local session can survive a completed/discarded run and would
+      // otherwise resurrect the recovery banner on every Live launch even
+      // though the server has no work left to resume.
+      clearSession();
+      if (currentSessionId === saved.id) {
+        currentSessionId = null;
+        selectedElement = null;
+        expectedVariants = 0;
+        arrivedVariants = 0;
+        visibleVariant = 0;
+        recoveryWaitingForAnchor = false;
+        stopScrollTracking();
+        hideShaderOverlay();
+        hideBar(true);
+        setLiveState('IDLE');
+      }
       return false;
     }
 
