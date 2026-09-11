@@ -3086,17 +3086,17 @@ ul {
 .portfolio-content-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 6px;
 }
 
 .portfolio-highlight-card {
   position: relative;
   display: flex;
   min-width: 0;
-  min-height: 178px;
+  min-height: 132px;
   flex-direction: column;
   overflow: hidden;
-  padding: 9px;
+  padding: 7px;
   border: 3px outset var(--primary-dark);
   border-radius: 8px;
   background: var(--bg-elev);
@@ -3134,6 +3134,7 @@ ul {
   display: flex;
   align-items: center;
   gap: 5px;
+  min-width: 0;
   color: var(--primary-dark);
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   font-size: 0.82rem;
@@ -3143,28 +3144,26 @@ ul {
   text-transform: none;
 }
 
-.portfolio-highlight-icon {
-  display: inline-grid;
-  width: 22px;
-  height: 22px;
-  flex: 0 0 22px;
-  place-items: center;
-  border: 1px solid var(--primary-dark);
-  border-radius: 4px;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev)),
-    color-mix(in srgb, var(--primary-dark) 16%, var(--bg-elev))
-  );
-  color: var(--primary-dark);
-  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.75);
+.portfolio-highlight-avatar {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border: 2px outset var(--primary-dark);
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-elev);
+  box-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 30%, transparent);
 }
 
 .portfolio-highlight-title {
   position: relative;
   z-index: 1;
   color: inherit;
+  min-width: 0;
+  overflow: hidden;
   text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .portfolio-highlight-title:hover {
@@ -3173,14 +3172,22 @@ ul {
   text-underline-offset: 2px;
 }
 
+.portfolio-highlight-platform {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--primary-dark);
+  font-size: 0.82rem;
+}
+
 .portfolio-highlight-card > p {
   position: relative;
   z-index: 1;
   flex: 1;
   margin: 0;
   color: var(--text-muted);
-  font-size: 0.74rem;
-  line-height: 1.35;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  font-size: 0.7rem;
+  line-height: 1.3;
 }
 
 .portfolio-highlight-metrics {
@@ -3188,26 +3195,29 @@ ul {
   z-index: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 8px;
+  gap: 3px;
+  margin-top: 6px;
 }
 
 .portfolio-highlight-metrics span {
-  padding: 3px 5px;
+  padding: 2px 4px;
   border: 1px solid var(--border-light);
   border-radius: 3px;
   background: color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev));
   color: var(--text-muted);
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-  font-size: 0.63rem;
+  font-size: 0.58rem;
   line-height: 1.1;
 }
 
 .portfolio-panel .neo-grid {
   margin-top: 2px;
+  gap: 8px;
 }
 
 .portfolio-panel .portfolio-item {
+  min-height: 116px;
+  padding: 9px;
   border: 3px outset var(--primary-dark);
   border-radius: 8px;
   background: var(--bg-elev);
@@ -3225,7 +3235,23 @@ ul {
 
 .portfolio-panel .portfolio-item h3,
 .portfolio-panel .portfolio-item h4 {
+  margin: 0 0 4px;
   color: var(--primary-dark);
+  font-size: 0.88rem;
+  line-height: 1.2;
+}
+
+.portfolio-panel .portfolio-item p {
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  -webkit-line-clamp: 2;
+}
+
+.portfolio-panel .portfolio-meta {
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.7rem;
 }
 
 @media (max-width: 700px) {

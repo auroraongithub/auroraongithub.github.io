@@ -24,10 +24,11 @@ const { projects } = Astro.props;
       {contentPortfolio.map((item) => (
         <article class="portfolio-highlight-card">
           <div class="portfolio-highlight-topline">
-            <span class="portfolio-highlight-icon"><i class={`bi ${item.icon}`}></i></span>
+            <img class="portfolio-highlight-avatar" src={item.avatar} alt={`${item.title} profile picture`} loading="lazy" />
             {item.href
               ? <a class="portfolio-highlight-title" href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a>
               : <span>{item.title}</span>}
+            <span class="portfolio-highlight-platform" aria-hidden="true"><i class={`bi ${item.icon}`}></i></span>
           </div>
           <p>{item.description}</p>
           <div class="portfolio-highlight-metrics">
