@@ -2421,6 +2421,10 @@ ul {
   content: "⊳ ";
 }
 
+.neo-sidebar .neo-content a.webring-badge::before {
+  content: none;
+}
+
 .gallery-content img {
   display: block;
   width: 100%;
