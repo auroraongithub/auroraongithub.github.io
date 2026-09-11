@@ -8,7 +8,7 @@ function text(id, value) {
 function favoriteCardMarkup(item) {
   const template = document.getElementById('favoriteCardTemplate');
   if (!template) {
-    const imageMarkup = item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : '';
+    const imageMarkup = item.image ? `<img class="favorite-item-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : '';
     const infoMarkup = `<div class="favorite-info"><strong>${escapeHtml(item.title)}</strong>${item.year ? `<small>${escapeHtml(item.year)}</small>` : ''}${item.score ? `<small>★ ${escapeHtml(item.score)}</small>` : ''}</div>`;
     return `<div class="carousel-item favorite-item">${imageMarkup}${infoMarkup}</div>`;
   }

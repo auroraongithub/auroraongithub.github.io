@@ -3061,7 +3061,8 @@ ul {
   z-index: auto;
 }
 
-.manga-section {
+.manga-section,
+.favorites-section {
   padding: 3px;
   background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
   border: 2px solid var(--primary);
@@ -3079,7 +3080,8 @@ ul {
     2px 2px 5px rgba(0, 0, 0, 0.25);
 }
 
-.manga-section > .neo-header {
+.manga-section > .neo-header,
+.favorites-section > .neo-header {
   width: max-content;
   min-width: 150px;
   max-width: calc(100% - 12px);
@@ -3109,12 +3111,14 @@ ul {
   animation: about-stripe-move 1s linear infinite;
 }
 
-.manga-section > .neo-header h2 {
+.manga-section > .neo-header h2,
+.favorites-section > .neo-header h2 {
   font-size: 0.9rem;
   letter-spacing: 0.08em;
 }
 
-.manga-section > .neo-content {
+.manga-section > .neo-content,
+.favorites-section > .neo-content {
   position: relative;
   z-index: 0;
   display: flex;
@@ -3128,7 +3132,8 @@ ul {
   border-radius: 0 8px 8px 8px;
 }
 
-.manga-section .neo-carousel {
+.manga-section .neo-carousel,
+.favorites-section .neo-carousel {
   margin: 0;
 }
 
@@ -3179,14 +3184,16 @@ ul {
   transform: scale(1.05);
 }
 
-.manga-section .carousel-viewport {
+.manga-section .carousel-viewport,
+.favorites-section .carousel-viewport {
   border: 0;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
 }
 
-.manga-section .carousel-track {
+.manga-section .carousel-track,
+.favorites-section .carousel-track {
   --gap: 8px;
   padding: 8px;
 }
@@ -3234,7 +3241,8 @@ ul {
   transform: none;
 }
 
-.manga-section .carousel-ctrl {
+.manga-section .carousel-ctrl,
+.favorites-section .carousel-ctrl {
   width: 34px;
   height: 34px;
   border: 1px solid var(--primary-dark);
@@ -3252,19 +3260,187 @@ ul {
     0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
-.manga-section .carousel-ctrl:hover {
+.manga-section .carousel-ctrl:hover,
+.favorites-section .carousel-ctrl:hover {
   background: linear-gradient(to bottom, var(--primary-light), var(--primary));
   color: var(--bg);
 }
 
-[data-theme="dark"] .manga-section .carousel-ctrl {
+[data-theme="dark"] .manga-section .carousel-ctrl,
+[data-theme="dark"] .favorites-section .carousel-ctrl {
   color: var(--text);
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
 }
 
-[data-theme="dark"] .manga-section .carousel-ctrl:hover {
+[data-theme="dark"] .manga-section .carousel-ctrl:hover,
+[data-theme="dark"] .favorites-section .carousel-ctrl:hover {
   color: var(--bg);
   text-shadow: none;
+}
+
+/* Dumby-inspired category tabs and beveled favorite cards. */
+.favorites-section .favorites-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  margin: 0 2px 8px;
+  flex-wrap: nowrap;
+}
+
+.favorites-section .fav-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 6px 6px 3px 3px;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-elev) 0%,
+    color-mix(in srgb, var(--primary-light) 20%, var(--bg-elev)) 100%
+  );
+  color: var(--text-muted);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+    0 1px 1px rgba(0, 0, 0, 0.12);
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.favorites-section .fav-tab:hover {
+  border-color: var(--primary);
+  color: var(--text);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--primary-light) 25%, var(--bg-elev)),
+    color-mix(in srgb, var(--primary) 12%, var(--bg-elev))
+  );
+}
+
+.favorites-section .fav-tab.active {
+  border-color: var(--primary-dark);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--primary-light) 52%, var(--bg-elev)) 0%,
+    color-mix(in srgb, var(--primary) 30%, var(--bg-elev)) 45%,
+    color-mix(in srgb, var(--primary-dark) 24%, var(--bg-elev)) 50%,
+    color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev)) 100%
+  );
+  color: var(--text);
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 255, 255, 0.8),
+    inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 35%, transparent),
+    0 1px 2px rgba(0, 0, 0, 0.14);
+}
+
+.favorites-section .fav-tab i {
+  font-size: 0.82rem;
+}
+
+.favorites-section .favorite-item {
+  height: 250px;
+  min-height: 0;
+  border: 3px outset var(--primary-dark);
+  border-radius: 8px;
+  background: var(--bg-elev);
+  box-shadow: 2px 2px 0 color-mix(in srgb, var(--primary-dark) 30%, transparent);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.favorites-section .favorite-item::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  right: 6px;
+  height: 30%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.72),
+    rgba(255, 255, 255, 0.14),
+    transparent
+  );
+  border-radius: 8px 8px 50% 50% / 8px 8px 30% 30%;
+}
+
+.favorites-section .favorite-item:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 2px var(--halo),
+    2px 3px 0 color-mix(in srgb, var(--primary) 38%, transparent);
+}
+
+.favorites-section .favorite-item img,
+.favorites-section .favorite-item .favorite-item-image {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 172px;
+  flex: 0 0 172px;
+  aspect-ratio: auto;
+  object-fit: cover;
+  border: 1px solid var(--primary-dark);
+  background: var(--bg);
+  transition: none;
+}
+
+.favorites-section .favorite-item:hover img {
+  transform: none;
+}
+
+.favorites-section .favorite-item .favorite-info {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+  gap: 3px;
+  padding: 7px 8px;
+  border-top: 1px solid var(--primary-dark);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--primary-light) 14%, var(--bg-elev)),
+    var(--bg-elev) 68%
+  );
+  overflow: hidden;
+}
+
+.favorites-section .favorite-item .favorite-info strong {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.favorites-section .favorite-item .favorite-info small {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.15;
+}
+
+@media (max-width: 500px) {
+  .favorites-section .fav-tab {
+    padding: 5px 4px;
+    font-size: 0.68rem;
+  }
+
+  .favorites-section .favorite-item {
+    height: 218px;
+  }
+
+  .favorites-section .favorite-item img,
+  .favorites-section .favorite-item .favorite-item-image {
+    height: 145px;
+    flex-basis: 145px;
+  }
 }
 
 .carousel-ctrl {

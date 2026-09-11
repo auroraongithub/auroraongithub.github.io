@@ -9,7 +9,7 @@ interface Props {
 const { title, image, year, score } = Astro.props;
 ---
 <div class="carousel-item favorite-item">
-  {image && <img data-favorite-image src={image} alt={title} loading="lazy" />}
+  {image && <img class="favorite-item-image" data-favorite-image src={image} alt={title} loading="lazy" />}
   <div class="favorite-info">
     <strong data-favorite-title>{title}</strong>
     {year && <small data-favorite-year>{year}</small>}

@@ -53,7 +53,7 @@ const recentStories = sortByDate(await getCollection('stories', ({ data }) => !d
   </SiteSection>
   <div class="hover-card" id="seriesHover"></div>
 
-  <SiteSection id="favorites" title="Favorites" icon="bi-heart">
+  <SiteSection id="favorites" title="Favorites" class="favorites-section">
     <div class="favorites-tabs">
       {favoriteCategories.map((category, index) => (
         <button class:list={['fav-tab', { active: index === 0 }]} data-category={category.id} onclick={`switchFavoritesTab('${category.id}')`}><i class={`bi ${category.icon}`}></i> {category.label}</button>
