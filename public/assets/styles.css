@@ -1560,11 +1560,11 @@ ul {
 .changelog-widget-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
 }
 
 .changelog-widget-entry {
-  padding: 8px;
+  padding: 6px;
   background: var(--bg-secondary);
   border-radius: 6px;
   border-left: 3px solid var(--primary);
@@ -1577,20 +1577,20 @@ ul {
 .changelog-widget-entry .date {
   font-size: 0.65rem;
   color: var(--text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .changelog-widget-entry .title {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--primary);
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .changelog-widget-entry .body {
   font-size: 0.75rem;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.25;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
