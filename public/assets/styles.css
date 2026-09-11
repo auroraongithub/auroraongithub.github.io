@@ -1024,7 +1024,10 @@ ul {
 
 .shoutbox-input {
   padding: 7px;
-  background: var(--bg-elev);
+  background-color: var(--bg-elev);
+  background-image: url('../img/chatbox-texture.svg');
+  background-repeat: repeat;
+  background-size: 4px 4px;
   border-top: 1px solid var(--primary-dark);
   display: flex;
   flex-direction: column;
@@ -1032,9 +1035,15 @@ ul {
   flex-shrink: 0;
 }
 
-.widget-shoutbox-sidebar .shoutbox-setup--polished,
+.widget-shoutbox-sidebar .shoutbox-setup--polished {
+  background-color: color-mix(in srgb, var(--bg-elev) 88%, transparent);
+}
+
 .widget-shoutbox-sidebar .shoutbox-input {
-  background: color-mix(in srgb, var(--bg-elev) 88%, transparent);
+  background-color: var(--bg-elev);
+  background-image: url('../img/chatbox-texture.svg');
+  background-repeat: repeat;
+  background-size: 4px 4px;
 }
 
 .shoutbox-user-info {
