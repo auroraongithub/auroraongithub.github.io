@@ -996,23 +996,52 @@ ul {
 .shoutbox-setup--polished .shoutbox-setup-row input[type="text"] {
   height: 30px;
   box-sizing: border-box;
-  padding: 5px 9px;
-  background: var(--bg);
-  border-color: var(--primary-dark);
+  padding: 7px 9px;
+  border: 1px solid var(--primary-dark);
   border-radius: 4px;
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev)),
+      color-mix(in srgb, var(--primary) 10%, var(--bg-elev))
+    ) 0 0 / 100% 47% no-repeat,
+    linear-gradient(
+      to bottom,
+      transparent 0 47%,
+      var(--primary-dark) 47% 50%,
+      transparent 50% 100%
+    ),
+    var(--bg-elev);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8rem;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    1px 1px 0 var(--border-light);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .shoutbox-setup--polished .shoutbox-join-btn {
   min-height: 30px;
-  padding: 5px 12px;
-  background: linear-gradient(to bottom, var(--primary-light), var(--primary) 50%, var(--primary-dark));
+  padding: 7px 11px;
+  background: linear-gradient(
+    to bottom,
+    var(--primary-light) 0%,
+    var(--primary) 45%,
+    var(--primary-dark) 50%,
+    var(--primary-dark) 100%
+  );
   border: 1px solid var(--primary-dark);
   border-radius: 4px;
   color: var(--bg);
+  font-family: inherit;
   font-size: 0.8rem;
   font-weight: 600;
-  line-height: 1.2;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.55);
+  line-height: normal;
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(0, 0, 0, 0.18);
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
 }
 
@@ -1389,6 +1418,7 @@ ul {
 .admin-login-content {
   position: relative;
   width: min(360px, 100%);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   padding: 3px;
   box-sizing: border-box;
   background: var(--border-light);
@@ -1478,13 +1508,6 @@ ul {
   border: 1px solid var(--primary-dark);
   border-top: none;
   border-radius: 0 0 6px 6px;
-}
-
-.admin-login-body p {
-  margin: 0 0 12px;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  line-height: 1.4;
 }
 
 .admin-login-body form {
