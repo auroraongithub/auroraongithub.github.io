@@ -360,15 +360,15 @@ ul {
 .neo-container {
   max-width: 1100px;
   margin: 0 auto;
-  border: 2px solid var(--border-light);
+  border: 2px solid #fff;
   border-right-color: var(--primary-dark);
   border-bottom-color: var(--primary-dark);
   border-radius: 8px;
   padding: 2px;
   background: var(--border-light);
   box-shadow:
-    0 0 0 2px var(--border-light),
-    3px 3px 0 var(--border-light),
+    0 0 0 2px #fff,
+    3px 3px 0 #fff,
     6px 6px 0 var(--border-light),
     2px 2px 5px rgba(0, 0, 0, 0.25);
   transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
@@ -1398,14 +1398,14 @@ ul {
 /* Now Widget Styles */
 .widget-now {
   background: var(--border-light);
-  border: 2px solid var(--border-light);
+  border: 2px solid #fff;
   border-right-color: var(--primary-dark);
   border-bottom-color: var(--primary-dark);
   border-radius: 8px;
   padding: 2px;
   box-shadow:
-    0 0 0 2px var(--border-light),
-    3px 3px 0 var(--border-light),
+    0 0 0 2px #fff,
+    3px 3px 0 #fff,
     6px 6px 0 var(--border-light),
     2px 2px 5px rgba(0, 0, 0, 0.25);
   transition: transform 0.3s ease, background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
@@ -1454,6 +1454,21 @@ ul {
 .widget-now .now-widget-value {
   color: var(--text);
   font-size: 0.8rem;
+}
+
+/* Sidebar cards don't add the generic hover shadow; only the existing lift remains. */
+.neo-sidebar .neo-box:hover,
+.neo-widgets .neo-box:hover {
+  box-shadow: none;
+}
+
+/* The Now card's Lilith halo is part of its resting frame, not a hover effect. */
+.neo-widgets .widget-now:hover {
+  box-shadow:
+    0 0 0 2px #fff,
+    3px 3px 0 #fff,
+    6px 6px 0 var(--border-light),
+    2px 2px 5px rgba(0, 0, 0, 0.25);
 }
 
 .now-widget-item {
