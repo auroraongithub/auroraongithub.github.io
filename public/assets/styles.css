@@ -1158,6 +1158,24 @@ ul {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+/* Keep the setup and active message fields on the same visible midline. */
+.shoutbox-setup--polished .shoutbox-setup-row input[type="text"],
+.shoutbox-send-row input {
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev)),
+      color-mix(in srgb, var(--primary) 10%, var(--bg-elev))
+    ) 0 0 / 100% 47% no-repeat,
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--primary-light) 24%, var(--primary-dark)),
+      var(--primary-dark) 50%,
+      color-mix(in srgb, var(--primary-dark) 78%, var(--bg-elev))
+    ) 0 47% / 100% 2px no-repeat,
+    var(--bg-elev);
+}
+
 .shoutbox-send-row input::placeholder {
   color: var(--text-muted);
 }
