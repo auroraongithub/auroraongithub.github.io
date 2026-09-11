@@ -78,14 +78,14 @@ const recentStories = sortByDate(await getCollection('stories', ({ data }) => !d
       <div class="recent-panel">
         <h3><i class="bi bi-journal-text"></i> Latest Blog Posts</h3>
         <div class="recent-list" id="recentBlogs">
-          {recentBlogs.length ? recentBlogs.map((post) => <a class="recent-item" href={`/blogs/${entrySlug(post.id)}/`}><strong>{post.data.title}</strong><small>{post.data.date.toLocaleDateString()}</small></a>) : <div class="loading-small">Loading...</div>}
+          {recentBlogs.length ? recentBlogs.map((post) => <a class="recent-item recent-card" href={`/blogs/${entrySlug(post.id)}/`}><strong>{post.data.title}</strong><small>{post.data.date.toLocaleDateString()}</small></a>) : <div class="loading-small">Loading...</div>}
         </div>
         <a href="/blogs/" class="widget-link">View all blogs <i class="bi bi-arrow-right"></i></a>
       </div>
       <div class="recent-panel">
         <h3><i class="bi bi-book"></i> Latest Stories</h3>
         <div class="recent-list" id="recentStories">
-          {recentStories.length ? recentStories.map((post) => <a class="recent-item" href={`/stories/${entrySlug(post.id)}/`}><strong>{post.data.title}</strong><small>{post.data.date.toLocaleDateString()}</small></a>) : <div class="loading-small">Loading...</div>}
+          {recentStories.length ? recentStories.map((post) => <a class="recent-item recent-card" href={`/stories/${entrySlug(post.id)}/`}><strong>{post.data.title}</strong><small>{post.data.date.toLocaleDateString()}</small></a>) : <div class="loading-small">Loading...</div>}
         </div>
         <a href="/stories/" class="widget-link">View all stories <i class="bi bi-arrow-right"></i></a>
       </div>

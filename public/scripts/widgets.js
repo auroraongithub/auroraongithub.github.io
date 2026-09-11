@@ -162,7 +162,7 @@ function recentMarkup(posts, type) {
     const id = post.id ?? post._id ?? '';
     const title = post.title || 'Untitled';
     const date = dateFromBackend(post.date);
-    return `<a class="recent-item" href="/post.html?id=${encodeURIComponent(id)}"><strong>${escapeHtml(title)}</strong>${date ? `<small>${date.toLocaleDateString()}</small>` : ''}</a>`;
+    return `<a class="recent-item recent-card" href="/post.html?id=${encodeURIComponent(id)}"><strong>${escapeHtml(title)}</strong>${date ? `<small>${date.toLocaleDateString()}</small>` : ''}</a>`;
   }).join('') || `<p class="text-muted">No ${type} posts yet.</p>`;
 }
 
