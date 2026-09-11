@@ -20,19 +20,15 @@ const { projects } = Astro.props;
   </div>
 
   <section class="portfolio-panel" id="portfolioContentPanel" role="tabpanel" data-portfolio-panel="content">
-    <div class="portfolio-panel-intro">
-      <span class="portfolio-panel-kicker"><i class="bi bi-broadcast-pin"></i> Content creation / social growth</span>
-      <p>Selected channels, edits, and milestones from a hands-on content workflow.</p>
-    </div>
-
     <div class="portfolio-content-grid">
       {contentPortfolio.map((item) => (
         <article class="portfolio-highlight-card">
           <div class="portfolio-highlight-topline">
             <span class="portfolio-highlight-icon"><i class={`bi ${item.icon}`}></i></span>
-            <span>{item.eyebrow}</span>
+            {item.href
+              ? <a class="portfolio-highlight-title" href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a>
+              : <span>{item.title}</span>}
           </div>
-          <h3>{item.href ? <a href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a> : item.title}</h3>
           <p>{item.description}</p>
           <div class="portfolio-highlight-metrics">
             {item.metrics.map((metric) => <span>{metric}</span>)}
@@ -43,10 +39,6 @@ const { projects } = Astro.props;
   </section>
 
   <section class="portfolio-panel" id="portfolioCodingPanel" role="tabpanel" data-portfolio-panel="coding" hidden>
-    <div class="portfolio-panel-intro">
-      <span class="portfolio-panel-kicker"><i class="bi bi-terminal"></i> Coding / web projects</span>
-      <p>Small tools, websites, and experiments built to solve a real problem or make an idea easier to use.</p>
-    </div>
     <div class="neo-grid" id="portfolioGrid">
       {projects.length
         ? projects.map((project) => <ProjectCard name={project.data.name} description={project.data.description} href={project.data.githubUrl || project.data.url || '#'} language={project.data.language} stars={project.data.stars} forks={project.data.forks} />)
