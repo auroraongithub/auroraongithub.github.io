@@ -100,6 +100,7 @@ test('public API outages degrade without breaking the site shell', async ({ page
   await page.goto('/');
   await expect(page.locator('.site-banner')).toBeVisible();
   await expect(page.locator('#statusFeeling')).toHaveText('Offline');
+  await page.locator('[data-portfolio-tab="coding"]').click();
   await expect(page.locator('#portfolioGrid .portfolio-item').first()).toBeVisible();
   await expect(page.locator('#recentBlogs .recent-item').first()).toBeVisible();
 });

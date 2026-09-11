@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import ContentLayout from '../layouts/ContentLayout.astro';
 import SiteSection from '../components/SiteSection.astro';
-import ProjectCard from '../components/ProjectCard.astro';
+import PortfolioShowcase from '../components/PortfolioShowcase.astro';
 import FavoriteCard from '../components/FavoriteCard.astro';
 import MangaCard from '../components/MangaCard.astro';
 import MobileShoutbox from '../components/MobileShoutbox.astro';
@@ -68,10 +68,7 @@ const recentStories = sortByDate(await getCollection('stories', ({ data }) => !d
   </SiteSection>
 
   <SiteSection id="portfolio" title="Portfolio">
-    <p class="text-muted mb-2">my work!</p>
-    <div class="neo-grid" id="portfolioGrid">
-      {projects.length ? projects.map((project) => <ProjectCard name={project.data.name} description={project.data.description} href={project.data.githubUrl || project.data.url || '#'} language={project.data.language} stars={project.data.stars} forks={project.data.forks} />) : <div class="loading-small" style="text-align:center;padding:40px;">Loading projects...</div>}
-    </div>
+    <PortfolioShowcase projects={projects} />
   </SiteSection>
 
   <SiteSection id="recent" title="Recent" icon="bi-clock-history">
