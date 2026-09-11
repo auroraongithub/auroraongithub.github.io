@@ -423,7 +423,6 @@ ul {
 
 .neo-box:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
 }
 
 .neo-box:last-child {
@@ -4056,6 +4055,7 @@ select option {
 
 /* About Contact Bar - horizontal layout below about */
 .about-contact-bar {
+  --contact-ink: color-mix(in srgb, var(--primary-dark) 78%, var(--text));
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -4072,7 +4072,7 @@ select option {
 }
 
 .contact-label {
-  color: var(--primary-dark);
+  color: var(--contact-ink);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -4081,8 +4081,8 @@ select option {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-shadow:
-    1px 1px 0 #fff,
-    -1px -1px 0 rgba(255, 255, 255, 0.55);
+    1px 1px 0 var(--bg-elev),
+    -1px -1px 0 color-mix(in srgb, var(--bg-elev) 60%, transparent);
 }
 
 .contact-link {
@@ -4099,7 +4099,7 @@ select option {
   );
   border: 1px solid var(--primary-dark);
   border-radius: 5px;
-  color: var(--primary-dark);
+  color: var(--contact-ink);
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
@@ -4112,7 +4112,7 @@ select option {
 
 .contact-link:hover {
   background: linear-gradient(to bottom, var(--primary-light), var(--primary));
-  color: #fff;
+  color: var(--bg);
   border-color: var(--primary-dark);
   box-shadow:
     inset 1px 1px 1px rgba(255, 255, 255, 0.7),
