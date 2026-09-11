@@ -10,10 +10,6 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 <ContentLayout title="Blogs">
   <SiteSection title="Blogs" icon="bi-journal-text" class="blogs-section">
     <div class="post-controls" aria-label="Blog archive filters">
-      <div class="post-controls-heading">
-        <span><i class="bi bi-inbox"></i> Workbench archive</span>
-        <span class="post-count">{posts.length} entries</span>
-      </div>
       <label class="post-search">
         <i class="bi bi-search" aria-hidden="true"></i>
         <span class="visually-hidden">Search blogs</span>
