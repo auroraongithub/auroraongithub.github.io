@@ -813,6 +813,13 @@ ul {
   gap: 5px;
   background: var(--bg);
   border-bottom: 1px solid var(--primary-dark);
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+
+.shoutbox-messages::-webkit-scrollbar-track {
+  background: transparent;
+  border-left: 0;
 }
 
 .widget-shoutbox-sidebar .shoutbox-messages {
