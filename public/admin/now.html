@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Now Editor · elythria.dev Admin</title>
+    <link rel="stylesheet" href="./../assets/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  </head>
+  <body>
+    <!-- Color Picker Modal -->
+    <div class="color-picker-modal" data-color-modal>
+      <div class="color-picker-content">
+        <div class="color-picker-header">
+          <h3>Choose Your Color</h3>
+          <button class="color-picker-close" data-color-close>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="color-picker-options">
+          <button class="color-option" data-color="cyan" title="Cyan">
+            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
+            <span>Cyan</span>
+          </button>
+          <button class="color-option" data-color="pink" title="Pink">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
+            <span>Pink</span>
+          </button>
+          <button class="color-option" data-color="purple" title="Purple">
+            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
+            <span>Purple</span>
+          </button>
+          <button class="color-option" data-color="green" title="Green">
+            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
+            <span>Green</span>
+          </button>
+          <button class="color-option" data-color="orange" title="Orange">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
+            <span>Orange</span>
+          </button>
+          <button class="color-option" data-color="blue" title="Blue">
+            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
+            <span>Blue</span>
+          </button>
+          <button class="color-option" data-color="red" title="Red">
+            <div class="color-preview" style="background: linear-gradient(135deg, #e74c3c, #ec7063);"></div>
+            <span>Red</span>
+          </button>
+          <button class="color-option" data-color="yellow" title="Yellow">
+            <div class="color-preview" style="background: linear-gradient(135deg, #f1c40f, #f7dc6f);"></div>
+            <span>Yellow</span>
+          </button>
+          <button class="color-option" data-color="teal" title="Teal">
+            <div class="color-preview" style="background: linear-gradient(135deg, #1abc9c, #48c9b0);"></div>
+            <span>Teal</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="neo-container">
+      <div class="site-banner">
+        <div class="brand">elythria.dev</div>
+        <div class="header-controls">
+          <button class="color-picker-toggle" title="Change color" data-color-picker>
+            <i class="bi bi-palette"></i>
+          </button>
+          <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+            <i class="bi bi-brightness-high"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="neo-layout">
+        <aside class="neo-sidebar">
+          <div class="neo-box">
+            <div class="neo-header"><h3>Content</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./blogs.html">Blogs</a></li>
+                <li><a href="./stories.html">Stories</a></li>
+                <li><a href="./add-post.html">Add Post</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="neo-box">
+            <div class="neo-header"><h3>Site</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./status.html">Status Strip</a></li>
+                <li><a href="./now.html" class="active">Now Page</a></li>
+                <li><a href="./changelog.html">Changelog</a></li>
+                <li><a href="./resources.html">Resources</a></li>
+                <li><a href="./favorites.html">Favorites</a></li>
+                <li><a href="./portfolio.html">Portfolio</a></li>
+                <li><a href="./settings.html">Settings</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="neo-box">
+            <div class="neo-header"><h3>YouTube CMS</h3></div>
+            <div class="neo-content">
+              <ul>
+                <li><a href="./youtube-research.html"><i class="bi bi-youtube"></i> Research</a></li>
+                <li><a href="./youtube-transcripts.html"><i class="bi bi-card-text"></i> Transcripts</a></li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        <main class="neo-main">
+          <section class="neo-box">
+            <div class="neo-header"><h2><i class="bi bi-clock-history"></i> Now Editor</h2></div>
+            <div class="neo-content">
+              <p style="color: var(--text-muted); margin-bottom: 20px;">
+                This shows what you're currently up to. Visible in the "Now" modal.
+              </p>
+              <form id="nowForm" class="form">
+                <div class="field">
+                  <label for="working_on">Working On</label>
+                  <input id="working_on" type="text" placeholder="Scanlation, YouTube videos..." />
+                </div>
+                <div class="field">
+                  <label for="learning">Learning</label>
+                  <input id="learning" type="text" placeholder="Japanese, Web Development..." />
+                </div>
+                <div class="field">
+                  <label>Open to Collaborations?</label>
+                  <div style="display: flex; gap: 20px; margin-top: 8px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                      <input type="radio" name="collabs" value="true" id="collabsYes" />
+                      <span>Yes</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                      <input type="radio" name="collabs" value="false" id="collabsNo" />
+                      <span>No</span>
+                    </label>
+                  </div>
+                </div>
+                <button class="btn btn-primary" type="submit">
+                  <i class="bi bi-check-lg"></i> Save Now Panel
+                </button>
+              </form>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module">
+      import '../assets/app.js';
+      
+      const API_BASE = 'https://nijikade-backend.vercel.app/api';
+      const workingOnInput = document.getElementById('working_on');
+      const learningInput = document.getElementById('learning');
+      const collabsYes = document.getElementById('collabsYes');
+      const collabsNo = document.getElementById('collabsNo');
+      
+      // Load current data
+      async function loadNow() {
+        try {
+          const res = await fetch(`${API_BASE}/site/now`);
+          const data = await res.json();
+          workingOnInput.value = data.working_on || '';
+          learningInput.value = data.learning || '';
+          if (data.open_to_collabs) {
+            collabsYes.checked = true;
+          } else {
+            collabsNo.checked = true;
+          }
+        } catch (err) {
+          console.error('Failed to load now:', err);
+        }
+      }
+      
+      // Save
+      document.getElementById('nowForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('Not logged in');
+        
+        try {
+          const res = await fetch(`${API_BASE}/admin/now?token=${token}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              working_on: workingOnInput.value,
+              learning: learningInput.value,
+              open_to_collabs: collabsYes.checked
+            })
+          });
+          if (res.ok) {
+            alert('Now panel saved!');
+          } else {
+            const data = await res.json();
+            alert(data.error || 'Failed to save');
+          }
+        } catch (err) {
+          alert('Error saving');
+        }
+      });
+      
+      loadNow();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+@import './tokens.css';
+
+/* Keep migration-only additions intentionally small so legacy visuals remain authoritative. */
+.astro-refactor-note {
+  max-width: 720px;
+  margin: 2rem auto;
+}

@@ -1,0 +1,2248 @@
+// ==========================================================================
+// NEOCITIES REDESIGN - app.js
+// Theme handling, scroll animations, carousel, and API functions
+// ==========================================================================
+
+// ==========================================================================
+// THEME HANDLING
+// ==========================================================================
+
+const THEME_KEY = 'theme';
+const COLOR_KEY = 'color';
+const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+function getStoredTheme() {
+  return localStorage.getItem(THEME_KEY);
+}
+
+function getStoredColor() {
+  return localStorage.getItem(COLOR_KEY) || 'cyan';
+}
+
+function getInitialTheme() {
+  const stored = getStoredTheme();
+  if (stored) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem(THEME_KEY, theme);
+  
+  // Update icon
+  document.querySelectorAll('.theme-toggle i').forEach(icon => {
+    icon.className = theme === 'dark' ? 'bi bi-moon-stars' : 'bi bi-brightness-high';
+  });
+}
+
+function applyColor(color) {
+  document.documentElement.setAttribute('data-color', color);
+  localStorage.setItem(COLOR_KEY, color);
+  
+  // Update active state in color picker
+  document.querySelectorAll('.color-option').forEach(option => {
+    option.classList.toggle('active', option.dataset.color === color);
+  });
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || getInitialTheme();
+  const next = current === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  
+  // Animate the toggle button
+  document.querySelectorAll('.theme-toggle').forEach(btn => {
+    btn.classList.remove('fade');
+    void btn.offsetWidth; // Trigger reflow
+    btn.classList.add('fade');
+  });
+}
+
+// ==========================================================================
+// COLOR PICKER
+// ==========================================================================
+
+function initColorPicker() {
+  const modal = document.querySelector('[data-color-modal]');
+  const toggleBtn = document.querySelector('[data-color-picker]');
+  const closeBtn = document.querySelector('[data-color-close]');
+  const colorOptions = document.querySelectorAll('.color-option');
+  
+  if (!modal || !toggleBtn) return;
+  
+  // Open modal
+  toggleBtn.addEventListener('click', () => {
+    modal.classList.add('active');
+  });
+  
+  // Close modal
+  const closeModal = () => {
+    modal.classList.remove('active');
+  };
+  
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeModal);
+  }
+  
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+  
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+  
+  // Color option selection
+  colorOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      const color = option.dataset.color;
+      applyColor(color);
+      closeModal();
+    });
+  });
+  
+  // Apply stored color on load
+  const storedColor = getStoredColor();
+  applyColor(storedColor);
+}
+
+// ==========================================================================
+// SCROLL ANIMATIONS (IntersectionObserver)
+// ==========================================================================
+
+function initScrollAnimations() {
+  const animateElements = document.querySelectorAll('.scroll-animate, .masonry-item, .neo-box');
+  
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          // Add staggered delay based on element position
+          const delay = index * 0.05;
+          entry.target.style.animationDelay = `${delay}s`;
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+    
+    animateElements.forEach(el => {
+      // Reset state for animation
+      if (!el.classList.contains('animate-in')) {
+        observer.observe(el);
+      }
+    });
+  } else {
+    // Fallback: just show everything
+    animateElements.forEach(el => {
+      el.classList.add('animate-in');
+    });
+  }
+}
+
+// Make it globally available for dynamic content
+window.initScrollAnimations = initScrollAnimations;
+
+// ==========================================================================
+// HEADER CONTROLS
+// ==========================================================================
+
+function initHeaderControls() {
+  // Theme toggle buttons
+  const toggleButtons = document.querySelectorAll('[data-toggle-theme]');
+  toggleButtons.forEach(btn => btn.addEventListener('click', toggleTheme));
+}
+
+// ==========================================================================
+// MOBILE BOTTOM NAV - Highlight Active Page
+// ==========================================================================
+
+function initMobileNav() {
+  const currentPath = window.location.pathname;
+  const navLinks = document.querySelectorAll('.mobile-bottom-nav a');
+  
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    const href = link.getAttribute('href');
+    
+    // Check if this link matches the current page
+    if (href === './' && (currentPath.endsWith('/') || currentPath.endsWith('index.html'))) {
+      link.classList.add('active');
+    } else if (href !== './' && currentPath.includes(href.replace('./', ''))) {
+      link.classList.add('active');
+    }
+  });
+}
+
+// ==========================================================================
+// DATA FETCHERS
+// ==========================================================================
+
+async function fetchJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Network error');
+  return res.json();
+}
+
+export async function getAllPosts(type) {
+  const root = document.querySelector('#posts');
+  if (!root) return;
+  
+  root.innerHTML = '<div class="loading">Loading...</div>';
+  
+  try {
+    const data = await fetchJSON('https://nijikade-backend.vercel.app/api/post?type=' + encodeURIComponent(type));
+    root.innerHTML = '';
+    
+    (data.posts || []).forEach(year => {
+      // Year header
+      const yearHeader = document.createElement('div');
+      yearHeader.className = 'year-header';
+      yearHeader.textContent = year.year;
+      root.appendChild(yearHeader);
+      
+      // Posts for this year
+      (year.posts || []).forEach((post, i) => {
+        const card = document.createElement('div');
+        card.className = 'masonry-item';
+        card.style.animationDelay = `${i * 0.1}s`;
+        card.innerHTML = `
+          <div class="item-header">
+            <h3><a href="./post.html?id=${post.id}">${post.title}</a></h3>
+          </div>
+          <div class="item-content">
+            <div class="item-meta">
+              <span><i class="bi bi-calendar3"></i> ${post.date}</span>
+              <span class="chip">${post.tags || 'No tags'}</span>
+            </div>
+          </div>
+        `;
+        root.appendChild(card);
+      });
+    });
+    
+    // Trigger scroll animations for new content
+    initScrollAnimations();
+    
+  } catch (e) {
+    root.innerHTML = '<div class="neo-box"><div class="neo-content">Failed to load posts. Please try again later.</div></div>';
+  }
+}
+
+export async function getPost() {
+  const titleEl = document.querySelector('#title');
+  const contentEl = document.querySelector('#post-content');
+  
+  if (!titleEl || !contentEl) return;
+  
+  titleEl.textContent = 'Loading...';
+  
+  try {
+    const url = new URL(window.location.href);
+    const id = url.searchParams.get('id');
+    
+    if (!id) {
+      window.location.href = './blogs.html';
+      return;
+    }
+    
+    const data = await fetchJSON('https://nijikade-backend.vercel.app/api/post/' + encodeURIComponent(id));
+    titleEl.textContent = data.data.title;
+    contentEl.innerHTML = data.data.content;
+    
+    // Update page title
+    document.title = `${data.data.title} · nijika.de`;
+    
+    // Store current post type for navigation
+    const postType = data.data.type || 'blog';
+    window.currentPostId = id;
+    window.currentPostType = postType;
+    
+    // Update "Back to" link based on post type
+    const backToList = document.getElementById('backToList');
+    if (backToList) {
+      const link = backToList.querySelector('a');
+      if (postType === 'story') {
+        link.href = './stories.html';
+        link.textContent = 'Back to Stories';
+      } else {
+        link.href = './blogs.html';
+        link.textContent = 'Back to Blogs';
+      }
+    }
+    
+    // Load kudos
+    loadKudos(id);
+    
+    // Load navigation (prev/next)
+    loadPostNavigation(id);
+    
+  } catch (e) {
+    titleEl.textContent = 'Failed to load';
+    contentEl.innerHTML = '<p>Could not load the post. Please try again later.</p>';
+  }
+}
+
+// Load kudos count for a post
+async function loadKudos(postId) {
+  const kudosCountEl = document.getElementById('kudosCount');
+  const kudosBtn = document.getElementById('kudosBtn');
+  
+  if (!kudosCountEl) return;
+  
+  try {
+    const res = await fetch(`${API_BASE}/post/${postId}/kudos`);
+    const data = await res.json();
+    kudosCountEl.textContent = data.kudos || 0;
+    
+    // Check if user already liked this post
+    const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+    if (likedPosts.includes(postId) && kudosBtn) {
+      kudosBtn.classList.add('liked');
+    }
+  } catch (err) {
+    console.error('Failed to load kudos:', err);
+  }
+}
+
+// Give kudos to a post
+window.giveKudos = async function() {
+  const postId = window.currentPostId;
+  const kudosBtn = document.getElementById('kudosBtn');
+  const kudosCountEl = document.getElementById('kudosCount');
+  
+  if (!postId || !kudosBtn) return;
+  
+  // Check if already liked
+  const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+  if (likedPosts.includes(postId)) {
+    // Already liked - could show a message or just return
+    return;
+  }
+  
+  try {
+    const res = await fetch(`${API_BASE}/post/${postId}/kudos`, {
+      method: 'POST'
+    });
+    const data = await res.json();
+    
+    if (kudosCountEl) kudosCountEl.textContent = data.kudos;
+    kudosBtn.classList.add('liked');
+    
+    // Save to localStorage
+    likedPosts.push(postId);
+    localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
+    
+    // Animate
+    kudosBtn.style.transform = 'scale(1.1)';
+    setTimeout(() => { kudosBtn.style.transform = ''; }, 200);
+  } catch (err) {
+    console.error('Failed to give kudos:', err);
+  }
+};
+
+// Load post navigation (prev/next in same type)
+async function loadPostNavigation(postId) {
+  try {
+    // Try the navigation API first
+    let data = null;
+    try {
+      const res = await fetch(`${API_BASE}/post/${postId}/navigation`);
+      if (res.ok) {
+        data = await res.json();
+        console.log('Navigation API data:', data);
+      }
+    } catch (apiErr) {
+      console.log('Navigation API not available, using fallback');
+    }
+    
+    // If API didn't work or returned error, use fallback
+    if (!data || data.error) {
+      console.log('Using fallback navigation method');
+      // Get current post type
+      const postType = window.currentPostType || 'blog';
+      
+      // Fetch all posts of this type
+      const postsRes = await fetch(`${API_BASE}/post?type=${postType}`);
+      const postsData = await postsRes.json();
+      
+      // Flatten posts from grouped by year format
+      const allPosts = (postsData.posts || []).flatMap(g => g.posts);
+      
+      // Posts come sorted desc (newest first), so we reverse for chronological order
+      const posts = allPosts.reverse();
+      
+      // Find current post index
+      const currentIndex = posts.findIndex(p => String(p.id) === String(postId));
+      
+      if (currentIndex !== -1) {
+        data = {
+          type: postType,
+          prev: currentIndex > 0 ? posts[currentIndex - 1] : null,
+          next: currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null
+        };
+        console.log('Fallback navigation data:', data);
+      } else {
+        console.log('Could not find post in list');
+        return;
+      }
+    }
+    
+    const postType = data.type || 'blog';
+    const typeLabel = postType === 'story' ? 'Story' : 'Post';
+    
+    // Bottom navigation
+    // Left button = Newer (data.next), Right button = Older (data.prev)
+    const prevBtn = document.getElementById('prevPost'); // Left button
+    const nextBtn = document.getElementById('nextPost'); // Right button
+    
+    // Left button shows NEWER post (data.next)
+    if (prevBtn && data.next) {
+      prevBtn.href = `./post.html?id=${data.next.id}`;
+      prevBtn.innerHTML = `<i class="bi bi-arrow-left"></i> Newer ${typeLabel}`;
+      prevBtn.title = data.next.title;
+      prevBtn.style.visibility = 'visible';
+    }
+    
+    // Right button shows OLDER post (data.prev)
+    if (nextBtn && data.prev) {
+      nextBtn.href = `./post.html?id=${data.prev.id}`;
+      nextBtn.innerHTML = `Older ${typeLabel} <i class="bi bi-arrow-right"></i>`;
+      nextBtn.title = data.prev.title;
+      nextBtn.style.visibility = 'visible';
+    }
+    
+    // Sidebar navigation
+    const prevSidebar = document.getElementById('prevPostSidebar'); // Shows older
+    const nextSidebar = document.getElementById('nextPostSidebar'); // Shows newer
+    
+    // prevSidebar shows OLDER (data.prev)
+    if (prevSidebar && data.prev) {
+      const link = prevSidebar.querySelector('a');
+      if (link) {
+        link.href = `./post.html?id=${data.prev.id}`;
+        link.textContent = `← Older: ${data.prev.title}`;
+        link.title = data.prev.title;
+        prevSidebar.style.display = 'list-item';
+      }
+    }
+    
+    // nextSidebar shows NEWER (data.next)
+    if (nextSidebar && data.next) {
+      const link = nextSidebar.querySelector('a');
+      if (link) {
+        link.href = `./post.html?id=${data.next.id}`;
+        link.textContent = `Newer: ${data.next.title} →`;
+        link.title = data.next.title;
+        nextSidebar.style.display = 'list-item';
+      }
+    }
+    
+  } catch (err) {
+    console.error('Failed to load post navigation:', err);
+  }
+}
+
+// ==========================================================================
+// CAROUSEL
+// ==========================================================================
+
+export function initCarousel() {
+  const track = document.querySelector('.carousel-track');
+  if (!track) return;
+  
+  const items = Array.from(track.children);
+  let index = 0;
+  
+  function perView() {
+    return parseInt(getComputedStyle(track).getPropertyValue('--per-view')) || 3;
+  }
+  
+  function stepWidth() {
+    const col = items[0];
+    if (!col) return 0;
+    return col.getBoundingClientRect().width + parseInt(getComputedStyle(track).getPropertyValue('--gap'));
+  }
+  
+  function maxIndex() {
+    return Math.max(0, items.length - perView());
+  }
+  
+  function render() {
+    track.style.transform = `translateX(-${index * stepWidth()}px)`;
+  }
+  
+  const nextBtn = document.querySelector('[data-carousel-next]');
+  const prevBtn = document.querySelector('[data-carousel-prev]');
+  
+  function next() {
+    index = (index >= maxIndex()) ? 0 : index + 1;
+    render();
+  }
+  
+  function prev() {
+    index = (index <= 0) ? maxIndex() : index - 1;
+    render();
+  }
+  
+  nextBtn?.addEventListener('click', next);
+  prevBtn?.addEventListener('click', prev);
+  window.addEventListener('resize', render);
+  
+  // Auto-advance
+  let timer = setInterval(next, 5000);
+  
+  [nextBtn, prevBtn, track].forEach(el => {
+    el?.addEventListener('pointerenter', () => clearInterval(timer));
+    el?.addEventListener('pointerleave', () => { timer = setInterval(next, 5000); });
+  });
+  
+  render();
+
+  // ==========================================================================
+  // HOVER CARD LOGIC (Hardcoded series details)
+  // ==========================================================================
+  
+  const details = {
+    mabarai: {
+      title: "Mabarai-san wa Boku wo Karitai (Mabarai-san Hunts Me Down)",
+      tags: ["Romance", "Comedy", "School Life"],
+      status: "Completed",
+      rating: "8.18",
+      bookmarks: "12.5k",
+      desc: "A romcom where Mabarai-san (a vampire hunter) relentlessly teases the MC (a vampire)."
+    },
+    blacksmith: {
+      title: "Kyuutei Kajishi no Shiawase na Nichijou (Happy Daily Life of a Court Blacksmith)",
+      tags: ["Fantasy", "Slice of Life", "Work Life"],
+      status: "Ongoing",
+      rating: "7.93",
+      bookmarks: "9.4k",
+      desc: "A talented blacksmith finds happiness after being picked up by the daughter of a neighboring country."
+    },
+    contract: {
+      title: "There Is a Lie in My Contract Marriage",
+      tags: ["Romance", "Drama", "Isekai"],
+      status: "Ongoing",
+      rating: "8.02",
+      bookmarks: "21.3k",
+      desc: "A contract marriage built on a lie spirals into complicated feelings and hidden agendas."
+    },
+    kobayashi: {
+      title: "Endo and Kobayashi's Live Commentary on the Villainess",
+      tags: ["Fantasy", "Romance", "Comedy"],
+      status: "Completed",
+      rating: "8.35",
+      bookmarks: "32.0k",
+      desc: "Two students give 'live commentary' to a game world, changing the fate of a misunderstood villainess."
+    },
+    forcedgf: {
+      title: "Bocchi no Boku ni Kyousei Kanojo ga Yattekita",
+      tags: ["Romance", "Comedy", "School Life"],
+      status: "Ongoing",
+      rating: "7.76",
+      bookmarks: "6.8k",
+      desc: "A loner boy's life turns upside down when a 'forced' girlfriend temporarily barges in his life."
+    },
+    deathgame: {
+      title: "Isekaigaeri no Moto Yuusha... Death Game ni Makikomaremashita",
+      tags: ["Action", "Thriller", "Survival"],
+      status: "Ongoing",
+      rating: "7.68",
+      bookmarks: "4.1k",
+      desc: "A returned stupidly overpowered hero is dragged into a modern death game."
+    },
+    finalmessage: {
+      title: "Okuru Kotoba (Final Message)",
+      tags: ["Drama", "One-shot"],
+      status: "Completed",
+      rating: "7.90",
+      bookmarks: "1.2k",
+      desc: "They say that a spirit sometimes appears on a certain crossing in town. One day, a high school boy named Sahara gets into an accident on that very crossing, causing his and his friends' lives to change forever."
+    },
+    shigure: {
+      title: "Shigure-san Wants to Shine!",
+      tags: ["Comedy", "School Life"],
+      status: "Ongoing",
+      rating: "7.81",
+      bookmarks: "3.3k",
+      desc: "Two loner seatmates trying their best to 'shine'."
+    },
+    '80k': {
+      title: "Saving 80,000 Gold in Another World for My Retirement",
+      tags: ["Fantasy", "Isekai", "Adventure"],
+      status: "Ongoing",
+      rating: "7.85",
+      bookmarks: "29.6k",
+      desc: "A resourceful girl exploits two worlds to build a retirement fund."
+    },
+    mmo: {
+      title: "Retire Shita Ningyoushi no MMO Kikou Jojishi",
+      tags: ["Fantasy", "Adventure", "Game"],
+      status: "Ongoing",
+      rating: "7.70",
+      bookmarks: "1.8k",
+      desc: "A retired top dollmaker with a broken hand learns about a VRMMO and proceeds to play doll pokemon using dolls with egos."
+    }
+  };
+
+  const hover = document.getElementById('seriesHover');
+  if (!hover) return;
+  
+  function showHoverCard(e, key) {
+    const d = details[key];
+    if (!d) return;
+    
+    hover.innerHTML = `
+      <div class="title">${d.title}</div>
+      <div class="meta">
+        <span>Status: ${d.status}</span>
+        <span>Rating: ${d.rating}</span>
+        <span>Bookmarks: ${d.bookmarks}</span>
+      </div>
+      <div class="tags">${(d.tags || []).map(t => `<span class="chip chip-sm">${t}</span>`).join('')}</div>
+      <div class="desc">${d.desc}</div>
+    `;
+    moveHover(e);
+    hover.style.display = 'block';
+    hover.style.pointerEvents = 'auto';
+  }
+  
+  function moveHover(e) {
+    const padding = 20;
+    const offsetX = 20;
+    const offsetY = 20;
+    
+    // Position card relative to cursor
+    let x = e.clientX + offsetX;
+    let y = e.clientY + offsetY;
+    
+    // Get viewport dimensions
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const cardWidth = 340;
+    const cardHeight = hover.offsetHeight;
+    
+    // Flip horizontally if too close to right edge
+    if (x + cardWidth > viewportWidth - padding) {
+      x = e.clientX - cardWidth - offsetX;
+    }
+    
+    // Flip vertically if too close to bottom edge
+    if (y + cardHeight > viewportHeight - padding) {
+      y = e.clientY - cardHeight - offsetY;
+    }
+    
+    // Ensure card stays within viewport
+    x = Math.max(padding, Math.min(x, viewportWidth - cardWidth - padding));
+    y = Math.max(padding, Math.min(y, viewportHeight - cardHeight - padding));
+    
+    hover.style.left = `${x}px`;
+    hover.style.top = `${y}px`;
+  }
+  
+  function hideHoverCard() {
+    hover.style.display = 'none';
+    hover.style.pointerEvents = 'none';
+  }
+  
+  // Attach hover events to carousel items
+  const itemEls = document.querySelectorAll('.carousel-item');
+  itemEls.forEach(item => {
+    item.addEventListener('mouseenter', (e) => {
+      const key = item.getAttribute('data-series');
+      showHoverCard(e, key);
+    });
+    item.addEventListener('mousemove', (e) => {
+      if (hover.style.display === 'block') moveHover(e);
+    });
+    item.addEventListener('mouseleave', (e) => {
+      if (!hover.contains(e.relatedTarget)) hideHoverCard();
+    });
+  });
+  
+  hover.addEventListener('mouseleave', hideHoverCard);
+}
+
+// ==========================================================================
+// PAGE INITIALIZATION
+// ==========================================================================
+
+function initTheme() {
+  applyTheme(getInitialTheme());
+  applyColor(getStoredColor());
+}
+
+function initPage() {
+  initTheme();
+  initHeaderControls();
+  initColorPicker();
+  initMobileNav();
+  initPetals();
+  initStatusStrip();
+  initDesktopWidgets();
+  initMainWidgets();
+  initFavorites();
+  initRecentPosts();
+  initMoreDrawer();
+  initModals();
+  initShoutbox();
+  initPortfolio();
+  
+  // Initialize scroll animations after a short delay to let content render
+  setTimeout(initScrollAnimations, 100);
+}
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', initPage);
+
+// Re-run animations when window loads (for images etc)
+window.addEventListener('load', () => {
+  initScrollAnimations();
+});
+
+// ==========================================================================
+// FALLING PETALS ANIMATION
+// ==========================================================================
+
+function initPetals() {
+  const body = document.body;
+  body.style.overflowX = 'hidden';
+  
+  const options = {
+    blowAnimations: ['blow-soft-left', 'blow-medium-left', 'blow-soft-right', 'blow-medium-right'],
+    className: 'petal',
+    fallSpeed: 1,
+    maxSize: 14,
+    minSize: 10,
+    newOn: 300,
+    swayAnimations: ['sway-0', 'sway-1', 'sway-2', 'sway-3', 'sway-4', 'sway-5', 'sway-6', 'sway-7', 'sway-8']
+  };
+  
+  let animationId = null;
+  
+  function randomArrayElem(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+  
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
+  function elementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+  
+  function elementPastBottom(el) {
+    const rect = el.getBoundingClientRect();
+    return rect.top > (window.innerHeight || document.documentElement.clientHeight);
+  }
+  
+  function createPetal() {
+    if (!animationId) return;
+    
+    setTimeout(() => {
+      requestAnimationFrame(createPetal);
+    }, options.newOn);
+    
+    // Get random animations
+    const blowAnimation = randomArrayElem(options.blowAnimations);
+    const swayAnimation = randomArrayElem(options.swayAnimations);
+    const fallTime = ((document.documentElement.clientHeight * 0.007) + Math.round(Math.random() * 5)) * options.fallSpeed;
+    
+    // Build animation string
+    const animations = `fall ${fallTime}s linear 0s 1, ${blowAnimation} ${((fallTime > 30 ? fallTime : 30) - 20) + randomInt(0, 20)}s linear 0s infinite, ${swayAnimation} ${randomInt(2, 4)}s linear 0s infinite`;
+    
+    // Create petal element
+    const petal = document.createElement('div');
+    petal.className = options.className;
+    
+    // Randomize size
+    const height = randomInt(options.minSize, options.maxSize);
+    const width = height - Math.floor(randomInt(0, options.minSize) / 3);
+    
+    // Apply styles
+    petal.style.animation = animations;
+    petal.style.borderRadius = `${randomInt(options.maxSize, options.maxSize + Math.floor(Math.random() * 10))}px ${randomInt(1, Math.floor(width / 4))}px`;
+    petal.style.height = `${height}px`;
+    petal.style.width = `${width}px`;
+    petal.style.left = `${Math.random() * document.documentElement.clientWidth - 100}px`;
+    petal.style.marginTop = `${-(Math.floor(Math.random() * 20) + 15)}px`;
+    
+    // Remove petal when fall animation ends (petal reached bottom)
+    petal.addEventListener('animationend', function(e) {
+      if (e.animationName === 'fall') {
+        this.remove();
+      }
+    });
+    
+    // Remove petal if it goes past the viewport bottom during blow/sway
+    petal.addEventListener('animationiteration', function(e) {
+      if ((options.blowAnimations.includes(e.animationName) || options.swayAnimations.includes(e.animationName)) && elementPastBottom(this)) {
+        this.remove();
+      }
+    });
+    
+    body.appendChild(petal);
+  }
+  
+  // Start the animation
+  animationId = requestAnimationFrame(createPetal);
+  
+  // Store animation ID for potential cleanup
+  body.dataset.petalsAnimId = animationId;
+}
+
+// ==========================================================================
+// STATUS STRIP & WIDGETS
+// ==========================================================================
+
+const API_BASE = 'https://nijikade-backend.vercel.app/api';
+
+// Cache system to reduce API calls
+const apiCache = {
+  data: {},
+  get(key) {
+    const cached = this.data[key];
+    if (!cached) return null;
+    if (Date.now() - cached.timestamp > cached.ttl) {
+      delete this.data[key];
+      return null;
+    }
+    return cached.value;
+  },
+  set(key, value, ttl = 60000) {
+    this.data[key] = { value, timestamp: Date.now(), ttl };
+  },
+  // Clear all cache
+  clear() {
+    this.data = {};
+  }
+};
+
+// Prevent duplicate in-flight requests
+const pendingRequests = {};
+
+async function cachedFetch(url, ttl = 60000) {
+  // Check cache first
+  const cached = apiCache.get(url);
+  if (cached) return cached;
+  
+  // Check if request is already in flight
+  if (pendingRequests[url]) {
+    return pendingRequests[url];
+  }
+  
+  // Make the request and store the promise
+  pendingRequests[url] = (async () => {
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      apiCache.set(url, data, ttl);
+      return data;
+    } finally {
+      delete pendingRequests[url];
+    }
+  })();
+  
+  return pendingRequests[url];
+}
+
+// Bundle data cache - stores combined data from bundle endpoint
+let bundleData = null;
+let bundleTimestamp = 0;
+const BUNDLE_TTL = 120000; // 2 minutes
+
+// Fetch all main widget data in one request
+async function fetchBundle() {
+  // Check if bundle is still fresh
+  if (bundleData && Date.now() - bundleTimestamp < BUNDLE_TTL) {
+    return bundleData;
+  }
+  
+  try {
+    const res = await fetch(`${API_BASE}/site/bundle?include=status,now,changelog,stats,latestBlog,latestStory&changelogLimit=5`);
+    if (res.ok) {
+      bundleData = await res.json();
+      bundleTimestamp = Date.now();
+      return bundleData;
+    }
+  } catch (err) {
+    console.log('Bundle fetch failed, falling back to individual requests');
+  }
+  return null;
+}
+
+async function initStatusStrip() {
+  const statusStrip = document.getElementById('statusStrip');
+  if (!statusStrip) return;
+  
+  try {
+    // Try to use bundle data first
+    const bundle = await fetchBundle();
+    const data = bundle?.status || await cachedFetch(`${API_BASE}/site/status`, 300000);
+    
+    const feelingEl = document.getElementById('statusFeeling');
+    const doingEl = document.getElementById('statusDoing');
+    const updatedEl = document.getElementById('statusUpdated');
+    const marqueeEl = document.getElementById('marqueeText');
+    
+    if (feelingEl) feelingEl.textContent = data.feeling || 'Happy';
+    if (doingEl) doingEl.textContent = data.doing || 'Vibing';
+    if (updatedEl && data.last_updated) {
+      const date = new Date(data.last_updated._seconds ? data.last_updated._seconds * 1000 : data.last_updated);
+      updatedEl.textContent = date.toLocaleDateString();
+    }
+    if (marqueeEl) marqueeEl.textContent = data.currently_marquee || 'Welcome to nijika.de! ✨';
+  } catch (err) {
+    console.error('Failed to load status:', err);
+  }
+}
+
+// ==========================================================================
+// DESKTOP WIDGETS (RIGHT SIDEBAR)
+// ==========================================================================
+
+async function initDesktopWidgets() {
+  // Try to fetch bundle first for efficiency
+  const bundle = await fetchBundle();
+  
+  // Load Now widget (sidebar + drawer)
+  // Use bundle data if available, otherwise fetch individually
+  try {
+    const data = bundle?.now || await cachedFetch(`${API_BASE}/site/now`, 120000);
+    
+    // Update sidebar widget
+    const workingEl = document.getElementById('widgetWorkingOn');
+    const learningEl = document.getElementById('widgetLearning');
+    const collabsEl = document.getElementById('widgetCollabs');
+    
+    if (workingEl) workingEl.textContent = data.working_on || 'Various projects';
+    if (learningEl) learningEl.textContent = data.learning || 'New things';
+    if (collabsEl) {
+      collabsEl.innerHTML = data.open_to_collabs 
+        ? '<i class="bi bi-check-circle-fill" style="color: #2ecc71;"></i> Yes!'
+        : '<i class="bi bi-x-circle-fill" style="color: #e74c3c;"></i> Not right now';
+    }
+    
+    // Update drawer widget
+    const drawerWorkingEl = document.getElementById('drawerWorkingOn');
+    const drawerLearningEl = document.getElementById('drawerLearning');
+    const drawerCollabsEl = document.getElementById('drawerCollabs');
+    
+    if (drawerWorkingEl) drawerWorkingEl.textContent = data.working_on || 'Various projects';
+    if (drawerLearningEl) drawerLearningEl.textContent = data.learning || 'New things';
+    if (drawerCollabsEl) {
+      drawerCollabsEl.innerHTML = data.open_to_collabs 
+        ? '<i class="bi bi-check-circle-fill" style="color: #2ecc71;"></i> Yes!'
+        : '<i class="bi bi-x-circle-fill" style="color: #e74c3c;"></i> Not right now';
+    }
+  } catch (err) {
+    console.error('Failed to load Now widget:', err);
+  }
+  
+  // Load Changelog widget (sidebar + drawer)
+  try {
+    const entries = bundle?.changelog || await cachedFetch(`${API_BASE}/site/changelog?limit=1`, 60000);
+    
+    const changelogHTML = !entries.length 
+      ? '<p class="loading-small">No updates yet.</p>'
+      : entries.slice(0, 1).map(entry => `
+          <div class="changelog-widget-entry ${entry.pinned ? 'pinned' : ''}">
+            <div class="date">${entry.date ? new Date(entry.date).toLocaleDateString() : ''}</div>
+            ${entry.title ? `<div class="title">${entry.title}</div>` : ''}
+            <div class="body">${entry.body}</div>
+          </div>
+        `).join('');
+    
+    // Update sidebar widget
+    const listEl = document.getElementById('widgetChangelog');
+    if (listEl) listEl.innerHTML = changelogHTML;
+    
+    // Update drawer widget
+    const drawerListEl = document.getElementById('drawerChangelog');
+    if (drawerListEl) drawerListEl.innerHTML = changelogHTML;
+    
+  } catch (err) {
+    console.error('Failed to load Changelog widget:', err);
+  }
+  
+  // Load Spotify widget (right sidebar) - still use individual fetch since it's not critical
+  try {
+    const data = await cachedFetch(`${API_BASE}/site/settings`, 600000); // 10 min cache
+    
+    if (data.spotify_embed_url) {
+      const spotifyBox = document.getElementById('widgetSpotifyBox');
+      const spotifyFrame = document.getElementById('widgetSpotify');
+      
+      if (spotifyBox && spotifyFrame) {
+        spotifyFrame.src = data.spotify_embed_url;
+        spotifyBox.style.display = 'block';
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load Spotify widget:', err);
+  }
+}
+
+// ==========================================================================
+// MAIN WIDGETS SECTION (in main content area)
+// ==========================================================================
+
+async function initMainWidgets() {
+  // Try to use bundle data first
+  const bundle = await fetchBundle();
+  
+  // Load Stats (for left sidebar)
+  try {
+    const data = bundle?.stats || await cachedFetch(`${API_BASE}/site/stats`, 120000);
+    
+    const projectsEl = document.getElementById('statProjects');
+    const postsEl = document.getElementById('statPosts');
+    
+    if (projectsEl) projectsEl.textContent = data.projects || data.projects_count || '0';
+    if (postsEl) postsEl.textContent = data.posts || data.posts_count || '0';
+  } catch (err) {
+    console.error('Failed to load stats:', err);
+  }
+  
+  // Initialize visitor tracking
+  initVisitorTracking();
+}
+
+// ==========================================================================
+// RECENT / PROOF OF LIFE SECTION
+// ==========================================================================
+
+async function initRecentPosts() {
+  // Try to use bundle data first
+  const bundle = await fetchBundle();
+  
+  // Load Latest Blogs
+  try {
+    let posts = [];
+    if (bundle?.latestBlog) {
+      posts = [bundle.latestBlog];
+    } else {
+      const data = await cachedFetch(`${API_BASE}/site/posts/latest?type=blog&limit=1`, 60000);
+      if (!data.error) {
+        posts = Array.isArray(data) ? data : (data.posts || []);
+      }
+    }
+    
+    const listEl = document.getElementById('recentBlogs');
+    if (listEl) {
+      if (!posts || posts.length === 0) {
+        listEl.innerHTML = '<p class="text-muted">No blog posts yet.</p>';
+      } else {
+        listEl.innerHTML = posts.map(post => `
+          <a href="./post.html?id=${post.id}" class="recent-card">
+            <div class="title">${post.title}</div>
+            <div class="date">${post.date || ''}</div>
+            ${post.excerpt ? `<div class="excerpt">${post.excerpt}</div>` : ''}
+          </a>
+        `).join('');
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load recent blogs:', err);
+    const listEl = document.getElementById('recentBlogs');
+    if (listEl) listEl.innerHTML = '<p class="text-muted">Failed to load</p>';
+  }
+  
+  // Load Latest Stories
+  try {
+    let posts = [];
+    if (bundle?.latestStory) {
+      posts = [bundle.latestStory];
+    } else {
+      const data = await cachedFetch(`${API_BASE}/site/posts/latest?type=story&limit=1`, 60000);
+      if (!data.error) {
+        posts = Array.isArray(data) ? data : (data.posts || []);
+      }
+    }
+    
+    const listEl = document.getElementById('recentStories');
+    if (listEl) {
+      if (!posts || posts.length === 0) {
+        listEl.innerHTML = '<p class="text-muted">No stories yet.</p>';
+      } else {
+        listEl.innerHTML = posts.map(post => `
+          <a href="./post.html?id=${post.id}" class="recent-card">
+            <div class="title">${post.title}</div>
+            <div class="date">${post.date || ''}</div>
+            ${post.excerpt ? `<div class="excerpt">${post.excerpt}</div>` : ''}
+          </a>
+        `).join('');
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load recent stories:', err);
+    const listEl = document.getElementById('recentStories');
+    if (listEl) listEl.innerHTML = '<p class="text-muted">Failed to load</p>';
+  }
+}
+
+// ==========================================================================
+// FAVORITES WIDGET
+// ==========================================================================
+
+let currentFavCategory = 'anime';
+let favCarouselIndex = 0;
+
+function initFavorites() {
+  const track = document.getElementById('favoritesTrack');
+  if (!track) return;
+  
+  // Make switchFavoritesTab available globally
+  window.switchFavoritesTab = switchFavoritesTab;
+  
+  // Setup carousel controls
+  setupFavoritesCarousel();
+  
+  // Load initial category
+  loadFavorites('anime');
+}
+
+function setupFavoritesCarousel() {
+  const prevBtn = document.querySelector('[data-fav-carousel-prev]');
+  const nextBtn = document.querySelector('[data-fav-carousel-next]');
+  const track = document.getElementById('favoritesTrack');
+  
+  if (!prevBtn || !nextBtn || !track) return;
+  
+  prevBtn.addEventListener('click', () => {
+    const items = track.querySelectorAll('.carousel-item');
+    if (items.length === 0) return;
+    
+    const perView = getPerView();
+    const maxIndex = Math.max(0, items.length - perView);
+    
+    // Infinite: wrap to end if at start
+    favCarouselIndex = (favCarouselIndex <= 0) ? maxIndex : favCarouselIndex - 1;
+    updateFavoritesCarousel();
+  });
+  
+  nextBtn.addEventListener('click', () => {
+    const items = track.querySelectorAll('.carousel-item');
+    if (items.length === 0) return;
+    
+    const perView = getPerView();
+    const maxIndex = Math.max(0, items.length - perView);
+    
+    // Infinite: wrap to start if at end
+    favCarouselIndex = (favCarouselIndex >= maxIndex) ? 0 : favCarouselIndex + 1;
+    updateFavoritesCarousel();
+  });
+  
+  // Auto-advance every 5 seconds
+  let autoAdvanceTimer = setInterval(() => {
+    const items = track.querySelectorAll('.carousel-item');
+    if (items.length === 0) return;
+    
+    const perView = getPerView();
+    const maxIndex = Math.max(0, items.length - perView);
+    favCarouselIndex = (favCarouselIndex >= maxIndex) ? 0 : favCarouselIndex + 1;
+    updateFavoritesCarousel();
+  }, 5000);
+  
+  // Pause on hover
+  [prevBtn, nextBtn, track].forEach(el => {
+    el?.addEventListener('pointerenter', () => clearInterval(autoAdvanceTimer));
+    el?.addEventListener('pointerleave', () => {
+      autoAdvanceTimer = setInterval(() => {
+        const items = track.querySelectorAll('.carousel-item');
+        if (items.length === 0) return;
+        
+        const perView = getPerView();
+        const maxIndex = Math.max(0, items.length - perView);
+        favCarouselIndex = (favCarouselIndex >= maxIndex) ? 0 : favCarouselIndex + 1;
+        updateFavoritesCarousel();
+      }, 5000);
+    });
+  });
+}
+
+function getPerView() {
+  if (window.innerWidth <= 500) return 2;
+  if (window.innerWidth <= 900) return 3;
+  return 5;
+}
+
+function updateFavoritesCarousel() {
+  const track = document.getElementById('favoritesTrack');
+  if (!track) return;
+  
+  const perView = getPerView();
+  const gap = 12;
+  const itemWidth = (track.parentElement.offsetWidth - (gap * (perView - 1))) / perView;
+  const offset = favCarouselIndex * (itemWidth + gap);
+  
+  track.style.transform = `translateX(-${offset}px)`;
+}
+
+// Update carousel on resize
+window.addEventListener('resize', () => {
+  const track = document.getElementById('favoritesTrack');
+  if (track && track.querySelectorAll('.carousel-item').length > 0) {
+    // Clamp index to valid range after resize
+    const items = track.querySelectorAll('.carousel-item');
+    const perView = getPerView();
+    const maxIndex = Math.max(0, items.length - perView);
+    favCarouselIndex = Math.min(favCarouselIndex, maxIndex);
+    updateFavoritesCarousel();
+  }
+});
+
+function switchFavoritesTab(category) {
+  currentFavCategory = category;
+  favCarouselIndex = 0; // Reset carousel position
+  
+  // Update tab active states
+  document.querySelectorAll('.fav-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.category === category);
+  });
+  
+  loadFavorites(category);
+}
+
+async function loadFavorites(category) {
+  const track = document.getElementById('favoritesTrack');
+  if (!track) return;
+  
+  track.innerHTML = '<div class="loading-small" style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading favorites...</div>';
+  track.style.transform = 'translateX(0)';
+  
+  try {
+    const data = await cachedFetch(`${API_BASE}/site/favorites?category=${category}`, 120000); // 2 min cache
+    const items = data.items || [];
+    
+    if (!items.length) {
+      track.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center; padding: 40px;">No favorites added yet.</p>';
+      return;
+    }
+    
+    track.innerHTML = items.map(item => `
+      <div class="carousel-item">
+        ${item.image 
+          ? `<img src="${item.image}" alt="${escapeHtml(item.title)}" onerror="this.outerHTML='<div class=\\'favorite-item-image no-image\\' style=\\'height:180px;display:flex;align-items:center;justify-content:center;\\'><i class=\\'bi bi-image\\'></i></div>'">`
+          : `<div class="favorite-item-image no-image" style="height:180px;display:flex;align-items:center;justify-content:center;"><i class="bi bi-image"></i></div>`
+        }
+        <div class="fav-item-info">
+          <div class="fav-item-title">${escapeHtml(item.title)}</div>
+          <div class="fav-item-meta">
+            ${item.year ? `<span><i class="bi bi-calendar"></i> ${item.year}</span>` : ''}
+            ${item.score ? `<span><i class="bi bi-star-fill"></i> ${item.score}</span>` : ''}
+          </div>
+          ${(item.status && category !== 'characters') ? `<span class="fav-item-status ${item.status}">${formatFavStatus(item.status)}</span>` : ''}
+        </div>
+      </div>
+    `).join('');
+    
+    // Reset and update carousel
+    favCarouselIndex = 0;
+    updateFavoritesCarousel();
+    
+  } catch (err) {
+    console.error('Failed to load favorites:', err);
+    track.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center; padding: 40px;">Failed to load favorites.</p>';
+  }
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatFavStatus(status) {
+  const map = {
+    'completed': 'Completed',
+    'watching': 'Watching/Playing',
+    'plan': 'Plan to Watch',
+    'dropped': 'Dropped'
+  };
+  return map[status] || status;
+}
+
+// ==========================================================================
+// MORE DRAWER (MOBILE)
+// ==========================================================================
+
+function initMoreDrawer() {
+  const drawer = document.getElementById('moreDrawer');
+  if (!drawer) return;
+  
+  const toggleBtn = document.querySelector('[data-more-toggle]');
+  const closeBtns = document.querySelectorAll('[data-more-close]');
+  
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      drawer.classList.add('active');
+    });
+  }
+  
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      drawer.classList.remove('active');
+    });
+  });
+  
+  // Handle drawer link clicks that scroll to sections
+  drawer.querySelectorAll('[data-drawer-scroll]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.dataset.drawerScroll;
+      const target = document.getElementById(targetId);
+      if (target) {
+        drawer.classList.remove('active');
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+}
+
+// ==========================================================================
+// NOW MODAL
+// ==========================================================================
+
+function initNowModal() {
+  const modal = document.getElementById('nowModal');
+  if (!modal) return;
+  
+  const openBtns = document.querySelectorAll('[data-now-modal]');
+  const closeBtns = document.querySelectorAll('[data-now-close]');
+  
+  openBtns.forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      // Close drawer if open
+      document.getElementById('moreDrawer')?.classList.remove('active');
+      modal.classList.add('active');
+      
+      // Load data
+      try {
+        const data = await cachedFetch(`${API_BASE}/site/now`, 120000); // 2 min cache
+        
+        document.getElementById('nowWorkingOn').textContent = data.working_on || 'Various projects';
+        document.getElementById('nowLearning').textContent = data.learning || 'New things';
+        document.getElementById('nowCollabs').innerHTML = data.open_to_collabs 
+          ? '<i class="bi bi-check-circle-fill" style="color: #2ecc71;"></i> Yes!'
+          : '<i class="bi bi-x-circle-fill" style="color: #e74c3c;"></i> Not right now';
+      } catch (err) {
+        console.error('Failed to load now:', err);
+      }
+    });
+  });
+  
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', () => modal.classList.remove('active'));
+  });
+  
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal.querySelector('.now-modal-overlay')) {
+      modal.classList.remove('active');
+    }
+  });
+}
+
+// ==========================================================================
+// CHANGELOG MODAL
+// ==========================================================================
+
+function initChangelogModal() {
+  const modal = document.getElementById('changelogModal');
+  if (!modal) return;
+  
+  const openBtns = document.querySelectorAll('[data-changelog-modal]');
+  const closeBtns = document.querySelectorAll('[data-changelog-close]');
+  const listEl = document.getElementById('changelogList');
+  
+  openBtns.forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      // Close drawer if open
+      document.getElementById('moreDrawer')?.classList.remove('active');
+      modal.classList.add('active');
+      
+      // Load data
+      try {
+        const entries = await cachedFetch(`${API_BASE}/site/changelog?limit=5`, 60000); // 1 min cache
+        
+        if (!entries.length) {
+          listEl.innerHTML = '<p style="color: var(--text-muted);">No updates yet.</p>';
+          return;
+        }
+        
+        listEl.innerHTML = entries.map(entry => `
+          <div class="changelog-entry ${entry.pinned ? 'pinned' : ''}">
+            <div class="date">${entry.date ? new Date(entry.date).toLocaleDateString() : ''}</div>
+            ${entry.title ? `<div class="title">${entry.title}</div>` : ''}
+            <div class="body">${entry.body}</div>
+          </div>
+        `).join('');
+      } catch (err) {
+        listEl.innerHTML = '<p style="color: red;">Failed to load</p>';
+      }
+    });
+  });
+  
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', () => modal.classList.remove('active'));
+  });
+  
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal.querySelector('.changelog-modal-overlay')) {
+      modal.classList.remove('active');
+    }
+  });
+}
+
+// ==========================================================================
+// INIT ALL MODALS
+// ==========================================================================
+
+function initModals() {
+  initNowModal();
+  initChangelogModal();
+}
+
+// ==========================================================================
+// VISITOR TRACKING SYSTEM
+// ==========================================================================
+
+let visitorEventSource = null;
+let sessionId = null;
+let heartbeatInterval = null;
+
+function initVisitorTracking() {
+  const visitorsEl = document.getElementById('statVisitors');
+  const pageviewsEl = document.getElementById('statPageviews');
+  
+  if (!visitorsEl || !pageviewsEl) return;
+  
+  // Generate or retrieve session ID
+  sessionId = sessionStorage.getItem('visitorSessionId');
+  if (!sessionId) {
+    sessionId = generateSessionId();
+    sessionStorage.setItem('visitorSessionId', sessionId);
+  }
+  
+  // Register visitor and start tracking
+  registerVisitor();
+  
+  // Heartbeat every 45 seconds to keep session alive (expires after 90s of inactivity)
+  heartbeatInterval = setInterval(sendHeartbeat, 45000);
+  
+  // Connect to real-time updates
+  connectToVisitorStream();
+  
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    if (heartbeatInterval) clearInterval(heartbeatInterval);
+    if (visitorEventSource) visitorEventSource.close();
+    // Send disconnect signal
+    navigator.sendBeacon(`${API_BASE}/site/visitors/disconnect`, JSON.stringify({ sessionId }));
+  });
+}
+
+function generateSessionId() {
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+}
+
+async function registerVisitor() {
+  try {
+    await fetch(`${API_BASE}/site/visitors/connect`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        sessionId,
+        userAgent: navigator.userAgent,
+        referrer: document.referrer || 'direct'
+      })
+    });
+  } catch (err) {
+    console.error('Failed to register visitor:', err);
+  }
+}
+
+async function sendHeartbeat() {
+  try {
+    await fetch(`${API_BASE}/site/visitors/heartbeat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId })
+    });
+  } catch (err) {
+    console.error('Heartbeat failed:', err);
+  }
+}
+
+function connectToVisitorStream() {
+  // Use long-polling with extended intervals
+  pollVisitorCount();
+}
+
+async function pollVisitorCount() {
+  try {
+    const data = await cachedFetch(`${API_BASE}/site/visitors/stats`, 60000); // 1 min cache
+    
+    const visitorsEl = document.getElementById('statVisitors');
+    const pageviewsEl = document.getElementById('statPageviews');
+    
+    if (visitorsEl) visitorsEl.textContent = data.online || '0';
+    if (pageviewsEl) pageviewsEl.textContent = formatNumber(data.total || 0);
+    
+    // Poll every 60 seconds (cache reduces actual API calls)
+    setTimeout(pollVisitorCount, 60000);
+  } catch (err) {
+    console.error('Failed to fetch visitor stats:', err);
+    // Retry after 90 seconds on error
+    setTimeout(pollVisitorCount, 90000);
+  }
+}
+
+function formatNumber(num) {
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+  return num.toString();
+}
+
+// ==========================================================================
+// SHOUTBOX WITH ABLY REAL-TIME
+// ==========================================================================
+
+let shoutboxUser = null;
+let shoutboxColor = '#6de6e2'; // Default to theme primary color
+let ablyClient = null;
+let chatChannel = null;
+let shoutboxMessages = []; // Local message cache
+
+// Admin config
+const ADMIN_USERNAME = 'aurora';
+const ADMIN_COLOR = 'rainbow'; // Special flag for rainbow effect
+
+// All shoutbox instances (sidebar, mobile, drawer)
+const shoutboxInstances = ['', 'mobile', 'drawer'];
+
+// Rainbow colors for admin name animation
+const rainbowColors = ["#ff0000", "#ff5500", "#ffaa00", "#ffff00", "#aaff00", "#55ff00", "#00ff00", "#00ff55", "#00ffaa", "#00ffff", "#00aaff", "#0055ff", "#0000ff", "#5500ff", "#aa00ff", "#ff00ff", "#ff00aa", "#ff0055"];
+let rainbowInterval = null;
+
+function initShoutbox() {
+  // Check if any shoutbox exists
+  const hasShoutbox = shoutboxInstances.some(prefix => {
+    const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
+    return document.getElementById(id);
+  });
+  
+  if (!hasShoutbox) return;
+  
+  // Check if user already has a saved username
+  const savedUser = localStorage.getItem('shoutboxUser');
+  const savedColor = localStorage.getItem('shoutboxColor');
+  
+  if (savedUser) {
+    shoutboxUser = savedUser;
+    shoutboxColor = savedColor || '#6de6e2';
+    showShoutboxInput();
+  } else {
+    // Set color picker to theme color on first load for all instances
+    shoutboxInstances.forEach(prefix => {
+      const colorId = prefix ? `${prefix}ShoutboxColor` : 'shoutboxColor';
+      const colorInput = document.getElementById(colorId);
+      if (colorInput) colorInput.value = '#6de6e2';
+    });
+  }
+  
+  // Initialize Ably
+  initAbly();
+  
+  // Load message history from backend (one-time)
+  loadMessageHistory();
+  
+  // Check admin status on load
+  updateAdminButtons(isAdminLoggedIn());
+  
+  // Setup emoji pickers
+  setupEmojiPickers();
+  
+  // Make functions globally available
+  window.joinShoutbox = joinShoutbox;
+  window.changeShoutboxUser = changeShoutboxUser;
+  window.sendShoutboxMessage = sendShoutboxMessage;
+  window.deleteShoutboxMsg = deleteShoutboxMsg;
+  window.toggleAdminMode = toggleAdminMode;
+  window.openAdminLogin = openAdminLogin;
+  window.closeAdminLogin = closeAdminLogin;
+  window.submitAdminLogin = submitAdminLogin;
+  window.toggleEmojiPicker = toggleEmojiPicker;
+}
+
+// Initialize Ably real-time connection
+function initAbly() {
+  try {
+    // Using the public subscribe key
+    ablyClient = new Ably.Realtime('n02Veg.q8RTcA:dGXZAbNs4sibJ6mTELpZoUhT5ZdGqvW_1LH6aPdnmMs');
+    
+    ablyClient.connection.on('connected', () => {
+      console.log('Connected to Ably');
+      subscribeToChat();
+    });
+    
+    ablyClient.connection.on('failed', (err) => {
+      console.error('Ably connection failed:', err);
+    });
+  } catch (err) {
+    console.error('Failed to initialize Ably:', err);
+  }
+}
+
+// Subscribe to chat channel
+function subscribeToChat() {
+  chatChannel = ablyClient.channels.get('nijikade-chat');
+  
+  // Listen for new messages
+  chatChannel.subscribe('message', (msg) => {
+    const data = msg.data;
+    addMessageToUI(data);
+  });
+  
+  // Listen for delete events
+  chatChannel.subscribe('delete', (msg) => {
+    const msgId = msg.data.id;
+    removeMessageFromUI(msgId);
+  });
+}
+
+// Load message history from backend (one-time on page load)
+async function loadMessageHistory() {
+  try {
+    const res = await fetch(`${API_BASE}/site/shoutbox?limit=30`);
+    const data = await res.json();
+    shoutboxMessages = data.messages || [];
+    renderAllMessages();
+  } catch (err) {
+    console.error('Failed to load message history:', err);
+    shoutboxInstances.forEach(prefix => {
+      const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
+      const messagesEl = document.getElementById(id);
+      if (messagesEl) {
+        messagesEl.innerHTML = '<div class="shoutbox-loading">Failed to load messages</div>';
+      }
+    });
+  }
+}
+
+// Add a new message to the UI
+function addMessageToUI(msg) {
+  // Add to local cache
+  shoutboxMessages.push(msg);
+  
+  // Keep only last 50 messages locally
+  if (shoutboxMessages.length > 50) {
+    shoutboxMessages.shift();
+  }
+  
+  renderAllMessages();
+}
+
+// Remove a message from UI (when deleted)
+function removeMessageFromUI(msgId) {
+  shoutboxMessages = shoutboxMessages.filter(m => m.id !== msgId);
+  renderAllMessages();
+}
+
+// Render all messages to all shoutbox instances
+function renderAllMessages() {
+  const isAdmin = isAdminLoggedIn();
+  
+  const html = !shoutboxMessages.length 
+    ? '<div class="shoutbox-empty">No messages yet. Be the first to say hi!</div>'
+    : shoutboxMessages.map(msg => {
+        const time = new Date(msg.timestamp);
+        const timeStr = time.toLocaleString('en-US', { 
+          month: 'short', 
+          day: 'numeric', 
+          hour: 'numeric', 
+          minute: '2-digit',
+          hour12: true 
+        });
+        
+        // Only show rainbow if message has isAdmin flag (sent while logged in as admin)
+        const isAdminMessage = msg.isAdmin === true;
+        const userClass = isAdminMessage ? 'shoutbox-msg-user admin-rainbow' : 'shoutbox-msg-user';
+        const userStyle = isAdminMessage ? '' : `style="color: ${escapeHtml(msg.color)}"`;
+        const adminIcon = isAdminMessage ? '<i class="bi bi-star-fill admin-icon"></i> ' : '';
+        
+        return `
+          <div class="shoutbox-msg" data-msg-id="${msg.id}">
+            <div class="shoutbox-msg-header">
+              <span class="${userClass}" ${userStyle} data-username="${escapeHtml(msg.username)}">${adminIcon}${escapeHtml(msg.username)}</span>
+              <span class="shoutbox-msg-time">${timeStr}</span>
+              ${isAdmin ? `<button class="shoutbox-delete-btn" onclick="deleteShoutboxMsg('${msg.id}')" title="Delete message"><i class="bi bi-trash"></i></button>` : ''}
+            </div>
+            <div class="shoutbox-msg-text">${parseCustomEmojis(escapeHtml(msg.message))}</div>
+          </div>
+        `;
+      }).join('');
+  
+  // Update all instances
+  shoutboxInstances.forEach(prefix => {
+    const id = prefix ? `${prefix}ShoutboxMessages` : 'shoutboxMessages';
+    const messagesEl = document.getElementById(id);
+    if (messagesEl) {
+      messagesEl.innerHTML = html;
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+  });
+  
+  // Start rainbow animation for admin names
+  startRainbowAnimation();
+}
+
+// Rainbow text animation for admin username
+function startRainbowAnimation() {
+  if (rainbowInterval) clearInterval(rainbowInterval);
+  
+  let colorIndex = 0;
+  rainbowInterval = setInterval(() => {
+    document.querySelectorAll('.admin-rainbow').forEach(el => {
+      const username = el.getAttribute('data-username') || '';
+      let html = '';
+      for (let i = 0; i < username.length; i++) {
+        const color = rainbowColors[(i + colorIndex) % rainbowColors.length];
+        html += `<span style="color: ${color}; text-shadow: ${color} 0px 0px 3px;">${username.charAt(i)}</span>`;
+      }
+      // Keep the admin icon
+      html = '<i class="bi bi-star-fill admin-icon"></i> ' + html;
+      el.innerHTML = html;
+    });
+    colorIndex++;
+  }, 100);
+}
+
+// Check if user is logged in as admin
+function isAdminLoggedIn() {
+  // Check both sessionStorage (chatbox login) and localStorage (admin panel login)
+  return !!(sessionStorage.getItem('jwt') || localStorage.getItem('jwt'));
+}
+
+// Get the JWT token from either storage
+function getAdminToken() {
+  return sessionStorage.getItem('jwt') || localStorage.getItem('jwt');
+}
+
+// Open admin login modal
+function openAdminLogin() {
+  const modal = document.getElementById('adminLoginModal');
+  const emailInput = document.getElementById('adminEmail');
+  const passwordInput = document.getElementById('adminPassword');
+  const errorEl = document.getElementById('adminLoginError');
+  
+  if (modal) {
+    modal.classList.add('active');
+    if (emailInput) emailInput.value = '';
+    if (passwordInput) passwordInput.value = '';
+    if (emailInput) {
+      emailInput.focus();
+    }
+    if (errorEl) errorEl.textContent = '';
+  }
+}
+
+// Close admin login modal
+function closeAdminLogin() {
+  const modal = document.getElementById('adminLoginModal');
+  if (modal) modal.classList.remove('active');
+}
+
+// Submit admin login
+async function submitAdminLogin() {
+  const emailInput = document.getElementById('adminEmail');
+  const passwordInput = document.getElementById('adminPassword');
+  const errorEl = document.getElementById('adminLoginError');
+  const btn = document.querySelector('.admin-login-btn');
+  
+  const email = emailInput?.value.trim();
+  const password = passwordInput?.value;
+  
+  if (!email) {
+    if (errorEl) errorEl.textContent = 'Please enter your email';
+    emailInput?.focus();
+    return;
+  }
+  
+  if (!password) {
+    if (errorEl) errorEl.textContent = 'Please enter your password';
+    passwordInput?.focus();
+    return;
+  }
+  
+  if (btn) btn.disabled = true;
+  if (errorEl) errorEl.textContent = '';
+  
+  try {
+    const res = await fetch(`${API_BASE}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        email: email,
+        password: password 
+      })
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      sessionStorage.setItem('jwt', data.token);
+      closeAdminLogin();
+      updateAdminButtons(true);
+      
+      // Auto-set username to 'aurora' when admin logs in
+      shoutboxUser = ADMIN_USERNAME;
+      localStorage.setItem('shoutboxUser', shoutboxUser);
+      showShoutboxInput();
+      
+      renderAllMessages(); // Re-render to show delete buttons
+    } else {
+      if (errorEl) errorEl.textContent = 'Invalid credentials';
+    }
+  } catch (err) {
+    console.error('Login failed:', err);
+    if (errorEl) errorEl.textContent = 'Login failed. Please try again.';
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+// Update admin button appearance
+function updateAdminButtons(isAdmin) {
+  document.querySelectorAll('.shoutbox-admin-btn').forEach(btn => {
+    if (isAdmin) {
+      btn.classList.add('active');
+      btn.title = 'Logged in as admin (click to logout)';
+    } else {
+      btn.classList.remove('active');
+      btn.title = 'Admin login';
+    }
+  });
+}
+
+// Toggle admin mode
+function toggleAdminMode() {
+  if (isAdminLoggedIn()) {
+    // Log out - clear both storages
+    sessionStorage.removeItem('jwt');
+    localStorage.removeItem('jwt');
+    updateAdminButtons(false);
+    renderAllMessages(); // Re-render to hide delete buttons
+  } else {
+    // Open login modal
+    openAdminLogin();
+  }
+}
+
+// Delete a shoutbox message (admin only)
+async function deleteShoutboxMsg(msgId) {
+  if (!isAdminLoggedIn()) {
+    openAdminLogin();
+    return;
+  }
+  
+  try {
+    const token = getAdminToken();
+    const res = await fetch(`${API_BASE}/admin/shoutbox/${msgId}?token=${token}`, {
+      method: 'DELETE'
+    });
+    
+    if (res.ok) {
+      // Remove from local cache immediately
+      removeMessageFromUI(msgId);
+      
+      // Publish delete event to Ably so other clients remove it too
+      if (chatChannel) {
+        chatChannel.publish('delete', { id: msgId });
+      }
+    } else {
+      const errorData = await res.json().catch(() => ({}));
+      console.error('Delete failed:', res.status, errorData);
+      alert('Failed to delete message: ' + (errorData.error || res.status));
+    }
+  } catch (err) {
+    console.error('Delete failed:', err);
+    alert('Failed to delete message: ' + err.message);
+  }
+}
+
+function joinShoutbox(source = '') {
+  const prefix = source ? `${source}Shoutbox` : 'shoutbox';
+  const usernameInput = document.getElementById(`${prefix}Username`);
+  const colorInput = document.getElementById(`${prefix}Color`);
+  
+  const username = usernameInput?.value.trim();
+  if (!username) {
+    usernameInput?.focus();
+    return;
+  }
+  
+  shoutboxUser = username;
+  shoutboxColor = colorInput?.value || '#6de6e2';
+  
+  // Save to localStorage
+  localStorage.setItem('shoutboxUser', shoutboxUser);
+  localStorage.setItem('shoutboxColor', shoutboxColor);
+  
+  showShoutboxInput();
+}
+
+function showShoutboxInput() {
+  const isAdmin = isAdminLoggedIn();
+  
+  // If admin is logged in, auto-set username to 'aurora'
+  if (isAdmin && shoutboxUser !== ADMIN_USERNAME) {
+    shoutboxUser = ADMIN_USERNAME;
+    localStorage.setItem('shoutboxUser', shoutboxUser);
+  }
+  
+  // Update all instances
+  shoutboxInstances.forEach(prefix => {
+    const setupId = prefix ? `${prefix}ShoutboxSetup` : 'shoutboxSetup';
+    const inputId = prefix ? `${prefix}ShoutboxInput` : 'shoutboxInput';
+    const userId = prefix ? `${prefix}ShoutboxCurrentUser` : 'shoutboxCurrentUser';
+    
+    const setupEl = document.getElementById(setupId);
+    const inputEl = document.getElementById(inputId);
+    const currentUserEl = document.getElementById(userId);
+    
+    if (setupEl) setupEl.style.display = 'none';
+    if (inputEl) inputEl.style.display = 'flex';
+    if (currentUserEl) {
+      // If admin, show rainbow animated name
+      if (isAdmin && shoutboxUser.toLowerCase() === ADMIN_USERNAME.toLowerCase()) {
+        currentUserEl.classList.add('admin-rainbow-input');
+        currentUserEl.setAttribute('data-username', shoutboxUser);
+        startInputRainbowAnimation();
+      } else {
+        currentUserEl.classList.remove('admin-rainbow-input');
+        currentUserEl.textContent = shoutboxUser;
+        currentUserEl.style.color = shoutboxColor;
+      }
+    }
+  });
+}
+
+// Rainbow animation for input area username
+let inputRainbowInterval = null;
+function startInputRainbowAnimation() {
+  if (inputRainbowInterval) clearInterval(inputRainbowInterval);
+  
+  let colorIndex = 0;
+  inputRainbowInterval = setInterval(() => {
+    document.querySelectorAll('.admin-rainbow-input').forEach(el => {
+      const username = el.getAttribute('data-username') || ADMIN_USERNAME;
+      let html = '';
+      for (let i = 0; i < username.length; i++) {
+        const color = rainbowColors[(i + colorIndex) % rainbowColors.length];
+        html += `<span style="color: ${color}; text-shadow: ${color} 0px 0px 3px;">${username.charAt(i)}</span>`;
+      }
+      el.innerHTML = html;
+    });
+    colorIndex++;
+  }, 100);
+}
+
+function changeShoutboxUser(source = '') {
+  // Update all instances
+  shoutboxInstances.forEach(prefix => {
+    const setupId = prefix ? `${prefix}ShoutboxSetup` : 'shoutboxSetup';
+    const inputId = prefix ? `${prefix}ShoutboxInput` : 'shoutboxInput';
+    const usernameId = prefix ? `${prefix}ShoutboxUsername` : 'shoutboxUsername';
+    const colorId = prefix ? `${prefix}ShoutboxColor` : 'shoutboxColor';
+    
+    const setupEl = document.getElementById(setupId);
+    const inputEl = document.getElementById(inputId);
+    const usernameInput = document.getElementById(usernameId);
+    const colorInput = document.getElementById(colorId);
+    
+    // Pre-fill current values
+    if (usernameInput) usernameInput.value = shoutboxUser || '';
+    if (colorInput) colorInput.value = shoutboxColor || '#6de6e2';
+    
+    if (setupEl) setupEl.style.display = 'flex';
+    if (inputEl) inputEl.style.display = 'none';
+  });
+}
+
+async function sendShoutboxMessage(source = '') {
+  const prefix = source ? `${source}Shoutbox` : 'shoutbox';
+  const messageInput = document.getElementById(`${prefix}Message`);
+  const message = messageInput?.value.trim();
+  
+  if (!message || !shoutboxUser) return;
+  
+  // Disable input while sending
+  if (messageInput) messageInput.disabled = true;
+  
+  // Close emoji picker if open
+  const pickerContainerId = source ? `${source}EmojiPickerContainer` : 'emojiPickerContainer';
+  const pickerContainer = document.getElementById(pickerContainerId);
+  if (pickerContainer) pickerContainer.style.display = 'none';
+  
+  try {
+    // Check if user is logged in as admin
+    const sendingAsAdmin = isAdminLoggedIn() && shoutboxUser.toLowerCase() === ADMIN_USERNAME.toLowerCase();
+    
+    // Send to backend to store in Firestore
+    const res = await fetch(`${API_BASE}/site/shoutbox`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: shoutboxUser,
+        message: message,
+        color: shoutboxColor,
+        isAdmin: sendingAsAdmin
+      })
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      
+      // Clear all message inputs
+      shoutboxInstances.forEach(p => {
+        const msgId = p ? `${p}ShoutboxMessage` : 'shoutboxMessage';
+        const input = document.getElementById(msgId);
+        if (input) input.value = '';
+      });
+      
+      // Publish to Ably for real-time delivery to all clients
+      if (chatChannel && data.message) {
+        chatChannel.publish('message', data.message);
+      }
+    } else {
+      const data = await res.json();
+      alert(data.error || 'Failed to send message');
+    }
+  } catch (err) {
+    console.error('Failed to send message:', err);
+    alert('Failed to send message');
+  } finally {
+    if (messageInput) {
+      messageInput.disabled = false;
+      messageInput.focus();
+    }
+  }
+}
+
+// Setup emoji pickers for all instances
+// Custom emoji list - extracted from img/emojis folder
+const customEmojis = [
+  { name: 'encoreexcited', file: '1899-encoreexcited.png' },
+  { name: 'baizhialert', file: '2305-baizhialert.png' },
+  { name: 'baizhipat', file: '2305-baizhipat.png' },
+  { name: 'nowords', file: '27020-nowords.png' },
+  { name: 'cookie', file: '29913-cookie.png' },
+  { name: 'snicker', file: '30807-snicker.png' },
+  { name: 'suspicious', file: '34928-suspicious.png' },
+  { name: 'salute', file: '35744-salute.png' },
+  { name: 'drool', file: '36175-drool.png' },
+  { name: 'desperate', file: '37802-desperate.png' },
+  { name: 'shades', file: '38741-shades.png' },
+  { name: 'shrug', file: '40335-shrug.png' },
+  { name: 'lingyangwhat', file: '4260-lingyangwhat.png' },
+  { name: 'linyangget', file: '4260-linyangget.png' },
+  { name: 'unamused', file: '42837-unamused.png' },
+  { name: 'goofy', file: '46615-goofy.png' },
+  { name: 'chixiacry', file: '4836-chixiacry.png' },
+  { name: 'regret', file: '58272-regret.png' },
+  { name: 'yangyanglove', file: '5982-yangyanglove.png' },
+  { name: 'argue', file: '60413-argue.png' },
+  { name: 'yangyanghappy', file: '6788-yangyanghappy.png' },
+  { name: 'think', file: '69470-think.png' },
+  { name: 'tears', file: '72467-tears.png' },
+  { name: 'hesitant', file: '72568-hesitant.png' },
+  { name: 'jianxinehe', file: '7356-jianxinehe.png' },
+  { name: 'scared', file: '73697-scared.png' },
+  { name: 'yangyangded', file: '7552-yangyangded.png' },
+  { name: 'annoyed', file: '77556-annoyed.png' },
+  { name: 'fistshake', file: '77867-fistshake.png' },
+  { name: 'yangyangsus', file: '7817-yangyangsus.png' },
+  { name: 'shy', file: '7938-shy.png' },
+  { name: 'verinaok', file: '7973-verinaok.png' },
+  { name: 'yangyangapprove', file: '8350-yangyangapprove.png' },
+  { name: 'plead', file: '84145-plead.png' },
+  { name: 'laugh', file: '87893-laugh.png' },
+  { name: 'devious', file: '9057-devious.png' },
+  { name: 'gasp', file: '9137-gasp.png' },
+  { name: 'baizhiangry', file: '9174-baizhiangry.png' },
+  { name: 'blank', file: '91810-blank.png' },
+  { name: 'party', file: '91838-party.png' },
+  { name: 'yangyangstonks', file: '9288-yangyangstonks.png' },
+  { name: 'thumbsup', file: '92984-thumbsup.png' },
+  { name: 'army', file: '94610-army.png' },
+  { name: 'beg', file: '96763-beg.png' },
+  { name: 'zani', file: '97212-zani.png' }
+];
+
+function setupEmojiPickers() {
+  shoutboxInstances.forEach(prefix => {
+    const containerId = prefix ? `${prefix}EmojiPickerContainer` : 'emojiPickerContainer';
+    const pickerId = prefix ? `${prefix}CustomEmojiPicker` : 'customEmojiPicker';
+    const container = document.getElementById(containerId);
+    const picker = document.getElementById(pickerId);
+    if (!container || !picker) return;
+    
+    // Build the custom emoji grid
+    picker.innerHTML = customEmojis.map(emoji => `
+      <img 
+        src="img/emojis/${emoji.file}" 
+        alt=":${emoji.name}:" 
+        title=":${emoji.name}:" 
+        class="custom-emoji-option"
+        data-emoji-name="${emoji.name}"
+      />
+    `).join('');
+    
+    // Add click handlers for each emoji
+    picker.querySelectorAll('.custom-emoji-option').forEach(img => {
+      img.addEventListener('click', () => {
+        const emojiCode = `:${img.dataset.emojiName}:`;
+        const msgId = prefix ? `${prefix}ShoutboxMessage` : 'shoutboxMessage';
+        const messageInput = document.getElementById(msgId);
+        if (messageInput) {
+          const start = messageInput.selectionStart;
+          const end = messageInput.selectionEnd;
+          const text = messageInput.value;
+          messageInput.value = text.substring(0, start) + emojiCode + text.substring(end);
+          messageInput.selectionStart = messageInput.selectionEnd = start + emojiCode.length;
+          messageInput.focus();
+        }
+        // Hide picker after selection
+        container.style.display = 'none';
+      });
+    });
+  });
+}
+
+// Convert emoji codes like :laugh: to <img> tags
+function parseCustomEmojis(text) {
+  return text.replace(/:([a-zA-Z0-9_]+):/g, (match, name) => {
+    const emoji = customEmojis.find(e => e.name === name);
+    if (emoji) {
+      return `<img src="img/emojis/${emoji.file}" alt=":${name}:" title=":${name}:" class="chat-emoji" />`;
+    }
+    return match; // Return original if no match
+  });
+}
+
+// Toggle emoji picker visibility
+function toggleEmojiPicker(source = '') {
+  const containerId = source ? `${source}EmojiPickerContainer` : 'emojiPickerContainer';
+  const container = document.getElementById(containerId);
+  if (container) {
+    container.style.display = container.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+// ============================================
+// Portfolio
+// ============================================
+let portfolioProjects = [];
+let portfolioPage = 0;
+const PORTFOLIO_PER_PAGE = 4;
+
+async function initPortfolio() {
+  const portfolioGrid = document.querySelector('#portfolioGrid');
+  if (!portfolioGrid) return;
+  
+  // Store original content as fallback
+  const fallbackHTML = portfolioGrid.innerHTML;
+  
+  try {
+    portfolioGrid.innerHTML = '<p style="text-align:center;color:var(--text-muted)">Loading projects...</p>';
+    
+    const data = await cachedFetch(`${API_BASE}/site/projects`, 300000); // 5 min cache
+    // Handle both { projects: [...] } and [...] formats
+    portfolioProjects = data.error ? [] : (Array.isArray(data) ? data : (data.projects || []));
+    
+    if (portfolioProjects.length === 0) {
+      portfolioGrid.innerHTML = fallbackHTML;
+      return;
+    }
+    
+    renderPortfolio();
+  } catch (err) {
+    console.error('Failed to load portfolio:', err);
+    portfolioGrid.innerHTML = fallbackHTML;
+  }
+}
+
+function renderPortfolio() {
+  const portfolioGrid = document.querySelector('#portfolioGrid');
+  if (!portfolioGrid) return;
+  
+  const totalPages = Math.ceil(portfolioProjects.length / PORTFOLIO_PER_PAGE);
+  const start = portfolioPage * PORTFOLIO_PER_PAGE;
+  const end = start + PORTFOLIO_PER_PAGE;
+  const pageProjects = portfolioProjects.slice(start, end);
+  
+  let html = pageProjects.map(p => `
+    <a href="${p.github_url}" class="portfolio-item" target="_blank">
+      <h4>${escapeHtml(p.name)}</h4>
+      <p>${escapeHtml(p.description || 'No description')}</p>
+      <div class="portfolio-meta">
+        ${p.language ? `<span class="language">${escapeHtml(p.language)}</span>` : ''}
+        <span class="stars">★ ${p.stars || 0}</span>
+        <span class="forks">⑂ ${p.forks || 0}</span>
+      </div>
+    </a>
+  `).join('');
+  
+  // Add pagination if needed
+  if (totalPages > 1) {
+    html += `
+      <div class="portfolio-pagination">
+        <button class="btn btn-ghost" onclick="portfolioPrev()" ${portfolioPage === 0 ? 'disabled' : ''}>
+          <i class="bi bi-chevron-left"></i> Prev
+        </button>
+        <span class="page-info">${portfolioPage + 1} / ${totalPages}</span>
+        <button class="btn btn-ghost" onclick="portfolioNext()" ${portfolioPage >= totalPages - 1 ? 'disabled' : ''}>
+          Next <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    `;
+  }
+  
+  portfolioGrid.innerHTML = html;
+}
+
+window.portfolioPrev = function() {
+  if (portfolioPage > 0) {
+    portfolioPage--;
+    renderPortfolio();
+  }
+};
+
+window.portfolioNext = function() {
+  const totalPages = Math.ceil(portfolioProjects.length / PORTFOLIO_PER_PAGE);
+  if (portfolioPage < totalPages - 1) {
+    portfolioPage++;
+    renderPortfolio();
+  }
+};

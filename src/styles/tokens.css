@@ -1,0 +1,5 @@
+/* Astro-owned design tokens live here as the refactor progresses.
+ * The full legacy theme palette remains in /public/assets/styles.css during migration. */
+:root {
+  --shell-max-width: 1500px;
+}
