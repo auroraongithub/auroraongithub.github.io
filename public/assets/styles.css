@@ -2421,21 +2421,15 @@ ul {
   content: "⊳ ";
 }
 
-/* Scrollbox (for images/gifs like in reference) */
-.neo-scrollbox {
-  height: 150px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  padding: 5px;
-  text-align: center;
-}
-
-.neo-scrollbox img {
+.gallery-content img {
+  display: block;
   width: 100%;
   margin-bottom: 5px;
   border-radius: 4px;
+}
+
+.gallery-content img:last-child {
+  margin-bottom: 0;
 }
 
 /* ==========================================================================
