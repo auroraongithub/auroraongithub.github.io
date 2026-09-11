@@ -3915,7 +3915,7 @@ select option {
   display: inline-block;
   position: absolute;
   top: -30px;
-  left: -2px;
+  left: -6px;
   z-index: 2;
   margin: 0;
   padding: 6px 20px;
@@ -3951,7 +3951,7 @@ select option {
   box-sizing: border-box;
   padding: 8px;
   overflow: hidden;
-  background: var(--bg-elev) url('../img/dumby-about-bg.jpg') no-repeat center center;
+  background: var(--bg-elev) url('../img/about-green-bg.jpg') no-repeat center center;
   background-size: cover;
   border: 1px solid var(--primary-dark);
   border-radius: 0 8px 8px 8px;
