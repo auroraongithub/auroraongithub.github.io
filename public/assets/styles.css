@@ -684,11 +684,10 @@ ul {
   height: 0;
 }
 
-/* Make sidebar boxes scrollable - viewport responsive */
+/* Let the left rail scroll as one column so card contents can size naturally. */
 .neo-sidebar .neo-box .neo-content {
-  max-height: clamp(80px, 15vh, 140px);
-  overflow-y: auto;
-  overflow-x: hidden;
+  max-height: none;
+  overflow: visible;
 }
 
 /* Smaller font for sidebar navigation */
@@ -4763,7 +4762,7 @@ body.dark .contact-link.twitter:hover {
 /* For shorter screens (laptops, smaller monitors) */
 @media (max-height: 700px) {
   .neo-sidebar .neo-box .neo-content {
-    max-height: 80px;
+    max-height: none;
   }
   
   .neo-widgets .neo-box .neo-content {
