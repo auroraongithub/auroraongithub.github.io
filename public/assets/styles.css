@@ -3073,6 +3073,16 @@ ul {
   color: var(--bg);
 }
 
+[data-theme="dark"] .manga-section .carousel-ctrl {
+  color: var(--text);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .manga-section .carousel-ctrl:hover {
+  color: var(--bg);
+  text-shadow: none;
+}
+
 .carousel-ctrl {
   position: absolute;
   top: 50%;
@@ -4237,11 +4247,11 @@ select option {
 
 .about-copy p {
   margin: 0 0 8px;
-  color: #000;
+  color: var(--text);
   font-family: Verdana, Geneva, sans-serif;
   font-size: 0.75rem;
   line-height: 1.4;
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--bg-elev) 85%, transparent);
 }
 
 .about-copy p:last-child {
@@ -4364,6 +4374,20 @@ body.dark .contact-link.twitter:hover {
 .contact-link.email:hover {
   background: var(--primary);
   border-color: var(--primary);
+}
+
+[data-theme="dark"] .about-contact-bar {
+  --contact-ink: var(--text);
+}
+
+[data-theme="dark"] .about-contact-bar .contact-link {
+  color: var(--text);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .about-contact-bar .contact-link:hover {
+  color: var(--bg);
+  text-shadow: none;
 }
 
 @media (max-width: 500px) {
