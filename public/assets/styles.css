@@ -3914,7 +3914,7 @@ select option {
   box-sizing: border-box;
   display: inline-block;
   position: absolute;
-  top: -34px;
+  top: -35px;
   left: -4px;
   z-index: 2;
   margin: 0;
@@ -4068,22 +4068,11 @@ select option {
     -1px -1px 0 rgba(255, 255, 255, 0.55);
 }
 
-.contact-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary-dark);
-  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-  font-size: 1rem;
-  line-height: 1;
-  text-shadow: 1px 1px 0 #fff;
-}
-
 .contact-link {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 9px;
+  gap: 4px;
+  padding: 3px 7px;
   background: linear-gradient(
     to bottom,
     var(--bg-elev) 0%,
@@ -4092,10 +4081,10 @@ select option {
     color-mix(in srgb, var(--primary-light) 22%, var(--bg-elev)) 100%
   );
   border: 1px solid var(--primary-dark);
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--primary-dark);
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-  font-size: 0.76rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-decoration: none;
   box-shadow:
