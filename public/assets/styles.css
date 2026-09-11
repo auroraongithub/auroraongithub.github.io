@@ -3024,6 +3024,10 @@ ul {
   border: 1px solid var(--primary-dark);
 }
 
+.manga-section .manga-card:hover img {
+  transform: none;
+}
+
 .manga-section .carousel-ctrl {
   width: 34px;
   height: 34px;
