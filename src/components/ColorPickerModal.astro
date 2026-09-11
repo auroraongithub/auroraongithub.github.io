@@ -1,0 +1,21 @@
+---
+import { themes } from '../data/themes';
+---
+<div class="color-picker-modal" data-color-modal>
+  <div class="color-picker-content">
+    <div class="color-picker-header">
+      <h3>Choose Your Color</h3>
+      <button class="color-picker-close" aria-label="Close color picker" data-color-close>
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="color-picker-options">
+      {themes.map((theme) => (
+        <button class="color-option" data-color={theme.id} title={theme.label}>
+          <div class="color-preview" style={`background: linear-gradient(135deg, ${theme.from}, ${theme.to});`}></div>
+          <span>{theme.label}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+</div>

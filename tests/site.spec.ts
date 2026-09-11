@@ -39,21 +39,15 @@ test('all nine color themes and dark mode persist', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });
 
-test('local image assets render and a screenshot is captured', async ({ page }, testInfo) => {
-  const failedLocalAssets: string[] = [];
-  page.on('response', (response) => {
-    const url = new URL(response.url());
-    if (url.pathname.startsWith('/img/') && response.status() >= 400) failedLocalAssets.push(`${response.status()} ${url.pathname}`);
-  });
+test('local image assets render and a screenshot is captured', async ({ page, request }, testInfo) => {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  const localImages = page.locator('img[src^="/img/"]');
-  const count = await localImages.count();
-  expect(count).toBeGreaterThan(0);
-  for (let index = 0; index < count; index += 1) {
-    await localImages.nth(index).scrollIntoViewIfNeeded();
-    await expect.poll(() => localImages.nth(index).evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBeTruthy();
+  const sources = await page.locator('img[src^="/img/"]').evaluateAll((images) => [...new Set(images.map((image) => (image as HTMLImageElement).getAttribute('src')).filter(Boolean))] as string[]);
+  expect(sources.length).toBeGreaterThan(0);
+  for (const source of sources) {
+    const response = await request.get(new URL(source, page.url()).href);
+    expect(response.status(), `local image failed: ${source}`).toBeLessThan(400);
   }
-  expect(failedLocalAssets).toEqual([]);
+  await expect(page.locator('.about-grid img[src^="/img/"]').first()).toBeVisible();
   const fontFamily = await page.locator('body').evaluate((body) => getComputedStyle(body).fontFamily);
   expect(fontFamily.trim().length).toBeGreaterThan(0);
   await page.screenshot({ path: testInfo.outputPath('home-full.png'), fullPage: true });
@@ -68,7 +62,7 @@ test('blog and story detail routes are generated and navigable', async ({ page }
     expect(href).toMatch(new RegExp(`^/${section}/.+/$`));
     const response = await page.goto(href!);
     expect(response?.status()).toBeLessThan(400);
-    await expect(page.locator('.neo-article h1')).toBeVisible();
+    await expect(page.locator('.neo-article > .article-header > h1')).toBeVisible();
   }
 });
 

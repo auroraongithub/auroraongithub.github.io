@@ -132,11 +132,13 @@ async function loadRecent() {
   for (const [type, id] of [['blog', 'recentBlogs'], ['story', 'recentStories']]) {
     const el = document.getElementById(id);
     if (!el) continue;
+    const fallback = el.innerHTML;
     try {
       const payload = await cachedFetch(`/post?type=${type}`, 120_000);
       el.innerHTML = recentMarkup(flattenPosts(payload), type);
     } catch (error) {
-      el.innerHTML = '<p class="text-muted">Failed to load</p>';
+      console.warn(`Recent ${type} posts unavailable`, error);
+      el.innerHTML = fallback;
     }
   }
 }
