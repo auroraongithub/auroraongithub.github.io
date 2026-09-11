@@ -2,6 +2,8 @@ const hover = document.getElementById('seriesHover');
 const items = [...document.querySelectorAll('.manga-card[data-series]')];
 
 if (hover && items.length) {
+  let hideTimer;
+
   const escapeHTML = (value) => String(value).replace(/[&<>'"]/g, (character) => ({
     '&': '&amp;',
     '<': '&lt;',
@@ -21,7 +23,6 @@ if (hover && items.length) {
 
   const render = (details) => {
     hover.innerHTML = `
-      <div class="hover-card-kicker">MANGADEX / SERIES INFO</div>
       <div class="title">${escapeHTML(details.title)}</div>
       <div class="meta">
         <span><b>STATUS</b> ${escapeHTML(details.status)}</span>
@@ -30,7 +31,6 @@ if (hover && items.length) {
       </div>
       <div class="tags">${details.tags.map((tag) => `<span class="hover-tag">${escapeHTML(tag)}</span>`).join('')}</div>
       <div class="desc">${escapeHTML(details.description)}</div>
-      <div class="hover-card-hint">OPEN ON MANGADEX ↗</div>
     `;
   };
 
@@ -49,13 +49,19 @@ if (hover && items.length) {
   };
 
   const show = (event, item) => {
+    window.clearTimeout(hideTimer);
     render(readDetails(item));
     hover.style.display = 'block';
     move(event);
+    requestAnimationFrame(() => hover.classList.add('is-visible'));
   };
 
   const hide = () => {
-    hover.style.display = 'none';
+    hover.classList.remove('is-visible');
+    window.clearTimeout(hideTimer);
+    hideTimer = window.setTimeout(() => {
+      hover.style.display = 'none';
+    }, 180);
   };
 
   items.forEach((item) => {

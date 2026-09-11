@@ -2886,6 +2886,8 @@ ul {
   border-radius: 0 12px 12px 12px;
   overflow: visible;
   box-sizing: border-box;
+  position: relative;
+  margin-top: 30px;
   box-shadow:
     0 0 0 2px var(--halo),
     3px 3px 0 var(--halo),
@@ -2894,32 +2896,40 @@ ul {
 }
 
 .manga-section > .neo-header {
-  background: linear-gradient(
-    to bottom,
-    var(--primary-light) 0%,
-    var(--primary) 45%,
-    var(--primary-dark) 50%,
-    var(--primary-dark) 100%
+  width: max-content;
+  min-width: 190px;
+  max-width: calc(100% - 12px);
+  box-sizing: border-box;
+  display: inline-block;
+  position: absolute;
+  top: -35px;
+  left: -4px;
+  z-index: 2;
+  margin: 0;
+  padding: 6px 20px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--primary-light),
+    var(--primary-light) 6px,
+    var(--primary) 6px,
+    var(--primary) 12px
   );
-  border: 1px solid var(--primary-dark);
+  background-size: 17px 17px;
+  border: 2px solid var(--halo);
   border-bottom: none;
-  border-radius: 4px 4px 0 0;
-  padding: 6px 10px;
+  border-radius: 15px 15px 0 0;
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-  text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  color: #fff;
+  text-shadow: 2px 2px 0 color-mix(in srgb, var(--primary-dark) 85%, #000);
+  box-shadow: 2px -2px 5px color-mix(in srgb, var(--primary) 22%, transparent);
+  animation: about-stripe-move 1s linear infinite;
 }
 
 .manga-section > .neo-content {
-  background: var(--bg-elev);
-  border: 1px solid var(--primary-dark);
-  border-radius: 0 8px 8px 8px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   padding: 8px;
-}
-
-.manga-section > .neo-content > p {
-  margin-top: 0;
-  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
 }
 
 .manga-section .neo-carousel {
@@ -2974,10 +2984,10 @@ ul {
 }
 
 .manga-section .carousel-viewport {
-  border: 1px solid var(--primary-dark);
-  border-radius: 0 8px 8px 8px;
-  background: color-mix(in srgb, var(--bg-elev) 84%, var(--primary-light));
-  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.7);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .manga-section .carousel-track {
@@ -3109,6 +3119,15 @@ ul {
   white-space: normal;
   word-wrap: break-word;
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  opacity: 0;
+  transform: scale(0.86) translateY(8px);
+  transform-origin: top left;
+  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hover-card.is-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
 }
 
 .hover-card::before {
@@ -3140,27 +3159,6 @@ ul {
   margin-bottom: 6px;
   font-size: 0.95rem;
   line-height: 1.25;
-}
-
-.hover-card-kicker,
-.hover-card-hint {
-  position: relative;
-  z-index: 1;
-  color: var(--primary-dark);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.hover-card-kicker {
-  margin-bottom: 4px;
-}
-
-.hover-card-hint {
-  margin-top: 8px;
-  padding-top: 5px;
-  border-top: 1px dashed var(--primary-dark);
-  text-align: right;
 }
 
 .hover-card .meta {
