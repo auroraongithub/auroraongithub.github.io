@@ -683,6 +683,13 @@ ul {
   margin-bottom: 4px;
 }
 
+/* Stats are a fixed 2x2 summary, not a scrollbox. */
+.neo-sidebar .sidebar-stats-box .neo-content {
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 10px;
+}
+
 .neo-main {
   flex: 1;
   min-width: 0;
@@ -873,6 +880,48 @@ ul {
 
 .shoutbox-join-btn:hover {
   opacity: 0.9;
+}
+
+/* Compact shoutbox setup - keeps the sidebar controls inside their widget. */
+.shoutbox-setup--polished {
+  box-sizing: border-box;
+  gap: 7px;
+  padding: 8px;
+  background: var(--bg-elev);
+  border-top: 1px solid var(--border-light);
+}
+
+.shoutbox-setup--polished .shoutbox-setup-row {
+  gap: 7px;
+}
+
+.shoutbox-setup--polished .shoutbox-setup-row input[type="color"] {
+  width: 28px;
+  height: 28px;
+  border-width: 1px;
+  box-shadow: 0 2px 6px rgba(44, 62, 62, 0.12);
+}
+
+.shoutbox-setup--polished .shoutbox-setup-row input[type="text"] {
+  height: 30px;
+  box-sizing: border-box;
+  padding: 5px 9px;
+  background: var(--bg);
+}
+
+.shoutbox-setup--polished .shoutbox-join-btn {
+  min-height: 30px;
+  padding: 5px 12px;
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.shoutbox-setup--polished .shoutbox-join-btn:focus-visible,
+.shoutbox-setup--polished .shoutbox-setup-row input:focus-visible {
+  outline: 2px solid var(--primary-dark);
+  outline-offset: 2px;
 }
 
 .shoutbox-input {
@@ -1594,6 +1643,13 @@ ul {
 }
 
 .stats-grid.sidebar-stats .stat-item {
+  display: flex;
+  min-width: 0;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex-direction: column;
   padding: 6px 4px;
 }
 
@@ -1603,6 +1659,7 @@ ul {
 
 .stats-grid.sidebar-stats .stat-label {
   font-size: 0.55rem;
+  line-height: 1.15;
   margin-top: 2px;
 }
 
@@ -4610,6 +4667,22 @@ body.dark .contact-link.twitter:hover {
   .neo-content {
     padding: 8px 12px;
   }
+}
+
+/* Keep the fixed Stats summary intact after short-viewport overrides. */
+.neo-sidebar .sidebar-stats-box {
+  overflow: visible;
+}
+
+.neo-sidebar .sidebar-stats-box .neo-content.stats-content {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 10px !important;
+}
+
+.neo-sidebar .sidebar-stats-box .stats-grid.sidebar-stats {
+  min-height: 84px;
 }
 
 /* ==================== IMAGE LIGHTBOX ==================== */
