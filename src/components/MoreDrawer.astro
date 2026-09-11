@@ -1,0 +1,68 @@
+<div class="more-drawer" id="moreDrawer">
+  <div class="more-drawer-overlay" data-more-close></div>
+  <div class="more-drawer-content">
+    <div class="more-drawer-header">
+      <h3>More</h3>
+      <button class="more-drawer-close" data-more-close aria-label="Close more menu"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="more-drawer-body">
+      <div class="more-drawer-section more-drawer-widget">
+        <h4><i class="bi bi-clock-history"></i> Now</h4>
+        <div class="drawer-now-widget">
+          <div class="now-widget-item"><span class="now-widget-label">Working On</span><span class="now-widget-value" id="drawerWorkingOn">Loading...</span></div>
+          <div class="now-widget-item"><span class="now-widget-label">Learning</span><span class="now-widget-value" id="drawerLearning">Loading...</span></div>
+          <div class="now-widget-item"><span class="now-widget-label">Open to Collabs</span><span class="now-widget-value" id="drawerCollabs"><i class="bi bi-question-circle"></i></span></div>
+        </div>
+      </div>
+
+      <div class="more-drawer-section more-drawer-widget">
+        <h4><i class="bi bi-list-check"></i> Updates</h4>
+        <div class="drawer-changelog-list" id="drawerChangelog"><div class="loading-small">Loading...</div></div>
+        <a href="/changelog/" class="widget-link">View all updates <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      <div class="more-drawer-section more-drawer-widget">
+        <div class="drawer-widget-header">
+          <h4><i class="bi bi-chat-dots"></i> Chatbox</h4>
+          <button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button>
+        </div>
+        <div class="drawer-shoutbox shoutbox-container">
+          <div class="shoutbox-messages" id="drawerShoutboxMessages"><div class="shoutbox-loading">Loading messages...</div></div>
+          <div class="shoutbox-setup" id="drawerShoutboxSetup">
+            <div class="shoutbox-setup-row">
+              <input type="color" id="drawerShoutboxColor" value="#6de6e2" aria-label="Chat name color" />
+              <input type="text" id="drawerShoutboxUsername" placeholder="Choose a username..." maxlength="30" />
+            </div>
+            <button class="shoutbox-join-btn" onclick="joinShoutbox('drawer')">Join Chat</button>
+          </div>
+          <div class="shoutbox-input" id="drawerShoutboxInput" style="display: none;">
+            <div class="shoutbox-user-info"><span id="drawerShoutboxCurrentUser"></span><button class="shoutbox-change-user" onclick="changeShoutboxUser('drawer')" title="Change username"><i class="bi bi-pencil"></i></button></div>
+            <div class="shoutbox-send-row">
+              <button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker('drawer')" title="Add emoji"><i class="bi bi-emoji-smile"></i></button>
+              <input type="text" id="drawerShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('drawer')" />
+              <button class="shoutbox-send-btn" onclick="sendShoutboxMessage('drawer')"><i class="bi bi-send"></i></button>
+            </div>
+            <div class="emoji-picker-container" id="drawerEmojiPickerContainer" style="display: none;"><div class="custom-emoji-picker" id="drawerCustomEmojiPicker"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="more-drawer-section">
+        <h4><i class="bi bi-book"></i> Resources</h4>
+        <ul>
+          <li><a href="/resources/?cat=scanlation"><i class="bi bi-translate"></i> Scanlation Guide</a></li>
+          <li><a href="/resources/?cat=youtube"><i class="bi bi-youtube"></i> YouTube Guide</a></li>
+        </ul>
+      </div>
+
+      <div class="more-drawer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#" data-drawer-scroll="statusStrip"><i class="bi bi-broadcast"></i> Status</a></li>
+          <li><a href={Astro.url.pathname === '/' ? '#portfolio' : '/portfolio/'}><i class="bi bi-briefcase-fill"></i> Portfolio</a></li>
+          <li><a href="https://dsc.gg/evescans" target="_blank" rel="noopener noreferrer"><i class="bi bi-discord"></i> Discord</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

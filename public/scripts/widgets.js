@@ -26,9 +26,9 @@ async function loadNow() {
   if (!hasNow) return;
   try {
     const data = await cachedFetch('/site/now', 120_000);
-    for (const id of ['widgetWorkingOn', 'nowWorkingOn']) text(id, data.working_on || 'Nothing listed');
-    for (const id of ['widgetLearning', 'nowLearning']) text(id, data.learning || 'Nothing listed');
-    for (const id of ['widgetCollabs', 'nowCollabs']) text(id, data.open_to_collabs ? 'Yes' : 'No');
+    for (const id of ['widgetWorkingOn', 'nowWorkingOn', 'drawerWorkingOn']) text(id, data.working_on || 'Nothing listed');
+    for (const id of ['widgetLearning', 'nowLearning', 'drawerLearning']) text(id, data.learning || 'Nothing listed');
+    for (const id of ['widgetCollabs', 'nowCollabs', 'drawerCollabs']) text(id, data.open_to_collabs ? 'Yes' : 'No');
   } catch (error) {
     console.warn('Now panel unavailable', error);
   }
@@ -49,6 +49,8 @@ async function loadChangelog() {
     if (widget) widget.innerHTML = entries.length ? changelogMarkup(entries) : '<p class="text-muted">No updates yet.</p>';
     const modal = document.getElementById('changelogList');
     if (modal) modal.innerHTML = entries.length ? changelogMarkup(entries) : '<p class="text-muted">No updates yet.</p>';
+    const drawer = document.getElementById('drawerChangelog');
+    if (drawer) drawer.innerHTML = entries.length ? changelogMarkup(entries) : '<p class="text-muted">No updates yet.</p>';
   } catch (error) {
     console.warn('Changelog unavailable', error);
   }
@@ -154,8 +156,24 @@ function initModals() {
   bind('changelogModal', '[data-changelog-open]', '[data-changelog-close]');
 }
 
+function initMoreDrawer() {
+  const drawer = document.getElementById('moreDrawer');
+  if (!drawer) return;
+  document.querySelector('[data-more-toggle]')?.addEventListener('click', (event) => {
+    event.preventDefault();
+    drawer.classList.add('active');
+  });
+  drawer.querySelectorAll('[data-more-close]').forEach((button) => button.addEventListener('click', () => drawer.classList.remove('active')));
+  drawer.querySelectorAll('[data-drawer-scroll]').forEach((link) => link.addEventListener('click', (event) => {
+    event.preventDefault();
+    drawer.classList.remove('active');
+    document.getElementById(link.dataset.drawerScroll)?.scrollIntoView({ behavior: 'smooth' });
+  }));
+}
+
 async function initWidgets() {
   initModals();
+  initMoreDrawer();
   await Promise.allSettled([loadStatus(), loadNow(), loadChangelog(), loadStats(), loadSpotify(), loadPortfolio(), loadFavorites(), loadRecent()]);
 }
 

@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import ContentLayout from '../layouts/ContentLayout.astro';
 import SiteSection from '../components/SiteSection.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import MobileShoutbox from '../components/MobileShoutbox.astro';
 import { favoriteCategories } from '../data/favorites';
 import { mangaSeries } from '../data/mangaSeries';
 import { entrySlug, sortByDate } from '../lib/content';
@@ -93,4 +94,15 @@ const recentStories = sortByDate(await getCollection('stories', ({ data }) => !d
     <div class="neo-header"><h2><i class="bi bi-spotify"></i> Currently Listening</h2></div>
     <div class="neo-content" style="padding:15px;"><iframe id="widgetSpotify" style="border-radius:8px;border:none;" src="" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
   </section>
+
+  <MobileShoutbox />
+
+  <SiteSection title="Join Us!">
+    <div class="discord-banner">
+      <h3>Join our Discord Server!</h3>
+      <a href="https://dsc.gg/evescans" target="_blank" rel="noopener noreferrer">
+        <img src="https://imgur-archive.ppy.sh/discord/915843559830204416-954686229314989056-ESBANNER.png?width=1080&height=270" alt="Discord Server Banner" loading="lazy" />
+      </a>
+    </div>
+  </SiteSection>
 </ContentLayout>

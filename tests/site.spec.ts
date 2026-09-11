@@ -23,6 +23,23 @@ test('primary navigation contract stays intact', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Arcade / Games' })).toBeVisible();
 });
 
+test('mobile navigation preserves the original More drawer experience', async ({ page }) => {
+  await page.goto('/');
+  if ((await page.evaluate(() => window.innerWidth)) > 600) test.skip();
+
+  await expect(page.locator('.mobile-bottom-nav')).toBeVisible();
+  const labels = await page.locator('.mobile-bottom-nav a').allTextContents();
+  expect(labels.map((label) => label.trim())).toEqual(['Home', 'About', 'Blogs', 'Stories', 'More']);
+  await page.locator('[data-more-toggle]').click();
+  await expect(page.locator('#moreDrawer')).toHaveClass(/active/);
+  await expect(page.locator('#drawerWorkingOn')).toBeVisible();
+  await expect(page.locator('#drawerShoutboxMessages')).toBeVisible();
+  await page.locator('.more-drawer-close').click();
+  await expect(page.locator('#moreDrawer')).not.toHaveClass(/active/);
+  await expect(page.locator('.mobile-shoutbox-section')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Join Us!' })).toBeVisible();
+});
+
 test('all nine color themes and dark mode persist', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-color-picker]').click();

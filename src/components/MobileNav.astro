@@ -1,19 +1,15 @@
 ---
-import { primaryNavigation } from '../data/navigation';
-const icons: Record<string, string> = {
-  Home: 'bi-house-fill',
-  About: 'bi-person-fill',
-  Portfolio: 'bi-briefcase-fill',
-  Blogs: 'bi-journal-text',
-  Stories: 'bi-book-fill'
-};
 const path = Astro.url.pathname;
-const isActive = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+const aboutHref = path === '/' ? '#about' : '/about/';
+const blogsHref = '/blogs/';
+const storiesHref = '/stories/';
 ---
 <nav class="mobile-bottom-nav" aria-label="Primary mobile navigation">
   <ul>
-    {primaryNavigation.map((item) => (
-      <li><a href={item.href} class:list={{ active: isActive(item.href) }}><i class={`bi ${icons[item.label] ?? 'bi-circle'}`}></i><span>{item.label === 'Portfolio' ? 'Work' : item.label}</span></a></li>
-    ))}
+    <li><a href="/" class:list={{ active: path === '/' }}><i class="bi bi-house-fill"></i><span>Home</span></a></li>
+    <li><a href={aboutHref} class:list={{ active: path.startsWith('/about') || (path === '/' && false) }}><i class="bi bi-person-fill"></i><span>About</span></a></li>
+    <li><a href={blogsHref} class:list={{ active: path.startsWith('/blogs') }}><i class="bi bi-journal-text"></i><span>Blogs</span></a></li>
+    <li><a href={storiesHref} class:list={{ active: path.startsWith('/stories') }}><i class="bi bi-book-fill"></i><span>Stories</span></a></li>
+    <li><a href="#" data-more-toggle><i class="bi bi-grid-fill"></i><span>More</span></a></li>
   </ul>
 </nav>
