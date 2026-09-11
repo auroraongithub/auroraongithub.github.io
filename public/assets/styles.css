@@ -1560,13 +1560,13 @@ ul {
 .changelog-widget-list {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
 .changelog-widget-entry {
-  padding: 6px;
+  padding: 4px 5px;
   background: var(--bg-secondary);
-  border-radius: 6px;
+  border-radius: 4px;
   border-left: 3px solid var(--primary);
 }
 
@@ -1590,7 +1590,7 @@ ul {
 .changelog-widget-entry .body {
   font-size: 0.75rem;
   color: var(--text-muted);
-  line-height: 1.25;
+  line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
