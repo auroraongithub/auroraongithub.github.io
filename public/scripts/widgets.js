@@ -73,7 +73,7 @@ async function loadNow() {
 function changelogMarkup(entries) {
   return entries.map((entry) => {
     const date = dateFromBackend(entry.date);
-    return `<div class="changelog-widget-item ${entry.pinned ? 'pinned' : ''}"><div class="changelog-widget-date">${date ? date.toLocaleDateString() : ''}</div>${entry.title ? `<strong>${escapeHtml(entry.title)}</strong>` : ''}<div>${escapeHtml(entry.body || '')}</div></div>`;
+    return `<div class="changelog-widget-entry ${entry.pinned ? 'pinned' : ''}"><div class="date">${date ? date.toLocaleDateString() : ''}</div>${entry.title ? `<strong class="title">${escapeHtml(entry.title)}</strong>` : ''}<div class="body">${escapeHtml(entry.body || '')}</div></div>`;
   }).join('');
 }
 
