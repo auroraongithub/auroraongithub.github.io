@@ -108,7 +108,11 @@ async function loadFavorites(category = favoriteCategory) {
   try {
     const payload = await cachedFetch(`/site/favorites?category=${encodeURIComponent(category)}`, 120_000);
     const items = payload.items || [];
-    track.innerHTML = items.length ? items.map((item) => `<div class="carousel-item favorite-item">${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : ''}<div class="favorite-info"><strong>${escapeHtml(item.title)}</strong>${item.year ? `<small>${escapeHtml(item.year)}</small>` : ''}${item.score ? `<small>★ ${escapeHtml(item.score)}</small>` : ''}</div></div>`).join('') : '<p class="text-muted" style="padding:40px;">No favorites added yet.</p>';
+    track.innerHTML = items.length ? items.map((item) => {
+      const imageMarkup = item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : '';
+      const infoMarkup = `<div class="favorite-info"><strong>${escapeHtml(item.title)}</strong>${item.year ? `<small>${escapeHtml(item.year)}</small>` : ''}${item.score ? `<small>★ ${escapeHtml(item.score)}</small>` : ''}</div>`;
+      return `<div class="carousel-item favorite-item">${imageMarkup}${infoMarkup}</div>`;
+    }).join('') : '<p class="text-muted" style="padding:40px;">No favorites added yet.</p>';
     window.dispatchEvent(new Event('favorites:rendered'));
   } catch (error) {
     console.warn('Favorites unavailable', error);
