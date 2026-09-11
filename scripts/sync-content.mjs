@@ -1,8 +1,9 @@
 import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const API_BASE = process.env.ELYTHRIA_API_BASE || 'https://nijikade-backend.vercel.app/api';
-const ROOT = new URL('../', import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 function slugify(value) {
   return String(value || 'untitled')
@@ -50,20 +51,21 @@ async function request(path) {
   return response.json();
 }
 
-async function resetGeneratedDir(collection) {
+async function replaceGeneratedDir(collection, files) {
   const dir = join(ROOT, 'src', 'content', collection, '_generated');
   await mkdir(dir, { recursive: true });
   for (const name of await readdir(dir)) {
     if (name.endsWith('.md')) await rm(join(dir, name));
   }
-  return dir;
+  for (const [name, content] of files) {
+    await writeFile(join(dir, name), content, 'utf8');
+  }
 }
 
 async function syncPosts(type, collection) {
-  const generatedDir = await resetGeneratedDir(collection);
   const listing = await request(`/post?type=${encodeURIComponent(type)}`);
   const summaries = flattenPosts(listing);
-  let count = 0;
+  const files = [];
 
   for (const summary of summaries) {
     const id = summary.id ?? summary._id;
@@ -88,19 +90,17 @@ async function syncPosts(type, collection) {
       '---',
       ''
     ].join('\n');
-
-    await writeFile(join(generatedDir, `${slug}.md`), `${frontmatter}${content}\n`, 'utf8');
-    count += 1;
+    files.push([`${slug}.md`, `${frontmatter}${content}\n`]);
   }
 
-  console.log(`[content] synced ${count} ${collection}`);
+  await replaceGeneratedDir(collection, files);
+  console.log(`[content] synced ${files.length} ${collection}`);
 }
 
 async function syncProjects() {
-  const generatedDir = await resetGeneratedDir('projects');
   const payload = await request('/site/projects');
   const projects = Array.isArray(payload) ? payload : (payload?.projects || []);
-  let count = 0;
+  const files = [];
 
   for (const [index, project] of projects.entries()) {
     if (!project?.name) continue;
@@ -120,11 +120,11 @@ async function syncProjects() {
       '---',
       ''
     ].filter(Boolean);
-    await writeFile(join(generatedDir, `${slug}.md`), `${lines.join('\n')}\n`, 'utf8');
-    count += 1;
+    files.push([`${slug}.md`, `${lines.join('\n')}\n`]);
   }
 
-  console.log(`[content] synced ${count} projects`);
+  await replaceGeneratedDir('projects', files);
+  console.log(`[content] synced ${files.length} projects`);
 }
 
 const jobs = [
@@ -143,6 +143,4 @@ for (const [label, job] of jobs) {
   }
 }
 
-if (failed) {
-  console.warn('[content] One or more backend syncs were unavailable. The Astro build will continue with collection content already present.');
-}
+if (failed) console.warn('[content] One or more backend syncs were unavailable. The Astro build will continue with collection content already present.');
