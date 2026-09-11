@@ -1023,16 +1023,31 @@ ul {
 }
 
 .shoutbox-input {
+  position: relative;
+  isolation: isolate;
   padding: 7px;
   background-color: var(--bg-elev);
-  background-image: url('../img/chatbox-texture.svg');
-  background-repeat: repeat;
-  background-size: 4px 4px;
+  background-image: none;
   border-top: 1px solid var(--primary-dark);
   display: flex;
   flex-direction: column;
   gap: 6px;
   flex-shrink: 0;
+}
+
+.shoutbox-input::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: url('../img/chatbox-texture.svg') repeat 0 0 / 4px 4px;
+  opacity: 0.12;
+}
+
+.shoutbox-input > * {
+  position: relative;
+  z-index: 1;
 }
 
 .widget-shoutbox-sidebar .shoutbox-setup--polished {
@@ -1041,9 +1056,6 @@ ul {
 
 .widget-shoutbox-sidebar .shoutbox-input {
   background-color: var(--bg-elev);
-  background-image: url('../img/chatbox-texture.svg');
-  background-repeat: repeat;
-  background-size: 4px 4px;
 }
 
 .shoutbox-user-info {
