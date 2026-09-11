@@ -1,0 +1,18 @@
+---
+interface Props {
+  title: string;
+  image?: string;
+  year?: string | number;
+  score?: string | number;
+}
+
+const { title, image, year, score } = Astro.props;
+---
+<div class="carousel-item favorite-item">
+  {image && <img data-favorite-image src={image} alt={title} loading="lazy" />}
+  <div class="favorite-info">
+    <strong data-favorite-title>{title}</strong>
+    {year && <small data-favorite-year>{year}</small>}
+    {score && <small data-favorite-score>★ {score}</small>}
+  </div>
+</div>

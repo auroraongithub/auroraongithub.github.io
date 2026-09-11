@@ -5,6 +5,42 @@ function text(id, value) {
   if (el) el.textContent = value;
 }
 
+function favoriteCardMarkup(item) {
+  const template = document.getElementById('favoriteCardTemplate');
+  if (!template) {
+    const imageMarkup = item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : '';
+    const infoMarkup = `<div class="favorite-info"><strong>${escapeHtml(item.title)}</strong>${item.year ? `<small>${escapeHtml(item.year)}</small>` : ''}${item.score ? `<small>★ ${escapeHtml(item.score)}</small>` : ''}</div>`;
+    return `<div class="carousel-item favorite-item">${imageMarkup}${infoMarkup}</div>`;
+  }
+
+  const fragment = template.content.cloneNode(true);
+  const card = fragment.firstElementChild;
+  const image = card?.querySelector('[data-favorite-image]');
+  const title = card?.querySelector('[data-favorite-title]');
+  const year = card?.querySelector('[data-favorite-year]');
+  const score = card?.querySelector('[data-favorite-score]');
+  if (!card || !title) return '';
+
+  title.textContent = item.title || 'Untitled';
+  if (image) {
+    if (item.image) {
+      image.src = item.image;
+      image.alt = item.title || 'Favorite';
+    } else {
+      image.remove();
+    }
+  }
+  if (year) {
+    if (item.year) year.textContent = item.year;
+    else year.remove();
+  }
+  if (score) {
+    if (item.score) score.textContent = `★ ${item.score}`;
+    else score.remove();
+  }
+  return card.outerHTML;
+}
+
 async function loadStatus() {
   if (!document.getElementById('statusStrip')) return;
   try {
@@ -108,11 +144,7 @@ async function loadFavorites(category = favoriteCategory) {
   try {
     const payload = await cachedFetch(`/site/favorites?category=${encodeURIComponent(category)}`, 120_000);
     const items = payload.items || [];
-    track.innerHTML = items.length ? items.map((item) => {
-      const imageMarkup = item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : '';
-      const infoMarkup = `<div class="favorite-info"><strong>${escapeHtml(item.title)}</strong>${item.year ? `<small>${escapeHtml(item.year)}</small>` : ''}${item.score ? `<small>★ ${escapeHtml(item.score)}</small>` : ''}</div>`;
-      return `<div class="carousel-item favorite-item">${imageMarkup}${infoMarkup}</div>`;
-    }).join('') : '<p class="text-muted" style="padding:40px;">No favorites added yet.</p>';
+    track.innerHTML = items.length ? items.map(favoriteCardMarkup).join('') : '<p class="text-muted" style="padding:40px;">No favorites added yet.</p>';
     window.dispatchEvent(new Event('favorites:rendered'));
   } catch (error) {
     console.warn('Favorites unavailable', error);
