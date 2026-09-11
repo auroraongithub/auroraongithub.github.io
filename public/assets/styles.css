@@ -3951,8 +3951,16 @@ select option {
   box-sizing: border-box;
   padding: 8px;
   overflow: hidden;
-  background: var(--bg-elev) url('../img/about-green-bg.jpg') no-repeat center center;
-  background-size: cover;
+  background-color: var(--bg-elev);
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--bg-elev) 28%, transparent),
+      color-mix(in srgb, var(--bg-elev) 28%, transparent)
+    ),
+    url('../img/about-green-bg.jpg');
+  background-repeat: no-repeat;
+  background-position: center, center;
+  background-size: cover, cover;
   border: 1px solid var(--primary-dark);
   border-radius: 0 8px 8px 8px;
 }
@@ -4003,7 +4011,7 @@ select option {
 
 .about-copy p {
   margin: 0 0 8px;
-  color: var(--text);
+  color: #000;
   font-size: 0.84rem;
   line-height: 1.45;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);
