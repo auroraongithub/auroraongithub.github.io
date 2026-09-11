@@ -696,11 +696,6 @@ ul {
   min-width: 0;
 }
 
-.neo-sidebar .sidebar-more .neo-content {
-  max-height: none;
-  overflow: visible;
-}
-
 /* Smaller font for sidebar navigation */
 .neo-sidebar .neo-content ul {
   font-size: 0.85rem;
