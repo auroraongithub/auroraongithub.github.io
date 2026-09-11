@@ -1009,7 +1009,7 @@ ul {
     var(--primary-light) 0%,
     var(--primary) 45%,
     var(--primary-dark) 50%,
-    var(--primary-dark) 100%
+    transparent 100%
   );
   color: var(--text);
   font-family: inherit;
@@ -1029,7 +1029,7 @@ ul {
     var(--primary-light) 0%,
     var(--primary) 45%,
     var(--primary-dark) 50%,
-    var(--primary-dark) 100%
+    transparent 100%
   );
   border: 1px solid var(--primary-dark);
   border-radius: 4px;
