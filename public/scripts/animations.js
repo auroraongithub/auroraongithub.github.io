@@ -1,4 +1,4 @@
-const animatedElements = document.querySelectorAll('.scroll-animate, .masonry-item, .neo-box');
+const animatedElements = document.querySelectorAll('.scroll-animate:not(.sidebar-animate), .masonry-item, .neo-box:not(.sidebar-animate)');
 
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver((entries, currentObserver) => {
