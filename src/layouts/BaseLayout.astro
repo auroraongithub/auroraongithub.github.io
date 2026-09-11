@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import Footer from '../components/Footer.astro';
+import MobileNav from '../components/MobileNav.astro';
+import SiteModals from '../components/SiteModals.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  includeLegacyRuntime?: boolean;
+}
+
+const { title = site.title, description = site.description, includeLegacyRuntime = true } = Astro.props;
+const pageTitle = title === site.title ? title : `${title} · ${site.name}`;
+---
+<!doctype html>
+<html lang="en" data-theme="light" data-color="cyan">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+    <link rel="preconnect" href="https://nijikade-backend.vercel.app" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://cdn.ably.com" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <script is:inline>
+      try {
+        const storedTheme = localStorage.getItem('theme');
+        const storedColor = localStorage.getItem('color');
+        if (storedTheme) document.documentElement.dataset.theme = storedTheme;
+        if (storedColor) document.documentElement.dataset.color = storedColor;
+      } catch (_) {}
+    </script>
+  </head>
+  <body>
+    <div class="neo-container">
+      <SiteHeader />
+      <slot />
+      <Footer />
+    </div>
+    <MobileNav />
+    <SiteModals />
+    {includeLegacyRuntime && <script is:inline src="https://cdn.ably.com/lib/ably.min-1.js"></script>}
+    {includeLegacyRuntime && <script is:inline type="module" src="/assets/app.js"></script>}
+    {includeLegacyRuntime && (
+      <script is:inline type="module">
+        import { initCarousel } from '/assets/app.js';
+        window.addEventListener('load', () => initCarousel?.());
+      </script>
+    )}
+  </body>
+</html>

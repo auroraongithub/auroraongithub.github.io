@@ -1,0 +1,20 @@
+---
+interface Props {
+  name: string;
+  description?: string;
+  href?: string;
+  language?: string;
+  stars?: number;
+  forks?: number;
+}
+const { name, description = 'No description', href = '#', language, stars = 0, forks = 0 } = Astro.props;
+---
+<a href={href} class="portfolio-item" target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+  <h4>{name}</h4>
+  <p>{description}</p>
+  <div class="portfolio-meta">
+    {language && <span class="language">{language}</span>}
+    <span class="stars">★ {stars}</span>
+    <span class="forks">⑂ {forks}</span>
+  </div>
+</a>

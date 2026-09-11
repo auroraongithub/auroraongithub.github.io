@@ -1,0 +1,30 @@
+---
+import { themes } from '../data/themes';
+---
+<div class="header-controls">
+  <button class="color-picker-toggle" title="Change color" aria-label="Change color" data-color-picker>
+    <i class="bi bi-palette"></i>
+  </button>
+  <button class="theme-toggle" title="Toggle theme" aria-label="Toggle light and dark mode" data-toggle-theme>
+    <i class="bi bi-brightness-high"></i>
+  </button>
+</div>
+
+<div class="color-picker-modal" data-color-modal>
+  <div class="color-picker-content">
+    <div class="color-picker-header">
+      <h3>Choose Your Color</h3>
+      <button class="color-picker-close" aria-label="Close color picker" data-color-close>
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="color-picker-options">
+      {themes.map((theme) => (
+        <button class="color-option" data-color={theme.id} title={theme.label}>
+          <div class="color-preview" style={`background: linear-gradient(135deg, ${theme.from}, ${theme.to});`}></div>
+          <span>{theme.label}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+</div>

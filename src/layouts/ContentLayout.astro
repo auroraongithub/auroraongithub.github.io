@@ -1,0 +1,23 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import StatusStrip from '../components/StatusStrip.astro';
+import WidgetRail from '../components/WidgetRail.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  showStatus?: boolean;
+  showWidgets?: boolean;
+  includeLegacyRuntime?: boolean;
+}
+const { title, description, showStatus = true, showWidgets = true, includeLegacyRuntime = true } = Astro.props;
+---
+<BaseLayout title={title} description={description} includeLegacyRuntime={includeLegacyRuntime}>
+  {showStatus && <StatusStrip />}
+  <div class="neo-layout">
+    <Sidebar />
+    <main class="neo-main"><slot /></main>
+    {showWidgets && <WidgetRail />}
+  </div>
+</BaseLayout>

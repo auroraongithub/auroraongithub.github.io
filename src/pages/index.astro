@@ -1,23 +1,81 @@
 ---
-import '../styles/global.css';
+import ContentLayout from '../layouts/ContentLayout.astro';
+import SiteSection from '../components/SiteSection.astro';
 ---
-<!doctype html>
-<html lang="en" data-theme="light" data-color="cyan">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>elythria.dev</title>
-    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
-    <link rel="stylesheet" href="/assets/styles.css" />
-  </head>
-  <body>
-    <div class="neo-container astro-refactor-note">
-      <section class="neo-box">
-        <div class="neo-header"><h2>elythria.dev</h2></div>
-        <div class="neo-content">
-          <p>Astro migration scaffold. Shared site components replace this temporary shell in the next milestone.</p>
-        </div>
-      </section>
+<ContentLayout>
+  <div class="neo-hero scroll-animate">
+    <img class="avatar" src="/img/aboutme.gif" alt="About Me" />
+  </div>
+
+  <SiteSection id="about" title="About Me">
+    <div class="about-grid">
+      <img src="/img/pfp.png" alt="Aurora" />
+      <div>
+        <h3 style="margin-top: 0;">aurora · Creator, Scanlator</h3>
+        <p>I am a hobbyist coder and I also design for projects for myself or ones that I find interesting. I usually create designs in photoshop and code sites when I have nothing to do.</p>
+        <p>I'm a pretty competitive gamer. You can find me the most in osu! and Valorant.</p>
+      </div>
     </div>
-  </body>
-</html>
+    <div class="about-contact-bar">
+      <span class="contact-label"><i class="bi bi-envelope"></i> Contact:</span>
+      <a href="https://discord.com/users/izaurora" target="_blank" rel="noopener noreferrer" class="contact-link discord"><i class="bi bi-discord"></i> izaurora</a>
+      <a href="https://x.com/_kuzuminn" target="_blank" rel="noopener noreferrer" class="contact-link twitter"><i class="bi bi-twitter-x"></i> @_kuzuminn</a>
+      <a href="https://youtube.com/@pmuaurora" target="_blank" rel="noopener noreferrer" class="contact-link youtube"><i class="bi bi-youtube"></i> @pmuaurora</a>
+      <a href="mailto:aurorashorts.forbusiness@gmail.com" class="contact-link email"><i class="bi bi-envelope-fill"></i> Email</a>
+    </div>
+  </SiteSection>
+
+  <SiteSection title="Our Group's Mangas">
+    <p class="text-muted mb-2">All series that our group worked on</p>
+    <div class="neo-carousel">
+      <div class="carousel-viewport">
+        <div class="carousel-track" id="seriesTrack">
+          <a class="carousel-item" data-series="mabarai" href="https://mangadex.org/title/4db9c1e8-243b-4f73-95e8-ea29f632f456/mabarai-san-wa-boku-wo-karitai" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/Xokjrz1g" alt="Mabarai-san Hunts Me Down" /></a>
+          <a class="carousel-item" data-series="blacksmith" href="https://mangadex.org/title/4bdeff13-b1fb-4fd8-9a9f-56d2d885c2c7/kyuutei-kajishi-no-shiawase-na-nichijou-black-na-shokuba-wo-tsuihou-saretaga-ringoku-de-koushaku" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/kDWy1Q5D" alt="Happy Daily Life of a Court Blacksmith" /></a>
+          <a class="carousel-item" data-series="contract" href="https://mangadex.org/title/72fe5a3b-a69b-4f74-af4e-9d679b28b750/there-is-a-lie-in-my-contract-marriage" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/YCcLn58Y" alt="There Is a Lie in My Contract Marriage" /></a>
+          <a class="carousel-item" data-series="kobayashi" href="https://mangadex.org/title/a944aace-6f03-4298-b864-aee895acab28/endo-and-kobayashi-s-live-commentary-on-the-villainess" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/ciVSQwrK" alt="Endo and Kobayashi's Live Commentary on the Villainess" /></a>
+          <a class="carousel-item" data-series="forcedgf" href="https://mangadex.org/title/fc7e628c-6c26-497a-b17d-dfea90b44652/bocchi-no-boku-ni-kyousei-kanojo-ga-yattekita" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/iUZa6NKv" alt="I'm a Loner and My Girlfriend Came to Me by Force" /></a>
+          <a class="carousel-item" data-series="deathgame" href="https://mangadex.org/title/720466f8-2eee-43a5-893b-67f9190c04ae/isekaigaeri-no-moto-yuusha-desuga-death-game-ni-makikomare-mashita" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/Qf5k02iY" alt="A Former Hero Returning From Another World Gets Involved in a Death Game" /></a>
+          <a class="carousel-item" data-series="finalmessage" href="https://mangadex.org/title/d21daa0a-0abc-45c4-b9b1-d3456ba884d5/okuru-kotoba" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/POLDhgtZ" alt="Final Message" /></a>
+          <a class="carousel-item" data-series="shigure" href="https://mangadex.org/title/a476ce7f-2fb8-4f6f-8337-fa62ce5034fb/shigure-san-wants-to-shine" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/EuNjtaDy" alt="Shigure-San Wants to Shine!" /></a>
+          <a class="carousel-item" data-series="80k" href="https://mangadex.org/title/89ed3ec2-ebe6-4d6b-92eb-d753a8bb365e/saving-80-000-gold-in-another-world-for-my-retirement" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/94S9tuew" alt="Saving 80,000 Gold Coins in the Different World for My Old Age" /></a>
+          <a class="carousel-item" data-series="mmo" href="https://mangadex.org/title/b5ef1317-7c35-411a-b33b-f588c2f76940/retire-shita-ningyoushi-no-mmo-kikou-jojishi" target="_blank" rel="noopener noreferrer"><img src="https://roraosu.s-ul.eu/hwpT2eim" alt="Retire Shita Ningyoushi no MMO Kikou Jojishi" /></a>
+        </div>
+      </div>
+      <button class="carousel-ctrl carousel-prev" data-carousel-prev aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+      <button class="carousel-ctrl carousel-next" data-carousel-next aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+    </div>
+  </SiteSection>
+  <div class="hover-card" id="seriesHover"></div>
+
+  <SiteSection id="favorites" title="Favorites" icon="bi-heart">
+    <div class="favorites-tabs">
+      <button class="fav-tab active" data-category="anime" onclick="switchFavoritesTab('anime')"><i class="bi bi-play-circle"></i> Anime</button>
+      <button class="fav-tab" data-category="manga" onclick="switchFavoritesTab('manga')"><i class="bi bi-book"></i> Manga/LN</button>
+      <button class="fav-tab" data-category="characters" onclick="switchFavoritesTab('characters')"><i class="bi bi-person"></i> Characters</button>
+      <button class="fav-tab" data-category="games" onclick="switchFavoritesTab('games')"><i class="bi bi-controller"></i> Games</button>
+    </div>
+    <div class="neo-carousel favorites-carousel">
+      <div class="carousel-viewport"><div class="carousel-track" id="favoritesTrack"><div class="loading-small" style="text-align:center;padding:40px;">Loading favorites...</div></div></div>
+      <button class="carousel-ctrl carousel-prev" data-fav-carousel-prev aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+      <button class="carousel-ctrl carousel-next" data-fav-carousel-next aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+    </div>
+  </SiteSection>
+
+  <SiteSection id="portfolio" title="Portfolio">
+    <p class="text-muted mb-2">my work!</p>
+    <div class="neo-grid" id="portfolioGrid"><div class="loading-small" style="text-align:center;padding:40px;">Loading projects...</div></div>
+  </SiteSection>
+
+  <SiteSection id="recent" title="Recent" icon="bi-clock-history">
+    <div class="recent-grid">
+      <div class="recent-panel"><h3><i class="bi bi-journal-text"></i> Latest Blog Posts</h3><div class="recent-list" id="recentBlogs"><div class="loading-small">Loading...</div></div><a href="/blogs/" class="widget-link">View all blogs <i class="bi bi-arrow-right"></i></a></div>
+      <div class="recent-panel"><h3><i class="bi bi-book"></i> Latest Stories</h3><div class="recent-list" id="recentStories"><div class="loading-small">Loading...</div></div><a href="/stories/" class="widget-link">View all stories <i class="bi bi-arrow-right"></i></a></div>
+    </div>
+  </SiteSection>
+
+  <section class="neo-box scroll-animate" id="widgetSpotifyBox" style="display: none;">
+    <div class="neo-header"><h2><i class="bi bi-spotify"></i> Currently Listening</h2></div>
+    <div class="neo-content" style="padding:15px;"><iframe id="widgetSpotify" style="border-radius:8px;border:none;" src="" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
+  </section>
+</ContentLayout>

@@ -1,0 +1,35 @@
+<div class="now-modal" id="nowModal">
+  <div class="now-modal-overlay" data-now-close></div>
+  <div class="now-modal-content">
+    <div class="now-modal-header"><h3><i class="bi bi-clock-history"></i> What I'm Up To</h3><button class="now-modal-close" data-now-close><i class="bi bi-x-lg"></i></button></div>
+    <div class="now-modal-body">
+      <div class="now-item"><span class="now-label">Working On</span><span class="now-value" id="nowWorkingOn">Loading...</span></div>
+      <div class="now-item"><span class="now-label">Learning</span><span class="now-value" id="nowLearning">Loading...</span></div>
+      <div class="now-item"><span class="now-label">Open to Collabs</span><span class="now-value" id="nowCollabs"><i class="bi bi-question-circle"></i></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="admin-login-modal" id="adminLoginModal">
+  <div class="admin-login-overlay" onclick="closeAdminLogin()"></div>
+  <div class="admin-login-content">
+    <div class="admin-login-header"><h3><i class="bi bi-shield-lock"></i> Admin Login</h3><button class="admin-login-close" onclick="closeAdminLogin()"><i class="bi bi-x-lg"></i></button></div>
+    <div class="admin-login-body">
+      <p>Login to moderate chatbox messages.</p>
+      <form autocomplete="on">
+        <input type="email" id="adminEmail" name="email" autocomplete="email" placeholder="Email..." />
+        <input type="password" id="adminPassword" name="password" autocomplete="current-password" placeholder="Password..." onkeypress="if(event.key==='Enter'){event.preventDefault();submitAdminLogin();}" />
+      </form>
+      <div class="admin-login-error" id="adminLoginError"></div>
+      <button class="admin-login-btn" onclick="submitAdminLogin()">Login</button>
+    </div>
+  </div>
+</div>
+
+<div class="changelog-modal" id="changelogModal">
+  <div class="changelog-modal-overlay" data-changelog-close></div>
+  <div class="changelog-modal-content">
+    <div class="changelog-modal-header"><h3><i class="bi bi-list-check"></i> Changelog</h3><button class="changelog-modal-close" data-changelog-close><i class="bi bi-x-lg"></i></button></div>
+    <div class="changelog-modal-body" id="changelogList"><div class="loading"><i class="bi bi-arrow-repeat spin"></i> Loading...</div></div>
+  </div>
+</div>

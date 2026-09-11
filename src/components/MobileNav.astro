@@ -1,0 +1,19 @@
+---
+import { primaryNavigation } from '../data/navigation';
+const icons: Record<string, string> = {
+  Home: 'bi-house-fill',
+  About: 'bi-person-fill',
+  Portfolio: 'bi-briefcase-fill',
+  Blogs: 'bi-journal-text',
+  Stories: 'bi-book-fill'
+};
+const path = Astro.url.pathname;
+const isActive = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+---
+<nav class="mobile-bottom-nav" aria-label="Primary mobile navigation">
+  <ul>
+    {primaryNavigation.map((item) => (
+      <li><a href={item.href} class:list={{ active: isActive(item.href) }}><i class={`bi ${icons[item.label] ?? 'bi-circle'}`}></i><span>{item.label === 'Portfolio' ? 'Work' : item.label}</span></a></li>
+    ))}
+  </ul>
+</nav>

@@ -1,0 +1,15 @@
+---
+interface Props {
+  title: string;
+  image?: string;
+  href?: string;
+  meta?: string;
+}
+const { title, image, href, meta } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+<Tag class="carousel-item media-card" href={href} target={href?.startsWith('http') ? '_blank' : undefined} rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}>
+  {image && <img src={image} alt={title} loading="lazy" />}
+  <span class="media-card-title">{title}</span>
+  {meta && <small>{meta}</small>}
+</Tag>

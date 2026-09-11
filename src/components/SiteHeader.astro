@@ -1,0 +1,8 @@
+---
+import ThemeControls from './ThemeControls.astro';
+import { site } from '../data/site';
+---
+<header class="site-banner">
+  <a href="/" class="brand" style="text-decoration: none !important; color: var(--primary) !important;">{site.name}</a>
+  <ThemeControls />
+</header>

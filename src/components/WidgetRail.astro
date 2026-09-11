@@ -1,0 +1,54 @@
+<aside class="neo-widgets">
+  <div class="neo-box scroll-animate widget-now">
+    <div class="neo-header"><h3><i class="bi bi-clock-history"></i> Now</h3></div>
+    <div class="neo-content">
+      <div class="now-widget-item"><span class="now-widget-label">Working On</span><span class="now-widget-value" id="widgetWorkingOn">Loading...</span></div>
+      <div class="now-widget-item"><span class="now-widget-label">Learning</span><span class="now-widget-value" id="widgetLearning">Loading...</span></div>
+      <div class="now-widget-item"><span class="now-widget-label">Open to Collabs</span><span class="now-widget-value" id="widgetCollabs"><i class="bi bi-question-circle"></i></span></div>
+    </div>
+  </div>
+
+  <div class="neo-box scroll-animate widget-changelog">
+    <div class="neo-header"><h3><i class="bi bi-list-check"></i> Updates</h3></div>
+    <div class="neo-content">
+      <div class="changelog-widget-list" id="widgetChangelog"><div class="loading-small">Loading...</div></div>
+      <a href="/changelog/" class="widget-link" style="margin-top: 10px; display: block;">View all updates <i class="bi bi-arrow-right"></i></a>
+    </div>
+  </div>
+
+  <div class="neo-box scroll-animate widget-shoutbox-sidebar">
+    <div class="neo-header">
+      <h3><i class="bi bi-chat-dots"></i> Chatbox</h3>
+      <button class="shoutbox-admin-btn" onclick="toggleAdminMode()" title="Admin login"><i class="bi bi-shield-lock"></i></button>
+    </div>
+    <div class="neo-content shoutbox-container">
+      <div class="shoutbox-messages" id="shoutboxMessages"><div class="shoutbox-loading">Loading messages...</div></div>
+      <div class="shoutbox-setup" id="shoutboxSetup">
+        <div class="shoutbox-setup-row">
+          <input type="color" id="shoutboxColor" value="#6de6e2" aria-label="Chat name color" />
+          <input type="text" id="shoutboxUsername" placeholder="Choose a username..." maxlength="30" />
+        </div>
+        <button class="shoutbox-join-btn" onclick="joinShoutbox()">Join Chat</button>
+      </div>
+      <div class="shoutbox-input" id="shoutboxInput" style="display: none;">
+        <div class="shoutbox-user-info"><span id="shoutboxCurrentUser"></span><button class="shoutbox-change-user" onclick="changeShoutboxUser()" title="Change username"><i class="bi bi-pencil"></i></button></div>
+        <div class="shoutbox-send-row">
+          <button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker()" title="Add emoji"><i class="bi bi-emoji-smile"></i></button>
+          <input type="text" id="shoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage()" />
+          <button class="shoutbox-send-btn" onclick="sendShoutboxMessage()"><i class="bi bi-send"></i></button>
+        </div>
+        <div class="emoji-picker-container" id="emojiPickerContainer" style="display: none;"><div class="custom-emoji-picker" id="customEmojiPicker"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="neo-box scroll-animate widget-resources">
+    <div class="neo-header"><h3><i class="bi bi-book"></i> Resources</h3></div>
+    <div class="neo-content">
+      <ul class="resources-list">
+        <li><a href="/resources/?cat=scanlation"><i class="bi bi-translate"></i> Scanlation</a></li>
+        <li><a href="/resources/?cat=youtube"><i class="bi bi-youtube"></i> YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+</aside>

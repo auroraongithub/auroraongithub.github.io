@@ -1,0 +1,63 @@
+---
+import PrimaryNav from './PrimaryNav.astro';
+import { secondaryNavigation } from '../data/navigation';
+import { socialLinks } from '../data/socialLinks';
+---
+<aside class="neo-sidebar">
+  <div class="neo-box scroll-animate">
+    <div class="neo-header"><h3>Navigate</h3></div>
+    <div class="neo-content"><PrimaryNav /></div>
+  </div>
+
+  <div class="neo-box scroll-animate">
+    <div class="neo-header"><h3>Links</h3></div>
+    <div class="neo-content">
+      <ul>
+        {socialLinks.map((link) => (
+          <li><a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{link.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="neo-box scroll-animate">
+    <div class="neo-header"><h3>More</h3></div>
+    <div class="neo-content">
+      <ul>
+        {secondaryNavigation.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="neo-box scroll-animate">
+    <div class="neo-header"><h3>Gallery</h3></div>
+    <div class="neo-content">
+      <div class="neo-scrollbox">
+        <img src="/img/pfp.png" alt="Profile" loading="lazy" />
+        <img src="/img/topheader.png" alt="Header artwork" loading="lazy" />
+      </div>
+    </div>
+  </div>
+
+  <div class="neo-box scroll-animate">
+    <div class="neo-header"><h3>More</h3></div>
+    <div class="neo-content" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+      <a href="https://salamithecat.com/" target="_blank" rel="noopener noreferrer"><img src="https://salamithecat.com/button.webp" width="88" height="31" alt="Salami the Cat" /></a>
+      <img src="/img/igotaleek.gif" alt="I got a leek" style="width: 120px; border-radius: 4px;" loading="lazy" />
+      <img src="/img/2voca.jpg" alt="Vocaloid" style="width: 120px; border-radius: 4px;" loading="lazy" />
+      <img src="/img/0178-mikuwink2.gif" alt="Miku wink" style="width: 120px; border-radius: 4px;" loading="lazy" />
+    </div>
+  </div>
+
+  <div class="neo-box scroll-animate">
+    <div class="neo-header"><h3><i class="bi bi-bar-chart"></i> Stats</h3></div>
+    <div class="neo-content">
+      <div class="stats-grid sidebar-stats">
+        <div class="stat-item"><span class="stat-value" id="statProjects">--</span><span class="stat-label">Projects</span></div>
+        <div class="stat-item"><span class="stat-value" id="statPosts">--</span><span class="stat-label">Posts</span></div>
+        <div class="stat-item"><span class="stat-value" id="statVisitors">--</span><span class="stat-label">Online Now</span></div>
+        <div class="stat-item"><span class="stat-value" id="statPageviews">--</span><span class="stat-label">Total Visits</span></div>
+      </div>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,15 @@
+---
+import ContentLayout from './ContentLayout.astro';
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+<ContentLayout title={title} description={description}>
+  <article class="neo-article scroll-animate">
+    <div class="article-header"><h1>{title}</h1><slot name="meta" /></div>
+    <div class="article-content"><slot /></div>
+    <slot name="after" />
+  </article>
+</ContentLayout>
