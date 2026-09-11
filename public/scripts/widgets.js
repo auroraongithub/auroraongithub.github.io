@@ -82,7 +82,16 @@ async function loadChangelog() {
     const payload = await cachedFetch('/site/changelog?limit=5', 60_000);
     const entries = Array.isArray(payload) ? payload : (payload.entries || []);
     const widget = document.getElementById('widgetChangelog');
-    if (widget) widget.innerHTML = entries.length ? changelogMarkup(entries) : '<p class="text-muted">No updates yet.</p>';
+    if (widget) {
+      const markup = entries.length ? changelogMarkup(entries) : '<p class="text-muted">No updates yet.</p>';
+      const link = widget.querySelector('.widget-link');
+      if (link) {
+        while (widget.firstElementChild && widget.firstElementChild !== link) widget.firstElementChild.remove();
+        link.insertAdjacentHTML('beforebegin', markup);
+      } else {
+        widget.innerHTML = markup;
+      }
+    }
     const modal = document.getElementById('changelogList');
     if (modal) modal.innerHTML = entries.length ? changelogMarkup(entries) : '<p class="text-muted">No updates yet.</p>';
     const drawer = document.getElementById('drawerChangelog');
