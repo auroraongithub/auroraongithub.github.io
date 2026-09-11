@@ -674,6 +674,12 @@ ul {
   max-height: calc(100vh - 20px);
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.neo-sidebar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 /* Make sidebar boxes scrollable - viewport responsive */
