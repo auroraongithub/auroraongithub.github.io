@@ -10984,7 +10984,7 @@ void main() {
    * In these states a quiet poll indicator means "busy", not "absent".
    */
   function agentHasWorkInFlight() {
-    return state === 'GENERATING' || state === 'SAVING';
+    return state === 'GENERATING' || state === 'SAVING' || steerLocked;
   }
 
   /**
