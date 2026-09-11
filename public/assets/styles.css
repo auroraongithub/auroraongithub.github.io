@@ -3914,8 +3914,8 @@ select option {
   box-sizing: border-box;
   display: inline-block;
   position: absolute;
-  top: -33px;
-  left: -3px;
+  top: -34px;
+  left: -4px;
   z-index: 2;
   margin: 0;
   padding: 6px 20px;
@@ -4012,8 +4012,9 @@ select option {
 .about-copy p {
   margin: 0 0 8px;
   color: #000;
-  font-size: 0.84rem;
-  line-height: 1.45;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.4;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);
 }
 
@@ -4054,15 +4055,28 @@ select option {
 }
 
 .contact-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--primary-dark);
   display: flex;
   align-items: center;
   gap: 6px;
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow:
+    1px 1px 0 #fff,
+    -1px -1px 0 rgba(255, 255, 255, 0.55);
 }
 
-.contact-label i {
-  color: var(--primary);
+.contact-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-dark);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 1rem;
+  line-height: 1;
+  text-shadow: 1px 1px 0 #fff;
 }
 
 .contact-link {
