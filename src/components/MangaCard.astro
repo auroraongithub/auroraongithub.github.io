@@ -1,0 +1,29 @@
+---
+import type { MangaDetails } from '../data/mangaDetails';
+
+interface Props {
+  id: string;
+  title: string;
+  href: string;
+  image: string;
+  details: MangaDetails;
+}
+
+const { id, title, href, image, details } = Astro.props;
+---
+<a
+  class="carousel-item manga-card"
+  data-series={id}
+  data-series-title={title}
+  data-series-status={details.status}
+  data-series-rating={details.rating}
+  data-series-bookmarks={details.bookmarks}
+  data-series-tags={details.tags.join('|')}
+  data-series-description={details.description}
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`Open ${title} on MangaDex`}
+>
+  <img src={image} alt={title} loading="lazy" />
+</a>

@@ -2877,6 +2877,55 @@ ul {
   z-index: auto;
 }
 
+.manga-section {
+  padding: 3px;
+  background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
+  border: 2px solid var(--halo);
+  border-right-color: var(--primary-dark);
+  border-bottom-color: var(--primary-dark);
+  border-radius: 0 12px 12px 12px;
+  overflow: visible;
+  box-sizing: border-box;
+  box-shadow:
+    0 0 0 2px var(--halo),
+    3px 3px 0 var(--halo),
+    6px 6px 0 color-mix(in srgb, var(--primary) 22%, var(--bg-elev)),
+    2px 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.manga-section > .neo-header {
+  background: linear-gradient(
+    to bottom,
+    var(--primary-light) 0%,
+    var(--primary) 45%,
+    var(--primary-dark) 50%,
+    var(--primary-dark) 100%
+  );
+  border: 1px solid var(--primary-dark);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding: 6px 10px;
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+.manga-section > .neo-content {
+  background: var(--bg-elev);
+  border: 1px solid var(--primary-dark);
+  border-radius: 0 8px 8px 8px;
+  padding: 8px;
+}
+
+.manga-section > .neo-content > p {
+  margin-top: 0;
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+}
+
+.manga-section .neo-carousel {
+  margin: 0;
+}
+
 .carousel-viewport {
   overflow: hidden;
   border-radius: 8px;
@@ -2924,6 +2973,80 @@ ul {
   transform: scale(1.05);
 }
 
+.manga-section .carousel-viewport {
+  border: 1px solid var(--primary-dark);
+  border-radius: 0 8px 8px 8px;
+  background: color-mix(in srgb, var(--bg-elev) 84%, var(--primary-light));
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.manga-section .carousel-track {
+  --gap: 8px;
+  padding: 8px;
+}
+
+.manga-section .manga-card {
+  border: 3px outset var(--primary-dark);
+  border-radius: 8px;
+  background: var(--bg-elev);
+  box-shadow: 2px 2px 0 color-mix(in srgb, var(--primary-dark) 30%, transparent);
+}
+
+.manga-section .manga-card::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  right: 6px;
+  height: 32%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0.18),
+    transparent
+  );
+  border-radius: 8px 8px 50% 50% / 8px 8px 30% 30%;
+}
+
+.manga-section .manga-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 2px var(--halo),
+    2px 3px 0 color-mix(in srgb, var(--primary) 38%, transparent);
+}
+
+.manga-section .manga-card img {
+  position: relative;
+  z-index: 0;
+  border: 1px solid var(--primary-dark);
+}
+
+.manga-section .carousel-ctrl {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 6px;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-elev) 0%,
+    color-mix(in srgb, var(--primary-light) 35%, var(--bg-elev)) 45%,
+    color-mix(in srgb, var(--primary-dark) 24%, var(--bg-elev)) 50%,
+    color-mix(in srgb, var(--primary-light) 22%, var(--bg-elev)) 100%
+  );
+  color: var(--primary-dark);
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 255, 255, 0.8),
+    0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.manga-section .carousel-ctrl:hover {
+  background: linear-gradient(to bottom, var(--primary-light), var(--primary));
+  color: var(--bg);
+}
+
 .carousel-ctrl {
   position: absolute;
   top: 50%;
@@ -2966,17 +3089,39 @@ ul {
   position: fixed;
   pointer-events: none;
   z-index: 999999;
-  background: var(--card);
+  background: var(--bg-elev);
   color: var(--text);
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 15px;
-  width: 340px;
-  min-width: 340px;
-  box-shadow: var(--shadow-hover);
+  border: 3px outset var(--primary-dark);
+  border-radius: 8px;
+  padding: 10px;
+  width: min(320px, calc(100vw - 28px));
+  min-width: 0;
+  box-sizing: border-box;
+  box-shadow:
+    0 0 0 2px var(--halo),
+    3px 3px 0 color-mix(in srgb, var(--primary) 32%, transparent),
+    2px 2px 5px rgba(0, 0, 0, 0.3);
   display: none;
   white-space: normal;
   word-wrap: break-word;
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+}
+
+.hover-card::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  right: 6px;
+  height: 28%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.75),
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+  border-radius: 6px 6px 50% 50% / 6px 6px 30% 30%;
 }
 
 .hover-card * {
@@ -2984,31 +3129,82 @@ ul {
 }
 
 .hover-card .title {
+  position: relative;
+  z-index: 1;
   font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 8px;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+.hover-card-kicker,
+.hover-card-hint {
+  position: relative;
+  z-index: 1;
+  color: var(--primary-dark);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.hover-card-kicker {
+  margin-bottom: 4px;
+}
+
+.hover-card-hint {
+  margin-top: 8px;
+  padding-top: 5px;
+  border-top: 1px dashed var(--primary-dark);
+  text-align: right;
 }
 
 .hover-card .meta {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+  color: var(--text);
+  font-size: 0.7rem;
+  margin-bottom: 7px;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 5px 9px;
+}
+
+.hover-card .meta span {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.hover-card .meta b {
+  color: var(--primary-dark);
+  font-size: 0.62rem;
 }
 
 .hover-card .tags {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.hover-tag {
+  padding: 2px 6px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev));
+  color: var(--primary-dark);
+  font-size: 0.68rem;
+  font-weight: 700;
 }
 
 .hover-card .desc {
+  position: relative;
+  z-index: 1;
   color: var(--text);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 
 /* ==========================================================================

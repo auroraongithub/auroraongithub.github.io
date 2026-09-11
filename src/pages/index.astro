@@ -4,8 +4,10 @@ import ContentLayout from '../layouts/ContentLayout.astro';
 import SiteSection from '../components/SiteSection.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import FavoriteCard from '../components/FavoriteCard.astro';
+import MangaCard from '../components/MangaCard.astro';
 import MobileShoutbox from '../components/MobileShoutbox.astro';
 import { favoriteCategories } from '../data/favorites';
+import { mangaDetails } from '../data/mangaDetails';
 import { mangaSeries } from '../data/mangaSeries';
 import { entrySlug, sortByDate } from '../lib/content';
 
@@ -38,14 +40,12 @@ const recentStories = sortByDate(await getCollection('stories', ({ data }) => !d
     </div>
   </SiteSection>
 
-  <SiteSection title="Our Group's Mangas">
+  <SiteSection title="Our Group's Mangas" class="manga-section">
     <p class="text-muted mb-2">All series that our group worked on</p>
     <div class="neo-carousel">
       <div class="carousel-viewport">
         <div class="carousel-track" id="seriesTrack">
-          {mangaSeries.map((series) => (
-            <a class="carousel-item" data-series={series.id} href={series.href} target="_blank" rel="noopener noreferrer"><img src={series.image} alt={series.title} /></a>
-          ))}
+          {mangaSeries.map((series) => <MangaCard {...series} details={mangaDetails[series.id]} />)}
         </div>
       </div>
       <button class="carousel-ctrl carousel-prev" data-carousel-prev aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
