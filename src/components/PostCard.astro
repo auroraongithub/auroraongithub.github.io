@@ -5,14 +5,15 @@ interface Props {
   date?: Date | string;
   tags?: string[];
   description?: string;
+  icon?: string;
 }
-const { title, href, date, tags = [], description } = Astro.props;
+const { title, href, date, tags = [], description, icon = 'bi-envelope-paper' } = Astro.props;
 const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
 ---
 <article class="masonry-item post-card" data-post-card data-title={title.toLowerCase()} data-tags={tags.join(' ').toLowerCase()}>
   <a class="post-card-link" href={href} aria-label={`Read ${title}`}>
     <div class="item-header">
-      <span class="post-card-icon" aria-hidden="true"><i class="bi bi-envelope-paper"></i></span>
+      <span class="post-card-icon" aria-hidden="true"><i class={`bi ${icon}`}></i></span>
       <h3>{title}</h3>
       <i class="post-card-arrow bi bi-arrow-up-right" aria-hidden="true"></i>
     </div>

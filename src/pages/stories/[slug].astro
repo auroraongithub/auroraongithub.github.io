@@ -24,8 +24,13 @@ interface Props {
 const { post, newer, older } = Astro.props;
 const { Content } = await render(post);
 ---
-<PostLayout title={post.data.title} description={post.data.description}>
-  <Fragment slot="meta"><div class="article-meta"><span><i class="bi bi-calendar3"></i> {post.data.date.toLocaleDateString()}</span>{post.data.tags.length > 0 && <span>{post.data.tags.join(' · ')}</span>}</div></Fragment>
+<PostLayout title={post.data.title} description={post.data.description} className="blog-post story-post">
+  <Fragment slot="meta">
+    <div class="article-meta">
+      <span><b>DATE</b> <i class="bi bi-calendar3"></i> {post.data.date.toLocaleDateString()}</span>
+      {post.data.tags.length > 0 && <span><b>TAG</b> {post.data.tags.join(' · ')}</span>}
+    </div>
+  </Fragment>
   <Content />
   <Fragment slot="after">
     <PostKudos postId={post.data.backendId} />

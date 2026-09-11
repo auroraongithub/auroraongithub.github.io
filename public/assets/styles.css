@@ -3331,7 +3331,8 @@ ul {
 .favorites-section,
 .portfolio-section,
 .recent-section,
-.blogs-section {
+.blogs-section,
+.stories-section {
   padding: 3px;
   background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
   border: 2px solid var(--primary);
@@ -3353,7 +3354,8 @@ ul {
 .favorites-section > .neo-header,
 .portfolio-section > .neo-header,
 .recent-section > .neo-header,
-.blogs-section > .neo-header {
+.blogs-section > .neo-header,
+.stories-section > .neo-header {
   width: max-content;
   min-width: 150px;
   max-width: calc(100% - 12px);
@@ -3387,7 +3389,8 @@ ul {
 .favorites-section > .neo-header h2,
 .portfolio-section > .neo-header h2,
 .recent-section > .neo-header h2,
-.blogs-section > .neo-header h2 {
+.blogs-section > .neo-header h2,
+.stories-section > .neo-header h2 {
   font-size: 0.9rem;
   letter-spacing: 0.08em;
 }
@@ -3396,7 +3399,8 @@ ul {
 .favorites-section > .neo-content,
 .portfolio-section > .neo-content,
 .recent-section > .neo-content,
-.blogs-section > .neo-content {
+.blogs-section > .neo-content,
+.stories-section > .neo-content {
   position: relative;
   z-index: 0;
   display: flex;
@@ -4854,6 +4858,24 @@ select option {
   animation: about-stripe-move 1s linear infinite;
 }
 
+.story-post::before {
+  content: 'STORY CHAPTER';
+}
+
+.story-post .article-content {
+  background:
+    linear-gradient(to right, color-mix(in srgb, var(--primary-light) 9%, transparent), transparent 18%),
+    color-mix(in srgb, var(--bg-elev) 92%, var(--primary-light));
+}
+
+.story-post .article-content p {
+  max-width: 72ch;
+}
+
+.story-post .article-content em {
+  color: var(--primary-dark);
+}
+
 .blog-post .article-header {
   position: relative;
   z-index: 1;
@@ -5085,7 +5107,8 @@ select option {
 }
 
 @media (max-width: 768px) {
-  .blogs-section .masonry-grid {
+  .blogs-section .masonry-grid,
+  .stories-section .masonry-grid {
     grid-template-columns: 1fr;
   }
 
