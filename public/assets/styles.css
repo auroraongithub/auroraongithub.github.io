@@ -1006,10 +1006,9 @@ ul {
   border-radius: 4px;
   background: linear-gradient(
     to bottom,
-    var(--primary-light) 0%,
-    var(--primary) 45%,
-    var(--primary-dark) 50%,
-    var(--primary-dark) 100%
+    color-mix(in srgb, var(--primary-light) 32%, var(--bg-elev)) 0%,
+    color-mix(in srgb, var(--primary) 12%, var(--bg-elev)) 42%,
+    var(--bg-elev) 100%
   );
   color: var(--text);
   font-family: inherit;
@@ -1131,10 +1130,9 @@ ul {
   border-radius: 4px;
   background: linear-gradient(
     to bottom,
-    var(--primary-light) 0%,
-    var(--primary) 45%,
-    var(--primary-dark) 50%,
-    var(--primary-dark) 100%
+    color-mix(in srgb, var(--primary-light) 32%, var(--bg-elev)) 0%,
+    color-mix(in srgb, var(--primary) 12%, var(--bg-elev)) 42%,
+    var(--bg-elev) 100%
   );
   color: var(--text);
   font-family: inherit;
