@@ -5,7 +5,7 @@ export const contentPortfolio = [
     avatar: 'https://yt3.googleusercontent.com/QpuoTw8za14mv5_na10jv_nyql6JYsP5VJAtCNMXhEG-NVv3YLCwx-5LqVJRV-f7--O3u9x3KF0=s900-c-k-c0x00ffffff-no-rj',
     description: 'Gaming and culture videos.',
     href: 'https://youtube.com/@pmuaurora',
-    metrics: ['7.4K subscribers', '6M views in under 30 days']
+    metrics: ['8.4K subscribers', '6M views in under 30 days']
   },
   {
     icon: 'bi-youtube',

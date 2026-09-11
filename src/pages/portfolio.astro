@@ -6,7 +6,7 @@ import PortfolioShowcase from '../components/PortfolioShowcase.astro';
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 ---
 <ContentLayout title="Portfolio">
-  <SiteSection title="Portfolio" id="portfolio">
+  <SiteSection title="Portfolio" id="portfolio" class="portfolio-section">
     <PortfolioShowcase projects={projects} />
   </SiteSection>
 </ContentLayout>

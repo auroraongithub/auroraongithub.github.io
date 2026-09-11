@@ -3100,10 +3100,12 @@ ul {
   overflow: hidden;
   padding: 6px;
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  color: inherit;
   border: 3px outset var(--primary-dark);
   border-radius: 8px;
   background: var(--bg-elev);
   box-shadow: 2px 2px 0 color-mix(in srgb, var(--primary-dark) 30%, transparent);
+  text-decoration: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -3169,7 +3171,7 @@ ul {
   white-space: nowrap;
 }
 
-.portfolio-highlight-title:hover {
+.portfolio-highlight-card:hover .portfolio-highlight-title {
   color: var(--text);
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -3317,7 +3319,8 @@ ul {
 }
 
 .manga-section,
-.favorites-section {
+.favorites-section,
+.portfolio-section {
   padding: 3px;
   background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
   border: 2px solid var(--primary);
@@ -3336,7 +3339,8 @@ ul {
 }
 
 .manga-section > .neo-header,
-.favorites-section > .neo-header {
+.favorites-section > .neo-header,
+.portfolio-section > .neo-header {
   width: max-content;
   min-width: 150px;
   max-width: calc(100% - 12px);
@@ -3367,13 +3371,15 @@ ul {
 }
 
 .manga-section > .neo-header h2,
-.favorites-section > .neo-header h2 {
+.favorites-section > .neo-header h2,
+.portfolio-section > .neo-header h2 {
   font-size: 0.9rem;
   letter-spacing: 0.08em;
 }
 
 .manga-section > .neo-content,
-.favorites-section > .neo-content {
+.favorites-section > .neo-content,
+.portfolio-section > .neo-content {
   position: relative;
   z-index: 0;
   display: flex;
