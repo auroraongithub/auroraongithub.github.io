@@ -1,8 +1,15 @@
 ---
+import { getCollection } from 'astro:content';
 import ContentLayout from '../layouts/ContentLayout.astro';
 import SiteSection from '../components/SiteSection.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 import { favoriteCategories } from '../data/favorites';
 import { mangaSeries } from '../data/mangaSeries';
+import { entrySlug, sortByDate } from '../lib/content';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const recentBlogs = sortByDate(await getCollection('blogs', ({ data }) => !data.draft)).slice(0, 3);
+const recentStories = sortByDate(await getCollection('stories', ({ data }) => !data.draft)).slice(0, 3);
 ---
 <ContentLayout>
   <div class="neo-hero scroll-animate">
@@ -58,18 +65,32 @@ import { mangaSeries } from '../data/mangaSeries';
 
   <SiteSection id="portfolio" title="Portfolio">
     <p class="text-muted mb-2">my work!</p>
-    <div class="neo-grid" id="portfolioGrid"><div class="loading-small" style="text-align:center;padding:40px;">Loading projects...</div></div>
+    <div class="neo-grid" id="portfolioGrid">
+      {projects.length ? projects.map((project) => <ProjectCard name={project.data.name} description={project.data.description} href={project.data.githubUrl || project.data.url || '#'} language={project.data.language} stars={project.data.stars} forks={project.data.forks} />) : <div class="loading-small" style="text-align:center;padding:40px;">Loading projects...</div>}
+    </div>
   </SiteSection>
 
   <SiteSection id="recent" title="Recent" icon="bi-clock-history">
     <div class="recent-grid">
-      <div class="recent-panel"><h3><i class="bi bi-journal-text"></i> Latest Blog Posts</h3><div class="recent-list" id="recentBlogs"><div class="loading-small">Loading...</div></div><a href="/blogs/" class="widget-link">View all blogs <i class="bi bi-arrow-right"></i></a></div>
-      <div class="recent-panel"><h3><i class="bi bi-book"></i> Latest Stories</h3><div class="recent-list" id="recentStories"><div class="loading-small">Loading...</div></div><a href="/stories/" class="widget-link">View all stories <i class="bi bi-arrow-right"></i></a></div>
+      <div class="recent-panel">
+        <h3><i class="bi bi-journal-text"></i> Latest Blog Posts</h3>
+        <div class="recent-list" id="recentBlogs">
+          {recentBlogs.length ? recentBlogs.map((post) => <a class="recent-item" href={`/blogs/${entrySlug(post.id)}/`}><strong>{post.data.title}</strong><small>{post.data.date.toLocaleDateString()}</small></a>) : <div class="loading-small">Loading...</div>}
+        </div>
+        <a href="/blogs/" class="widget-link">View all blogs <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="recent-panel">
+        <h3><i class="bi bi-book"></i> Latest Stories</h3>
+        <div class="recent-list" id="recentStories">
+          {recentStories.length ? recentStories.map((post) => <a class="recent-item" href={`/stories/${entrySlug(post.id)}/`}><strong>{post.data.title}</strong><small>{post.data.date.toLocaleDateString()}</small></a>) : <div class="loading-small">Loading...</div>}
+        </div>
+        <a href="/stories/" class="widget-link">View all stories <i class="bi bi-arrow-right"></i></a>
+      </div>
     </div>
   </SiteSection>
 
   <section class="neo-box scroll-animate" id="widgetSpotifyBox" style="display: none;">
     <div class="neo-header"><h2><i class="bi bi-spotify"></i> Currently Listening</h2></div>
-    <div class="neo-content" style="padding:15px;"><iframe id="widgetSpotify" style="border-radius:8px;border:none;" src="" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
+    <div class="neo-content" style="padding:15px;"><iframe id="widgetSpotify" style="border-radius:8px;border:none;" src="" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
   </section>
 </ContentLayout>
