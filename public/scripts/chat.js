@@ -32,6 +32,7 @@ function ids(source = '') {
   return {
     messages: `${prefix}Messages`, setup: `${prefix}Setup`, input: `${prefix}Input`,
     username: `${prefix}Username`, color: `${prefix}Color`, currentUser: `${prefix}CurrentUser`, message: `${prefix}Message`,
+    emojiButton: `${prefix}EmojiButton`,
     picker: source ? `${source}EmojiPickerContainer` : 'emojiPickerContainer',
     customPicker: source ? `${source}CustomEmojiPicker` : 'customEmojiPicker'
   };
@@ -163,7 +164,7 @@ window.sendShoutboxMessage = async (source = '') => {
   const message = input?.value.trim();
   if (!message || !username) return;
   if (input) input.disabled = true;
-  document.getElementById(current.picker)?.style.setProperty('display', 'none');
+  closeEmojiPickers();
   try {
     const response = await fetch(`${API_BASE}/site/shoutbox`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, message, color, isAdmin: isAdmin() && username.toLowerCase() === ADMIN_USERNAME }) });
     const data = await response.json();
@@ -223,9 +224,56 @@ window.submitAdminLogin = async () => {
   }
 };
 
+function closeEmojiPickers() {
+  shoutboxInstances.forEach((source) => {
+    const current = ids(source);
+    const picker = document.getElementById(current.picker);
+    const button = document.getElementById(current.emojiButton);
+    if (picker) {
+      picker.style.display = 'none';
+      picker.style.visibility = '';
+      picker.dataset.open = 'false';
+    }
+    button?.setAttribute('aria-expanded', 'false');
+  });
+}
+
+function positionEmojiPicker(picker, button) {
+  picker.style.display = 'block';
+  picker.style.visibility = 'hidden';
+
+  const buttonRect = button.getBoundingClientRect();
+  const pickerWidth = picker.offsetWidth;
+  const pickerHeight = picker.offsetHeight;
+  const margin = 8;
+  const maxLeft = Math.max(margin, window.innerWidth - pickerWidth - margin);
+  const left = Math.min(Math.max(margin, buttonRect.right - pickerWidth), maxLeft);
+  let top = buttonRect.top - pickerHeight - margin;
+
+  if (top < margin) {
+    top = Math.min(buttonRect.bottom + margin, Math.max(margin, window.innerHeight - pickerHeight - margin));
+  }
+
+  picker.style.left = `${Math.round(left)}px`;
+  picker.style.top = `${Math.round(top)}px`;
+  picker.style.visibility = 'visible';
+}
+
 window.toggleEmojiPicker = (source = '') => {
-  const picker = document.getElementById(ids(source).picker);
-  if (picker) picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+  const current = ids(source);
+  const picker = document.getElementById(current.picker);
+  const button = document.getElementById(current.emojiButton);
+  if (!picker || !button) return;
+
+  if (picker.dataset.open === 'true') {
+    closeEmojiPickers();
+    return;
+  }
+
+  closeEmojiPickers();
+  positionEmojiPicker(picker, button);
+  picker.dataset.open = 'true';
+  button.setAttribute('aria-expanded', 'true');
 };
 
 function setupEmojiPickers() {
@@ -234,6 +282,8 @@ function setupEmojiPickers() {
     const picker = document.getElementById(current.customPicker);
     const container = document.getElementById(current.picker);
     if (!picker || !container) return;
+    if (container.parentElement !== document.body) document.body.appendChild(container);
+    container.dataset.open = 'false';
     picker.innerHTML = emojis.map(([name, file]) => `<img src="/img/emojis/${file}" alt=":${name}:" title=":${name}:" class="custom-emoji-option" data-code=":${name}:">`).join('');
     picker.addEventListener('click', (event) => {
       const target = event.target.closest('[data-code]');
@@ -244,9 +294,23 @@ function setupEmojiPickers() {
       input.value = `${input.value.slice(0, start)}${target.dataset.code}${input.value.slice(end)}`;
       input.selectionStart = input.selectionEnd = start + target.dataset.code.length;
       input.focus();
-      container.style.display = 'none';
+      closeEmojiPickers();
     });
   });
+
+  if (!document.documentElement.dataset.emojiPickerEventsBound) {
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+      if (event.target.closest('.emoji-picker-container, .shoutbox-emoji-btn')) return;
+      closeEmojiPickers();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeEmojiPickers();
+    });
+    window.addEventListener('resize', closeEmojiPickers);
+    window.addEventListener('scroll', closeEmojiPickers, true);
+    document.documentElement.dataset.emojiPickerEventsBound = 'true';
+  }
 }
 
 async function loadHistory() {

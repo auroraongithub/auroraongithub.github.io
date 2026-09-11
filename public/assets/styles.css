@@ -1018,13 +1018,21 @@ ul {
 
 .shoutbox-send-row {
   display: flex;
+  align-items: center;
   gap: 6px;
 }
 
-.shoutbox-send-row input {
+.shoutbox-message-field {
+  position: relative;
   flex: 1;
   min-width: 0;
+}
+
+.shoutbox-send-row input {
+  width: 100%;
+  box-sizing: border-box;
   padding: 7px 9px;
+  padding-right: 35px;
   border: 1px solid var(--primary-dark);
   border-radius: 4px;
   background: var(--bg);
@@ -1087,36 +1095,46 @@ ul {
 
 /* Emoji picker button */
 .shoutbox-emoji-btn {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
   background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border: 0;
+  border-radius: 50%;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 8px 10px;
+  padding: 0;
   font-size: 1rem;
-  transition: all 0.2s;
+  transition: color 0.2s;
   flex-shrink: 0;
 }
 
 .shoutbox-emoji-btn:hover {
   color: var(--primary);
-  border-color: var(--primary);
 }
 
 /* Emoji picker container */
 .emoji-picker-container {
-  position: relative;
-  margin-top: 8px;
+  position: fixed;
+  z-index: 11001;
+  width: min(230px, calc(100vw - 16px));
+  margin: 0;
+  box-sizing: border-box;
 }
 
 /* Custom emoji picker grid */
 .custom-emoji-picker {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 4px;
   padding: 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--card);
+  border: 1px solid var(--primary);
   border-radius: 8px;
   box-shadow: var(--shadow);
   max-height: 200px;
@@ -1124,9 +1142,11 @@ ul {
 }
 
 .custom-emoji-option {
-  width: 32px;
-  height: 32px;
+  width: 100%;
+  max-width: 32px;
+  aspect-ratio: 1;
   object-fit: contain;
+  justify-self: center;
   cursor: pointer;
   padding: 2px;
   border-radius: 4px;
@@ -1135,7 +1155,12 @@ ul {
 
 .custom-emoji-option:hover {
   background: var(--primary);
-  transform: scale(1.15);
+}
+
+.shoutbox-emoji-btn:focus-visible,
+.custom-emoji-option:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 /* Chat emoji in messages */

@@ -11,14 +11,16 @@
         <input type="text" id="mobileShoutboxUsername" placeholder="Choose a username..." maxlength="30" />
       </div>
       <button class="shoutbox-join-btn" onclick="joinShoutbox('mobile')">Join Chat</button>
-    </div>
-    <div class="shoutbox-input" id="mobileShoutboxInput" style="display: none;">
-      <div class="shoutbox-user-info"><span id="mobileShoutboxCurrentUser"></span><button class="shoutbox-change-user" onclick="changeShoutboxUser('mobile')" title="Change username"><i class="bi bi-pencil"></i></button></div>
-      <div class="shoutbox-send-row">
-        <button class="shoutbox-emoji-btn" onclick="toggleEmojiPicker('mobile')" title="Add emoji"><i class="bi bi-emoji-smile"></i></button>
-        <input type="text" id="mobileShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('mobile')" />
-        <button class="shoutbox-send-btn" onclick="sendShoutboxMessage('mobile')"><i class="bi bi-send"></i></button>
       </div>
+      <div class="shoutbox-input" id="mobileShoutboxInput" style="display: none;">
+        <div class="shoutbox-user-info"><span id="mobileShoutboxCurrentUser"></span><button class="shoutbox-change-user" onclick="changeShoutboxUser('mobile')" title="Change username"><i class="bi bi-pencil"></i></button></div>
+        <div class="shoutbox-send-row">
+          <div class="shoutbox-message-field">
+            <input type="text" id="mobileShoutboxMessage" placeholder="Type a message..." maxlength="500" onkeypress="if(event.key==='Enter')sendShoutboxMessage('mobile')" />
+            <button class="shoutbox-emoji-btn" id="mobileShoutboxEmojiButton" type="button" onclick="toggleEmojiPicker('mobile')" title="Add emoji" aria-label="Add emoji" aria-controls="mobileEmojiPickerContainer" aria-expanded="false"><i class="bi bi-emoji-smile"></i></button>
+          </div>
+          <button class="shoutbox-send-btn" onclick="sendShoutboxMessage('mobile')"><i class="bi bi-send"></i></button>
+        </div>
       <div class="emoji-picker-container" id="mobileEmojiPickerContainer" style="display: none;"><div class="custom-emoji-picker" id="mobileCustomEmojiPicker"></div></div>
     </div>
   </div>
