@@ -1416,7 +1416,6 @@ ul {
 
 /* Now Widget Styles */
 .widget-now {
-  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   background: var(--border-light);
   border: 2px solid var(--halo);
   border-right-color: var(--primary-dark);
@@ -1479,6 +1478,7 @@ ul {
 /* Apply the Lilith window frame to every sidebar card. */
 .neo-sidebar .neo-box,
 .neo-widgets .neo-box {
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   background: var(--border-light);
   border: 2px solid var(--halo);
   border-right-color: var(--primary-dark);
