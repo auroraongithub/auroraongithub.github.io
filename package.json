@@ -4,9 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "sync:content": "node scripts/sync-content.mjs",
+    "predev": "npm run sync:content",
     "dev": "astro dev",
     "start": "astro dev",
     "check": "astro check",
+    "prebuild": "npm run sync:content",
     "build": "astro build",
     "preview": "astro preview",
     "verify": "npm run check && npm run build"

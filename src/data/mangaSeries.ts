@@ -1,0 +1,12 @@
+export const mangaSeries = [
+  { id: 'mabarai', title: 'Mabarai-san Hunts Me Down', href: 'https://mangadex.org/title/4db9c1e8-243b-4f73-95e8-ea29f632f456/mabarai-san-wa-boku-wo-karitai', image: 'https://roraosu.s-ul.eu/Xokjrz1g' },
+  { id: 'blacksmith', title: 'Happy Daily Life of a Court Blacksmith', href: 'https://mangadex.org/title/4bdeff13-b1fb-4fd8-9a9f-56d2d885c2c7/kyuutei-kajishi-no-shiawase-na-nichijou-black-na-shokuba-wo-tsuihou-saretaga-ringoku-de-koushaku', image: 'https://roraosu.s-ul.eu/kDWy1Q5D' },
+  { id: 'contract', title: 'There Is a Lie in My Contract Marriage', href: 'https://mangadex.org/title/72fe5a3b-a69b-4f74-af4e-9d679b28b750/there-is-a-lie-in-my-contract-marriage', image: 'https://roraosu.s-ul.eu/YCcLn58Y' },
+  { id: 'kobayashi', title: "Endo and Kobayashi's Live Commentary on the Villainess", href: 'https://mangadex.org/title/a944aace-6f03-4298-b864-aee895acab28/endo-and-kobayashi-s-live-commentary-on-the-villainess', image: 'https://roraosu.s-ul.eu/ciVSQwrK' },
+  { id: 'forcedgf', title: "I'm a Loner and My Girlfriend Came to Me by Force", href: 'https://mangadex.org/title/fc7e628c-6c26-497a-b17d-dfea90b44652/bocchi-no-boku-ni-kyousei-kanojo-ga-yattekita', image: 'https://roraosu.s-ul.eu/iUZa6NKv' },
+  { id: 'deathgame', title: 'A Former Hero Returning From Another World Gets Involved in a Death Game', href: 'https://mangadex.org/title/720466f8-2eee-43a5-893b-67f9190c04ae/isekaigaeri-no-moto-yuusha-desuga-death-game-ni-makikomare-mashita', image: 'https://roraosu.s-ul.eu/Qf5k02iY' },
+  { id: 'finalmessage', title: 'Final Message', href: 'https://mangadex.org/title/d21daa0a-0abc-45c4-b9b1-d3456ba884d5/okuru-kotoba', image: 'https://roraosu.s-ul.eu/POLDhgtZ' },
+  { id: 'shigure', title: 'Shigure-San Wants to Shine!', href: 'https://mangadex.org/title/a476ce7f-2fb8-4f6f-8337-fa62ce5034fb/shigure-san-wants-to-shine', image: 'https://roraosu.s-ul.eu/EuNjtaDy' },
+  { id: '80k', title: 'Saving 80,000 Gold Coins in the Different World for My Old Age', href: 'https://mangadex.org/title/89ed3ec2-ebe6-4d6b-92eb-d753a8bb365e/saving-80-000-gold-in-another-world-for-my-retirement', image: 'https://roraosu.s-ul.eu/94S9tuew' },
+  { id: 'mmo', title: 'Retire Shita Ningyoushi no MMO Kikou Jojishi', href: 'https://mangadex.org/title/b5ef1317-7c35-411a-b33b-f588c2f76940/retire-shita-ningyoushi-no-mmo-kikou-jojishi', image: 'https://roraosu.s-ul.eu/hwpT2eim' }
+] as const;
