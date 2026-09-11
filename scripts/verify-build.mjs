@@ -1,7 +1,8 @@
 import { access, readdir, readFile, stat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = new URL('../', import.meta.url).pathname;
+const root = fileURLToPath(new URL('../', import.meta.url));
 const dist = join(root, 'dist');
 const required = [
   'index.html',
