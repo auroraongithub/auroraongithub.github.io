@@ -2940,6 +2940,15 @@ ul {
   padding: 8px;
   overflow: hidden;
   background-color: var(--bg-elev);
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--bg-elev) 42%, transparent),
+      color-mix(in srgb, var(--bg-elev) 42%, transparent)
+    ),
+    url('../img/manga-bg.jpg');
+  background-repeat: no-repeat;
+  background-position: center, center;
+  background-size: cover, cover;
   border: 1px solid var(--primary-dark);
   border-radius: 0 8px 8px 8px;
 }
