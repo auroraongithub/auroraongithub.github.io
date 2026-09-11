@@ -32,6 +32,7 @@
   --shadow-hover: 0 8px 24px rgba(109, 230, 226, 0.25);
   --gradient: linear-gradient(to right, #6de6e2, #a8f5f2);
   --gradient-subtle: linear-gradient(135deg, #f7fcfc 0%, #e8f9f9 100%);
+  --halo: #fff;
 }
 
 [data-theme="dark"] {
@@ -50,6 +51,7 @@
   --shadow-hover: 0 8px 24px rgba(109, 230, 226, 0.2);
   --gradient: linear-gradient(to right, #6de6e2, #a8f5f2);
   --gradient-subtle: linear-gradient(135deg, #0f1a1a 0%, #1a2d2d 100%);
+  --halo: var(--border-light);
 }
 
 /* Pink Theme */
@@ -360,15 +362,15 @@ ul {
 .neo-container {
   max-width: 1100px;
   margin: 0 auto;
-  border: 2px solid #fff;
+  border: 2px solid var(--halo);
   border-right-color: var(--primary-dark);
   border-bottom-color: var(--primary-dark);
   border-radius: 8px;
   padding: 2px;
   background: var(--border-light);
   box-shadow:
-    0 0 0 2px #fff,
-    3px 3px 0 #fff,
+    0 0 0 2px var(--halo),
+    3px 3px 0 var(--halo),
     6px 6px 0 var(--border-light),
     2px 2px 5px rgba(0, 0, 0, 0.25);
   transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
@@ -1410,14 +1412,14 @@ ul {
 /* Now Widget Styles */
 .widget-now {
   background: var(--border-light);
-  border: 2px solid #fff;
+  border: 2px solid var(--halo);
   border-right-color: var(--primary-dark);
   border-bottom-color: var(--primary-dark);
   border-radius: 8px;
   padding: 2px;
   box-shadow:
-    0 0 0 2px #fff,
-    3px 3px 0 #fff,
+    0 0 0 2px var(--halo),
+    3px 3px 0 var(--halo),
     6px 6px 0 var(--border-light),
     2px 2px 5px rgba(0, 0, 0, 0.25);
   transition: transform 0.3s ease, background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
@@ -1477,8 +1479,8 @@ ul {
 /* The Now card's Lilith halo is part of its resting frame, not a hover effect. */
 .neo-widgets .widget-now:hover {
   box-shadow:
-    0 0 0 2px #fff,
-    3px 3px 0 #fff,
+    0 0 0 2px var(--halo),
+    3px 3px 0 var(--halo),
     6px 6px 0 var(--border-light),
     2px 2px 5px rgba(0, 0, 0, 0.25);
 }
