@@ -1,0 +1,14 @@
+---
+import ContentLayout from '../layouts/ContentLayout.astro';
+import SiteSection from '../components/SiteSection.astro';
+---
+<ContentLayout title="Resources">
+  <SiteSection title="Resources">
+    <div class="resource-category-tabs">
+      <button class="btn btn-ghost" data-resource-category="scanlation"><i class="bi bi-translate"></i> Scanlation</button>
+      <button class="btn btn-ghost" data-resource-category="youtube"><i class="bi bi-youtube"></i> YouTube</button>
+    </div>
+    <div id="resourcePanels"><div class="loading">Loading...</div></div>
+  </SiteSection>
+  <script is:inline type="module" src="/scripts/resources.js"></script>
+</ContentLayout>

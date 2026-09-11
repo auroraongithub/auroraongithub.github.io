@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import SiteSection from '../../components/SiteSection.astro';
+import PostCard from '../../components/PostCard.astro';
+import { entrySlug, sortByDate } from '../../lib/content';
+const posts = sortByDate(await getCollection('stories', ({ data }) => !data.draft));
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
+---
+<ContentLayout title="Stories">
+  <SiteSection title="Stories">
+    <div class="post-controls">
+      <input type="search" class="form-control" placeholder="Search stories..." aria-label="Search stories" data-post-search />
+      <div class="tag-filters">
+        <button class="btn btn-ghost active" data-tag-filter="">All</button>
+        {tags.map((tag) => <button class="btn btn-ghost" data-tag-filter={tag.toLowerCase()}>{tag}</button>)}
+      </div>
+    </div>
+    <div class="masonry-grid" data-post-grid>
+      {posts.map((post) => <PostCard title={post.data.title} description={post.data.description} date={post.data.date} tags={post.data.tags} href={`/stories/${entrySlug(post.id)}/`} />)}
+    </div>
+    <p class="text-muted" data-post-empty hidden>No matching stories.</p>
+  </SiteSection>
+  <script is:inline type="module" src="/scripts/post-filter.js"></script>
+</ContentLayout>

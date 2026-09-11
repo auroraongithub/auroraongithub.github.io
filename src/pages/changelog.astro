@@ -1,0 +1,10 @@
+---
+import ContentLayout from '../layouts/ContentLayout.astro';
+import SiteSection from '../components/SiteSection.astro';
+---
+<ContentLayout title="Changelog">
+  <SiteSection title="Changelog" icon="bi-list-check">
+    <div id="fullChangelogList"><div class="loading">Loading...</div></div>
+  </SiteSection>
+  <script is:inline type="module" src="/scripts/changelog-page.js"></script>
+</ContentLayout>

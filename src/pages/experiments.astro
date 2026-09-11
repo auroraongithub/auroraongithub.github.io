@@ -1,0 +1,15 @@
+---
+import ContentLayout from '../layouts/ContentLayout.astro';
+import SiteSection from '../components/SiteSection.astro';
+---
+<ContentLayout title="Experiments">
+  <SiteSection title="Experiments">
+    <p>Small interactive work, prototypes, and side experiments stay grouped here instead of crowding the primary navigation.</p>
+  </SiteSection>
+  <SiteSection title="Arcade / Games" id="games" icon="bi-controller">
+    <p class="text-muted">Arcade and game experiments are secondary to this section and are not part of the primary site navigation.</p>
+  </SiteSection>
+  <SiteSection title="Coursework / Utilities" id="utilities" icon="bi-code-slash">
+    <p><a href="/ITC/">Open the preserved ITC experiments and utilities.</a></p>
+  </SiteSection>
+</ContentLayout>

@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '../layouts/ContentLayout.astro';
+import SiteSection from '../components/SiteSection.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+<ContentLayout title="Portfolio">
+  <SiteSection title="Portfolio" id="portfolio">
+    <p class="text-muted mb-2">my work!</p>
+    <div class="neo-grid" id={projects.length ? undefined : 'portfolioGrid'}>
+      {projects.length ? projects.map((project) => <ProjectCard name={project.data.name} description={project.data.description} href={project.data.githubUrl || project.data.url || '#'} language={project.data.language} stars={project.data.stars} forks={project.data.forks} />) : <div class="loading-small">Loading projects...</div>}
+    </div>
+  </SiteSection>
+</ContentLayout>

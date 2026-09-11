@@ -9,7 +9,7 @@ interface Props {
 const { title, href, date, tags = [], description } = Astro.props;
 const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
 ---
-<article class="masonry-item post-card">
+<article class="masonry-item post-card" data-post-card data-title={title.toLowerCase()} data-tags={tags.join(' ').toLowerCase()}>
   <div class="item-header"><h3><a href={href}>{title}</a></h3></div>
   <div class="item-content">
     {description && <p>{description}</p>}
