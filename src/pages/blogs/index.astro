@@ -8,12 +8,20 @@ const posts = sortByDate(await getCollection('blogs', ({ data }) => !data.draft)
 const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 ---
 <ContentLayout title="Blogs">
-  <SiteSection title="Blogs">
-    <div class="post-controls">
-      <input type="search" class="form-control" placeholder="Search blogs..." aria-label="Search blogs" data-post-search />
-      <div class="tag-filters">
-        <button class="btn btn-ghost active" data-tag-filter="">All</button>
-        {tags.map((tag) => <button class="btn btn-ghost" data-tag-filter={tag.toLowerCase()}>{tag}</button>)}
+  <SiteSection title="Blogs" icon="bi-journal-text" class="blogs-section">
+    <div class="post-controls" aria-label="Blog archive filters">
+      <div class="post-controls-heading">
+        <span><i class="bi bi-inbox"></i> Workbench archive</span>
+        <span class="post-count">{posts.length} entries</span>
+      </div>
+      <label class="post-search">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <span class="visually-hidden">Search blogs</span>
+        <input type="search" class="form-control" placeholder="Search the archive..." aria-label="Search blogs" data-post-search />
+      </label>
+      <div class="tag-filters" aria-label="Filter by blog tag">
+        <button type="button" class="btn btn-ghost active" data-tag-filter="">All</button>
+        {tags.map((tag) => <button type="button" class="btn btn-ghost" data-tag-filter={tag.toLowerCase()}>{tag}</button>)}
       </div>
     </div>
     <div class="masonry-grid" data-post-grid>

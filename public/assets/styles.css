@@ -3330,7 +3330,8 @@ ul {
 .manga-section,
 .favorites-section,
 .portfolio-section,
-.recent-section {
+.recent-section,
+.blogs-section {
   padding: 3px;
   background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
   border: 2px solid var(--primary);
@@ -3351,7 +3352,8 @@ ul {
 .manga-section > .neo-header,
 .favorites-section > .neo-header,
 .portfolio-section > .neo-header,
-.recent-section > .neo-header {
+.recent-section > .neo-header,
+.blogs-section > .neo-header {
   width: max-content;
   min-width: 150px;
   max-width: calc(100% - 12px);
@@ -3384,7 +3386,8 @@ ul {
 .manga-section > .neo-header h2,
 .favorites-section > .neo-header h2,
 .portfolio-section > .neo-header h2,
-.recent-section > .neo-header h2 {
+.recent-section > .neo-header h2,
+.blogs-section > .neo-header h2 {
   font-size: 0.9rem;
   letter-spacing: 0.08em;
 }
@@ -3392,7 +3395,8 @@ ul {
 .manga-section > .neo-content,
 .favorites-section > .neo-content,
 .portfolio-section > .neo-content,
-.recent-section > .neo-content {
+.recent-section > .neo-content,
+.blogs-section > .neo-content {
   position: relative;
   z-index: 0;
   display: flex;
@@ -3945,6 +3949,302 @@ ul {
 
 .year-header:first-child {
   margin-top: 0;
+}
+
+/* ==========================================================================
+   BLOG ARCHIVE (Dumby-inspired mail shelf)
+   ========================================================================== */
+
+.blogs-section .neo-content {
+  gap: 0;
+}
+
+.blogs-section .post-controls {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 9px;
+  padding: 0 0 8px;
+  border-bottom: 1px dotted var(--primary-dark);
+}
+
+.blogs-section .post-controls-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--primary-dark);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.blogs-section .post-controls-heading i {
+  margin-right: 3px;
+}
+
+.blogs-section .post-count {
+  padding: 2px 6px;
+  border: 1px solid var(--border-light);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--primary-light) 14%, var(--bg-elev));
+  color: var(--text-muted);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.blogs-section .post-search {
+  position: relative;
+  display: block;
+}
+
+.blogs-section .post-search > i {
+  position: absolute;
+  top: 50%;
+  left: 9px;
+  z-index: 1;
+  color: var(--primary-dark);
+  font-size: 0.74rem;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.blogs-section .post-search .form-control {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 9px 7px 25px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 4px;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-elev) 0%,
+    color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)) 45%,
+    color-mix(in srgb, var(--primary-dark) 12%, var(--bg-elev)) 50%,
+    var(--bg-elev) 100%
+  );
+  color: var(--text);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.76rem;
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.blogs-section .post-search .form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.blogs-section .post-search .form-control:focus {
+  outline: 1px solid var(--primary);
+  border-color: var(--primary-dark);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.12), 0 0 0 2px color-mix(in srgb, var(--primary-light) 30%, transparent);
+}
+
+.blogs-section .tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: end;
+}
+
+.blogs-section .tag-filters .btn {
+  min-height: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
+  color: var(--text-muted);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.blogs-section .tag-filters .btn:hover {
+  transform: none;
+  border-color: var(--primary);
+  background: linear-gradient(to bottom, var(--primary-light), var(--primary));
+  color: var(--bg);
+}
+
+.blogs-section .tag-filters .btn.active {
+  outline: none;
+  border-color: var(--primary-dark);
+  background: var(--primary);
+  color: var(--bg);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55), inset 0 -1px 1px color-mix(in srgb, var(--primary-dark) 70%, transparent);
+}
+
+.blogs-section .masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  align-items: start;
+}
+
+.blogs-section .masonry-item {
+  min-width: 0;
+  background: color-mix(in srgb, var(--bg-elev) 86%, transparent);
+  border: 1px solid var(--primary-dark);
+  border-radius: 6px;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.75), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 30%, transparent), 1px 1px 2px rgba(0, 0, 0, 0.12);
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.blogs-section .masonry-item:hover {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev));
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.85), 0 1px 3px color-mix(in srgb, var(--primary-dark) 22%, transparent);
+  transform: none;
+}
+
+.blogs-section .post-card-link {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.blogs-section .post-card-link:hover {
+  color: var(--text);
+}
+
+.blogs-section .masonry-item .item-header {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--primary-dark);
+  background: linear-gradient(
+    to bottom,
+    var(--primary-light) 0%,
+    var(--primary) 45%,
+    var(--primary-dark) 50%,
+    var(--primary-light) 100%
+  );
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.blogs-section .post-card-icon,
+.blogs-section .post-card-arrow {
+  color: var(--bg);
+  font-size: 0.72rem;
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
+}
+
+.blogs-section .post-card-arrow {
+  opacity: 0.75;
+}
+
+.blogs-section .masonry-item .item-header h3 {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  margin: 0;
+  color: var(--bg);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.blogs-section .masonry-item .item-content {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 7px;
+  padding: 8px;
+}
+
+.blogs-section .post-card-description {
+  display: -webkit-box;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.76rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.blogs-section .masonry-item .item-meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
+  color: var(--text-muted);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.64rem;
+}
+
+.blogs-section .post-date {
+  flex: 0 0 auto;
+  color: var(--primary-dark);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.blogs-section .post-tags {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 3px;
+}
+
+.blogs-section .item-meta .chip {
+  padding: 2px 5px;
+  border: 1px solid var(--border-light);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev));
+  color: var(--text-muted);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.6rem;
+  line-height: 1.1;
+}
+
+.blogs-section .item-meta .chip:hover {
+  border-color: var(--border-light);
+  color: var(--text-muted);
+}
+
+.blogs-section .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.blogs-section [data-post-empty] {
+  margin: 10px 0 0;
+  padding: 14px 8px;
+  border-top: 1px dotted var(--primary-dark);
+  color: var(--text-muted);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.78rem;
+  text-align: center;
 }
 
 /* ==========================================================================
