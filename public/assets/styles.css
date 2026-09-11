@@ -790,6 +790,19 @@ ul {
   padding: 0 !important;
 }
 
+.widget-shoutbox-sidebar .shoutbox-container {
+  background-color: var(--bg-elev);
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--bg-elev) 42%, transparent),
+      color-mix(in srgb, var(--bg-elev) 42%, transparent)
+    ),
+    url('../img/manga-bg.jpg');
+  background-repeat: no-repeat;
+  background-position: center, center;
+  background-size: cover, cover;
+}
+
 .shoutbox-messages {
   flex: 1 1 auto;
   min-height: 50px;
@@ -800,6 +813,10 @@ ul {
   gap: 5px;
   background: var(--bg);
   border-bottom: 1px solid var(--primary-dark);
+}
+
+.widget-shoutbox-sidebar .shoutbox-messages {
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
 }
 
 .shoutbox-loading {
@@ -1006,6 +1023,11 @@ ul {
   flex-direction: column;
   gap: 6px;
   flex-shrink: 0;
+}
+
+.widget-shoutbox-sidebar .shoutbox-setup--polished,
+.widget-shoutbox-sidebar .shoutbox-input {
+  background: color-mix(in srgb, var(--bg-elev) 88%, transparent);
 }
 
 .shoutbox-user-info {
@@ -1637,6 +1659,19 @@ ul {
   background: var(--bg-elev);
   border: 1px solid var(--primary-dark);
   border-radius: 0 0 3px 3px;
+}
+
+.neo-widgets .widget-shoutbox-sidebar > .neo-content.shoutbox-container {
+  background-color: var(--bg-elev);
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--bg-elev) 42%, transparent),
+      color-mix(in srgb, var(--bg-elev) 42%, transparent)
+    ),
+    url('../img/manga-bg.jpg');
+  background-repeat: no-repeat;
+  background-position: center, center;
+  background-size: cover, cover;
 }
 
 /* Sidebar cards don't add a separate hover shadow; only the existing lift remains. */
@@ -2940,15 +2975,6 @@ ul {
   padding: 8px;
   overflow: hidden;
   background-color: var(--bg-elev);
-  background-image:
-    linear-gradient(
-      color-mix(in srgb, var(--bg-elev) 42%, transparent),
-      color-mix(in srgb, var(--bg-elev) 42%, transparent)
-    ),
-    url('../img/manga-bg.jpg');
-  background-repeat: no-repeat;
-  background-position: center, center;
-  background-size: cover, cover;
   border: 1px solid var(--primary-dark);
   border-radius: 0 8px 8px 8px;
 }
