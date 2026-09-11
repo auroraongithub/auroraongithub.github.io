@@ -373,8 +373,25 @@ ul {
     3px 3px 0 var(--halo),
     6px 6px 0 var(--border-light),
     2px 2px 5px rgba(0, 0, 0, 0.25);
+  isolation: isolate;
   transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   position: relative;
+}
+
+.neo-container::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--primary-dark);
+  opacity: 0.16;
+  -webkit-mask-image: url('../img/wallpaper.svg');
+  -webkit-mask-repeat: repeat;
+  -webkit-mask-size: 84px 16px;
+  mask-image: url('../img/wallpaper.svg');
+  mask-repeat: repeat;
+  mask-size: 84px 16px;
 }
 
 .neo-container::before {
