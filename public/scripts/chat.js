@@ -308,7 +308,6 @@ function setupEmojiPickers() {
       if (event.key === 'Escape') closeEmojiPickers();
     });
     window.addEventListener('resize', closeEmojiPickers);
-    window.addEventListener('scroll', closeEmojiPickers, true);
     document.documentElement.dataset.emojiPickerEventsBound = 'true';
   }
 }
