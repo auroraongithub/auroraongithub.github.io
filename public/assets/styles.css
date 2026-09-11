@@ -4844,7 +4844,7 @@ select option {
   );
   background-size: 17px 17px;
   color: #fff;
-  content: '✉  BLOG ENTRY';
+  content: 'BLOG ENTRY';
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
