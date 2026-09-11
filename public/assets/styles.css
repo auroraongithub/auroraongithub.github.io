@@ -1006,10 +1006,9 @@ ul {
   border-radius: 4px;
   background: linear-gradient(
     to bottom,
-    var(--primary-light) 0%,
-    var(--primary) 45%,
-    var(--primary-dark) 50%,
-    transparent 100%
+    color-mix(in srgb, var(--primary-light) 24%, transparent) 0%,
+    color-mix(in srgb, var(--primary) 10%, transparent) 34%,
+    transparent 72%
   );
   color: var(--text);
   font-family: inherit;
@@ -1026,10 +1025,9 @@ ul {
   padding: 7px 11px;
   background: linear-gradient(
     to bottom,
-    var(--primary-light) 0%,
-    var(--primary) 45%,
-    var(--primary-dark) 50%,
-    transparent 100%
+    color-mix(in srgb, var(--primary-light) 24%, transparent) 0%,
+    color-mix(in srgb, var(--primary) 10%, transparent) 34%,
+    transparent 72%
   );
   border: 1px solid var(--primary-dark);
   border-radius: 4px;
