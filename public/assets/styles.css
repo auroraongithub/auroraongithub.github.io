@@ -4656,7 +4656,7 @@ ul {
 
 /* Compact MyAnimeList-style favorite entries. */
 .favorites-section .favorites-carousel .carousel-viewport {
-  max-height: 292px;
+  max-height: 300px;
   overflow-y: auto;
   scrollbar-color: var(--primary) transparent;
   scrollbar-width: thin;
@@ -4680,7 +4680,8 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 4px;
+  padding: 3px 4px 4px;
+  counter-reset: favorite-row;
   transform: none !important;
 }
 
@@ -4688,16 +4689,31 @@ ul {
   position: relative;
   display: grid;
   width: 100%;
-  height: 62px;
-  min-height: 62px;
-  grid-template-columns: 48px minmax(0, 1fr);
+  height: 48px;
+  min-height: 48px;
+  grid-template-columns: 22px 40px minmax(0, 1fr);
   align-items: stretch;
+  overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--primary) 32%, var(--border-light));
   border-bottom-style: dotted;
   border-radius: 2px;
   background: color-mix(in srgb, var(--primary-light) 7%, var(--bg-elev));
   box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.7);
   transition: border-color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.favorites-section .favorites-carousel .favorite-item .favorite-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  border-right: 1px dotted color-mix(in srgb, var(--primary-dark) 55%, transparent);
+  color: var(--text-muted);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
 }
 
 .favorites-section .favorites-carousel .favorite-item:nth-child(even) {
@@ -4721,10 +4737,10 @@ ul {
 
 .favorites-section .favorites-carousel .favorite-item img,
 .favorites-section .favorites-carousel .favorite-item .favorite-item-image {
-  width: 48px;
-  height: 60px;
+  width: 40px;
+  height: 46px;
   min-height: 0;
-  flex: 0 0 48px;
+  flex: 0 0 40px;
   border: 1px solid var(--primary-dark);
   border-right: 1px solid var(--primary-dark);
   border-radius: 1px 0 0 1px;
@@ -4737,8 +4753,8 @@ ul {
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto auto;
   align-content: center;
-  gap: 2px 8px;
-  padding: 5px 8px;
+  gap: 1px 7px;
+  padding: 4px 8px 3px;
   border-top: 0;
   background: transparent;
 }
@@ -4748,24 +4764,105 @@ ul {
   grid-column: 1 / -1;
   overflow: hidden;
   color: var(--text);
-  font-size: 0.75rem;
-  line-height: 1.15;
+  font-size: 0.71rem;
+  line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.favorites-section .favorites-carousel .favorite-item .favorite-meta {
+  display: flex;
+  min-width: 0;
+  grid-column: 1;
+  grid-row: 2;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
 }
 
 .favorites-section .favorites-carousel .favorite-item .favorite-info small {
   margin: 0;
   color: var(--text-muted);
-  font-size: 0.64rem;
+  font-size: 0.58rem;
   font-weight: 600;
   line-height: 1.1;
+  white-space: nowrap;
 }
 
-.favorites-section .favorites-carousel .favorite-item .favorite-info small:last-child {
-  justify-self: end;
+.favorites-section .favorites-carousel .favorite-item .favorite-kind {
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primary) 42%, var(--border-light));
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--primary-light) 13%, transparent);
   color: var(--primary-dark);
+  padding: 1px 4px;
+  text-overflow: ellipsis;
+  letter-spacing: 0.04em;
+}
+
+.favorites-section .favorites-carousel .favorite-item .favorite-score,
+.favorites-section .favorites-carousel .favorite-item .favorite-state {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
+  justify-self: end;
+  border: 1px solid color-mix(in srgb, var(--primary-dark) 60%, var(--border-light));
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--primary-light) 22%, var(--bg-elev));
+  color: var(--primary-dark);
+  padding: 1px 5px;
+  font-size: 0.57rem;
   font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.favorites-section .favorites-carousel .favorite-item .favorite-state {
+  background: color-mix(in srgb, var(--bg-elev) 82%, var(--primary-light));
+  color: var(--text-muted);
+}
+
+.favorites-section .favorites-carousel .carousel-track:has(.favorites-state) {
+  min-height: 220px;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+@media (max-width: 500px) {
+  .favorites-section .favorites-carousel .carousel-viewport {
+    max-height: 270px;
+  }
+
+  .favorites-section .favorites-carousel .favorite-item {
+    height: 46px;
+    min-height: 46px;
+    grid-template-columns: 18px 36px minmax(0, 1fr);
+  }
+
+  .favorites-section .favorites-carousel .favorite-item img,
+  .favorites-section .favorites-carousel .favorite-item .favorite-item-image {
+    width: 36px;
+    height: 44px;
+    flex-basis: 36px;
+  }
+
+  .favorites-section .favorites-carousel .favorite-item .favorite-info {
+    gap: 1px 5px;
+    padding: 3px 6px 2px;
+  }
+
+  .favorites-section .favorites-carousel .favorite-item .favorite-info strong {
+    font-size: 0.67rem;
+  }
+
+  .favorites-section .favorites-carousel .favorite-item .favorite-info small,
+  .favorites-section .favorites-carousel .favorite-item .favorite-score,
+  .favorites-section .favorites-carousel .favorite-item .favorite-state {
+    font-size: 0.53rem;
+  }
 }
 
 .carousel-ctrl {

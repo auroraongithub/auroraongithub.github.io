@@ -5,12 +5,22 @@ function text(id, value) {
   if (el) el.textContent = value;
 }
 
-function favoriteCardMarkup(item) {
+const favoriteCategoryLabels = {
+  anime: 'ANIME',
+  manga: 'MANGA / LN',
+  characters: 'CHARACTERS',
+  games: 'GAMES',
+};
+
+function favoriteCardMarkup(item, index = 0, category = 'anime') {
+  const kind = favoriteCategoryLabels[category] || String(category).toUpperCase();
+  const rank = String(index + 1).padStart(2, '0');
   const template = document.getElementById('favoriteCardTemplate');
   if (!template) {
     const imageMarkup = item.image ? `<img class="favorite-item-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : '';
-    const infoMarkup = `<div class="favorite-info"><strong>${escapeHtml(item.title)}</strong>${item.year ? `<small>${escapeHtml(item.year)}</small>` : ''}${item.score ? `<small>★ ${escapeHtml(item.score)}</small>` : ''}</div>`;
-    return `<div class="carousel-item favorite-item">${imageMarkup}${infoMarkup}</div>`;
+    const scoreMarkup = item.score ? `<small class="favorite-score">★ ${escapeHtml(item.score)}</small>` : '<small class="favorite-state">FAV</small>';
+    const infoMarkup = `<div class="favorite-info"><strong>${escapeHtml(item.title)}</strong><div class="favorite-meta">${item.year ? `<small>${escapeHtml(item.year)}</small>` : ''}<small class="favorite-kind">${escapeHtml(kind)}</small></div>${scoreMarkup}</div>`;
+    return `<div class="carousel-item favorite-item"><span class="favorite-rank" aria-hidden="true">${rank}</span>${imageMarkup}${infoMarkup}</div>`;
   }
 
   const fragment = template.content.cloneNode(true);
@@ -18,9 +28,12 @@ function favoriteCardMarkup(item) {
   const image = card?.querySelector('[data-favorite-image]');
   const title = card?.querySelector('[data-favorite-title]');
   const year = card?.querySelector('[data-favorite-year]');
+  const rankEl = card?.querySelector('[data-favorite-rank]');
+  const kindEl = card?.querySelector('[data-favorite-kind]');
   const score = card?.querySelector('[data-favorite-score]');
   if (!card || !title) return '';
 
+  if (rankEl) rankEl.textContent = rank;
   title.textContent = item.title || 'Untitled';
   if (image) {
     if (item.image) {
@@ -34,9 +47,15 @@ function favoriteCardMarkup(item) {
     if (item.year) year.textContent = item.year;
     else year.remove();
   }
+  if (kindEl) kindEl.textContent = kind;
   if (score) {
-    if (item.score) score.textContent = `★ ${item.score}`;
-    else score.remove();
+    if (item.score) {
+      score.className = 'favorite-score';
+      score.textContent = `★ ${item.score}`;
+    } else {
+      score.className = 'favorite-state';
+      score.textContent = 'FAV';
+    }
   }
   return card.outerHTML;
 }
@@ -153,7 +172,7 @@ async function loadFavorites(category = favoriteCategory) {
   try {
     const payload = await cachedFetch(`/site/favorites?category=${encodeURIComponent(category)}`, 120_000);
     const items = payload.items || [];
-    track.innerHTML = items.length ? items.map(favoriteCardMarkup).join('') : '<p class="favorites-state text-muted">No favorites added yet.</p>';
+    track.innerHTML = items.length ? items.map((item, index) => favoriteCardMarkup(item, index, category)).join('') : '<p class="favorites-state text-muted">No favorites added yet.</p>';
     window.dispatchEvent(new Event('favorites:rendered'));
   } catch (error) {
     console.warn('Favorites unavailable', error);

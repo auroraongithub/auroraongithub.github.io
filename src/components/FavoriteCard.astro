@@ -4,15 +4,20 @@ interface Props {
   image?: string;
   year?: string | number;
   score?: string | number;
+  kind?: string;
 }
 
-const { title, image, year, score } = Astro.props;
+const { title, image, year, score, kind = 'ANIME' } = Astro.props;
 ---
 <div class="carousel-item favorite-item">
+  <span class="favorite-rank" data-favorite-rank aria-hidden="true">01</span>
   {image && <img class="favorite-item-image" data-favorite-image src={image} alt={title} loading="lazy" />}
   <div class="favorite-info">
     <strong data-favorite-title>{title}</strong>
-    {year && <small data-favorite-year>{year}</small>}
-    {score && <small data-favorite-score>★ {score}</small>}
+    <div class="favorite-meta">
+      {year && <small data-favorite-year>{year}</small>}
+      <small class="favorite-kind" data-favorite-kind>{kind}</small>
+    </div>
+    {score ? <small class="favorite-score" data-favorite-score>★ {score}</small> : <small class="favorite-state" data-favorite-state>FAV</small>}
   </div>
 </div>
