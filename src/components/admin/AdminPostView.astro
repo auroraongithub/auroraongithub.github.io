@@ -49,7 +49,16 @@ import AdminPanel from './AdminPanel.astro';
 </script>
 <style>
   .admin-post-view { max-width: 780px; margin: 0 auto; }
-  .admin-post-view h1 { margin: 0 0 16px; font-size: clamp(1.35rem, 3vw, 2rem); }
+  .admin-post-view h1 {
+    margin: 0 0 7px;
+    color: var(--text);
+    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--halo) 75%, transparent);
+  }
   .admin-post-view :global(img) { max-width: 100%; height: auto; cursor: zoom-in; }
   .admin-lightbox { position: fixed; inset: 0; z-index: 12000; display: none; align-items: center; justify-content: center; padding: 30px; background: rgba(0,0,0,.86); }
   .admin-lightbox.active { display: flex; }
