@@ -7,7 +7,10 @@ const { active } = Astro.props;
 ---
 <aside class="neo-sidebar admin-nav" aria-label="Admin navigation">
   {adminNavigation.map((section) => (
-    <section class="neo-box admin-nav-group">
+    <section
+      class="neo-box admin-nav-group"
+      data-default-accent={section.label === 'Content' ? 'purple' : section.label === 'Site' ? 'green' : 'orange'}
+    >
       <div class="neo-header"><h3>{section.label}</h3></div>
       <div class="neo-content">
         <ul class="primary-nav-list admin-nav-list">

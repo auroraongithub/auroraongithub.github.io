@@ -262,6 +262,170 @@
   --gradient-subtle: linear-gradient(135deg, #0f1a18 0%, #1a2d2a 100%);
 }
 
+/* Default theme - a colorful old-web mix that gives each module its own voice. */
+[data-color="default"] {
+  --bg: #f7fcfc;
+  --bg-elev: #ffffff;
+  --bg-secondary: var(--bg-elev);
+  --text: #2c3e3e;
+  --text-muted: #5a7070;
+  --primary: #6de6e2;
+  --primary-light: #a8f5f2;
+  --primary-dark: #4fc9c5;
+  --accent: #78beff;
+  --card: #ffffff;
+  --border: #6de6e2;
+  --border-light: #c0f5f3;
+  --shadow: 0 4px 12px rgba(109, 230, 226, 0.15);
+  --shadow-hover: 0 8px 24px rgba(109, 230, 226, 0.25);
+  --gradient: linear-gradient(to right, #6de6e2, #a8f5f2);
+  --gradient-subtle: linear-gradient(135deg, #f7fcfc 0%, #e8f9f9 100%);
+  --halo: #fff;
+}
+
+[data-theme="dark"][data-color="default"] {
+  --bg: #0f1a1a;
+  --bg-elev: #162525;
+  --bg-secondary: var(--bg-elev);
+  --text: #e4ffff;
+  --text-muted: #a0c9c9;
+  --primary: #6de6e2;
+  --primary-light: #a8f5f2;
+  --primary-dark: #4fc9c5;
+  --accent: #78beff;
+  --card: #1a2d2d;
+  --border: #6de6e2;
+  --border-light: #2d5a5a;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 8px 24px rgba(109, 230, 226, 0.2);
+  --gradient: linear-gradient(to right, #6de6e2, #a8f5f2);
+  --gradient-subtle: linear-gradient(135deg, #0f1a1a 0%, #1a2d2d 100%);
+  --halo: var(--border-light);
+}
+
+/* The Default theme deliberately uses the same compact color language as the public site,
+   but assigns a different ramp to each major module so the page feels collected rather
+   than monochrome. The vars inherit into headers, tabs, borders, buttons and shadows. */
+[data-color="default"] [data-default-accent="cyan"],
+[data-color="default"] .about-card {
+  --primary: #6de6e2;
+  --primary-light: #a8f5f2;
+  --primary-dark: #4fc9c5;
+  --accent: #78beff;
+  --border: #6de6e2;
+  --border-light: color-mix(in srgb, #6de6e2 32%, var(--bg-elev));
+  --gradient: linear-gradient(to right, #6de6e2, #a8f5f2);
+  --shadow: 0 4px 12px color-mix(in srgb, #6de6e2 15%, transparent);
+  --shadow-hover: 0 8px 24px color-mix(in srgb, #6de6e2 25%, transparent);
+}
+
+[data-color="default"] [data-default-accent="pink"],
+[data-color="default"] .favorites-section,
+[data-color="default"] .changelog-page {
+  --primary: #ff6b9d;
+  --primary-light: #ffa4c4;
+  --primary-dark: #e5517f;
+  --accent: #ff8fab;
+  --border: #ff6b9d;
+  --border-light: color-mix(in srgb, #ff6b9d 32%, var(--bg-elev));
+  --gradient: linear-gradient(to right, #ff6b9d, #ffa4c4);
+  --shadow: 0 4px 12px color-mix(in srgb, #ff6b9d 15%, transparent);
+  --shadow-hover: 0 8px 24px color-mix(in srgb, #ff6b9d 25%, transparent);
+}
+
+[data-color="default"] [data-default-accent="purple"],
+[data-color="default"] .portfolio-section,
+[data-color="default"] .stories-section {
+  --primary: #9b59b6;
+  --primary-light: #bb8fce;
+  --primary-dark: #7d3c98;
+  --accent: #af7ac5;
+  --border: #9b59b6;
+  --border-light: color-mix(in srgb, #9b59b6 32%, var(--bg-elev));
+  --gradient: linear-gradient(to right, #9b59b6, #bb8fce);
+  --shadow: 0 4px 12px color-mix(in srgb, #9b59b6 15%, transparent);
+  --shadow-hover: 0 8px 24px color-mix(in srgb, #9b59b6 25%, transparent);
+}
+
+[data-color="default"] [data-default-accent="green"],
+[data-color="default"] .recent-section,
+[data-color="default"] .resources-page {
+  --primary: #2ecc71;
+  --primary-light: #7fd99f;
+  --primary-dark: #27ae60;
+  --accent: #58d68d;
+  --border: #2ecc71;
+  --border-light: color-mix(in srgb, #2ecc71 32%, var(--bg-elev));
+  --gradient: linear-gradient(to right, #2ecc71, #7fd99f);
+  --shadow: 0 4px 12px color-mix(in srgb, #2ecc71 15%, transparent);
+  --shadow-hover: 0 8px 24px color-mix(in srgb, #2ecc71 25%, transparent);
+}
+
+[data-color="default"] [data-default-accent="orange"],
+[data-color="default"] .listening-section,
+[data-color="default"] .experiments-page {
+  --primary: #ff9f43;
+  --primary-light: #ffbe76;
+  --primary-dark: #e67e22;
+  --accent: #ffa562;
+  --border: #ff9f43;
+  --border-light: color-mix(in srgb, #ff9f43 32%, var(--bg-elev));
+  --gradient: linear-gradient(to right, #ff9f43, #ffbe76);
+  --shadow: 0 4px 12px color-mix(in srgb, #ff9f43 15%, transparent);
+  --shadow-hover: 0 8px 24px color-mix(in srgb, #ff9f43 25%, transparent);
+}
+
+[data-color="default"] [data-default-accent="blue"],
+[data-color="default"] .manga-section,
+[data-color="default"] .blogs-section {
+  --primary: #5dade2;
+  --primary-light: #85c1e9;
+  --primary-dark: #3498db;
+  --accent: #7fb3d5;
+  --border: #5dade2;
+  --border-light: color-mix(in srgb, #5dade2 32%, var(--bg-elev));
+  --gradient: linear-gradient(to right, #5dade2, #85c1e9);
+  --shadow: 0 4px 12px color-mix(in srgb, #5dade2 15%, transparent);
+  --shadow-hover: 0 8px 24px color-mix(in srgb, #5dade2 25%, transparent);
+}
+
+[data-color="default"] [data-default-accent="red"] {
+  --primary: #e74c3c;
+  --primary-light: #ec7063;
+  --primary-dark: #c0392b;
+  --accent: #e57373;
+  --border: #e74c3c;
+  --border-light: color-mix(in srgb, #e74c3c 32%, var(--bg-elev));
+  --gradient: linear-gradient(to right, #e74c3c, #ec7063);
+  --shadow: 0 4px 12px color-mix(in srgb, #e74c3c 15%, transparent);
+  --shadow-hover: 0 8px 24px color-mix(in srgb, #e74c3c 25%, transparent);
+}
+
+[data-color="default"] [data-default-accent="yellow"] {
+  --primary: #f1c40f;
+  --primary-light: #f7dc6f;
+  --primary-dark: #d4ac0d;
+  --accent: #f4d03f;
+  --border: #f1c40f;
+  --border-light: color-mix(in srgb, #f1c40f 32%, var(--bg-elev));
+  --gradient: linear-gradient(to right, #f1c40f, #f7dc6f);
+  --shadow: 0 4px 12px color-mix(in srgb, #f1c40f 15%, transparent);
+  --shadow-hover: 0 8px 24px color-mix(in srgb, #f1c40f 25%, transparent);
+}
+
+[data-color="default"] [data-default-accent="teal"],
+[data-color="default"] .join-section {
+  --primary: #1abc9c;
+  --primary-light: #48c9b0;
+  --primary-dark: #16a085;
+  --accent: #5dccb4;
+  --border: #1abc9c;
+  --border-light: color-mix(in srgb, #1abc9c 32%, var(--bg-elev));
+  --gradient: linear-gradient(to right, #1abc9c, #48c9b0);
+  --shadow: 0 4px 12px color-mix(in srgb, #1abc9c 15%, transparent);
+  --shadow-hover: 0 8px 24px color-mix(in srgb, #1abc9c 25%, transparent);
+}
+
 /* ==========================================================================
    BASE STYLES
    ========================================================================== */
@@ -736,6 +900,20 @@ ul {
   background: linear-gradient(to top, var(--option-to) 0%, var(--option-from) 45%, color-mix(in srgb, var(--option-from) 78%, #000) 50%, var(--option-to) 100%);
   filter: brightness(0.96);
   box-shadow: inset 0 2px 5px color-mix(in srgb, var(--option-from) 55%, transparent), inset 0 0 0 2px rgba(255,255,255,0.92), inset 0 0 0 4px color-mix(in srgb, var(--option-from) 78%, #000), 0 0 0 2px var(--option-from);
+}
+
+/* Default is the colorful swatch: a single button that previews the mixed page palette. */
+.color-option[data-color="default"] {
+  background: conic-gradient(from 220deg at 50% 50%, #6de6e2, #5dade2, #9b59b6, #ff6b9d, #ff9f43, #f1c40f, #2ecc71, #1abc9c, #6de6e2);
+}
+
+.color-option[data-color="default"]:hover {
+  background: conic-gradient(from 220deg at 50% 50%, #83ece8, #76bced, #ad70c5, #ff82ad, #ffb463, #f5d24d, #50d887, #40c8ae, #83ece8);
+}
+
+.color-option[data-color="default"].active {
+  background: conic-gradient(from 220deg at 50% 50%, #6de6e2, #5dade2, #9b59b6, #ff6b9d, #ff9f43, #f1c40f, #2ecc71, #1abc9c, #6de6e2);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.94), inset 0 0 0 4px rgba(36,51,51,0.72), 0 0 0 2px #6de6e2, 0 0 0 4px rgba(255,107,157,0.55);
 }
 
 .theme-mode-row {

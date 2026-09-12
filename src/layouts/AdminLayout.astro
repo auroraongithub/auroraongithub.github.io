@@ -29,7 +29,7 @@ const {
 } = Astro.props;
 ---
 <!doctype html>
-<html lang="en" data-theme="light" data-color="cyan">
+<html lang="en" data-theme="light" data-color="default">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -45,7 +45,7 @@ const {
         const storedTheme = localStorage.getItem('theme');
         const storedColor = localStorage.getItem('color');
         if (storedTheme) document.documentElement.dataset.theme = storedTheme;
-        if (storedColor) document.documentElement.dataset.color = storedColor;
+        if (storedColor) document.documentElement.dataset.color = storedColor === 'cyan' ? 'default' : storedColor;
       } catch (_) {}
     </script>
   </head>

@@ -4,14 +4,14 @@ import SidebarButton from './SidebarButton.astro';
 import { socialLinks } from '../data/socialLinks';
 ---
 <aside class="neo-sidebar">
-  <div class="neo-box sidebar-animate">
+  <div class="neo-box sidebar-animate" data-default-accent="cyan">
     <div class="neo-header"><h3><i class="bi bi-compass" aria-hidden="true"></i> Navigate</h3></div>
     <div class="neo-content">
       <PrimaryNav />
     </div>
   </div>
 
-  <div class="neo-box sidebar-animate">
+  <div class="neo-box sidebar-animate" data-default-accent="pink">
     <div class="neo-header"><h3><i class="bi bi-link-45deg" aria-hidden="true"></i> Links</h3></div>
     <div class="neo-content">
       <ul class="sidebar-links">
@@ -22,7 +22,7 @@ import { socialLinks } from '../data/socialLinks';
     </div>
   </div>
 
-  <div class="neo-box sidebar-animate">
+  <div class="neo-box sidebar-animate" data-default-accent="purple">
     <div class="neo-header"><h3><i class="bi bi-images" aria-hidden="true"></i> Gallery</h3></div>
     <div class="neo-content gallery-content">
       <img src="/img/pfp.png" alt="Profile" loading="lazy" />
@@ -30,7 +30,7 @@ import { socialLinks } from '../data/socialLinks';
     </div>
   </div>
 
-  <div class="neo-box sidebar-animate sidebar-more">
+  <div class="neo-box sidebar-animate sidebar-more" data-default-accent="green">
     <div class="neo-header"><h3><i class="bi bi-three-dots" aria-hidden="true"></i> More</h3></div>
     <div class="neo-content" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
       <a class="webring-badge" href="https://salamithecat.com/" target="_blank" rel="noopener noreferrer"><img src="https://salamithecat.com/button.webp" width="88" height="31" alt="Salami the Cat" /></a>
@@ -40,7 +40,7 @@ import { socialLinks } from '../data/socialLinks';
     </div>
   </div>
 
-  <div class="neo-box sidebar-animate sidebar-stats-box">
+  <div class="neo-box sidebar-animate sidebar-stats-box" data-default-accent="orange">
     <div class="neo-header"><h3><i class="bi bi-bar-chart"></i> Stats</h3></div>
     <div class="neo-content stats-content" id="sidebarStatsContent">
       <div class="stats-grid sidebar-stats">

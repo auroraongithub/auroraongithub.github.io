@@ -1,6 +1,6 @@
 const THEME_KEY = 'theme';
 const COLOR_KEY = 'color';
-const validColors = new Set(['cyan', 'pink', 'purple', 'green', 'orange', 'blue', 'red', 'yellow', 'teal']);
+const validColors = new Set(['default', 'pink', 'purple', 'green', 'orange', 'blue', 'red', 'yellow', 'teal']);
 
 function applyTheme(theme) {
   const next = theme === 'dark' ? 'dark' : 'light';
@@ -23,18 +23,23 @@ function applyTheme(theme) {
 }
 
 function applyColor(color) {
-  const next = validColors.has(color) ? color : 'cyan';
+  const migrated = color === 'cyan' ? 'default' : color;
+  const next = validColors.has(migrated) ? migrated : 'default';
   document.documentElement.dataset.color = next;
   try { localStorage.setItem(COLOR_KEY, next); } catch (_) {}
-  document.querySelectorAll('.color-option').forEach((option) => option.classList.toggle('active', option.dataset.color === next));
+  document.querySelectorAll('.color-option').forEach((option) => {
+    const active = option.dataset.color === next;
+    option.classList.toggle('active', active);
+    option.setAttribute('aria-pressed', String(active));
+  });
 }
 
 function initThemeControls() {
   let storedTheme = 'light';
-  let storedColor = 'cyan';
+  let storedColor = 'default';
   try {
     storedTheme = localStorage.getItem(THEME_KEY) || document.documentElement.dataset.theme || 'light';
-    storedColor = localStorage.getItem(COLOR_KEY) || document.documentElement.dataset.color || 'cyan';
+    storedColor = localStorage.getItem(COLOR_KEY) || document.documentElement.dataset.color || 'default';
   } catch (_) {}
   applyTheme(storedTheme);
   applyColor(storedColor);
@@ -50,7 +55,7 @@ function initThemeControls() {
   modal?.addEventListener('click', (event) => { if (event.target === modal) close(); });
   document.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(); });
   document.querySelectorAll('.color-option').forEach((option) => option.addEventListener('click', () => {
-    applyColor(option.dataset.color || 'cyan');
+    applyColor(option.dataset.color || 'default');
     close();
   }));
 }

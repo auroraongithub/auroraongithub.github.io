@@ -1,5 +1,5 @@
 export const themes = [
-  { id: 'cyan', label: 'Cyan', from: '#6de6e2', to: '#a8f5f2' },
+  { id: 'default', label: 'Default', from: '#6de6e2', to: '#ff6b9d' },
   { id: 'pink', label: 'Pink', from: '#ff6b9d', to: '#ffa4c4' },
   { id: 'purple', label: 'Purple', from: '#9b59b6', to: '#bb8fce' },
   { id: 'green', label: 'Green', from: '#2ecc71', to: '#7fd99f' },
