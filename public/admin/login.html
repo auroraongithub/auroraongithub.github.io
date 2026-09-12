@@ -1,117 +1,96 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Admin Login · elythria.dev</title>
     <link rel="stylesheet" href="./../assets/styles.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+      .admin-login-page { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+      .admin-login-page .neo-container { width: min(860px, 100%); }
+      .admin-login-page .site-banner { margin-bottom: 0; }
+      .admin-login-page .admin-label { margin-left: auto; color: rgba(255,255,255,.78); font: 700 .72rem/1 'Courier New', monospace; letter-spacing: .12em; text-transform: uppercase; }
+      .admin-login-page .admin-controls { display: flex; gap: 6px; margin-left: 14px; }
+      .admin-login-page .admin-controls button { border: 1px solid rgba(255,255,255,.45); border-radius: 6px; padding: 6px 9px; background: rgba(255,255,255,.14); color: #fff; cursor: pointer; font: 600 .72rem/1 'Poppins', sans-serif; }
+      .admin-login-page .admin-controls button:hover { background: rgba(255,255,255,.26); }
+      .admin-login-page .neo-layout { align-items: stretch; padding: 10px; }
+      .admin-login-page .neo-sidebar { flex-basis: 176px; position: static; max-height: none; }
+      .admin-login-page .neo-sidebar .neo-box { margin-bottom: 0; }
+      .admin-login-page .neo-sidebar .neo-content { max-height: none; padding: 9px; }
+      .admin-login-page .neo-sidebar li { margin-bottom: 3px; }
+      .admin-login-page .neo-sidebar a { display: block; padding: 7px 8px; border-radius: 5px; color: var(--text-muted); font-size: .82rem; }
+      .admin-login-page .neo-sidebar a:hover, .admin-login-page .neo-sidebar a:focus-visible { background: var(--bg); color: var(--primary); }
+      .admin-login-page .neo-main { justify-content: center; }
+      .admin-login-page .login-panel { max-width: 520px; margin: auto; width: 100%; }
+      .admin-login-page .login-content { padding: 18px 20px 20px; }
+      .admin-login-page .login-form { gap: 14px; }
+      .admin-login-page .field { gap: 5px; }
+      .admin-login-page .field label { font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; }
+      .admin-login-page .field input { padding: 10px 12px; }
+      .admin-login-page .login-submit { width: 100%; margin-top: 4px; }
+      .color-picker-close { font-family: inherit; font-size: .72rem; }
+      @media (max-width: 640px) {
+        .admin-login-page { padding: 12px; }
+        .admin-login-page .admin-controls button { padding-inline: 7px; }
+        .admin-login-page .neo-layout { display: block; }
+        .admin-login-page .neo-sidebar { margin-bottom: 10px; }
+        .admin-login-page .neo-sidebar .neo-content { padding: 7px; }
+        .admin-login-page .neo-sidebar ul { display: flex; flex-wrap: wrap; gap: 4px; }
+        .admin-login-page .neo-sidebar li { margin: 0; flex: 1 1 30%; }
+        .admin-login-page .neo-sidebar a { text-align: center; }
+      }
+      @media (max-width: 420px) {
+        .admin-login-page .site-banner { align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+        .admin-login-page .admin-label { margin-left: 0; }
+        .admin-login-page .admin-controls { width: 100%; margin-left: 0; }
+        .admin-login-page .admin-controls button { flex: 1; }
+      }
+    </style>
   </head>
-  <body>
-    <!-- Color Picker Modal -->
+  <body class="admin-login-page">
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
-        <div class="color-picker-header">
-          <h3>Choose Your Color</h3>
-          <button class="color-picker-close" data-color-close>
-            <i class="bi bi-x-lg"></i>
-          </button>
-        </div>
+        <div class="color-picker-header"><h3>Choose your color</h3><button class="color-picker-close" type="button" data-color-close>Close</button></div>
         <div class="color-picker-options">
-          <button class="color-option" data-color="cyan" title="Cyan (Current)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div>
-            <span>Cyan</span>
-          </button>
-          <button class="color-option" data-color="pink" title="Pink (Original)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div>
-            <span>Pink</span>
-          </button>
-          <button class="color-option" data-color="purple" title="Purple">
-            <div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div>
-            <span>Purple</span>
-          </button>
-          <button class="color-option" data-color="green" title="Green">
-            <div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div>
-            <span>Green</span>
-          </button>
-          <button class="color-option" data-color="orange" title="Orange">
-            <div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div>
-            <span>Orange</span>
-          </button>
-          <button class="color-option" data-color="blue" title="Blue">
-            <div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div>
-            <span>Blue</span>
-          </button>
-          <button class="color-option" data-color="red" title="Red">
-            <div class="color-preview" style="background: linear-gradient(135deg, #e74c3c, #ec7063);"></div>
-            <span>Red</span>
-          </button>
-          <button class="color-option" data-color="yellow" title="Yellow">
-            <div class="color-preview" style="background: linear-gradient(135deg, #f1c40f, #f7dc6f);"></div>
-            <span>Yellow</span>
-          </button>
-          <button class="color-option" data-color="teal" title="Teal">
-            <div class="color-preview" style="background: linear-gradient(135deg, #1abc9c, #48c9b0);"></div>
-            <span>Teal</span>
-          </button>
+          <button class="color-option" data-color="cyan" title="Cyan"><div class="color-preview" style="background: linear-gradient(135deg, #6de6e2, #a8f5f2);"></div><span>Cyan</span></button>
+          <button class="color-option" data-color="pink" title="Pink"><div class="color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ffa4c4);"></div><span>Pink</span></button>
+          <button class="color-option" data-color="purple" title="Purple"><div class="color-preview" style="background: linear-gradient(135deg, #9b59b6, #bb8fce);"></div><span>Purple</span></button>
+          <button class="color-option" data-color="green" title="Green"><div class="color-preview" style="background: linear-gradient(135deg, #2ecc71, #7fd99f);"></div><span>Green</span></button>
+          <button class="color-option" data-color="orange" title="Orange"><div class="color-preview" style="background: linear-gradient(135deg, #ff9f43, #ffbe76);"></div><span>Orange</span></button>
+          <button class="color-option" data-color="blue" title="Blue"><div class="color-preview" style="background: linear-gradient(135deg, #5dade2, #85c1e9);"></div><span>Blue</span></button>
+          <button class="color-option" data-color="red" title="Red"><div class="color-preview" style="background: linear-gradient(135deg, #e74c3c, #ec7063);"></div><span>Red</span></button>
+          <button class="color-option" data-color="yellow" title="Yellow"><div class="color-preview" style="background: linear-gradient(135deg, #f1c40f, #f7dc6f);"></div><span>Yellow</span></button>
+          <button class="color-option" data-color="teal" title="Teal"><div class="color-preview" style="background: linear-gradient(135deg, #1abc9c, #48c9b0);"></div><span>Teal</span></button>
         </div>
       </div>
     </div>
-
     <div class="neo-container">
-      <!-- Site Banner/Header -->
-      <div class="site-banner">
-        <div class="brand">elythria.dev</div>
-        <div class="header-controls">
-          <button class="color-picker-toggle" title="Change color" data-color-picker>
-            <i class="bi bi-palette"></i>
-          </button>
-          <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
-            <i class="bi bi-brightness-high"></i>
-          </button>
-        </div>
-      </div>
-
+      <header class="site-banner">
+        <a href="/" class="brand" style="text-decoration: none !important; color: #fff !important;">elythria.dev</a>
+        <span class="admin-label">Admin</span>
+        <div class="admin-controls" aria-label="Display controls"><button type="button" data-color-picker>Color</button><button type="button" data-toggle-theme>Theme</button></div>
+      </header>
       <div class="neo-layout">
-        <aside class="neo-sidebar">
-          <div class="neo-box">
-            <div class="neo-header"><h3>Navigate</h3></div>
-            <div class="neo-content">
-              <ul>
-                <li><a href="./blogs.html">Blogs</a></li>
-                <li><a href="./stories.html">Stories</a></li>
-                <li><a href="./add-post.html">Add Post</a></li>
-              </ul>
-            </div>
-          </div>
+        <aside class="neo-sidebar" aria-label="Admin navigation">
+          <div class="neo-box"><div class="neo-header"><h2>Navigate</h2></div><div class="neo-content"><ul><li><a href="./blogs.html">Blogs</a></li><li><a href="./stories.html">Stories</a></li><li><a href="./add-post.html">Add Post</a></li></ul></div></div>
         </aside>
-
         <main class="neo-main">
-          <section class="neo-box">
-            <div class="neo-header"><h2>Admin Login</h2></div>
-            <div class="neo-content">
-              <form id="loginForm" class="form">
-                <div class="field">
-                  <label for="email">Email</label>
-                  <input id="email" type="email" placeholder="name@example.com" required />
-                </div>
-                <div class="field">
-                  <label for="password">Password</label>
-                  <input id="password" type="password" placeholder="••••••" required />
-                </div>
-                <button class="btn btn-primary" type="submit">Login</button>
+          <section class="neo-box login-panel">
+            <div class="neo-header"><h1>Admin login</h1></div>
+            <div class="neo-content login-content">
+              <form id="loginForm" class="form login-form">
+                <div class="field"><label for="email">Email</label><input id="email" type="email" placeholder="name@example.com" autocomplete="username" required /></div>
+                <div class="field"><label for="password">Password</label><input id="password" type="password" placeholder="Enter your password" autocomplete="current-password" required /></div>
+                <button class="btn btn-primary login-submit" type="submit">Log in</button>
               </form>
             </div>
           </section>
         </main>
       </div>
     </div>
-
     <script type="module">
       import './login_logic.js';
       import '../assets/app.js';
     </script>
   </body>
 </html>
-
-

@@ -1,24 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Admin</title>
-    </head>
-    <body>
-        <script>
-            window.onload = () => {
-                try {
-                    const token = sessionStorage.getItem('jwt');
-                    if (!token) {
-                        window.location.href = './login.html';
-                    } else {
-                        window.location.href = './blogs.html';
-                    }
-                } catch (err) {
-                    window.location.href = './login.html';
-                }
-            };
-        </script>
-    </body>
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin · elythria.dev</title>
+    <link rel="stylesheet" href="./../assets/styles.css" />
+    <style>
+      body.admin-entry { display: grid; min-height: 100vh; place-items: center; padding: 20px; }
+      .admin-entry .neo-container { width: min(520px, 100%); }
+      .admin-entry .site-banner { margin-bottom: 0; }
+      .admin-entry .entry-panel { margin: 10px; }
+      .admin-entry .entry-content { display: grid; gap: 8px; padding: 18px; text-align: center; }
+      .admin-entry .entry-status { display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: var(--primary); font: .78rem/1.4 'Courier New', monospace; }
+      .admin-entry .entry-status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent); }
+      @media (max-width: 500px) { body.admin-entry { padding: 12px; } .admin-entry .entry-panel { margin: 8px; } }
+    </style>
+  </head>
+  <body class="admin-entry">
+    <div class="neo-container" aria-live="polite">
+      <header class="site-banner"><div class="brand">elythria.dev</div><span class="admin-label">Admin</span></header>
+      <section class="neo-box entry-panel">
+        <div class="neo-header"><h1>Opening dashboard</h1></div>
+        <div class="neo-content entry-content"><span class="entry-status">Checking your session</span></div>
+      </section>
+    </div>
+    <script>
+      window.onload = () => {
+        try {
+          const token = sessionStorage.getItem('jwt');
+          window.location.href = token ? './blogs.html' : './login.html';
+        } catch (err) {
+          window.location.href = './login.html';
+        }
+      };
+    </script>
+  </body>
 </html>
