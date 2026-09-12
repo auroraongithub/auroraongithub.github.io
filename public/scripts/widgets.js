@@ -149,15 +149,15 @@ async function loadFavorites(category = favoriteCategory) {
   const track = document.getElementById('favoritesTrack');
   if (!track) return;
   favoriteCategory = category;
-  track.innerHTML = '<div class="loading-small" style="text-align:center;padding:40px;">Loading favorites...</div>';
+  track.innerHTML = '<div class="favorites-state loading-small">Loading favorites...</div>';
   try {
     const payload = await cachedFetch(`/site/favorites?category=${encodeURIComponent(category)}`, 120_000);
     const items = payload.items || [];
-    track.innerHTML = items.length ? items.map(favoriteCardMarkup).join('') : '<p class="text-muted" style="padding:40px;">No favorites added yet.</p>';
+    track.innerHTML = items.length ? items.map(favoriteCardMarkup).join('') : '<p class="favorites-state text-muted">No favorites added yet.</p>';
     window.dispatchEvent(new Event('favorites:rendered'));
   } catch (error) {
     console.warn('Favorites unavailable', error);
-    track.innerHTML = '<p class="text-muted" style="padding:40px;">Failed to load favorites.</p>';
+    track.innerHTML = '<p class="favorites-state text-muted">Failed to load favorites.</p>';
   }
 }
 

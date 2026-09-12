@@ -2390,6 +2390,20 @@ ul {
   text-decoration: none;
 }
 
+.favorites-carousel .carousel-track:has(.favorites-state) {
+  display: flex;
+  min-height: 220px;
+  align-items: center;
+  justify-content: center;
+}
+
+.favorites-carousel .favorites-state {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 32px 16px;
+  text-align: center;
+}
+
 .favorites-carousel .carousel-item img {
   height: 190px;
   aspect-ratio: 3/4;
