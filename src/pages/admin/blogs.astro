@@ -10,11 +10,13 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   <div class="blog-admin-page">
     <AdminPostWorkspace active="blogs">
       <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/add-post/">Add Post</a></Fragment>
-      <div class="blog-toolbar" role="search" aria-label="Filter blog posts">
+      <div class="blog-toolbar post-controls" role="search" aria-label="Filter blog posts">
         <div class="blog-toolbar-controls">
-          <AdminField label="Find posts" forId="blogSearch">
-            <input id="blogSearch" type="search" placeholder="Title or tag" autocomplete="off" />
-          </AdminField>
+          <label class="post-search">
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <span class="visually-hidden">Search blogs</span>
+            <input id="blogSearch" type="search" class="form-control" placeholder="Search the archive..." aria-label="Search blogs" autocomplete="off" />
+          </label>
           <AdminField label="Year" forId="blogYear">
             <select id="blogYear">
               <option value="all">All years</option>
@@ -25,7 +27,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
             <button class="btn btn-ghost" type="button" id="blogFilterReset">Reset</button>
           </div>
         </div>
-        <div class="blog-toolbar-footer">
+        <div class="blog-toolbar-footer tag-filters">
           <AdminTabs
             tabs={[{ id: 'all', label: 'All posts' }, { id: 'tagged', label: 'Tagged' }, { id: 'untagged', label: 'No tags' }]}
             dataAttribute="category"
@@ -580,6 +582,272 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     .blog-post-type-tabs :global(.admin-tab) {
       flex: 1;
       justify-content: center;
+    }
+  }
+
+  /* Keep the archive controls in the same mail-shelf language as /blogs/. */
+  .blog-admin-page :global(.blog-toolbar.post-controls) {
+    display: grid;
+    gap: 6px;
+    margin: 0 0 9px;
+    padding: 0 0 8px;
+    border: 0;
+    border-bottom: 1px dotted var(--primary-dark);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .blog-admin-page :global(.blog-toolbar .post-search) {
+    position: relative;
+    display: block;
+    min-width: 0;
+  }
+
+  .blog-admin-page :global(.blog-toolbar .post-search > i) {
+    position: absolute;
+    top: 50%;
+    left: 9px;
+    z-index: 1;
+    color: var(--primary-dark);
+    font-size: .74rem;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+
+  .blog-admin-page :global(.blog-toolbar .post-search .form-control) {
+    min-height: 0;
+    padding: 7px 9px 7px 25px;
+    border: 1px solid var(--primary-dark);
+    border-radius: 4px;
+    background: linear-gradient(to bottom, var(--bg-elev) 0%, color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)) 45%, color-mix(in srgb, var(--primary-dark) 12%, var(--bg-elev)) 50%, var(--bg-elev) 100%);
+    color: var(--text);
+    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    font-size: .76rem;
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, .12), inset 0 1px 0 rgba(255, 255, 255, .75);
+  }
+
+  .blog-admin-page :global(.blog-toolbar .post-search .form-control:focus) {
+    outline: 1px solid var(--primary);
+    border-color: var(--primary-dark);
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, .12), 0 0 0 2px color-mix(in srgb, var(--primary-light) 30%, transparent);
+  }
+
+  .blog-admin-page :global(.blog-toolbar .admin-field label) {
+    color: var(--primary-dark);
+    font: 700 .62rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .blog-admin-page :global(.blog-toolbar .admin-field select) {
+    min-height: 0;
+    padding: 7px 8px;
+    border: 1px solid var(--primary-dark);
+    border-radius: 4px;
+    background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
+    color: var(--text);
+    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    font-size: .76rem;
+  }
+
+  .blog-admin-page :global(.blog-toolbar-actions) {
+    min-height: 0;
+    align-items: end;
+    gap: 5px;
+  }
+
+  .blog-admin-page :global(.blog-toolbar-actions .admin-status) {
+    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  }
+
+  .blog-admin-page :global(.blog-toolbar-actions .btn) {
+    min-height: 0;
+    padding: 7px 9px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
+    color: var(--text-muted);
+    font: 700 .66rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .8);
+    text-transform: uppercase;
+  }
+
+  .blog-admin-page :global(.blog-toolbar-actions .btn:hover) {
+    border-color: var(--primary);
+    background: linear-gradient(to bottom, var(--primary-light), var(--primary));
+    color: var(--bg);
+    transform: none;
+  }
+
+  .blog-admin-page :global(.blog-toolbar-footer.tag-filters) {
+    display: flex;
+    min-height: 0;
+    align-items: end;
+    justify-content: flex-start;
+    gap: 3px;
+    padding: 0;
+    border: 0;
+  }
+
+  .blog-admin-page :global(.blog-toolbar-footer .admin-tabs) {
+    display: contents;
+  }
+
+  .blog-admin-page :global(.blog-toolbar-footer .admin-tab) {
+    min-height: 0 !important;
+    padding: 4px 8px !important;
+    border: 1px solid var(--border-light);
+    border-radius: 4px 4px 2px 2px !important;
+    background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
+    color: var(--text-muted);
+    font: 700 .66rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif !important;
+    letter-spacing: .02em;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .8);
+  }
+
+  .blog-admin-page :global(.blog-toolbar-footer .admin-tab:hover) {
+    border-color: var(--primary);
+    background: linear-gradient(to bottom, var(--primary-light), var(--primary));
+    color: var(--bg);
+    transform: none;
+  }
+
+  .blog-admin-page :global(.blog-toolbar-footer .admin-tab.active) {
+    border-color: var(--primary-dark);
+    background: var(--primary);
+    color: var(--bg);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .55), inset 0 -1px 1px color-mix(in srgb, var(--primary-dark) 70%, transparent);
+  }
+
+  @media (max-width: 560px) {
+    .blog-toolbar-controls {
+      grid-template-columns: minmax(0, 1fr) minmax(100px, 1fr);
+    }
+
+    .blog-toolbar-controls .post-search {
+      grid-column: 1 / -1;
+    }
+
+    .blog-toolbar-actions {
+      grid-column: 1 / -1;
+      justify-content: flex-end;
+    }
+  }
+
+  /* The legacy page rules are broader than the admin card rules, so keep the
+     dynamically rendered admin entries on the same compact card system. */
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item) {
+    position: relative;
+    display: flex;
+    height: 106px;
+    min-height: 106px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--bg-elev) 86%, transparent);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .75), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 30%, transparent), 1px 1px 2px rgba(0, 0, 0, .12);
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item:hover) {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev));
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .85), 0 1px 3px color-mix(in srgb, var(--primary-dark) 22%, transparent);
+    transform: none;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-head) {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+    position: relative;
+    min-width: 0;
+    padding: 7px 8px;
+    padding-right: 96px;
+    border-bottom: 1px solid var(--primary-dark);
+    background: linear-gradient(to bottom, var(--primary-light) 0%, var(--primary) 45%, var(--primary-dark) 50%, var(--primary-light) 100%);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .6);
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-head h3) {
+    display: -webkit-box;
+    min-width: 0;
+    overflow: hidden;
+    margin: 0;
+    color: var(--bg);
+    font: 700 .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-overflow: ellipsis;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-head .post-card-icon),
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-head a) {
+    color: var(--bg);
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-body) {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    padding: 8px;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-meta) {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
+    color: var(--text-muted);
+    font: .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-actions) {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    gap: 5px;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-actions .btn) {
+    min-height: 22px;
+    padding: 3px 6px;
+    border: 1px solid color-mix(in srgb, #fff 62%, var(--primary-dark));
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--bg-elev) 78%, transparent);
+    font: 700 .6rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-transform: uppercase;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-actions .btn:hover) {
+    background: #fff;
+    transform: none;
+  }
+
+  @media (max-width: 560px) {
+    .blog-admin-page :global(.admin-post-workspace .admin-post-list) {
+      grid-template-columns: 1fr;
     }
   }
 </style>

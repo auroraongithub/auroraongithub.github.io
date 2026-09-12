@@ -7,12 +7,12 @@ const { type, title, showIcon = true, panel = true } = Astro.props;
 {panel ? (
   <AdminPanel title={title} icon={showIcon ? (type === 'blog' ? 'bi-journal-text' : 'bi-book') : undefined} class="admin-post-panel">
     <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/add-post/">Add Post</a></Fragment>
-    <div class="admin-list admin-post-list" data-admin-post-list data-post-type={type}>
+    <div class="admin-list admin-post-list masonry-grid" data-admin-post-list data-post-type={type}>
       <p class="admin-status" data-state="loading">Loading {type === 'blog' ? 'posts' : 'stories'}…</p>
     </div>
   </AdminPanel>
 ) : (
-  <div class="admin-list admin-post-list" data-admin-post-list data-post-type={type}>
+  <div class="admin-list admin-post-list masonry-grid" data-admin-post-list data-post-type={type}>
     <p class="admin-status" data-state="loading">Loading {type === 'blog' ? 'posts' : 'stories'}…</p>
   </div>
 )}
@@ -38,12 +38,15 @@ const { type, title, showIcon = true, panel = true } = Astro.props;
       root.innerHTML = years.map((year) => `
         <div class="admin-list-group-title">${escapeHtml(year.year)}</div>
         ${(year.posts || []).map((post) => `
-          <article class="admin-list-item" data-post-id="${escapeHtml(post.id)}">
-            <div class="admin-list-item-head"><h3><a href="/admin/post/?id=${encodeURIComponent(post.id)}">${escapeHtml(post.title)}</a></h3></div>
-            <div class="admin-list-item-body">
-              <div class="admin-list-meta">
-                <span><i class="bi bi-calendar3"></i> ${escapeHtml(post.date || '')}</span>
-                <span><i class="bi bi-tags"></i> ${escapeHtml(post.tags || 'No tags')}</span>
+          <article class="admin-list-item masonry-item post-card" data-post-id="${escapeHtml(post.id)}">
+            <div class="admin-list-item-head item-header">
+              <span class="post-card-icon" aria-hidden="true"><i class="bi ${type === 'blog' ? 'bi-envelope-paper' : 'bi-book'}"></i></span>
+              <h3><a href="/admin/post/?id=${encodeURIComponent(post.id)}">${escapeHtml(post.title)}</a></h3>
+            </div>
+            <div class="admin-list-item-body item-content">
+              <div class="admin-list-meta item-meta">
+                <span class="post-date"><i class="bi bi-calendar3"></i> ${escapeHtml(post.date || '')}</span>
+                <span class="post-tags"><span class="chip"><i class="bi bi-tags"></i> ${escapeHtml(post.tags || 'No tags')}</span></span>
               </div>
             </div>
             <div class="admin-list-item-actions">

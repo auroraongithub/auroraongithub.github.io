@@ -9,7 +9,7 @@ const postTabs = [
   { id: 'stories', label: 'Stories' }
 ] as const;
 ---
-<section class="neo-box scroll-animate admin-post-workspace">
+<section class:list={['neo-box', 'scroll-animate', 'admin-post-workspace', `${active}-section`]}>
   <div class="neo-header admin-post-workspace-header">
     <AdminTabs tabs={postTabs} active={active} dataAttribute="category" />
     <div class="admin-post-workspace-actions"><slot name="actions" /></div>
@@ -156,8 +156,17 @@ const postTabs = [
 
   .admin-post-workspace .admin-post-list {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 5px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .admin-post-workspace .masonry-item {
+    opacity: 1;
+    transform: none;
+  }
+
+  .admin-post-workspace .masonry-item:hover {
+    transform: none;
   }
 
   .admin-post-workspace .admin-post-list .admin-list-group-title {
@@ -175,67 +184,84 @@ const postTabs = [
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: "head actions" "body actions";
-    gap: 3px 10px;
-    align-items: center;
+    position: relative;
+    display: flex;
+    min-height: 112px;
+    flex-direction: column;
     min-width: 0;
-    padding: 8px 10px;
+    padding: 0;
+    overflow: hidden;
     border: 1px solid var(--border-light);
     border-radius: 4px;
-    background: linear-gradient(to bottom, color-mix(in srgb, var(--card) 94%, var(--primary-light)), var(--card));
+    background: color-mix(in srgb, var(--bg-elev) 86%, transparent);
     box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 34%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
     transition: border-color .16s ease, background-color .16s ease;
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item:hover {
     border-color: var(--primary);
-    background: var(--gradient-subtle);
+    background: color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev));
     box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 38%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 20%, transparent);
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item-head {
-    grid-area: head;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
     min-width: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
+    padding: 7px 8px;
+    padding-right: 94px;
+    border-bottom: 1px solid var(--primary-dark);
+    background: linear-gradient(to bottom, var(--primary-light) 0%, var(--primary) 45%, var(--primary-dark) 50%, var(--primary-light) 100%);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .6);
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item-head h3 {
     overflow: hidden;
     margin: 0;
-    font: 700 .82rem/1.3 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    font: 700 .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
+  .admin-post-workspace .admin-post-list .admin-list-item-head .post-card-icon {
+    color: var(--bg);
+    font-size: .72rem;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
+  }
+
   .admin-post-workspace .admin-post-list .admin-list-item-head a {
-    color: var(--text);
+    color: var(--bg);
     text-decoration: none;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item-head a:hover {
-    color: var(--primary-dark);
+    color: #fff;
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item-body {
-    grid-area: body;
+    display: flex;
+    flex: 1;
     min-width: 0;
-    padding: 0;
+    flex-direction: column;
+    padding: 8px;
   }
 
   .admin-post-workspace .admin-post-list .admin-list-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 3px 10px;
-    overflow: hidden;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
     color: var(--text-muted);
-    font: .68rem/1.3 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-    white-space: nowrap;
+    font: .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   }
 
   .admin-post-workspace .admin-post-list .admin-list-meta span {
@@ -243,27 +269,63 @@ const postTabs = [
     text-overflow: ellipsis;
   }
 
+  .admin-post-workspace .admin-post-list .admin-list-meta .post-date {
+    flex: 0 0 auto;
+    color: var(--primary-dark);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .admin-post-workspace .admin-post-list .admin-list-meta .post-tags {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 3px;
+  }
+
+  .admin-post-workspace .admin-post-list .admin-list-meta .chip {
+    max-width: 100%;
+    overflow: hidden;
+    padding: 2px 5px;
+    border: 1px solid var(--border-light);
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev));
+    color: var(--text-muted);
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .admin-post-workspace .admin-post-list .admin-list-meta i {
     display: none;
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item-actions {
-    grid-area: actions;
     display: flex;
     align-items: center;
+    position: absolute;
+    top: 6px;
+    right: 6px;
     gap: 5px;
-    min-height: 100%;
-    padding: 0 0 0 10px;
-    border-left: 1px solid var(--border-light);
-    background: color-mix(in srgb, var(--bg-elev) 76%, var(--primary-light));
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item-actions .btn {
     min-height: 25px;
-    padding: 4px 7px;
+    padding: 3px 6px;
     border-radius: 4px;
+    border-color: color-mix(in srgb, #fff 62%, var(--primary-dark));
+    background: color-mix(in srgb, var(--bg-elev) 78%, transparent);
     font: 700 .62rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     text-transform: uppercase;
+  }
+
+  .admin-post-workspace .admin-post-list .admin-list-item-actions .btn:hover {
+    background: #fff;
   }
 
   .admin-post-workspace .admin-post-list > .admin-status {
@@ -281,16 +343,16 @@ const postTabs = [
 
   @media (max-width: 560px) {
     .admin-post-workspace .admin-post-list .admin-list-item {
-      grid-template-columns: 1fr;
-      grid-template-areas: "head" "body" "actions";
+      min-height: 108px;
     }
 
     .admin-post-workspace .admin-post-list .admin-list-item-actions {
       min-height: 0;
-      padding: 6px 0 0;
-      border-top: 1px solid var(--border-light);
-      border-left: 0;
+      top: 5px;
+      right: 5px;
     }
+
+    .admin-post-workspace .admin-post-list { grid-template-columns: 1fr; }
   }
 
   @keyframes admin-post-stripe-move {
