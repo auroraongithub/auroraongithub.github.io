@@ -36,6 +36,40 @@
         width: 0%;
       }
       .progress-text { font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; }
+
+      .favorite-list-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+      .favorite-list-toolbar h4 { margin: 0; }
+      .favorite-sync-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .favorite-sync-status {
+        color: var(--text-muted);
+        font-size: 0.78rem;
+      }
+      .favorite-sync-status[data-state="ready"] { color: #2ecc71; }
+      .favorite-sync-status[data-state="pending"] { color: var(--primary); }
+      .favorite-sync-status[data-state="error"] { color: #e74c3c; }
+      .favorite-sync-progress {
+        display: none;
+        margin-top: 10px;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg);
+      }
+      .favorite-sync-progress.show { display: block; }
+      .favorite-sync-progress .progress-text { margin-top: 6px; }
       
       .add-section {
         background: var(--bg-secondary);
@@ -500,11 +534,18 @@
               </div>
 
               <!-- Favorites List -->
-              <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 30px;">
+              <div class="favorite-list-toolbar">
                 <h4 style="margin: 0;"><i class="bi bi-grid"></i> Current Favorites (<span id="favCount">0</span>)</h4>
-                <button type="button" class="btn btn-ghost" id="syncJikanBtn" onclick="syncJikanCache()" title="Fetch and save current MAL metadata">
-                  <i class="bi bi-arrow-repeat"></i> Sync Jikan cache
-                </button>
+                <div class="favorite-sync-actions">
+                  <span class="favorite-sync-status" id="favoriteSyncStatus" role="status" aria-live="polite">Checking Jikan cache…</span>
+                  <button type="button" class="btn btn-ghost" id="syncJikanBtn" onclick="syncJikanCache()" title="Fetch and save missing MAL metadata">
+                    <i class="bi bi-arrow-repeat"></i> <span id="syncJikanLabel">Sync missing</span>
+                  </button>
+                </div>
+              </div>
+              <div class="favorite-sync-progress" id="favoriteSyncProgress" aria-live="polite">
+                <div class="progress-bar"><div class="progress-fill" id="favoriteSyncFill"></div></div>
+                <div class="progress-text" id="favoriteSyncText">Waiting to sync...</div>
               </div>
               <div class="favorites-list" id="favoritesList">
                 <div class="loading">Loading...</div>
@@ -530,6 +571,71 @@
 
       function favoriteMalId(item) {
         return item?.mal_id ?? item?.malId ?? item?.myanimelist_id ?? item?.myanimelistId ?? null;
+      }
+
+      function favoriteJikan(item) {
+        const current = item?.jikan && typeof item.jikan === 'object' ? item.jikan : {};
+        const legacy = item?.jikan_metadata && typeof item.jikan_metadata === 'object' ? item.jikan_metadata : {};
+        const merged = { ...legacy, ...current };
+        return Object.keys(merged).length ? merged : null;
+      }
+
+      function hasJikanCache(item) {
+        return Boolean(favoriteJikan(item));
+      }
+
+      function syncDate(value) {
+        if (!value) return null;
+        const date = new Date(typeof value === 'number' ? value : String(value));
+        return Number.isNaN(date.valueOf()) ? null : date;
+      }
+
+      function updateJikanSyncStatus() {
+        const status = document.getElementById('favoriteSyncStatus');
+        const button = document.getElementById('syncJikanBtn');
+        const label = document.getElementById('syncJikanLabel');
+        if (!status || !button || !label) return;
+
+        if (currentCategory === 'games') {
+          status.dataset.state = 'error';
+          status.textContent = 'Jikan does not provide game stats';
+          label.textContent = 'Sync unavailable';
+          button.disabled = true;
+          return;
+        }
+
+        const linked = favorites.filter((item) => favoriteMalId(item));
+        const cached = linked.filter(hasJikanCache).length;
+        const missing = linked.length - cached;
+        const latest = linked
+          .map((item) => syncDate(favoriteJikan(item)?.synced_at))
+          .filter(Boolean)
+          .sort((a, b) => b - a)[0];
+        const lastSync = latest ? ` · Last saved ${latest.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}` : '';
+
+        if (!linked.length) {
+          status.dataset.state = 'neutral';
+          status.textContent = 'No MAL IDs linked yet';
+          label.textContent = 'Sync missing';
+          button.disabled = true;
+        } else if (missing) {
+          status.dataset.state = 'pending';
+          status.textContent = `${cached}/${linked.length} cached · ${missing} waiting for Jikan${lastSync}`;
+          label.textContent = `Sync ${missing} missing`;
+          button.disabled = false;
+        } else {
+          status.dataset.state = 'ready';
+          status.textContent = `All ${linked.length} MAL entries cached${lastSync}`;
+          label.textContent = 'Refresh cache';
+          button.disabled = false;
+        }
+      }
+
+      function setJikanSyncStatus(message, state = 'neutral') {
+        const status = document.getElementById('favoriteSyncStatus');
+        if (!status) return;
+        status.dataset.state = state;
+        status.textContent = message;
       }
 
       function jikanYear(data) {
@@ -583,21 +689,30 @@
         const token = localStorage.getItem('jwt');
         if (!token) return alert('Not logged in');
         const category = currentCategory;
-        const indexed = favorites.map((item, index) => ({ item, index })).filter(({ item }) => favoriteMalId(item) && !item.jikan);
-        if (!indexed.length) return alert('All MAL-linked entries already have cached Jikan metadata.');
-        if (!indexed.length) return alert('No MAL-linked entries to sync in this category.');
+        if (category === 'games') {
+          setJikanSyncStatus('Jikan does not provide game stats', 'error');
+          return;
+        }
+        const indexed = favorites.map((item, index) => ({ item, index })).filter(({ item }) => favoriteMalId(item) && !hasJikanCache(item));
+        if (!indexed.length) {
+          updateJikanSyncStatus();
+          setJikanSyncStatus('Nothing missing — all MAL entries already have saved Jikan metadata.', 'ready');
+          return;
+        }
 
         const button = document.getElementById('syncJikanBtn');
-        const progressEl = document.getElementById('importProgress');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
+        const progressEl = document.getElementById('favoriteSyncProgress');
+        const progressFill = document.getElementById('favoriteSyncFill');
+        const progressText = document.getElementById('favoriteSyncText');
         if (button) button.disabled = true;
         progressEl.classList.add('show');
         progressFill.style.width = '0%';
         progressText.textContent = `Syncing ${indexed.length} ${category} entries from Jikan...`;
+        setJikanSyncStatus(`Syncing 0/${indexed.length} from Jikan…`, 'pending');
 
         const updated = [...favorites];
         let synced = 0;
+        const failed = [];
         try {
           for (const [{ item, index }, position] of indexed.map((entry, position) => [entry, position])) {
             try {
@@ -614,9 +729,12 @@
               }
             } catch (error) {
               console.warn(`Could not sync ${item.title}`, error);
+              failed.push(item.title || `Entry ${position + 1}`);
             }
-            progressFill.style.width = `${Math.round(((position + 1) / indexed.length) * 75)}%`;
-            progressText.textContent = `Synced ${position + 1} of ${indexed.length}...`;
+            const completed = position + 1;
+            progressFill.style.width = `${Math.round((completed / indexed.length) * 75)}%`;
+            progressText.textContent = `Checked ${completed} of ${indexed.length} · ${synced} saved${failed.length ? ` · ${failed.length} waiting` : ''}`;
+            setJikanSyncStatus(`Syncing ${completed}/${indexed.length} · ${synced} saved`, 'pending');
           }
 
           const response = await fetch(`${API_BASE}/admin/favorites?token=${token}`, {
@@ -628,12 +746,20 @@
           favorites = updated;
           renderFavorites();
           progressFill.style.width = '100%';
-          progressText.textContent = `Saved ${synced} Jikan metadata records to the backend cache.`;
-          setTimeout(() => progressEl.classList.remove('show'), 2500);
+          progressText.textContent = failed.length
+            ? `Finished · ${synced} saved · ${failed.length} still unavailable. Run sync again later.`
+            : `Finished · ${synced} Jikan metadata records saved to the backend cache.`;
+          setJikanSyncStatus(
+            failed.length
+              ? `Sync finished · ${synced} saved · ${failed.length} still waiting for Jikan.`
+              : `Sync complete · ${synced} Jikan records saved to the backend cache.`,
+            failed.length ? 'pending' : 'ready'
+          );
         } catch (error) {
           console.error(error);
           progressFill.style.width = '0%';
           progressText.textContent = `Sync failed: ${error.message}`;
+          setJikanSyncStatus(`Sync failed: ${error.message}`, 'error');
         } finally {
           if (button) button.disabled = false;
         }
@@ -676,9 +802,11 @@
           const data = await res.json();
           favorites = data.items || [];
           renderFavorites();
+          updateJikanSyncStatus();
         } catch (err) {
           console.error(err);
           listEl.innerHTML = '<p class="text-muted">Failed to load favorites.</p>';
+          setJikanSyncStatus('Could not check the Jikan cache', 'error');
         }
       }
       
@@ -688,6 +816,7 @@
         
         if (!favorites.length) {
           listEl.innerHTML = '<p class="text-muted">No favorites yet. Add some above!</p>';
+          updateJikanSyncStatus();
           return;
         }
         
@@ -716,6 +845,7 @@
             </div>
           </div>
         `).join('');
+        updateJikanSyncStatus();
       }
       
       function escapeHtml(text) {

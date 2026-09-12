@@ -4836,6 +4836,13 @@ ul {
   color: var(--primary-dark);
 }
 
+.favorites-section .favorites-carousel .favorite-item .favorite-stats [data-favorite-pending] {
+  color: var(--primary-dark);
+  font-size: 0.53rem;
+  font-style: italic;
+  opacity: 0.82;
+}
+
 .favorites-section .favorites-carousel .carousel-track:has(.favorites-state) {
   min-height: 220px;
   align-items: center;

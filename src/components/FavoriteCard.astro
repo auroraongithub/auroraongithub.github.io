@@ -21,6 +21,7 @@ const { title, image, year, score, href } = Astro.props;
     </div>
     <div class="favorite-stats">
       <small class="favorite-score" data-favorite-score hidden={!score}>{score ? `★ ${score}` : ''}</small>
+      <small class="favorite-pending" data-favorite-pending hidden>MAL stats pending</small>
     </div>
   </div>
 </a>

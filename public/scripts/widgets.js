@@ -40,7 +40,7 @@ function favoriteCardMarkup(item, index = 0, category = '') {
   const template = document.getElementById('favoriteCardTemplate');
   if (!template) {
     const imageMarkup = item.image ? `<img class="favorite-item-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : '';
-    const infoMarkup = `<div class="favorite-info"><strong>${escapeHtml(item.title || 'Untitled')}</strong><div class="favorite-meta"><small data-favorite-year${item.year ? '' : ' hidden'}>${item.year ? escapeHtml(item.year) : ''}</small><small data-favorite-status hidden></small><small data-favorite-format hidden></small></div><div class="favorite-stats"><small class="favorite-score" data-favorite-score${item.score ? '' : ' hidden'}>${item.score ? `★ ${escapeHtml(item.score)}` : ''}</small></div></div>`;
+    const infoMarkup = `<div class="favorite-info"><strong>${escapeHtml(item.title || 'Untitled')}</strong><div class="favorite-meta"><small data-favorite-year${item.year ? '' : ' hidden'}>${item.year ? escapeHtml(item.year) : ''}</small><small data-favorite-status hidden></small><small data-favorite-format hidden></small></div><div class="favorite-stats"><small class="favorite-score" data-favorite-score${item.score ? '' : ' hidden'}>${item.score ? `★ ${escapeHtml(item.score)}` : ''}</small><small class="favorite-pending" data-favorite-pending hidden>MAL stats pending</small></div></div>`;
     return `<a class="carousel-item favorite-item" data-favorite-link href="${escapeHtml(initialHref)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(item.title || 'Favorite')} on MyAnimeList"><span class="favorite-rank" data-favorite-list-rank aria-hidden="true">${rank}</span>${imageMarkup}${infoMarkup}</a>`;
   }
 
@@ -54,6 +54,7 @@ function favoriteCardMarkup(item, index = 0, category = '') {
   const status = card?.querySelector('[data-favorite-status]');
   const format = card?.querySelector('[data-favorite-format]');
   const score = card?.querySelector('[data-favorite-score]');
+  const pending = card?.querySelector('[data-favorite-pending]');
   if (!card || !title) return '';
 
   if (link) {
@@ -85,8 +86,8 @@ function favoriteCardMarkup(item, index = 0, category = '') {
     format.hidden = !format.textContent;
   }
   if (score) {
-    const initialScore = initialMetadata?.score || item.score;
-    if (initialScore) {
+    const initialScore = initialMetadata?.score ?? item.score;
+    if (initialScore !== '' && initialScore !== null && initialScore !== undefined) {
       score.className = 'favorite-score';
       score.textContent = `★ ${initialScore}`;
       score.hidden = false;
@@ -95,6 +96,7 @@ function favoriteCardMarkup(item, index = 0, category = '') {
       score.hidden = true;
     }
   }
+  if (pending) pending.hidden = Boolean(initialMetadata) || !favoriteExternalId(item) || category === 'games';
   return card.outerHTML;
 }
 
@@ -125,8 +127,10 @@ function characterSeriesFromCatalog(data, item) {
 }
 
 function cachedFavoriteMetadata(item, category) {
-  const cached = item?.jikan || item?.jikan_metadata;
-  if (!cached) return null;
+  const current = item?.jikan && typeof item.jikan === 'object' ? item.jikan : {};
+  const legacy = item?.jikan_metadata && typeof item.jikan_metadata === 'object' ? item.jikan_metadata : {};
+  const cached = { ...legacy, ...current };
+  if (!Object.keys(cached).length) return null;
   const count = category === 'anime'
     ? (cached.episodes ? `${cached.episodes} eps` : '')
     : category === 'manga'
@@ -139,7 +143,7 @@ function cachedFavoriteMetadata(item, category) {
       ? cached.series || characterSeriesFromCatalog(null, item)
       : compactCatalogStatus(cached.status || '') || formatSavedStatus(item.status),
     format: [cached.type, count].filter(Boolean).join(' · '),
-    score: cached.score || item.score || '',
+    score: cached.score ?? item.score ?? '',
     image: cached.image || item.image || '',
     malUrl: cached.url || '',
   };
