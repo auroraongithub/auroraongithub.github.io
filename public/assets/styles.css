@@ -1052,7 +1052,7 @@ ul {
   margin-bottom: 4px;
 }
 
-/* Stats are a fixed 2x2 summary, not a scrollbox. */
+/* Stats are a fixed summary, not a scrollbox. */
 .neo-sidebar .sidebar-stats-box .neo-content {
   max-height: none !important;
   overflow: visible !important;
