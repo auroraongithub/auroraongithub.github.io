@@ -2196,6 +2196,20 @@ ul {
   height: 31px;
 }
 
+.widget-webring .webring-badge--site {
+  max-width: 100%;
+}
+
+.widget-webring .webring-badge--site img {
+  width: min(100%, 220px);
+  height: auto;
+}
+
+.more-drawer .widget-webring .webring-badge--site img {
+  width: min(100%, 220px);
+  height: auto;
+}
+
 .neo-sidebar .sidebar-more > .neo-content,
 .more-drawer .sidebar-more > .neo-content {
   background-color: color-mix(in srgb, var(--bg-elev) 58%, transparent);
