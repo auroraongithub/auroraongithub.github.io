@@ -40,7 +40,6 @@ const embedCode = `<a href="${siteUrl}/" target="_blank" rel="noopener noreferre
       await navigator.clipboard.writeText(code);
       copyButton.classList.add('copied');
       copyButton.querySelector('span').textContent = 'Copied!';
-      copyStatus.textContent = 'Embed code copied to your clipboard.';
       window.setTimeout(() => {
         copyButton.classList.remove('copied');
         copyButton.querySelector('span').textContent = 'Copy code';
