@@ -210,10 +210,9 @@ async function loadChangelog() {
 }
 
 async function loadStats() {
-  if (!document.getElementById('statProjects') && !document.getElementById('drawerStatProjects')) return;
+  if (!document.getElementById('statPosts') && !document.getElementById('drawerStatPosts')) return;
   try {
     const data = await cachedFetch('/site/stats', 120_000);
-    for (const id of ['statProjects', 'drawerStatProjects']) text(id, data.projects ?? data.projects_count ?? '0');
     for (const id of ['statPosts', 'drawerStatPosts']) text(id, data.posts ?? data.posts_count ?? '0');
     for (const id of ['statVisitors', 'drawerStatVisitors']) text(id, data.visitors ?? data.online ?? data.online_now ?? '0');
     for (const id of ['statPageviews', 'drawerStatPageviews']) text(id, data.pageviews ?? data.total_visits ?? data.total ?? '0');
