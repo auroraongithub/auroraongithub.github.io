@@ -49,6 +49,7 @@ test('all nine color themes and dark mode persist', async ({ page }) => {
   await page.locator('.color-option[data-color="red"]').click();
   await expect(page.locator('html')).toHaveAttribute('data-color', 'red');
   expect(await page.evaluate(() => localStorage.getItem('color'))).toBe('red');
+  await page.locator('[data-color-picker]').click();
   await page.locator('[data-toggle-theme]').click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.reload();
