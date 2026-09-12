@@ -1,13 +1,14 @@
----
-import AdminPanel from './AdminPanel.astro';
----
-<AdminPanel title="View Post" icon="bi-file-earmark-text">
-  <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/blogs/">Back to blogs</a></Fragment>
-  <article class="admin-post-view">
+<article class="neo-article scroll-animate blog-post animate-in admin-post-view">
+  <div class="article-header">
     <h1 id="adminPostTitle">Loading…</h1>
-    <div id="adminPostContent" class="content"><p class="admin-status" data-state="loading">Loading post…</p></div>
-  </article>
-</AdminPanel>
+    <div class="article-meta">
+      <a class="admin-post-back" href="/admin/blogs/">Back to blogs</a>
+    </div>
+  </div>
+  <div id="adminPostContent" class="article-content">
+    <p class="admin-status" data-state="loading">Loading post…</p>
+  </div>
+</article>
 <div class="admin-lightbox" id="adminLightbox" aria-hidden="true">
   <button class="btn btn-ghost admin-lightbox-close" type="button" aria-label="Close image"><i class="bi bi-x-lg"></i></button>
   <img id="adminLightboxImage" alt="" />
@@ -48,18 +49,18 @@ import AdminPanel from './AdminPanel.astro';
   document.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(); });
 </script>
 <style>
-  .admin-post-view { max-width: 780px; margin: 0 auto; }
-  .admin-post-view h1 {
-    margin: 0 0 7px;
-    color: var(--text);
-    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-    font-size: 1.25rem;
+  .admin-post-view { min-width: 0; }
+  .admin-post-view .article-meta { justify-content: flex-end; }
+  .admin-post-view .article-meta .admin-post-back {
+    color: var(--primary-dark);
     font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: 0;
-    text-shadow: 1px 1px 0 color-mix(in srgb, var(--halo) 75%, transparent);
+    text-decoration: none;
   }
-  .admin-post-view :global(img) { max-width: 100%; height: auto; cursor: zoom-in; }
+  .admin-post-view .article-meta .admin-post-back:hover {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+  .admin-post-view .article-content :global(img) { cursor: zoom-in; }
   .admin-lightbox { position: fixed; inset: 0; z-index: 12000; display: none; align-items: center; justify-content: center; padding: 30px; background: rgba(0,0,0,.86); }
   .admin-lightbox.active { display: flex; }
   .admin-lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; }
