@@ -14,6 +14,7 @@ interface Props {
   requiresAuth?: boolean;
   login?: boolean;
   wide?: boolean;
+  dashboard?: boolean;
   bodyClass?: string;
 }
 const {
@@ -23,6 +24,7 @@ const {
   requiresAuth = true,
   login = false,
   wide = false,
+  dashboard = false,
   bodyClass = ''
 } = Astro.props;
 ---
@@ -49,22 +51,20 @@ const {
   </head>
   <body class:list={['admin-page', { 'admin-login-page': login, 'admin-wide': wide }, bodyClass]} data-admin-theme data-admin-protected={requiresAuth ? 'true' : 'false'}>
     <div class="neo-container admin-shell">
-      <SiteHeader />
-      {requiresAuth && (
-        <div class="admin-utility-bar" aria-label="Admin utilities">
-          <span class="admin-utility-label"><i class="bi bi-shield-lock" aria-hidden="true"></i> Admin</span>
-          <div class="admin-utility-actions">
-            <a class="admin-utility-link" href="/" target="_blank" rel="noopener noreferrer"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> View site</a>
-            <button class="admin-utility-link" type="button" data-admin-logout><i class="bi bi-door-open" aria-hidden="true"></i> Log out</button>
-          </div>
-        </div>
-      )}
+      <div class="admin-site-header">
+        <SiteHeader />
+        {requiresAuth && (
+          <button class="admin-navbar-logout" type="button" data-admin-logout aria-label="Log out" title="Log out">
+            <i class="bi bi-door-open" aria-hidden="true"></i>
+          </button>
+        )}
+      </div>
       {login ? (
         <main class="admin-login-main"><slot /></main>
       ) : (
-        <div class="admin-layout">
-          <AdminNav active={active} />
-          <main class="neo-main admin-main"><slot /></main>
+        <div class:list={['admin-layout', { 'admin-dashboard-layout': dashboard }]}>
+          {!dashboard && <AdminNav active={active} />}
+          <main class:list={['neo-main', 'admin-main', { 'admin-dashboard-main': dashboard }]}><slot /></main>
         </div>
       )}
     </div>
