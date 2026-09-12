@@ -2106,6 +2106,45 @@ ul {
   font-size: 0.68rem;
 }
 
+.widget-changelog .widget-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 8px 0 0;
+  padding: 4px 6px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 4px;
+  background: linear-gradient(
+    to bottom,
+    #fff 0%,
+    color-mix(in srgb, #fff 72%, var(--primary-light)) 48%,
+    color-mix(in srgb, var(--primary-light) 68%, var(--primary)) 100%
+  );
+  color: var(--primary-dark);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #fff;
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+}
+
+.widget-changelog .widget-link:hover {
+  background: linear-gradient(to bottom, #fffef5, var(--primary-light));
+  color: var(--primary-dark);
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.widget-changelog .widget-link:active {
+  background: linear-gradient(to top, var(--primary-light), var(--primary));
+  box-shadow: inset 1px 1px 2px color-mix(in srgb, var(--primary-dark) 55%, transparent);
+  transform: translateY(1px);
+}
+
 .loading-small {
   font-size: 0.8rem;
   color: var(--text-muted);
