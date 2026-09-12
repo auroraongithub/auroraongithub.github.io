@@ -10,11 +10,11 @@
 .admin-page .admin-dashboard-layout { display: block; padding: 10px; }
 .admin-page .admin-dashboard-main { width: 100%; }
 .admin-site-header { position: relative; }
-.admin-site-header .site-banner { padding-right: 116px; }
-.admin-navbar-logout { position: absolute; top: 50%; right: 67px; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 30px; padding: 3px 5px; border: 1px solid var(--primary-dark); border-radius: 6px; background: linear-gradient(to bottom, var(--primary-light) 0%, var(--primary) 45%, var(--primary-dark) 50%, var(--primary-light) 100%); color: #fff; cursor: pointer; font-size: .9rem; box-shadow: inset 1px 1px 0 rgba(255,255,255,.78), 0 1px 2px rgba(0,0,0,.2); transform: translateY(-50%); }
-.admin-navbar-logout:hover { border-color: #fff; background: linear-gradient(to bottom, #fffef5 0%, color-mix(in srgb, var(--primary-light) 72%, #fffef5) 100%); color: var(--primary-dark); }
-.admin-navbar-logout:active { background: linear-gradient(to top, var(--primary-light) 0%, var(--primary) 45%, var(--primary-dark) 50%, var(--primary-light) 100%); box-shadow: inset 1px 1px 2px var(--primary-dark); transform: translateY(calc(-50% + 1px)); }
-.admin-navbar-logout i { position: relative; z-index: 1; }
+.admin-site-header .site-banner { position: relative; min-height: 58px; padding-right: 116px; flex-wrap: nowrap; }
+.admin-site-header .site-banner .brand { min-width: 0; max-width: calc(100% - 112px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-site-header .site-banner .header-controls { position: absolute; top: 50%; right: 10px; z-index: 2; transform: translateY(-50%); }
+.admin-navbar-logout { position: absolute; top: 50%; right: 62px; z-index: 3; transform: translateY(-50%); }
+.admin-navbar-logout:active { transform: translateY(calc(-50% + 1px)); }
 .admin-main { min-width: 0; }
 .admin-nav { display:grid;gap:10px;position:sticky;top:20px;max-height:calc(100vh - 40px);overflow-y:auto;scrollbar-color:var(--primary) var(--bg-elev);scrollbar-width:thin; }
 .admin-nav-group { margin:0 !important; }
