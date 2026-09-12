@@ -4278,17 +4278,17 @@ ul {
 .neo-widgets .widget-now {
   background-image:
     linear-gradient(
-      color-mix(in srgb, var(--bg-elev) 64%, transparent),
-      color-mix(in srgb, var(--bg-elev) 64%, transparent)
+      color-mix(in srgb, var(--bg-elev) 34%, transparent),
+      color-mix(in srgb, var(--bg-elev) 34%, transparent)
     ),
     url('https://s1.bwallpapers.com/wallpapers/2014/07/24/shining-sky_102439648.jpg');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
 }
 
 .neo-widgets .widget-now > .neo-content {
-  background-color: color-mix(in srgb, var(--bg-elev) 72%, transparent);
+  background-color: color-mix(in srgb, var(--bg-elev) 55%, transparent);
 }
 
 .manga-section .neo-carousel,
