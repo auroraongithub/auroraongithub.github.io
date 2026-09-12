@@ -4247,7 +4247,7 @@ ul {
   border-radius: 0 8px 8px 8px;
 }
 
-/* Let the manga panel carry the shared theme-aware wallpaper texture without
+/* Let the manga panel carry the shared theme-aware texture without
    competing with the covers or carousel controls. */
 .manga-section > .neo-content {
   isolation: isolate;
@@ -4261,10 +4261,10 @@ ul {
   pointer-events: none;
   background: var(--primary-dark);
   opacity: 0.1;
-  -webkit-mask: url('../img/wallpaper.svg') repeat;
-  -webkit-mask-size: 84px 16px;
-  mask: url('../img/wallpaper.svg') repeat;
-  mask-size: 84px 16px;
+  -webkit-mask: url('../img/chatbox-texture.svg') repeat;
+  -webkit-mask-size: 4px 4px;
+  mask: url('../img/chatbox-texture.svg') repeat;
+  mask-size: 4px 4px;
 }
 
 .manga-section > .neo-content > * {
