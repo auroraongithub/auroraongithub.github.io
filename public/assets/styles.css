@@ -2349,66 +2349,60 @@ ul {
   margin-top: 2px;
 }
 
-/* Dumby-inspired stat tiles: compact, bevelled readouts instead of flat cards. */
+/* Dumby-inspired system-status readouts: compact rows with light separators. */
 .stats-grid.sidebar-stats {
-  gap: 4px;
+  gap: 0;
 }
 
 .stats-grid.sidebar-stats .stat-item {
-  position: relative;
-  isolation: isolate;
-  min-height: 38px;
-  overflow: hidden;
-  padding: 5px 4px 4px;
-  border: 1px solid var(--primary-dark);
-  border-radius: 6px;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, #fff 72%, var(--bg-elev)) 0%,
-    color-mix(in srgb, var(--primary-light) 32%, var(--bg-elev)) 45%,
-    color-mix(in srgb, var(--primary-dark) 35%, var(--bg-elev)) 50%,
-    color-mix(in srgb, var(--primary-light) 14%, var(--bg-elev)) 100%
-  );
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.72),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.14),
-    0 1px 2px rgba(0, 0, 0, 0.16);
+  display: flex;
+  min-width: 0;
+  min-height: 27px;
+  align-items: baseline;
+  justify-content: space-between;
+  box-sizing: border-box;
+  flex-direction: row;
+  gap: 4px;
+  padding: 4px 5px;
+  border: 0;
+  border-right: 1px dotted var(--primary-dark);
+  border-bottom: 1px dotted var(--primary-dark);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev));
 }
 
-.stats-grid.sidebar-stats .stat-item::after {
-  position: absolute;
-  z-index: 0;
-  top: 2px;
-  right: 4px;
-  left: 4px;
-  height: 42%;
-  border-radius: 4px 4px 50% 50%;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0));
-  content: "";
-  pointer-events: none;
+.stats-grid.sidebar-stats .stat-item:nth-child(even) {
+  border-right: 0;
+  background: color-mix(in srgb, var(--primary-light) 6%, var(--bg-elev));
 }
 
-.stats-grid.sidebar-stats .stat-value,
-.stats-grid.sidebar-stats .stat-label {
-  position: relative;
-  z-index: 1;
+.stats-grid.sidebar-stats .stat-item:nth-last-child(-n + 2) {
+  border-bottom: 0;
 }
 
 .stats-grid.sidebar-stats .stat-value {
+  order: 2;
+  flex: 0 0 auto;
   margin: 0;
   color: var(--primary-dark);
-  font-size: 0.84rem;
+  font-size: 0.8rem;
+  font-weight: 700;
   line-height: 1;
-  text-shadow: 1px 1px 0 color-mix(in srgb, var(--bg-elev) 70%, #fff);
 }
 
 .stats-grid.sidebar-stats .stat-label {
-  margin-top: 3px;
-  color: var(--primary-dark);
-  font-size: 0.49rem;
+  order: 1;
+  min-width: 0;
+  overflow: hidden;
+  margin-top: 0;
+  color: var(--text-muted);
+  font-size: 0.48rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   line-height: 1.05;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .stat-item {
@@ -3427,12 +3421,12 @@ ul {
   content: none;
 }
 
-/* Dumby-inspired beveled buttons for the primary sidebar controls. */
+/* Dumby-inspired compact sidebar controls. */
 .neo-sidebar .neo-content ul.primary-nav-list,
 .neo-sidebar .neo-content ul.sidebar-links,
 .widget-resources .resources-list {
   display: grid;
-  gap: 6px;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -3446,65 +3440,39 @@ ul {
 
 .neo-sidebar .neo-content a.sidebar-button,
 .widget-resources a.sidebar-button {
-  position: relative;
-  isolation: isolate;
   display: flex;
   width: 100%;
-  min-height: 30px;
+  min-height: 25px;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  overflow: hidden;
-  padding: 6px 8px;
+  padding: 3px 6px;
   border: 1px solid var(--primary-dark);
   border-radius: 6px;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, #fff 68%, var(--bg-elev)) 0%,
-    color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev)) 43%,
-    color-mix(in srgb, var(--primary-dark) 48%, var(--bg-elev)) 50%,
-    color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)) 100%
+    color-mix(in srgb, var(--bg-elev) 86%, #fff) 0%,
+    color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev)) 100%
   );
   color: var(--primary-dark);
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  line-height: 1.2;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
   text-align: center;
   text-decoration: none;
-  text-shadow: 1px 1px 0 color-mix(in srgb, var(--bg-elev) 70%, #fff);
+  text-transform: uppercase;
   box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.72),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.16),
-    0 2px 4px rgba(0, 0, 0, 0.18);
-  transition: filter 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    inset 1px 1px 1px rgba(255, 255, 255, 0.82),
+    0 1px 2px rgba(0, 0, 0, 0.15);
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .neo-sidebar .neo-content a.sidebar-button::before,
 .widget-resources a.sidebar-button::before {
   content: none;
-}
-
-.neo-sidebar .neo-content a.sidebar-button::after,
-.widget-resources a.sidebar-button::after {
-  position: absolute;
-  z-index: 0;
-  top: 2px;
-  right: 4px;
-  left: 4px;
-  height: 45%;
-  border-radius: 4px 4px 50% 50%;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
-  content: "";
-  pointer-events: none;
-}
-
-.neo-sidebar .neo-content a.sidebar-button > *,
-.widget-resources a.sidebar-button > * {
-  position: relative;
-  z-index: 1;
 }
 
 .neo-sidebar .neo-content ul.sidebar-links a.sidebar-button,
@@ -3515,27 +3483,32 @@ ul {
 .widget-resources a.sidebar-button > i {
   flex: 0 0 1rem;
   color: currentColor;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   text-align: center;
 }
 
 .neo-sidebar .neo-content a.sidebar-button:hover,
 .widget-resources a.sidebar-button:hover {
-  filter: brightness(1.06);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg-elev) 94%, #fff) 0%,
+    color-mix(in srgb, var(--primary-light) 48%, var(--bg-elev)) 100%
+  );
   color: var(--primary-dark);
   box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.82),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.14),
-    0 2px 5px rgba(0, 0, 0, 0.22),
-    0 0 7px color-mix(in srgb, var(--primary) 28%, transparent);
+    inset 1px 1px 1px rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
 .neo-sidebar .neo-content a.sidebar-button:active,
 .widget-resources a.sidebar-button:active {
-  filter: brightness(0.96);
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--primary-light) 26%, var(--bg-elev)),
+    color-mix(in srgb, var(--bg-elev) 88%, #fff)
+  );
   box-shadow:
-    inset 1px 2px 3px rgba(0, 0, 0, 0.2),
-    0 1px 2px rgba(0, 0, 0, 0.16);
+    inset 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .neo-sidebar .neo-content a.sidebar-button:focus-visible,
@@ -3547,13 +3520,14 @@ ul {
 .neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active {
   background: linear-gradient(
     to bottom,
-    var(--primary-light) 0%,
-    var(--primary) 45%,
-    var(--primary-dark) 50%,
-    var(--primary-light) 100%
+    var(--primary) 0%,
+    var(--primary-dark) 100%
   );
   color: #fff;
   text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000);
+  box-shadow:
+    inset 1px 1px 1px color-mix(in srgb, var(--primary-light) 62%, #fff),
+    0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
 .neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active:hover {
