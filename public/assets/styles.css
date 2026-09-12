@@ -2349,35 +2349,48 @@ ul {
   margin-top: 2px;
 }
 
-/* Dumby-inspired system-status readouts: compact rows with light separators. */
+/* Dumby-inspired system-status readout: compact rows with light separators. */
 .stats-grid.sidebar-stats {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
   gap: 0;
+  font-family: "MS UI Gothic", "MS PGothic", monospace;
 }
 
 .stats-grid.sidebar-stats .stat-item {
   display: flex;
   min-width: 0;
-  min-height: 27px;
-  align-items: baseline;
+  min-height: 0;
+  align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
   flex-direction: row;
   gap: 4px;
-  padding: 4px 5px;
+  padding: 3px 5px;
   border: 0;
-  border-right: 1px dotted var(--primary-dark);
   border-bottom: 1px dotted var(--primary-dark);
   border-radius: 0;
-  background: color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev));
+  background: var(--bg-elev);
+  color: var(--primary-dark);
+  text-align: left;
 }
 
-.stats-grid.sidebar-stats .stat-item:nth-child(even) {
-  border-right: 0;
-  background: color-mix(in srgb, var(--primary-light) 6%, var(--bg-elev));
+.stats-grid.sidebar-stats .stat-item:first-child {
+  border-top: 2px solid var(--primary-dark);
+  background: color-mix(in srgb, var(--primary-light) 17%, var(--bg-elev));
 }
 
-.stats-grid.sidebar-stats .stat-item:nth-last-child(-n + 2) {
-  border-bottom: 0;
+.stats-grid.sidebar-stats .stat-item:nth-child(2) {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, #fff 84%, var(--bg-elev)),
+    color-mix(in srgb, var(--primary-light) 24%, var(--bg-elev))
+  );
+}
+
+.stats-grid.sidebar-stats .stat-item:last-child {
+  border-bottom: 2px solid var(--bg-elev);
 }
 
 .stats-grid.sidebar-stats .stat-value {
@@ -2385,7 +2398,7 @@ ul {
   flex: 0 0 auto;
   margin: 0;
   color: var(--primary-dark);
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 700;
   line-height: 1;
 }
@@ -2395,10 +2408,10 @@ ul {
   min-width: 0;
   overflow: hidden;
   margin-top: 0;
-  color: var(--text-muted);
-  font-size: 0.48rem;
+  color: var(--primary-dark);
+  font-size: 0.56rem;
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   line-height: 1.05;
   text-overflow: ellipsis;
   text-transform: uppercase;
@@ -7521,11 +7534,11 @@ body.dark .contact-link.twitter:hover {
   height: auto !important;
   max-height: none !important;
   overflow: visible !important;
-  padding: 7px !important;
+  padding: 0 !important;
 }
 
 .neo-sidebar .sidebar-stats-box .stats-grid.sidebar-stats {
-  min-height: 80px;
+  min-height: 0;
 }
 
 /* ==================== IMAGE LIGHTBOX ==================== */
