@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="90" viewBox="0 0 256 90" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256" height="90" viewBox="0 0 256 90" role="img" aria-labelledby="title desc">
   <title id="title">Visit elythria.dev</title>
   <desc id="desc">A retro web button for elythria.dev with Aurora waving from the right side.</desc>
   <defs>
@@ -63,7 +63,7 @@
     <circle cx="145" cy="19" r="2" fill="#fff" opacity=".75" />
     <circle cx="158" cy="25" r="1.4" fill="#fff" opacity=".65" />
     <path d="M174 0h82v90h-82z" fill="url(#shine)" opacity=".2" />
-    <image href="aurora-button-neutral.webp" x="163" y="9" width="94" height="94" preserveAspectRatio="xMidYMid meet" clip-path="url(#buttonClip)" />
+    <image href="/img/aurora-button-neutral.webp" xlink:href="/img/aurora-button-neutral.webp" x="163" y="9" width="94" height="94" preserveAspectRatio="xMidYMid meet" clip-path="url(#buttonClip)" />
     <path d="M8 82h240" stroke="#085f72" stroke-opacity=".5" />
   </g>
 </svg>
