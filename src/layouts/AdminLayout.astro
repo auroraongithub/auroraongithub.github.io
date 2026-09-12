@@ -51,11 +51,11 @@ const {
     <div class="neo-container admin-shell">
       <SiteHeader />
       {requiresAuth && (
-        <div class="admin-utility-bar">
-          <span><i class="bi bi-shield-lock" aria-hidden="true"></i> Admin</span>
-          <div>
-            <a class="admin-utility-link" href="/" target="_blank" rel="noopener noreferrer">View site</a>
-            <button class="admin-utility-link" type="button" data-admin-logout>Log out</button>
+        <div class="admin-utility-bar" aria-label="Admin utilities">
+          <span class="admin-utility-label"><i class="bi bi-shield-lock" aria-hidden="true"></i> Admin</span>
+          <div class="admin-utility-actions">
+            <a class="admin-utility-link" href="/" target="_blank" rel="noopener noreferrer"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> View site</a>
+            <button class="admin-utility-link" type="button" data-admin-logout><i class="bi bi-door-open" aria-hidden="true"></i> Log out</button>
           </div>
         </div>
       )}

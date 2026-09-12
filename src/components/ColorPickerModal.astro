@@ -7,13 +7,13 @@ import { themes } from '../data/themes';
       <div>
         <h3 id="color-picker-title"><i class="bi bi-palette-fill" aria-hidden="true"></i> Theme</h3>
       </div>
-      <button class="color-picker-close" aria-label="Close color picker" data-color-close>
-        <i class="bi bi-x-lg"></i>
+      <button class="color-picker-close" type="button" aria-label="Close color picker" data-color-close>
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
       </button>
     </div>
     <div class="color-picker-options">
       {themes.map((theme) => (
-        <button class="color-option" data-color={theme.id} style={`--option-from: ${theme.from}; --option-to: ${theme.to};`} aria-label={`Use ${theme.label} theme`} aria-pressed="false" title={`Use ${theme.label} theme`}></button>
+        <button class="color-option" type="button" data-color={theme.id} style={`--option-from: ${theme.from}; --option-to: ${theme.to};`} aria-label={`Use ${theme.label} theme`} aria-pressed="false" title={`Use ${theme.label} theme`}></button>
       ))}
     </div>
     <div class="theme-mode-row">
@@ -21,7 +21,7 @@ import { themes } from '../data/themes';
         <span class="theme-mode-kicker"><i class="bi bi-circle-half" aria-hidden="true"></i> Display mode</span>
         <small data-theme-mode-label>Light mode</small>
       </div>
-      <button class="theme-toggle" title="Use dark mode" aria-label="Use dark mode" data-toggle-theme>
+      <button class="theme-toggle" type="button" title="Use dark mode" aria-label="Use dark mode" data-toggle-theme>
         <i class="bi bi-brightness-high" aria-hidden="true"></i>
         <span data-theme-toggle-label>Use dark mode</span>
       </button>
