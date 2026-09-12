@@ -6,28 +6,38 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
 import AdminModal from '../../components/admin/AdminModal.astro';
 ---
 <AdminLayout title="Portfolio Editor" active="portfolio">
-  <AdminPanel title="Portfolio Editor" icon="bi-briefcase">
+  <AdminPanel title="Portfolio Editor" icon="bi-briefcase" class="portfolio-workspace">
     <div class="admin-import-block">
-      <h3><i class="bi bi-github"></i> Add from GitHub</h3>
-      <div class="admin-toolbar">
+      <div class="portfolio-section-heading">
+        <h3><i class="bi bi-github" aria-hidden="true"></i> Add from GitHub</h3>
+      </div>
+      <div class="admin-toolbar portfolio-import-toolbar">
         <AdminField label="Repository URL" forId="githubUrl"><input id="githubUrl" type="url" placeholder="https://github.com/owner/repository" /></AdminField>
-        <button class="btn btn-primary" id="fetchGithub" type="button">Fetch Repository</button>
+        <button class="btn btn-primary" id="fetchGithub" type="button"><i class="bi bi-cloud-download" aria-hidden="true"></i> Fetch Repository</button>
       </div>
       <AdminStatus id="portfolioMessage" />
       <div id="repoPreview" class="admin-repo-preview" hidden>
-        <div class="admin-compact-card">
-          <header><strong id="previewName"></strong></header>
+        <div class="admin-compact-card portfolio-preview-card">
+          <header>
+            <strong id="previewName"></strong>
+          </header>
           <div><p id="previewDescription"></p><div id="previewMeta" class="admin-list-meta"></div></div>
         </div>
         <div class="admin-split admin-custom-project-fields">
           <AdminField label="Custom Name" forId="customName" hint="Optional override shown on the public portfolio."><input id="customName" type="text" /></AdminField>
           <AdminField label="Custom Description" forId="customDescription" hint="Optional override shown on the public portfolio."><textarea id="customDescription"></textarea></AdminField>
         </div>
-        <div class="admin-preview-actions"><button class="btn btn-primary" id="addProject" type="button">Add Project</button><button class="btn btn-ghost" id="cancelProjectPreview" type="button">Cancel</button></div>
+        <div class="admin-preview-actions"><button class="btn btn-primary" id="addProject" type="button"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add Project</button><button class="btn btn-ghost" id="cancelProjectPreview" type="button">Cancel</button></div>
       </div>
     </div>
-    <div class="admin-list-toolbar"><h3>Projects <span class="admin-count" id="projectCount">0</span></h3><button class="btn btn-ghost" id="refreshProjects" type="button">Refresh</button></div>
-    <div id="projectsList" class="admin-grid"><p class="admin-status" data-state="loading">Loading projects…</p></div>
+
+    <div class="portfolio-library">
+      <div class="admin-list-toolbar">
+        <h3 class="portfolio-list-heading">Projects <span class="admin-count" id="projectCount">0</span></h3>
+        <button class="btn btn-ghost" id="refreshProjects" type="button"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Refresh</button>
+      </div>
+      <div id="projectsList" class="admin-grid"><p class="admin-status" data-state="loading">Loading projects…</p></div>
+    </div>
   </AdminPanel>
 
   <AdminModal id="editProjectModal" title="Edit Project">
@@ -57,5 +67,60 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     document.querySelector<HTMLFormElement>('#editProjectForm')?.addEventListener('submit',async(event)=>{event.preventDefault();const id=(document.querySelector<HTMLInputElement>('#editProjectId')!).value;const custom_name=(document.querySelector<HTMLInputElement>('#editCustomName')!).value.trim()||null;const custom_description=(document.querySelector<HTMLTextAreaElement>('#editCustomDescription')!).value.trim()||null;setAdminStatus(editMessage,'Saving…','loading');try{const response=await adminFetch(`/admin/projects/${encodeURIComponent(id)}`,{method:'PATCH',body:JSON.stringify({custom_name,custom_description})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Update failed');closeModal();await load();}catch(error){setAdminStatus(editMessage,error instanceof Error?error.message:'Update failed','error')}});
     document.querySelector('#refreshProjects')?.addEventListener('click',load); load();
   </script>
-  <style>.admin-import-block{padding-bottom:14px;margin-bottom:13px;border-bottom:1px dashed var(--border-light)}.admin-import-block h3,.admin-list-toolbar h3{margin:0 0 9px;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}.admin-repo-preview{display:grid;gap:10px;margin-top:10px;padding:10px;border:1px solid var(--border-light);border-radius:7px;background:var(--bg-elev)}.admin-preview-actions,.admin-modal-actions{display:flex;gap:6px}.admin-list-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 8px}.admin-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--primary);color:var(--bg);font-size:.68rem}.admin-project-desc{margin:0 0 8px;color:var(--text-muted);font-size:.78rem;line-height:1.5}.admin-compact-card a{font-size:.72rem}</style>
+  <style>
+    .portfolio-workspace { overflow: hidden; }
+    .portfolio-workspace .admin-panel-content { padding: 0; }
+    .portfolio-workspace .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+    .admin-import-block { margin: 0; padding: clamp(16px, 3vw, 26px); border-bottom: 1px dashed var(--border-light); background: linear-gradient(135deg, color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev)), var(--bg-elev) 58%); }
+    .portfolio-section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .portfolio-section-heading h3, .portfolio-list-heading h3 { display: flex; align-items: center; gap: 7px; margin: 0; color: var(--text); font-size: 1rem; text-transform: uppercase; letter-spacing: .08em; }
+    .portfolio-section-heading h3 i { color: var(--primary-dark); font-size: 1rem; }
+    .portfolio-import-toolbar { align-items: end; margin: 18px 0 10px; padding: 12px; border: 1px solid var(--border-light); border-radius: 8px; background: color-mix(in srgb, var(--bg) 46%, var(--card)); box-shadow: var(--shadow); }
+    .portfolio-import-toolbar .admin-field { gap: 6px; }
+    .portfolio-import-toolbar .admin-field label { color: var(--primary-dark); }
+    .portfolio-import-toolbar .btn { min-height: 38px; padding-inline: 13px; }
+    .portfolio-import-toolbar input { min-height: 38px; }
+    .admin-repo-preview { display: grid; gap: 14px; margin-top: 14px; padding: 14px; border: 1px solid var(--primary); border-radius: 8px; background: color-mix(in srgb, var(--primary-light) 10%, var(--bg-elev)); box-shadow: var(--shadow); }
+    .portfolio-preview-card { box-shadow: none; }
+    .portfolio-preview-card > header { display: grid; gap: 4px; }
+    .portfolio-preview-card > div { display: grid; gap: 10px; }
+    .admin-split.admin-custom-project-fields { align-items: start; }
+    .admin-preview-actions, .admin-modal-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+    .admin-preview-actions { padding-top: 2px; }
+    .portfolio-library { padding: clamp(16px, 3vw, 26px); }
+    .admin-list-toolbar { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin: 0 0 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--border-light); }
+    .portfolio-list-heading { display: grid; gap: 4px; }
+    .admin-list-toolbar h3 { margin: 0; }
+    .admin-list-toolbar .btn { flex: 0 0 auto; }
+    .admin-count { display: inline-grid; place-items: center; min-width: 21px; height: 21px; padding: 0 6px; border: 1px solid var(--primary-dark); border-radius: 8px; background: var(--primary); color: var(--bg); font: 700 .85rem/1 'Courier New', monospace; }
+    .admin-grid { grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 10px; }
+    .admin-compact-card { display: grid; grid-template-rows: auto 1fr auto; border-color: var(--border-light); border-radius: 8px; box-shadow: var(--shadow); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+    .admin-compact-card:hover { border-color: var(--primary); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .admin-compact-card > header { display: grid; gap: 3px; padding: 11px 12px; border-bottom: 1px solid var(--border-light); background: var(--gradient-subtle); }
+    .admin-compact-card > header strong { overflow-wrap: anywhere; font-size: .88rem; line-height: 1.35; }
+    .admin-compact-card > div { display: grid; align-content: start; gap: 10px; padding: 12px; }
+    .admin-project-desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; margin: 0; color: var(--text-muted); font-size: .85rem; line-height: 1.55; }
+    .admin-list-meta { align-items: center; }
+    .admin-list-meta span { display: inline-flex; align-items: center; gap: 3px; padding: 3px 6px; border: 1px solid var(--border-light); border-radius: 8px; background: color-mix(in srgb, var(--bg-elev) 72%, var(--primary-light)); }
+    .admin-compact-card a { width: fit-content; color: var(--primary-dark); font-size: .85rem; font-weight: 700; text-underline-offset: 3px; }
+    .admin-compact-card > footer { display: flex; flex-wrap: wrap; gap: 6px; padding: 9px 10px; border-top: 1px solid var(--border-light); background: color-mix(in srgb, var(--bg) 35%, var(--card)); }
+    .admin-compact-card > footer .btn { min-height: 29px; padding: 4px 8px; }
+    .admin-status { box-shadow: none; }
+    @media (max-width: 700px) {
+      .portfolio-section-heading { display: grid; gap: 10px; }
+      .portfolio-import-toolbar { align-items: stretch; }
+      .portfolio-import-toolbar > .btn { width: 100%; }
+    }
+    @media (max-width: 500px) {
+      .admin-import-block, .portfolio-library { padding: 14px; }
+      .admin-list-toolbar { align-items: stretch; flex-direction: column; }
+      .admin-list-toolbar .btn { width: 100%; }
+      .admin-grid { grid-template-columns: 1fr; }
+      .admin-preview-actions > .btn { flex: 1 1 130px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .admin-compact-card { transition: none; }
+      .admin-compact-card:hover { transform: none; }
+    }
+  </style>
 </AdminLayout>
