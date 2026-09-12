@@ -2,8 +2,8 @@
 import AdminLayout from '../layouts/AdminLayout.astro';
 import AdminPanel from '../components/admin/AdminPanel.astro';
 ---
-<AdminLayout title="Admin" requiresAuth={false} login={true}>
-  <AdminPanel title="Opening Admin" icon="bi-shield-lock" class="admin-login-panel">
+<AdminLayout title="Admin" requiresAuth={false} login={true} bodyClass="admin-entry-page">
+  <AdminPanel title="Opening Admin" icon="bi-shield-lock" class="admin-login-panel admin-entry-panel">
     <p class="admin-entry-message"><span class="admin-entry-dot"></span> Checking your session…</p>
   </AdminPanel>
   <script>
@@ -12,3 +12,65 @@ import AdminPanel from '../components/admin/AdminPanel.astro';
     window.location.replace(token ? '/admin/blogs/' : '/admin/login/');
   </script>
 </AdminLayout>
+
+<style>
+  .admin-entry-page .admin-login-main {
+    min-height: clamp(230px, 34vh, 330px);
+    padding-top: 42px;
+  }
+
+  .admin-entry-page .admin-entry-panel {
+    width: min(100%, 460px);
+    margin-top: 30px !important;
+    border-radius: 0 10px 10px 10px;
+    background: color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev));
+    box-shadow:
+      0 0 0 2px var(--halo),
+      3px 4px 9px color-mix(in srgb, var(--primary-dark) 18%, transparent);
+  }
+
+  .admin-entry-page .admin-entry-panel .admin-panel-header {
+    min-width: 156px;
+    top: -31px;
+    padding: 5px 16px;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 2px -2px 5px color-mix(in srgb, var(--primary) 18%, transparent);
+  }
+
+  .admin-entry-page .admin-entry-panel .admin-panel-content {
+    padding: 12px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .admin-entry-page .admin-entry-message {
+    justify-content: flex-start;
+    min-height: 30px;
+    margin: 0;
+    padding: 6px 8px;
+    border: 1px solid color-mix(in srgb, var(--primary-dark) 45%, var(--border-light));
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--bg) 72%, var(--primary-light));
+    color: var(--text);
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, #fff 55%, transparent);
+  }
+
+  [data-theme='dark'] .admin-entry-page .admin-entry-message {
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 12%, transparent);
+  }
+
+  .admin-entry-page .admin-entry-dot {
+    flex: 0 0 auto;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+  }
+
+  @media (max-width: 500px) {
+    .admin-entry-page .admin-login-main {
+      min-height: 210px;
+      padding: 38px 8px 16px;
+    }
+
+    .admin-entry-page .admin-entry-panel {
+      margin-top: 26px !important;
+    }
+  }
+</style>
