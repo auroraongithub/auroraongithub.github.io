@@ -1,6 +1,10 @@
 @import './tokens.css';
 
 /* Migration-only additions. The legacy stylesheet remains authoritative for visual parity. */
+html body {
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+}
+
 .primary-nav-list a.active { font-weight: 700; }
 .media-card { position: relative; }
 .media-card-title { display: block; margin-top: 0.4rem; font-size: 0.85rem; }
