@@ -177,11 +177,22 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 
   :global(.admin-post-editor-page .admin-post-workspace .admin-form) {
     grid-template-columns: minmax(0, 1.45fr) minmax(150px, .55fr);
-    gap: 12px 10px;
+    gap: 9px 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  :global(.admin-post-editor-page .admin-post-workspace .admin-form > .admin-field:nth-child(1)) {
+    grid-column: 1;
+  }
+
+  :global(.admin-post-editor-page .admin-post-workspace .admin-form > .admin-field:nth-child(2)) {
+    grid-column: 2;
   }
 
   :global(.admin-post-editor-page .admin-post-workspace .admin-field) {
     gap: 3px;
+    min-width: 0;
   }
 
   :global(.admin-post-editor-page .admin-post-workspace .admin-field label) {
@@ -240,7 +251,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   }
 
   :global(.admin-post-editor-page .admin-post-workspace .ql-editor) {
-    min-height: 300px;
+    min-height: 230px;
     padding: 12px;
     color: var(--text);
     font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
@@ -302,6 +313,10 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 
     :global(.admin-post-editor-page .admin-panel-actions) {
       width: auto;
+    }
+
+    :global(.admin-post-editor-page .admin-post-workspace .ql-editor) {
+      min-height: 200px;
     }
   }
 
