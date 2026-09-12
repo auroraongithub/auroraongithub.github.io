@@ -6,7 +6,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 <AdminLayout title="Admin Stories" active="stories">
   <div class="admin-stories-page">
     <AdminPostWorkspace active="stories">
-      <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/add-post/">Add Post</a></Fragment>
+      <Fragment slot="actions"><a class="btn btn-ghost admin-add-post-tab" href="/admin/add-post/" aria-label="Add post" title="Add post">+</a></Fragment>
       <AdminPostList type="story" title="Stories" panel={false} />
     </AdminPostWorkspace>
   </div>

@@ -9,7 +9,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 <AdminLayout title="Admin Blogs" active="blogs">
   <div class="blog-admin-page">
     <AdminPostWorkspace active="blogs">
-      <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/add-post/">Add Post</a></Fragment>
+      <Fragment slot="actions"><a class="btn btn-ghost admin-add-post-tab" href="/admin/add-post/" aria-label="Add post" title="Add post">+</a></Fragment>
       <div class="blog-toolbar post-controls" role="search" aria-label="Filter blog posts">
         <div class="blog-toolbar-controls">
           <label class="post-search">
@@ -955,8 +955,10 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       padding: 0 4px 0 2px;
     }
 
-    .blog-admin-page :global(.admin-post-workspace-actions .btn) {
-      padding-inline: 7px;
+    .blog-admin-page :global(.admin-post-workspace-actions .admin-add-post-tab) {
+      width: 31px;
+      min-width: 31px;
+      padding-inline: 0 !important;
       white-space: nowrap;
     }
 
@@ -1003,9 +1005,11 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       letter-spacing: .04em;
     }
 
-    .blog-admin-page :global(.admin-post-workspace-actions .btn) {
-      padding-inline: 5px;
-      font-size: .6rem;
+    .blog-admin-page :global(.admin-post-workspace-actions .admin-add-post-tab) {
+      width: 31px;
+      min-width: 31px;
+      padding-inline: 0 !important;
+      font-size: 1.1rem !important;
     }
   }
 </style>

@@ -68,15 +68,46 @@ const postTabs = [
     box-sizing: border-box;
     display: flex;
     align-items: stretch;
+    gap: 4px;
     position: absolute;
     top: -35px;
     left: -4px;
     z-index: 2;
     margin: 0;
     padding: 0;
-    border: 2px solid var(--halo);
-    border-bottom: none;
-    border-radius: 15px 15px 0 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-shadow: none;
+    box-shadow: none;
+  }
+
+  .admin-post-workspace-header .admin-tabs {
+    display: flex;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .admin-post-workspace-actions {
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
+
+  .admin-post-workspace-header .admin-tab,
+  .admin-post-workspace-actions .admin-add-post-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 31px !important;
+    padding: 7px 14px !important;
+    box-sizing: border-box;
+    border: 2px solid var(--primary-dark) !important;
+    border-bottom-color: var(--primary-dark) !important;
+    border-radius: 10px 10px 0 0 !important;
     background-image: repeating-linear-gradient(
       45deg,
       var(--primary-light),
@@ -86,57 +117,62 @@ const postTabs = [
     );
     background-size: 17px 17px;
     color: #fff;
-    text-shadow: 2px 2px 0 color-mix(in srgb, var(--primary-dark) 85%, #000);
-    box-shadow: 2px -2px 5px color-mix(in srgb, var(--primary) 22%, transparent);
-    animation: admin-post-stripe-move 1s linear infinite;
-  }
-
-  .admin-post-workspace-header .admin-tabs {
-    display: flex;
-    gap: 2px;
-    margin: 0;
-    padding: 0 4px;
-    border: 0;
-  }
-
-  .admin-post-workspace-actions {
-    display: flex;
-    align-items: center;
-    padding: 0 5px 0 3px;
-  }
-
-  .admin-post-workspace-actions .btn {
-    min-height: 25px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font: 700 .64rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-    text-transform: uppercase;
-  }
-
-  .admin-post-workspace-header .admin-tab {
-    min-height: 31px !important;
-    padding: 7px 14px !important;
-    border: 0;
-    border-radius: 10px 10px 0 0 !important;
-    background: transparent;
-    color: #fff;
     font: 700 .82rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif !important;
     letter-spacing: .08em;
     text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 85%, #000);
     text-transform: uppercase;
+    box-shadow:
+      0 0 0 1px var(--halo),
+      inset 1px 1px 0 rgba(255, 255, 255, .56),
+      2px -2px 4px color-mix(in srgb, var(--primary) 24%, transparent);
+    animation: admin-post-stripe-move 1s linear infinite;
+    transform: none;
   }
 
-  .admin-post-workspace-header .admin-tab:hover {
+  .admin-post-workspace-header .admin-tab:hover,
+  .admin-post-workspace-actions .admin-add-post-tab:hover {
+    border-color: var(--primary) !important;
     background: color-mix(in srgb, #fff 18%, transparent);
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--primary-light),
+      var(--primary-light) 6px,
+      var(--primary) 6px,
+      var(--primary) 12px
+    );
     color: #fff;
+    transform: none;
   }
 
   .admin-post-workspace-header .admin-tab.active {
-    border: 1px solid var(--primary-dark);
-    border-bottom: 0;
+    z-index: 1;
+    border-color: var(--primary-dark) !important;
+    box-shadow:
+      0 0 0 1px var(--halo),
+      0 1px 0 var(--bg-elev),
+      inset 1px 1px 0 rgba(255, 255, 255, .72),
+      2px -2px 4px color-mix(in srgb, var(--primary) 24%, transparent);
+  }
+
+  .admin-post-workspace-header .admin-tab.active::after {
+    content: '';
+    position: absolute;
+    right: 5px;
+    bottom: -3px;
+    left: 5px;
+    height: 4px;
     background: var(--bg-elev);
-    color: var(--primary-dark);
-    text-shadow: none;
+    pointer-events: none;
+  }
+
+  .admin-post-workspace-actions .admin-add-post-tab {
+    width: 31px;
+    min-width: 31px;
+    padding: 0 !important;
+    font-size: 1.18rem !important;
+    letter-spacing: 0;
+    line-height: 1 !important;
+    text-transform: none;
   }
 
   .admin-post-workspace > .admin-post-workspace-content {
@@ -403,10 +439,17 @@ const postTabs = [
     .admin-post-workspace-header .admin-tab {
       padding-inline: 10px !important;
     }
+
+    .admin-post-workspace-actions .admin-add-post-tab {
+      width: 31px;
+      min-width: 31px;
+      padding-inline: 0 !important;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .admin-post-workspace > .admin-post-workspace-header {
+    .admin-post-workspace-header .admin-tab,
+    .admin-post-workspace-actions .admin-add-post-tab {
       animation: none;
     }
   }
