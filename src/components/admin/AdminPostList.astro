@@ -1,15 +1,21 @@
 ---
 import AdminPanel from './AdminPanel.astro';
 
-interface Props { type: 'blog' | 'story'; title: string; showIcon?: boolean }
-const { type, title, showIcon = true } = Astro.props;
+interface Props { type: 'blog' | 'story'; title: string; showIcon?: boolean; panel?: boolean }
+const { type, title, showIcon = true, panel = true } = Astro.props;
 ---
-<AdminPanel title={title} icon={showIcon ? (type === 'blog' ? 'bi-journal-text' : 'bi-book') : undefined} class="admin-post-panel">
-  <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/add-post/">Add Post</a></Fragment>
+{panel ? (
+  <AdminPanel title={title} icon={showIcon ? (type === 'blog' ? 'bi-journal-text' : 'bi-book') : undefined} class="admin-post-panel">
+    <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/add-post/">Add Post</a></Fragment>
+    <div class="admin-list admin-post-list" data-admin-post-list data-post-type={type}>
+      <p class="admin-status" data-state="loading">Loading {type === 'blog' ? 'posts' : 'stories'}…</p>
+    </div>
+  </AdminPanel>
+) : (
   <div class="admin-list admin-post-list" data-admin-post-list data-post-type={type}>
     <p class="admin-status" data-state="loading">Loading {type === 'blog' ? 'posts' : 'stories'}…</p>
   </div>
-</AdminPanel>
+)}
 
 <script>
   import { adminFetch, escapeHtml } from '../../lib/admin/api';

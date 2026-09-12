@@ -4,41 +4,36 @@ import AdminField from '../../components/admin/AdminField.astro';
 import AdminStatus from '../../components/admin/AdminStatus.astro';
 import AdminTabs from '../../components/admin/AdminTabs.astro';
 import AdminPostList from '../../components/admin/AdminPostList.astro';
-
-const postTabs = [
-  { id: 'blogs', label: 'Blogs' },
-  { id: 'stories', label: 'Stories' }
-] as const;
+import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro';
 ---
 <AdminLayout title="Admin Blogs" active="blogs">
   <div class="blog-admin-page">
-    <div class="blog-post-type-tabs">
-      <AdminTabs tabs={postTabs} active="blogs" dataAttribute="category" />
-    </div>
-    <div class="blog-toolbar" role="search" aria-label="Filter blog posts">
-      <div class="blog-toolbar-controls">
-        <AdminField label="Find posts" forId="blogSearch">
-          <input id="blogSearch" type="search" placeholder="Title or tag" autocomplete="off" />
-        </AdminField>
-        <AdminField label="Year" forId="blogYear">
-          <select id="blogYear">
-            <option value="all">All years</option>
-          </select>
-        </AdminField>
-        <div class="blog-toolbar-actions">
-          <AdminStatus id="blogFilterStatus" />
-          <button class="btn btn-ghost" type="button" id="blogFilterReset">Reset</button>
+    <AdminPostWorkspace active="blogs">
+      <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/add-post/">Add Post</a></Fragment>
+      <div class="blog-toolbar" role="search" aria-label="Filter blog posts">
+        <div class="blog-toolbar-controls">
+          <AdminField label="Find posts" forId="blogSearch">
+            <input id="blogSearch" type="search" placeholder="Title or tag" autocomplete="off" />
+          </AdminField>
+          <AdminField label="Year" forId="blogYear">
+            <select id="blogYear">
+              <option value="all">All years</option>
+            </select>
+          </AdminField>
+          <div class="blog-toolbar-actions">
+            <AdminStatus id="blogFilterStatus" />
+            <button class="btn btn-ghost" type="button" id="blogFilterReset">Reset</button>
+          </div>
+        </div>
+        <div class="blog-toolbar-footer">
+          <AdminTabs
+            tabs={[{ id: 'all', label: 'All posts' }, { id: 'tagged', label: 'Tagged' }, { id: 'untagged', label: 'No tags' }]}
+            dataAttribute="category"
+          />
         </div>
       </div>
-      <div class="blog-toolbar-footer">
-        <AdminTabs
-          tabs={[{ id: 'all', label: 'All posts' }, { id: 'tagged', label: 'Tagged' }, { id: 'untagged', label: 'No tags' }]}
-          dataAttribute="category"
-        />
-      </div>
-    </div>
-
-    <AdminPostList type="blog" title="Blogs" showIcon={false} />
+      <AdminPostList type="blog" title="Blogs" panel={false} />
+    </AdminPostWorkspace>
   </div>
 </AdminLayout>
 
@@ -49,15 +44,6 @@ const postTabs = [
   const status = document.querySelector<HTMLElement>('#blogFilterStatus');
   const root = document.querySelector<HTMLElement>('[data-admin-post-list]');
   const tabs = [...document.querySelectorAll<HTMLButtonElement>('.blog-toolbar-footer [data-category]')];
-  const postRoutes: Record<string, string> = { blogs: '/admin/blogs/', stories: '/admin/stories/' };
-
-  document.querySelectorAll<HTMLButtonElement>('.blog-post-type-tabs [data-category]').forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const route = postRoutes[tab.dataset.category || ''];
-      if (route && window.location.pathname !== route) window.location.assign(route);
-    });
-  });
-
   if (search && year && reset && status && root) {
     const searchInput = search;
     const yearSelect = year;
