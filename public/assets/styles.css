@@ -723,23 +723,15 @@ ul {
   height: 24px;
   border-radius: 2px;
   border: 1px solid rgba(255,255,255,0.95);
-  background: linear-gradient(135deg, var(--option-from) 0 50%, var(--option-to) 50% 100%);
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.58), inset -1px -1px 0 rgba(0,0,0,0.16), 1px 1px 2px rgba(0,0,0,0.2);
-  overflow: hidden;
-}
-
-.color-preview::after {
-  content: "";
-  position: absolute;
-  inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(255,255,255,0.42) 0%,
-    rgba(255,255,255,0.12) 35%,
-    rgba(255,255,255,0.28) 50%,
-    rgba(255,255,255,0.08) 68%,
-    rgba(255,255,255,0) 100%
+    var(--option-to) 0%,
+    var(--option-from) 45%,
+    color-mix(in srgb, var(--option-from) 78%, #000) 50%,
+    var(--option-to) 100%
   );
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.58), inset -1px -1px 0 rgba(0,0,0,0.16), 1px 1px 2px rgba(0,0,0,0.2);
+  overflow: hidden;
 }
 
 .color-option-label {
