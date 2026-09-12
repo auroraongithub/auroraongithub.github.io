@@ -17,8 +17,8 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
             <span class="visually-hidden">Search blogs</span>
             <input id="blogSearch" type="search" class="form-control" placeholder="Search the archive..." aria-label="Search blogs" autocomplete="off" />
           </label>
-          <AdminField label="Year" forId="blogYear">
-            <select id="blogYear">
+          <AdminField label="Year" forId="blogYear" class="blog-year-field">
+            <select id="blogYear" aria-label="Filter by year">
               <option value="all">All years</option>
             </select>
           </AdminField>
@@ -643,6 +643,10 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     text-transform: uppercase;
   }
 
+  .blog-admin-page :global(.blog-toolbar .blog-year-field > label) {
+    display: none;
+  }
+
   .blog-admin-page :global(.blog-toolbar .admin-field select) {
     height: 28px;
     min-height: 28px;
@@ -668,16 +672,17 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   }
 
   .blog-admin-page :global(.blog-toolbar-actions .btn) {
-    height: 20px;
-    min-height: 20px;
-    padding: 4px 8px;
+    align-self: end;
+    height: 28px;
+    min-height: 28px;
+    padding: 5px 10px;
     box-sizing: border-box;
-    border: 1px solid var(--border-light);
+    border: 1px solid var(--primary-dark);
     border-radius: 4px;
     background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
     color: var(--text-muted);
     font: 700 .66rem/normal "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .8);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .8), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 22%, transparent);
     text-transform: uppercase;
   }
 
