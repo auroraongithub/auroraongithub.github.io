@@ -892,8 +892,11 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   }
 
   .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-actions .admin-danger:hover) {
-    background: linear-gradient(to bottom, color-mix(in srgb, var(--admin-danger, #b42318) 72%, #fff), var(--admin-danger, #b42318));
-    color: #fff;
+    border-color: color-mix(in srgb, var(--admin-danger, #b42318) 78%, #000);
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--admin-danger, #b42318) 72%, #fff), var(--admin-danger, #b42318) 54%, color-mix(in srgb, var(--admin-danger, #b42318) 82%, #000));
+    color: #fff !important;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--admin-danger, #b42318) 78%, #000);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .5), inset -1px -1px 0 rgba(0, 0, 0, .28), 0 1px 3px rgba(0, 0, 0, .22);
   }
 
   @media (max-width: 560px) {
