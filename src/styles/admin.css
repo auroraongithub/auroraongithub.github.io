@@ -77,10 +77,50 @@
 .admin-page .ql-snow .ql-stroke { stroke:var(--text-muted); }
 .admin-page .ql-snow .ql-fill { fill:var(--text-muted); }
 .admin-login-page { display:grid;place-items:center;padding:20px; }
-.admin-login-page .admin-shell { width:min(760px,100%); }
-.admin-login-main { padding:10px; }
-.admin-login-panel { max-width:520px;margin:0 auto!important; }
-.admin-login-actions { display:flex;gap:7px;align-items:center; }
+.admin-login-page .admin-shell { width:min(820px,100%); }
+.admin-login-main {
+  display:grid;
+  place-items:center;
+  min-height:clamp(250px,42vh,390px);
+  padding:clamp(16px,4vw,34px);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--primary-light) 8%,transparent),transparent 48%);
+}
+.admin-login-panel {
+  width:min(100%,500px);
+  margin:0 auto!important;
+  border-color:var(--primary-dark);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--primary-light) 34%,transparent),var(--shadow);
+}
+.admin-login-panel .admin-panel-header {
+  min-height:42px;
+  padding:10px 14px;
+  background:linear-gradient(to bottom,var(--primary-light),var(--primary) 48%,var(--primary-dark) 52%,var(--primary));
+}
+.admin-login-panel .admin-panel-header h2 {
+  color:#fff;
+  font-size:.82rem;
+  letter-spacing:1.7px;
+  text-shadow:1px 1px 0 color-mix(in srgb,var(--primary-dark) 80%,#000);
+}
+.admin-login-panel .admin-panel-content {
+  padding:18px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--primary-light) 13%,var(--card)),var(--card) 46%);
+}
+.admin-login-panel .admin-form { gap:12px; }
+.admin-login-panel .admin-field { gap:5px; }
+.admin-login-panel .admin-field label { font-size:.68rem;letter-spacing:.08em; }
+.admin-login-panel input:not([type='checkbox']):not([type='radio']) {
+  min-height:39px;
+  border-color:var(--primary-dark);
+  background:color-mix(in srgb,var(--card) 90%,var(--primary-light));
+  box-shadow:inset 1px 1px 2px color-mix(in srgb,var(--primary-dark) 18%,transparent);
+}
+.admin-login-panel input:not([type='checkbox']):not([type='radio']):focus-visible {
+  border-color:var(--primary);
+  box-shadow:inset 1px 1px 2px color-mix(in srgb,var(--primary-dark) 18%,transparent),0 0 0 2px color-mix(in srgb,var(--primary) 24%,transparent);
+}
+.admin-login-actions { display:flex;justify-content:flex-end;gap:7px;align-items:center;margin-top:2px;padding-top:12px;border-top:1px dotted color-mix(in srgb,var(--primary-dark) 45%,var(--border-light)); }
+.admin-login-actions .btn { min-width:74px; }
 .admin-entry-message { display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0;color:var(--text-muted);font:.78rem/1.4 'Courier New',monospace; }
 .admin-entry-dot { width:7px;height:7px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 20%,transparent); }
 .admin-toolbar { display:flex;align-items:end;gap:8px;flex-wrap:wrap;margin-bottom:12px; }

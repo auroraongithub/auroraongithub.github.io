@@ -5,7 +5,7 @@ import AdminField from '../../components/admin/AdminField.astro';
 import AdminStatus from '../../components/admin/AdminStatus.astro';
 ---
 <AdminLayout title="Admin Login" requiresAuth={false} login={true} bodyClass="admin-auth-page">
-  <AdminPanel title="Admin Login" icon="bi-shield-lock" class="admin-login-panel">
+  <AdminPanel title="Admin Login" class="admin-login-panel">
     <form id="loginForm" class="admin-form" novalidate>
       <AdminField label="Email" forId="email" required>
         <input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="username" required />
