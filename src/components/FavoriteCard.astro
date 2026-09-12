@@ -4,11 +4,12 @@ interface Props {
   image?: string;
   year?: string | number;
   score?: string | number;
+  href?: string;
 }
 
-const { title, image, year, score } = Astro.props;
+const { title, image, year, score, href } = Astro.props;
 ---
-<div class="carousel-item favorite-item">
+<a class="carousel-item favorite-item" data-favorite-link href={href} target={href ? '_blank' : undefined} rel={href ? 'noopener noreferrer' : undefined} aria-label={`Open ${title} on MyAnimeList`}>
   <span class="favorite-rank" data-favorite-list-rank aria-hidden="true">01</span>
   {image && <img class="favorite-item-image" data-favorite-image src={image} alt={title} loading="lazy" />}
   <div class="favorite-info">
@@ -20,8 +21,6 @@ const { title, image, year, score } = Astro.props;
     </div>
     <div class="favorite-stats">
       <small class="favorite-score" data-favorite-score hidden={!score}>{score ? `★ ${score}` : ''}</small>
-      <small data-favorite-api-rank hidden></small>
-      <small data-favorite-popularity hidden></small>
     </div>
   </div>
-</div>
+</a>
