@@ -4247,8 +4247,8 @@ ul {
   border-radius: 0 8px 8px 8px;
 }
 
-/* Let the manga panel carry the shared theme-aware texture without
-   competing with the covers or carousel controls. */
+/* Let the manga panel carry the supplied background without competing with
+   the covers or carousel controls. */
 .manga-section > .neo-content {
   isolation: isolate;
 }
@@ -4259,12 +4259,15 @@ ul {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: var(--primary-dark);
-  opacity: 0.1;
-  -webkit-mask: url('../img/parkay-floor.svg') repeat;
-  -webkit-mask-size: 40px 40px;
-  mask: url('../img/parkay-floor.svg') repeat;
-  mask-size: 40px 40px;
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--bg-elev) 78%, transparent),
+      color-mix(in srgb, var(--bg-elev) 78%, transparent)
+    ),
+    url('https://i.imgur.com/dVxebAx_d.webp?maxwidth=760&fidelity=grand');
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 236px 428px;
 }
 
 .manga-section > .neo-content > * {
