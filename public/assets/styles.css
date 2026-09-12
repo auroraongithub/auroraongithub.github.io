@@ -2349,30 +2349,30 @@ ul {
   margin-top: 2px;
 }
 
-/* Dumby-inspired stat tiles: small, bevelled readouts instead of flat cards. */
+/* Dumby-inspired stat tiles: compact, bevelled readouts instead of flat cards. */
 .stats-grid.sidebar-stats {
-  gap: 6px;
+  gap: 4px;
 }
 
 .stats-grid.sidebar-stats .stat-item {
   position: relative;
   isolation: isolate;
-  min-height: 54px;
+  min-height: 38px;
   overflow: hidden;
-  padding: 6px 4px;
+  padding: 5px 4px 4px;
   border: 1px solid var(--primary-dark);
-  border-radius: 5px;
+  border-radius: 6px;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, #fff 62%, var(--bg-elev)) 0%,
-    color-mix(in srgb, var(--primary-light) 34%, var(--bg-elev)) 44%,
-    color-mix(in srgb, var(--primary-dark) 42%, var(--bg-elev)) 50%,
-    color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev)) 100%
+    color-mix(in srgb, #fff 72%, var(--bg-elev)) 0%,
+    color-mix(in srgb, var(--primary-light) 32%, var(--bg-elev)) 45%,
+    color-mix(in srgb, var(--primary-dark) 35%, var(--bg-elev)) 50%,
+    color-mix(in srgb, var(--primary-light) 14%, var(--bg-elev)) 100%
   );
   box-shadow:
     inset 1px 1px 0 rgba(255, 255, 255, 0.72),
     inset 0 -2px 3px rgba(0, 0, 0, 0.14),
-    0 1px 3px rgba(0, 0, 0, 0.16);
+    0 1px 2px rgba(0, 0, 0, 0.16);
 }
 
 .stats-grid.sidebar-stats .stat-item::after {
@@ -2381,38 +2381,34 @@ ul {
   top: 2px;
   right: 4px;
   left: 4px;
-  height: 38%;
+  height: 42%;
   border-radius: 4px 4px 50% 50%;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0));
   content: "";
   pointer-events: none;
 }
 
-.stats-grid.sidebar-stats .stat-icon,
 .stats-grid.sidebar-stats .stat-value,
 .stats-grid.sidebar-stats .stat-label {
   position: relative;
   z-index: 1;
 }
 
-.stats-grid.sidebar-stats .stat-icon {
-  color: var(--primary-dark);
-  font-size: 0.72rem;
-  line-height: 1;
-}
-
 .stats-grid.sidebar-stats .stat-value {
-  margin-top: 3px;
+  margin: 0;
   color: var(--primary-dark);
-  font-size: 0.9rem;
+  font-size: 0.84rem;
+  line-height: 1;
   text-shadow: 1px 1px 0 color-mix(in srgb, var(--bg-elev) 70%, #fff);
 }
 
 .stats-grid.sidebar-stats .stat-label {
+  margin-top: 3px;
   color: var(--primary-dark);
-  font-size: 0.52rem;
+  font-size: 0.49rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
 }
 
 .stat-item {
@@ -7551,11 +7547,11 @@ body.dark .contact-link.twitter:hover {
   height: auto !important;
   max-height: none !important;
   overflow: visible !important;
-  padding: 10px !important;
+  padding: 7px !important;
 }
 
 .neo-sidebar .sidebar-stats-box .stats-grid.sidebar-stats {
-  min-height: 84px;
+  min-height: 80px;
 }
 
 /* ==================== IMAGE LIGHTBOX ==================== */
