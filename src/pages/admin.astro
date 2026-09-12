@@ -1,76 +1,188 @@
 ---
 import AdminLayout from '../layouts/AdminLayout.astro';
 import AdminPanel from '../components/admin/AdminPanel.astro';
+import AdminStatus from '../components/admin/AdminStatus.astro';
+import AdminTabs from '../components/admin/AdminTabs.astro';
+import { adminNavigation } from '../lib/admin/navigation';
+
+const contentSection = adminNavigation.find((section) => section.label === 'Content');
+const siteSection = adminNavigation.find((section) => section.label === 'Site');
+const youtubeSection = adminNavigation.find((section) => section.label === 'YouTube CMS');
+
+const quickActions = [
+  { label: 'Add Post', href: '/admin/add-post/', icon: 'bi-plus-square' },
+  { label: 'Update status strip', href: '/admin/status/', icon: 'bi-broadcast' },
+  { label: 'Edit Now page', href: '/admin/now/', icon: 'bi-clock-history' },
+  { label: 'Review changelog', href: '/admin/changelog/', icon: 'bi-list-check' }
+];
 ---
-<AdminLayout title="Admin" requiresAuth={false} login={true} bodyClass="admin-entry-page">
-  <AdminPanel title="Opening Admin" icon="bi-shield-lock" class="admin-login-panel admin-entry-panel">
-    <p class="admin-entry-message"><span class="admin-entry-dot"></span> Checking your session…</p>
+<AdminLayout title="Admin Dashboard" requiresAuth={true}>
+  <AdminPanel title="Admin Dashboard" icon="bi-grid-1x2" class="admin-dashboard-panel">
+    <Fragment slot="actions">
+      <span class="admin-dashboard-session"><span class="admin-dashboard-session-dot"></span> Session active</span>
+    </Fragment>
+
+    <AdminTabs
+      tabs={[
+        { id: 'overview', label: 'Overview', icon: 'bi-grid-1x2' },
+        { id: 'content', label: 'Content', icon: 'bi-journal-text' },
+        { id: 'site', label: 'Site', icon: 'bi-sliders' }
+      ]}
+    />
+
+    <section class="admin-dashboard-tab-panel" data-dashboard-panel="overview" role="tabpanel" aria-label="Overview">
+      <div class="admin-dashboard-overview">
+        <div class="admin-dashboard-block admin-dashboard-metrics-block">
+          <div class="admin-dashboard-block-heading">
+            <h3>Site snapshot</h3>
+            <span class="admin-dashboard-readout">LIVE</span>
+          </div>
+          <div class="admin-dashboard-metrics" aria-label="Site metrics">
+            <div class="admin-dashboard-metric"><strong id="statProjects">--</strong><span>Projects</span></div>
+            <div class="admin-dashboard-metric"><strong id="statPosts">--</strong><span>Posts</span></div>
+            <div class="admin-dashboard-metric"><strong id="statPageviews">--</strong><span>Total visits</span></div>
+          </div>
+          <AdminStatus id="adminDashboardStatus" />
+        </div>
+
+        <div class="admin-dashboard-block admin-dashboard-actions-block">
+          <div class="admin-dashboard-block-heading">
+            <h3>Quick actions</h3>
+            <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+          </div>
+          <nav aria-label="Quick actions">
+            {quickActions.map((action) => (
+              <a class="admin-dashboard-action" href={action.href}>
+                <i class={`bi ${action.icon}`} aria-hidden="true"></i><span>{action.label}</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+              </a>
+            ))}
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <section class="admin-dashboard-tab-panel" data-dashboard-panel="content" role="tabpanel" aria-label="Content" hidden>
+      <div class="admin-dashboard-link-groups">
+        {contentSection && (
+          <div class="admin-dashboard-link-group">
+            <div class="admin-dashboard-block-heading"><h3>{contentSection.label}</h3><i class="bi bi-pencil-square" aria-hidden="true"></i></div>
+            <nav aria-label={`${contentSection.label} links`}>
+              {contentSection.items.map((item) => (
+                <a class="admin-dashboard-action" href={item.href}>
+                  <i class={`bi ${'icon' in item && item.icon ? item.icon : 'bi-arrow-right'}`} aria-hidden="true"></i><span>{item.label}</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
+        {youtubeSection && (
+          <div class="admin-dashboard-link-group">
+            <div class="admin-dashboard-block-heading"><h3>{youtubeSection.label}</h3><i class="bi bi-youtube" aria-hidden="true"></i></div>
+            <nav aria-label={`${youtubeSection.label} links`}>
+              {youtubeSection.items.map((item) => (
+                <a class="admin-dashboard-action" href={item.href}>
+                  <i class={`bi ${'icon' in item && item.icon ? item.icon : 'bi-arrow-right'}`} aria-hidden="true"></i><span>{item.label}</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <section class="admin-dashboard-tab-panel" data-dashboard-panel="site" role="tabpanel" aria-label="Site" hidden>
+      {siteSection && (
+        <div class="admin-dashboard-link-group admin-dashboard-site-group">
+          <div class="admin-dashboard-block-heading"><h3>{siteSection.label}</h3><i class="bi bi-sliders" aria-hidden="true"></i></div>
+          <nav aria-label={`${siteSection.label} links`} class="admin-dashboard-site-links">
+            {siteSection.items.map((item) => (
+              <a class="admin-dashboard-action" href={item.href}>
+                <i class={`bi ${'icon' in item && item.icon ? item.icon : 'bi-arrow-right'}`} aria-hidden="true"></i><span>{item.label}</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+              </a>
+            ))}
+          </nav>
+        </div>
+      )}
+    </section>
   </AdminPanel>
-  <script>
-    let token = null;
-    try { token = localStorage.getItem('jwt') || sessionStorage.getItem('jwt'); } catch (_) {}
-    window.location.replace(token ? '/admin/blogs/' : '/admin/login/');
-  </script>
 </AdminLayout>
 
+<script>
+  import { adminFetch } from '../lib/admin/api';
+
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-admin-tab]')];
+  const panels = [...document.querySelectorAll<HTMLElement>('[data-dashboard-panel]')];
+  const status = document.querySelector<HTMLElement>('#adminDashboardStatus');
+
+  function setStatus(message = '', state: 'loading' | 'success' | 'error' | '' = '') {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.state = state;
+    status.hidden = !message;
+  }
+
+  function selectTab(id: string) {
+    tabs.forEach((tab) => {
+      const selected = tab.dataset.adminTab === id;
+      tab.classList.toggle('active', selected);
+      tab.setAttribute('aria-selected', String(selected));
+    });
+    panels.forEach((panel) => { panel.hidden = panel.dataset.dashboardPanel !== id; });
+  }
+
+  tabs.forEach((tab) => tab.addEventListener('click', () => selectTab(tab.dataset.adminTab || 'overview')));
+
+  async function loadStats() {
+    setStatus('Loading current site metrics…', 'loading');
+    try {
+      const response = await adminFetch('/site/stats', {}, { auth: false });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || 'Failed to load metrics');
+      document.querySelector('#statProjects')!.textContent = String(data.projects ?? data.projects_count ?? '0');
+      document.querySelector('#statPosts')!.textContent = String(data.posts ?? data.posts_count ?? '0');
+      document.querySelector('#statPageviews')!.textContent = String(data.pageviews ?? data.total_visits ?? data.total ?? '0');
+      setStatus('Metrics updated.', 'success');
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : 'Metrics unavailable.', 'error');
+    }
+  }
+
+  selectTab('overview');
+  loadStats();
+</script>
+
 <style>
-  .admin-entry-page .admin-login-main {
-    min-height: clamp(230px, 34vh, 330px);
-    padding-top: 42px;
+  .admin-dashboard-panel { margin-bottom: 0 !important; }
+  .admin-dashboard-panel .admin-panel-content { padding: 10px; }
+  .admin-dashboard-session { display: inline-flex; align-items: center; gap: 5px; color: var(--text-muted); font: 700 .64rem/1 'Courier New', monospace; letter-spacing: .06em; text-transform: uppercase; }
+  .admin-dashboard-session-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--admin-success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--admin-success) 17%, transparent); }
+  .admin-dashboard-panel .admin-tabs { margin: 0 0 10px; padding: 0 0 8px; }
+  .admin-dashboard-overview { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(220px, .8fr); gap: 8px; }
+  .admin-dashboard-block, .admin-dashboard-link-group { min-width: 0; border: 1px solid var(--border-light); border-radius: 6px; background: var(--bg-elev); }
+  .admin-dashboard-block-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 9px; border-bottom: 1px solid var(--border-light); background: var(--gradient-subtle); color: var(--primary-dark); }
+  .admin-dashboard-block-heading h3 { margin: 0; color: var(--text); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; }
+  .admin-dashboard-block-heading > i { font-size: .78rem; }
+  .admin-dashboard-readout { color: var(--primary-dark); font: 700 .6rem/1 'Courier New', monospace; letter-spacing: .08em; }
+  .admin-dashboard-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; padding: 1px; background: var(--border-light); }
+  .admin-dashboard-metric { display: grid; gap: 2px; min-height: 65px; place-content: center; padding: 8px; background: var(--card); text-align: center; }
+  .admin-dashboard-metric strong { color: var(--primary-dark); font-size: clamp(1.05rem, 2.8vw, 1.45rem); font-variant-numeric: tabular-nums; line-height: 1; }
+  .admin-dashboard-metric span { color: var(--text-muted); font-size: .66rem; text-transform: uppercase; }
+  .admin-dashboard-metrics-block .admin-status { margin: 7px; }
+  .admin-dashboard-actions-block nav, .admin-dashboard-link-group nav { display: grid; gap: 1px; padding: 1px; background: var(--border-light); }
+  .admin-dashboard-action { display: grid; grid-template-columns: 16px minmax(0, 1fr) 12px; align-items: center; gap: 6px; min-height: 31px; padding: 6px 8px; background: var(--card); color: var(--text); font-size: .73rem; text-decoration: none; }
+  .admin-dashboard-action:hover { background: var(--gradient-subtle); color: var(--primary-dark); }
+  .admin-dashboard-action > i:first-child { color: var(--primary-dark); font-size: .76rem; text-align: center; }
+  .admin-dashboard-action > i:last-child { color: var(--text-muted); font-size: .6rem; text-align: right; }
+  .admin-dashboard-link-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .admin-dashboard-site-group { max-width: none; }
+  .admin-dashboard-site-links { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  @media (max-width: 640px) {
+    .admin-dashboard-overview, .admin-dashboard-link-groups { grid-template-columns: 1fr; }
+    .admin-dashboard-site-links { grid-template-columns: 1fr !important; }
   }
-
-  .admin-entry-page .admin-entry-panel {
-    width: min(100%, 460px);
-    margin-top: 30px !important;
-    border-radius: 0 10px 10px 10px;
-    background: color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev));
-    box-shadow:
-      0 0 0 2px var(--halo),
-      3px 4px 9px color-mix(in srgb, var(--primary-dark) 18%, transparent);
-  }
-
-  .admin-entry-page .admin-entry-panel .admin-panel-header {
-    min-width: 156px;
-    top: -31px;
-    padding: 5px 16px;
-    border-radius: 10px 10px 0 0;
-    box-shadow: 2px -2px 5px color-mix(in srgb, var(--primary) 18%, transparent);
-  }
-
-  .admin-entry-page .admin-entry-panel .admin-panel-content {
-    padding: 12px;
-    border-radius: 0 0 8px 8px;
-  }
-
-  .admin-entry-page .admin-entry-message {
-    justify-content: flex-start;
-    min-height: 30px;
-    margin: 0;
-    padding: 6px 8px;
-    border: 1px solid color-mix(in srgb, var(--primary-dark) 45%, var(--border-light));
-    border-radius: 5px;
-    background: color-mix(in srgb, var(--bg) 72%, var(--primary-light));
-    color: var(--text);
-    box-shadow: inset 1px 1px 0 color-mix(in srgb, #fff 55%, transparent);
-  }
-
-  [data-theme='dark'] .admin-entry-page .admin-entry-message {
-    box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 12%, transparent);
-  }
-
-  .admin-entry-page .admin-entry-dot {
-    flex: 0 0 auto;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
-  }
-
-  @media (max-width: 500px) {
-    .admin-entry-page .admin-login-main {
-      min-height: 210px;
-      padding: 38px 8px 16px;
-    }
-
-    .admin-entry-page .admin-entry-panel {
-      margin-top: 26px !important;
-    }
+  @media (max-width: 420px) {
+    .admin-dashboard-panel .admin-panel-header { align-items: flex-start; flex-direction: column; }
+    .admin-dashboard-metrics { grid-template-columns: 1fr; }
+    .admin-dashboard-metric { min-height: 48px; }
   }
 </style>
