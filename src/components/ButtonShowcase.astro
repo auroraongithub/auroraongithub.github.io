@@ -1,0 +1,63 @@
+---
+import { site } from '../data/site';
+
+const siteUrl = 'https://elythria.dev';
+const buttonUrl = `${siteUrl}/img/elythria-button.svg`;
+const embedCode = `<a href="${siteUrl}/" target="_blank" rel="noopener noreferrer" aria-label="Visit elythria.dev">
+  <img src="${buttonUrl}" width="256" height="90" alt="Visit elythria.dev" />
+</a>`;
+---
+<div class="button-showcase">
+  <div class="button-intro">
+    <p class="button-kicker">a tiny piece of my web garden</p>
+    <p>Put this little badge on your site and send your visitors my way.</p>
+  </div>
+
+  <div class="button-preview-area">
+    <div class="button-preview-label">live preview <span aria-hidden="true">✦</span></div>
+    <a class="button-preview" href={siteUrl} target="_blank" rel="noopener noreferrer">
+      <img src="/img/elythria-button.svg" width="256" height="90" alt={`Visit ${site.name}`} />
+    </a>
+    <p class="button-size-note">256 × 90 pixels · the mascot lives on the right</p>
+  </div>
+
+  <div class="button-embed-area">
+    <div class="button-embed-heading">
+      <div>
+        <p class="button-kicker">copy + paste</p>
+        <h3>Put it on your site</h3>
+      </div>
+      <button class="button-copy" type="button" data-button-copy data-button-code={embedCode}>
+        <i class="bi bi-clipboard" aria-hidden="true"></i><span>Copy code</span>
+      </button>
+    </div>
+    <pre class="button-embed-code"><code>{embedCode}</code></pre>
+    <p class="button-copy-status" data-button-copy-status role="status" aria-live="polite"></p>
+  </div>
+
+  <p class="button-footer-note">If you use it, send me your link so I can visit your corner too ♡</p>
+</div>
+
+<script is:inline>
+  const copyButton = document.querySelector('[data-button-copy]');
+  const copyStatus = document.querySelector('[data-button-copy-status]');
+
+  copyButton?.addEventListener('click', async () => {
+    const code = copyButton.getAttribute('data-button-code') || '';
+    if (!code) return;
+
+    try {
+      await navigator.clipboard.writeText(code);
+      copyButton.classList.add('copied');
+      copyButton.querySelector('span').textContent = 'Copied!';
+      copyStatus.textContent = 'Embed code copied to your clipboard.';
+      window.setTimeout(() => {
+        copyButton.classList.remove('copied');
+        copyButton.querySelector('span').textContent = 'Copy code';
+        copyStatus.textContent = '';
+      }, 2200);
+    } catch (_) {
+      copyStatus.textContent = 'Select the code above and copy it manually.';
+    }
+  });
+</script>

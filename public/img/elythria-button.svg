@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="90" viewBox="0 0 256 90" role="img" aria-labelledby="title desc">
+  <title id="title">Visit elythria.dev</title>
+  <desc id="desc">A retro web button for elythria.dev with Aurora waving from the right side.</desc>
+  <defs>
+    <linearGradient id="frame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4ffff" />
+      <stop offset="0.48" stop-color="#9deeea" />
+      <stop offset="0.5" stop-color="#46c8c8" />
+      <stop offset="1" stop-color="#168e9d" />
+    </linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ecffff" />
+      <stop offset="0.44" stop-color="#aeece9" />
+      <stop offset="0.5" stop-color="#6fc9cf" />
+      <stop offset="1" stop-color="#3d9eb2" />
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0" />
+      <stop offset="0.48" stop-color="#fff" stop-opacity="0.52" />
+      <stop offset="1" stop-color="#fff" stop-opacity="0" />
+    </linearGradient>
+    <pattern id="pixels" width="12" height="12" patternUnits="userSpaceOnUse">
+      <path d="M0 0h1v12H0zM6 0h1v12H6z" fill="#fff" opacity=".11" />
+      <path d="M0 0h12v1H0zM0 6h12v1H0z" fill="#0b7185" opacity=".08" />
+    </pattern>
+    <filter id="shadow" x="-8%" y="-12%" width="125%" height="135%">
+      <feDropShadow dx="2" dy="3" stdDeviation="1.4" flood-color="#124f60" flood-opacity=".45" />
+    </filter>
+    <clipPath id="buttonClip">
+      <rect x="3" y="3" width="250" height="84" rx="10" />
+    </clipPath>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <rect x="3" y="3" width="250" height="84" rx="10" fill="url(#frame)" />
+    <rect x="7" y="7" width="242" height="76" rx="7" fill="url(#face)" stroke="#eaffff" stroke-width="1.5" />
+    <rect x="8" y="8" width="240" height="74" rx="6" fill="url(#pixels)" />
+    <path d="M10 10h236c-21 13-56 19-107 19-54 0-94-6-129-19Z" fill="#fff" opacity=".22" clip-path="url(#buttonClip)" />
+    <path d="M10 46h156" stroke="#fff" stroke-opacity=".58" />
+    <path d="M10 47h156" stroke="#197d91" stroke-opacity=".25" />
+    <path d="M10 65h152" stroke="#fff" stroke-opacity=".24" />
+    <rect x="10" y="10" width="154" height="22" rx="5" fill="#fff" opacity=".12" />
+    <text x="17" y="29" fill="#164b61" font-family="MS PGothic, Tahoma, sans-serif" font-size="20" font-weight="700" letter-spacing=".3" stroke="#fff" stroke-opacity=".68" stroke-width="1" paint-order="stroke">elythria.dev</text>
+    <text x="18" y="60" fill="#164b61" font-family="MS PGothic, Tahoma, sans-serif" font-size="9" font-weight="700" letter-spacing=".7">a tiny internet garden by aurora</text>
+    <text x="18" y="74" fill="#eaffff" font-family="MS PGothic, Tahoma, sans-serif" font-size="8" font-weight="700" letter-spacing=".6">CLICK TO VISIT ✦</text>
+    <circle cx="145" cy="19" r="2" fill="#fff" opacity=".75" />
+    <circle cx="158" cy="25" r="1.4" fill="#fff" opacity=".65" />
+    <path d="M174 0h82v90h-82z" fill="url(#shine)" opacity=".2" />
+    <image href="aurora-button-neutral.png" x="177" y="7" width="76" height="76" preserveAspectRatio="xMidYMid meet" />
+    <path d="M8 82h240" stroke="#085f72" stroke-opacity=".5" />
+  </g>
+</svg>

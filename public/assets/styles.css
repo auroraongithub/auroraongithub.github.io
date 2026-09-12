@@ -4567,7 +4567,8 @@ ul {
 .join-section,
 .resources-page,
 .experiments-page,
-.changelog-page {
+.changelog-page,
+.button-page {
   padding: 3px;
   background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
   border: 2px solid var(--primary);
@@ -4595,7 +4596,8 @@ ul {
 .join-section > .neo-header,
 .resources-page > .neo-header,
 .experiments-page > .neo-header,
-.changelog-page > .neo-header {
+.changelog-page > .neo-header,
+.button-page > .neo-header {
   width: max-content;
   min-width: 150px;
   max-width: calc(100% - 12px);
@@ -4635,7 +4637,8 @@ ul {
 .join-section > .neo-header h2,
 .resources-page > .neo-header h2,
 .experiments-page > .neo-header h2,
-.changelog-page > .neo-header h2 {
+.changelog-page > .neo-header h2,
+.button-page > .neo-header h2 {
   font-size: 0.9rem;
   letter-spacing: 0.08em;
 }
@@ -4650,7 +4653,8 @@ ul {
 .join-section > .neo-content,
 .resources-page > .neo-content,
 .experiments-page > .neo-content,
-.changelog-page > .neo-content {
+.changelog-page > .neo-content,
+.button-page > .neo-content {
   position: relative;
   z-index: 0;
   display: flex;
@@ -8023,6 +8027,33 @@ body.more-drawer-open {
   width: 88px;
 }
 
+.neo-sidebar .sidebar-more-link,
+.more-drawer .sidebar-more-link {
+  display: inline-flex;
+  flex: 1 0 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 3px 6px;
+  border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 50%, transparent);
+  color: var(--primary-dark);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.neo-sidebar .neo-content a.sidebar-more-link::before,
+.more-drawer .neo-content a.sidebar-more-link::before {
+  content: none;
+}
+
+.neo-sidebar .sidebar-more-link:hover,
+.more-drawer .sidebar-more-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
 .more-drawer .sidebar-stats-box .neo-content.stats-content {
   height: auto;
   max-height: none;
@@ -8359,4 +8390,221 @@ body.more-drawer-open {
 }
 @keyframes lightbox-fade-in {
   from { opacity: 0; } to { opacity: 1; }
+}
+
+/* ==========================================================================
+   BUTTON PAGE - a small, copyable web badge
+   ========================================================================== */
+
+.button-page > .neo-content {
+  padding: 10px;
+  background:
+    linear-gradient(color-mix(in srgb, var(--bg-elev) 82%, transparent), color-mix(in srgb, var(--bg-elev) 82%, transparent)),
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--primary-light) 34%, transparent), transparent 42%),
+    var(--bg-elev);
+}
+
+.button-showcase {
+  width: min(100%, 680px);
+  margin: 0 auto;
+  color: var(--text);
+}
+
+.button-intro {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 1px 2px 8px;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+.button-intro p {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.button-kicker,
+.button-preview-label {
+  color: var(--primary-dark);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.button-intro .button-kicker {
+  flex: 0 0 auto;
+}
+
+.button-preview-area {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 16px 8px 13px;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  text-align: center;
+}
+
+.button-preview-label {
+  justify-self: stretch;
+  text-align: left;
+}
+
+.button-preview-label span {
+  color: var(--accent);
+}
+
+.button-preview {
+  display: inline-flex;
+  padding: 5px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--primary-light) 20%, var(--bg-elev));
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, #fff 78%, transparent),
+    2px 2px 0 color-mix(in srgb, var(--primary-dark) 34%, transparent);
+  transition: filter 0.16s ease, box-shadow 0.16s ease;
+}
+
+.button-preview:hover,
+.button-preview:focus-visible {
+  filter: saturate(1.08) brightness(1.04);
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, #fff 88%, transparent),
+    3px 3px 0 color-mix(in srgb, var(--primary-dark) 40%, transparent);
+}
+
+.button-preview:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.button-preview img {
+  display: block;
+  width: 256px;
+  height: 90px;
+  max-width: 100%;
+}
+
+.button-size-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.72rem;
+}
+
+.button-embed-area {
+  padding: 14px 2px 8px;
+}
+
+.button-embed-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 7px;
+}
+
+.button-embed-heading .button-kicker {
+  margin: 0 0 2px;
+}
+
+.button-embed-heading h3 {
+  margin: 0;
+  color: var(--text);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.9rem;
+}
+
+.button-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 5px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, #fff 75%, var(--bg-elev)),
+    color-mix(in srgb, var(--primary-light) 30%, var(--bg-elev)) 47%,
+    color-mix(in srgb, var(--primary-dark) 25%, var(--bg-elev)) 50%,
+    color-mix(in srgb, var(--primary-light) 15%, var(--bg-elev))
+  );
+  color: var(--primary-dark);
+  cursor: pointer;
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.82), 0 1px 2px rgba(0, 0, 0, 0.17);
+  transition: filter 0.16s ease, box-shadow 0.16s ease;
+}
+
+.button-copy:hover,
+.button-copy:focus-visible,
+.button-copy.copied {
+  filter: brightness(1.06);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.button-copy:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.button-embed-code {
+  margin: 0;
+  padding: 10px;
+  overflow-x: auto;
+  border: 1px solid var(--primary-dark);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--bg) 90%, var(--primary-light));
+  color: var(--text);
+  font-family: "MS PGothic", "MS UI Gothic", Consolas, monospace;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.12);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.button-embed-code code {
+  color: inherit;
+}
+
+.button-copy-status {
+  min-height: 1em;
+  margin: 5px 0 0;
+  color: var(--primary-dark);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.7rem;
+  text-align: right;
+}
+
+.button-footer-note {
+  margin: 3px 2px 0;
+  color: var(--text-muted);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+@media (max-width: 540px) {
+  .button-intro,
+  .button-embed-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .button-copy-status {
+    text-align: left;
+  }
+
+  .button-preview img {
+    width: min(256px, calc(100vw - 64px));
+    height: auto;
+  }
 }
