@@ -538,6 +538,9 @@
                 <h4 style="margin: 0;"><i class="bi bi-grid"></i> Current Favorites (<span id="favCount">0</span>)</h4>
                 <div class="favorite-sync-actions">
                   <span class="favorite-sync-status" id="favoriteSyncStatus" role="status" aria-live="polite">Checking Jikan cache…</span>
+                  <button type="button" class="btn btn-ghost" id="applyManualMetadataBtn" onclick="applyManualMetadata()" title="Save the manually verified MAL metadata for every category">
+                    <i class="bi bi-journal-check"></i> <span>Fill verified MAL data</span>
+                  </button>
                   <button type="button" class="btn btn-ghost" id="syncJikanBtn" onclick="syncJikanCache()" title="Fetch and save missing MAL metadata">
                     <i class="bi bi-arrow-repeat"></i> <span id="syncJikanLabel">Sync missing</span>
                   </button>
@@ -559,6 +562,7 @@
 
     <script type="module">
       import '../assets/app.js';
+      import { manualMetadataFor } from './manual-favorites-metadata.js';
       
       const API_BASE = 'https://nijikade-backend.vercel.app/api';
       const JIKAN_BASE = 'https://api.jikan.moe/v4';
@@ -637,6 +641,75 @@
         status.dataset.state = state;
         status.textContent = message;
       }
+
+      function withManualMetadata(category, items, timestamp) {
+        return items.map((item) => {
+          const metadata = manualMetadataFor(category, item);
+          if (!metadata) return item;
+          return {
+            ...item,
+            score: category === 'characters' ? item.score ?? null : metadata.score ?? item.score ?? null,
+            year: metadata.year || item.year || null,
+            image: metadata.image || item.image || null,
+            jikan: { ...metadata, synced_at: timestamp, source: 'manual-mal-verification' },
+          };
+        });
+      }
+
+      window.applyManualMetadata = async () => {
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('Not logged in');
+
+        const button = document.getElementById('applyManualMetadataBtn');
+        const status = document.getElementById('favoriteSyncStatus');
+        if (button) button.disabled = true;
+        if (status) {
+          status.dataset.state = 'pending';
+          status.textContent = 'Saving manually verified MAL data for all categories…';
+        }
+
+        const categories = ['anime', 'manga', 'characters'];
+        const timestamp = Date.now();
+        let saved = 0;
+        try {
+          for (const category of categories) {
+            const source = category === currentCategory ? favorites : (await (await fetch(`${API_BASE}/site/favorites?category=${category}`)).json()).items || [];
+            const updated = withManualMetadata(category, source, timestamp);
+            const filled = updated.filter((item, index) => updated[index] !== source[index]).length;
+            const response = await fetch(`${API_BASE}/admin/favorites?token=${token}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ category, items: updated }),
+            });
+            if (!response.ok) throw new Error(`${category} save failed (${response.status})`);
+            saved += filled;
+            if (category === currentCategory) {
+              favorites = updated;
+              renderFavorites();
+            }
+            if (status) status.textContent = `Saved ${saved} verified records · ${category} complete`;
+          }
+          if (status) {
+            status.dataset.state = 'ready';
+            status.textContent = `Manual MAL fill complete · ${saved} records saved to the backend cache`;
+          }
+          const progressText = document.getElementById('favoriteSyncText');
+          const progressEl = document.getElementById('favoriteSyncProgress');
+          if (progressEl && progressText) {
+            progressEl.classList.add('show');
+            document.getElementById('favoriteSyncFill').style.width = '100%';
+            progressText.textContent = `Finished · ${saved} manually verified MAL records saved.`;
+          }
+        } catch (error) {
+          console.error(error);
+          if (status) {
+            status.dataset.state = 'error';
+            status.textContent = `Manual fill failed: ${error.message}`;
+          }
+        } finally {
+          if (button) button.disabled = false;
+        }
+      };
 
       function jikanYear(data) {
         return data?.year || data?.aired?.from?.slice?.(0, 4) || data?.published?.from?.slice?.(0, 4) || null;
