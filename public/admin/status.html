@@ -6,8 +6,12 @@
     <title>Status Editor · elythria.dev Admin</title>
     <link rel="stylesheet" href="./../assets/styles.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="./admin-theme.css" />
+    <style>
+      .admin-page .neo-container{max-width:1180px}.admin-page .site-banner{min-height:76px;padding:14px 18px}.admin-page .brand{font-size:clamp(1.35rem,3vw,1.8rem)}.admin-page .neo-layout{gap:10px;align-items:start}.admin-page .neo-sidebar{gap:10px}.admin-page .neo-sidebar .neo-box{margin-bottom:0}.admin-page .neo-sidebar .neo-header{padding:8px 12px}.admin-page .neo-sidebar .neo-header h3{font-size:.78rem;letter-spacing:1.5px}.admin-page .neo-sidebar .neo-content{padding:8px}.admin-page .neo-sidebar .neo-content a{border-radius:6px;padding:7px 9px}.admin-page .neo-main>.neo-box{overflow:hidden}.admin-page .neo-main>.neo-box>.neo-header{padding:10px 14px}.admin-page .neo-main>.neo-box>.neo-header h2,.admin-page .neo-main>.neo-box>.neo-header h3{font-size:.9rem;letter-spacing:1.2px}.admin-page .neo-main>.neo-box>.neo-content{padding:clamp(12px,2vw,20px)}.admin-page .form{max-width:680px;margin:0 auto;gap:13px}.admin-page .field{gap:5px}.admin-page .field label{font-size:.74rem;letter-spacing:.5px;text-transform:uppercase}.admin-page .field input,.admin-page .field select,.admin-page .field textarea{min-height:38px;padding:8px 10px;border:1px solid var(--border-light);border-radius:6px;font-size:.84rem}.admin-page .btn{min-height:34px;padding:7px 11px;border-radius:6px;font-size:.76rem}.admin-page .btn:focus-visible,.admin-page input:focus-visible,.admin-page select:focus-visible,.admin-page textarea:focus-visible{outline:2px solid var(--primary);outline-offset:3px}.admin-page .status-strip-screen{border-radius:6px;overflow:hidden}@media(max-width:768px){.admin-page .neo-layout{display:block}.admin-page .neo-sidebar{display:none}}@media(max-width:500px){.admin-page{padding:12px}}
+    </style>
   </head>
-  <body>
+  <body class="admin-page" data-admin-theme>
     <!-- Color Picker Modal -->
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
@@ -157,6 +161,7 @@
       </div>
     </div>
 
+    <script src="./admin-theme.js"></script>
     <script type="module">
       import '../assets/app.js';
       

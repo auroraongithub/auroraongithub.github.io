@@ -274,8 +274,12 @@
       .search-result-title { font-weight: 600; font-size: 0.9rem; }
       .search-result-meta { font-size: 0.75rem; color: var(--text-muted); }
     </style>
+    <link rel="stylesheet" href="./admin-theme.css" />
+    <style>
+      .admin-page .neo-container{max-width:1180px}.admin-page .site-banner{min-height:76px;padding:14px 18px}.admin-page .brand{font-size:clamp(1.35rem,3vw,1.8rem)}.admin-page .neo-layout{gap:10px;align-items:start}.admin-page .neo-sidebar{gap:10px}.admin-page .neo-sidebar .neo-box{margin-bottom:0}.admin-page .neo-sidebar .neo-header{padding:8px 12px}.admin-page .neo-sidebar .neo-header h3{font-size:.78rem;letter-spacing:1.5px}.admin-page .neo-sidebar .neo-content{padding:8px}.admin-page .neo-sidebar .neo-content a{border-radius:6px;padding:7px 9px}.admin-page .neo-main>.neo-box{overflow:hidden}.admin-page .neo-main>.neo-box>.neo-header{padding:10px 14px}.admin-page .neo-main>.neo-box>.neo-header h2,.admin-page .neo-main>.neo-box>.neo-header h3{font-size:.9rem;letter-spacing:1.2px}.admin-page .neo-main>.neo-box>.neo-content{padding:clamp(12px,2vw,20px)}.admin-page .category-tabs{gap:6px;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid var(--border-light)}.admin-page .category-tabs button{padding:7px 10px;font-size:.78rem}.admin-page .import-section,.admin-page .add-section{margin:0 0 16px!important;padding:0 0 16px!important;background:transparent!important;border:0!important;border-bottom:1px solid var(--border-light)!important;border-radius:0!important}.admin-page .import-section h4,.admin-page .add-section h4{margin:0 0 9px!important;color:var(--text);font-size:.8rem;letter-spacing:.7px;text-transform:uppercase}.admin-page .import-row{gap:8px}.admin-page .field{gap:5px}.admin-page .field label{font-size:.74rem;letter-spacing:.5px;text-transform:uppercase}.admin-page .field input,.admin-page .field select,.admin-page .field textarea{min-height:38px;padding:8px 10px;border:1px solid var(--border-light);border-radius:6px;font-size:.84rem}.admin-page .field textarea{min-height:72px}.admin-page .field small{font-size:.7rem;color:var(--text-muted)!important}.admin-page .btn{min-height:34px;padding:7px 11px;border-radius:6px;font-size:.76rem}.admin-page .btn:focus-visible,.admin-page input:focus-visible,.admin-page select:focus-visible,.admin-page textarea:focus-visible{outline:2px solid var(--primary);outline-offset:3px}.admin-page .favorites-list{grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:10px;margin-top:12px}.admin-page .favorite-card{border-color:var(--border-light);border-radius:7px}.admin-page .favorite-card-image{height:110px}.admin-page .favorite-card-body{padding:10px}.admin-page .favorite-card-actions{padding:8px 10px}.admin-page .loading,.admin-page .favorites-list>.text-muted,.admin-page .search-results>.text-muted{display:block;margin:0;padding:15px;border:1px dashed var(--border-light);border-radius:6px;color:var(--text-muted);text-align:center;font-size:.8rem}@media(max-width:768px){.admin-page .neo-layout{display:block}.admin-page .neo-sidebar{display:none}}@media(max-width:500px){.admin-page{padding:12px}.admin-page .add-form-grid{grid-template-columns:1fr}.admin-page .add-form-grid .field.full-width{grid-column:auto}.admin-page .import-row{flex-direction:column;align-items:stretch}}
+    </style>
   </head>
-  <body>
+  <body class="admin-page" data-admin-theme>
     <!-- Color Picker Modal -->
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
@@ -560,6 +564,7 @@
       </div>
     </div>
 
+    <script src="./admin-theme.js"></script>
     <script type="module">
       import '../assets/app.js';
       import { manualMetadataFor } from './manual-favorites-metadata.js';
