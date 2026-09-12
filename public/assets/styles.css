@@ -2237,7 +2237,8 @@ ul {
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
   background-clip: padding-box;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Sidebar cards don't add a separate hover shadow; only the existing lift remains. */
