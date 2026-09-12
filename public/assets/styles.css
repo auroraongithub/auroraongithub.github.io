@@ -4261,8 +4261,8 @@ ul {
   pointer-events: none;
   background-image:
     linear-gradient(
-      color-mix(in srgb, var(--bg-elev) 78%, transparent),
-      color-mix(in srgb, var(--bg-elev) 78%, transparent)
+      color-mix(in srgb, var(--bg-elev) 62%, transparent),
+      color-mix(in srgb, var(--bg-elev) 62%, transparent)
     ),
     url('https://i.imgur.com/dVxebAx_d.webp?maxwidth=760&fidelity=grand');
   background-position: center, center;
@@ -4271,6 +4271,32 @@ ul {
 }
 
 .manga-section > .neo-content > * {
+  position: relative;
+  z-index: 1;
+}
+
+.neo-widgets .widget-now > .neo-content {
+  isolation: isolate;
+}
+
+.neo-widgets .widget-now > .neo-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--bg-elev) 64%, transparent),
+      color-mix(in srgb, var(--bg-elev) 64%, transparent)
+    ),
+    url('https://s1.bwallpapers.com/wallpapers/2014/07/24/shining-sky_102439648.jpg');
+  background-position: center, center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.neo-widgets .widget-now > .neo-content > * {
   position: relative;
   z-index: 1;
 }
