@@ -3,12 +3,27 @@ import AdminPanel from './AdminPanel.astro';
 import AdminField from './AdminField.astro';
 import AdminStatus from './AdminStatus.astro';
 
-interface Props { mode: 'create' | 'update' }
-const { mode } = Astro.props;
+interface Props { mode: 'create' | 'update'; panel?: boolean }
+const { mode, panel = true } = Astro.props;
 const updating = mode === 'update';
 ---
-<AdminPanel title={updating ? 'Update Post' : 'Add Post'} icon={updating ? 'bi-pencil-square' : 'bi-plus-square'}>
-  <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/blogs/">Back to blogs</a></Fragment>
+{panel ? (
+  <AdminPanel title={updating ? 'Update Post' : 'Add Post'} icon={updating ? 'bi-pencil-square' : 'bi-plus-square'}>
+    <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/blogs/">Back to blogs</a></Fragment>
+    <form class="admin-form" data-admin-post-editor data-mode={mode}>
+      <AdminField label="Title" forId="postTitle" required><input id="postTitle" type="text" placeholder="Title" /></AdminField>
+      {!updating && (
+        <AdminField label="Category" forId="postCategory" required>
+          <select id="postCategory"><option value="">Select</option><option value="blog">Blog</option><option value="story">Story</option></select>
+        </AdminField>
+      )}
+      <AdminField label="Tags" forId="postTags" hint="Comma-separated tags" required><input id="postTags" type="text" placeholder="tag1, tag2" /></AdminField>
+      <AdminField label="Content" required><div id="postEditor" class="admin-editor"></div></AdminField>
+      <AdminStatus id="postEditorStatus" />
+      <div><button class="btn btn-primary" type="submit">{updating ? 'Update Post' : 'Add Post'}</button></div>
+    </form>
+  </AdminPanel>
+) : (
   <form class="admin-form" data-admin-post-editor data-mode={mode}>
     <AdminField label="Title" forId="postTitle" required><input id="postTitle" type="text" placeholder="Title" /></AdminField>
     {!updating && (
@@ -21,7 +36,7 @@ const updating = mode === 'update';
     <AdminStatus id="postEditorStatus" />
     <div><button class="btn btn-primary" type="submit">{updating ? 'Update Post' : 'Add Post'}</button></div>
   </form>
-</AdminPanel>
+)}
 <script is:inline src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
   import { adminFetch, storeAdminToken } from '../../lib/admin/api';
