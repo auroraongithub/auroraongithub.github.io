@@ -26,13 +26,17 @@
       </div>
     </div>
     <div class="neo-container admin-login-shell">
-      <header class="site-banner">
-        <a href="/" class="brand">elythria.dev</a>
-        <span class="admin-label">Admin</span>
-        <div class="admin-controls" aria-label="Display controls">
-          <button class="color-picker-toggle" type="button" title="Change color" aria-label="Change color" data-color-picker><i class="bi bi-palette-fill" aria-hidden="true"></i></button>
+      <div class="site-banner">
+        <div class="brand">elythria.dev</div>
+        <div class="header-controls">
+          <button class="color-picker-toggle" title="Change color" data-color-picker>
+            <i class="bi bi-palette"></i>
+          </button>
+          <button class="theme-toggle" title="Toggle theme" data-toggle-theme>
+            <i class="bi bi-brightness-high"></i>
+          </button>
         </div>
-      </header>
+      </div>
       <main class="admin-login-main">
         <section class="neo-box login-panel" aria-labelledby="loginTitle">
           <div class="neo-header login-panel-header"><h1 id="loginTitle">Admin Login</h1></div>
@@ -49,13 +53,12 @@
               <p class="login-status" id="loginStatus" role="status" aria-live="polite"></p>
               <div class="login-actions">
                 <button class="btn btn-primary login-submit" type="submit"><span>Login</span></button>
-                <a class="login-back" href="/">Back</a>
+                <a class="btn btn-ghost login-back" href="/">Back</a>
               </div>
             </form>
           </div>
         </section>
       </main>
-      <footer class="admin-login-footer"><span>elythria.dev · admin</span></footer>
     </div>
     <script type="module">
       import './login_logic.js';

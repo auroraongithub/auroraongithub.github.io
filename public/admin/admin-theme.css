@@ -532,37 +532,27 @@
 .admin-login-shell { width: min(620px, 100%); }
 
 .admin-login-page .site-banner {
-  min-height: 64px;
+  min-height: unset;
   margin-bottom: 0;
-  padding: 12px 16px;
+  padding: 15px 20px;
 }
 
 .admin-login-page .site-banner .brand {
-  display: inline-block;
+  display: block;
   padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: var(--admin-primary-light) !important;
-  font-family: 'Ecoder', 'MS PGothic', Tahoma, sans-serif;
-  font-size: 1.55rem;
+  color: var(--primary-light) !important;
+  font-family: 'Ecoder', sans-serif;
+  font-size: 1.8rem;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-decoration: none;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, .3);
-  filter: drop-shadow(0 2px var(--admin-primary-dark)) drop-shadow(0 0 2px #424242);
+  filter: drop-shadow(0 3px var(--primary-dark)) drop-shadow(2px 0 var(--primary-dark)) drop-shadow(0 -1px var(--primary-light)) drop-shadow(-1px 0 var(--primary-dark)) drop-shadow(0 5px white) drop-shadow(5px 0 white) drop-shadow(0 -5px white) drop-shadow(-5px 0 white) drop-shadow(1px 1px 0 rgba(172,172,172,0.6)) drop-shadow(1px 1px 0 rgba(172,172,172,0.6)) drop-shadow(0 0 2px #424242);
 }
 
-.admin-label {
-  margin-left: auto;
-  color: rgba(255, 255, 255, .82);
-  font: 700 .72rem/1 'Courier New', monospace;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-
-.admin-controls { gap: 5px; margin-left: 10px; }
-.admin-login-page .admin-controls .color-picker-toggle { width: 34px; height: 25px; border-radius: 4px; font-size: .78rem; }
+.admin-login-page .header-controls > .theme-toggle { display: inline-flex; }
 
 .admin-login-main {
   padding: 10px;
@@ -642,24 +632,27 @@
 .login-actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 1px;
+  justify-content: flex-start;
+  gap: 6px;
+  margin-top: 10px;
 }
 
-.login-submit {
+.login-actions .btn {
   width: auto;
-  min-height: 27px;
+  min-height: 0;
   margin: 0;
-  padding: 4px 13px;
-  border-radius: 3px;
-  font: 700 .72rem/1 'MS PGothic', 'MS UI Gothic', Tahoma, sans-serif;
-  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .65), 1px 1px 2px rgba(0, 0, 0, .16);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: .85rem;
+  font-weight: 500;
+  line-height: normal;
+  box-shadow: none;
 }
 
 .login-submit:disabled { cursor: wait; opacity: .72; transform: none; }
 .login-submit[data-loading='true'] { cursor: wait; }
-.login-back { color: var(--admin-primary-dark); font-size: .72rem; }
+.login-back { color: var(--admin-text); font-size: .85rem; text-decoration: none; }
 
 .admin-login-footer {
   justify-content: center;
