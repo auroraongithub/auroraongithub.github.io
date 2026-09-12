@@ -315,14 +315,20 @@ function initModals() {
 function initMoreDrawer() {
   const drawer = document.getElementById('moreDrawer');
   if (!drawer) return;
-  document.querySelector('[data-more-toggle]')?.addEventListener('click', (event) => {
+  const toggle = document.querySelector('[data-more-toggle]');
+  const setDrawerState = (isOpen) => {
+    drawer.classList.toggle('active', isOpen);
+    toggle?.setAttribute('aria-expanded', String(isOpen));
+    document.body.classList.toggle('more-drawer-open', isOpen);
+  };
+  toggle?.addEventListener('click', (event) => {
     event.preventDefault();
-    drawer.classList.add('active');
+    setDrawerState(true);
   });
-  drawer.querySelectorAll('[data-more-close]').forEach((button) => button.addEventListener('click', () => drawer.classList.remove('active')));
+  drawer.querySelectorAll('[data-more-close]').forEach((button) => button.addEventListener('click', () => setDrawerState(false)));
   drawer.querySelectorAll('[data-drawer-scroll]').forEach((link) => link.addEventListener('click', (event) => {
     event.preventDefault();
-    drawer.classList.remove('active');
+    setDrawerState(false);
     document.getElementById(link.dataset.drawerScroll)?.scrollIntoView({ behavior: 'smooth' });
   }));
 }

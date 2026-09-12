@@ -6,10 +6,10 @@ const storiesHref = '/stories/';
 ---
 <nav class="mobile-bottom-nav" aria-label="Primary mobile navigation">
   <ul>
-    <li><a href="/" class:list={{ active: path === '/' }}><i class="bi bi-house-fill"></i><span>Home</span></a></li>
-    <li><a href={aboutHref} class:list={{ active: path.startsWith('/about') || (path === '/' && false) }}><i class="bi bi-person-fill"></i><span>About</span></a></li>
-    <li><a href={blogsHref} class:list={{ active: path.startsWith('/blogs') }}><i class="bi bi-journal-text"></i><span>Blogs</span></a></li>
-    <li><a href={storiesHref} class:list={{ active: path.startsWith('/stories') }}><i class="bi bi-book-fill"></i><span>Stories</span></a></li>
-    <li><a href="#" data-more-toggle><i class="bi bi-grid-fill"></i><span>More</span></a></li>
+    <li><a href="/" class:list={{ active: path === '/' }} aria-current={path === '/' ? 'page' : undefined}><i class="bi bi-house-fill" aria-hidden="true"></i><span>Home</span></a></li>
+    <li><a href={aboutHref} class:list={{ active: path.startsWith('/about') }} aria-current={path.startsWith('/about') ? 'page' : undefined}><i class="bi bi-person-fill" aria-hidden="true"></i><span>About</span></a></li>
+    <li><a href={blogsHref} class:list={{ active: path.startsWith('/blogs') }} aria-current={path.startsWith('/blogs') ? 'page' : undefined}><i class="bi bi-journal-text" aria-hidden="true"></i><span>Blogs</span></a></li>
+    <li><a href={storiesHref} class:list={{ active: path.startsWith('/stories') }} aria-current={path.startsWith('/stories') ? 'page' : undefined}><i class="bi bi-book-fill" aria-hidden="true"></i><span>Stories</span></a></li>
+    <li><a href="#" data-more-toggle aria-haspopup="dialog" aria-controls="moreDrawer" aria-expanded="false"><i class="bi bi-grid-fill" aria-hidden="true"></i><span>More</span></a></li>
   </ul>
 </nav>
