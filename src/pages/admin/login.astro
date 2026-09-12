@@ -1,0 +1,89 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminPanel from '../../components/admin/AdminPanel.astro';
+import AdminField from '../../components/admin/AdminField.astro';
+import AdminStatus from '../../components/admin/AdminStatus.astro';
+---
+<AdminLayout title="Admin Login" requiresAuth={false} login={true} bodyClass="admin-auth-page">
+  <AdminPanel title="Admin Login" icon="bi-shield-lock" class="admin-login-panel">
+    <form id="loginForm" class="admin-form" novalidate>
+      <AdminField label="Email" forId="email" required>
+        <input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="username" required />
+      </AdminField>
+      <AdminField label="Password" forId="password" required>
+        <input id="password" name="password" type="password" placeholder="Password" autocomplete="current-password" required />
+      </AdminField>
+      <AdminStatus id="loginStatus" />
+      <div class="admin-login-actions">
+        <button class="btn btn-primary" type="submit" id="loginSubmit"><span>Login</span></button>
+        <a class="btn btn-ghost" href="/">Back</a>
+      </div>
+    </form>
+  </AdminPanel>
+
+  <script>
+    import { ADMIN_API_BASE, storeAdminToken } from '../../lib/admin/api';
+
+    const form = document.querySelector<HTMLFormElement>('#loginForm');
+    const emailInput = document.querySelector<HTMLInputElement>('#email');
+    const passwordInput = document.querySelector<HTMLInputElement>('#password');
+    const submit = document.querySelector<HTMLButtonElement>('#loginSubmit');
+    const status = document.querySelector<HTMLElement>('#loginStatus');
+
+    function setStatus(message = '', state: 'loading' | 'success' | 'error' | '' = '') {
+      if (!status) return;
+      status.textContent = message;
+      status.dataset.state = state;
+      status.hidden = !message;
+    }
+
+    function setInvalid(input: HTMLInputElement | null, invalid: boolean) {
+      if (!input) return;
+      input.setAttribute('aria-invalid', String(invalid));
+    }
+
+    emailInput?.addEventListener('input', () => setInvalid(emailInput, false));
+    passwordInput?.addEventListener('input', () => setInvalid(passwordInput, false));
+
+    form?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = emailInput?.value.trim() || '';
+      const password = passwordInput?.value || '';
+      setInvalid(emailInput, !email);
+      setInvalid(passwordInput, !password);
+      if (!email || !password) {
+        setStatus('Enter your email and password to continue.', 'error');
+        return;
+      }
+
+      if (submit) {
+        submit.disabled = true;
+        submit.querySelector('span')!.textContent = 'Checking…';
+      }
+      setStatus('Checking credentials…', 'loading');
+
+      try {
+        const response = await fetch(`${ADMIN_API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Login failed');
+        storeAdminToken(data.token);
+        setStatus('Login successful.', 'success');
+        const next = new URLSearchParams(window.location.search).get('next');
+        const safeNext = next?.startsWith('/admin/') ? next : '/admin/blogs/';
+        window.location.replace(safeNext);
+      } catch (error) {
+        setStatus(error instanceof Error ? error.message : 'Unable to sign in.', 'error');
+        setInvalid(emailInput, true);
+        setInvalid(passwordInput, true);
+        if (submit) {
+          submit.disabled = false;
+          submit.querySelector('span')!.textContent = 'Login';
+        }
+      }
+    });
+  </script>
+</AdminLayout>

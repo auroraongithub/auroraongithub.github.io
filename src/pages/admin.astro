@@ -1,18 +1,14 @@
 ---
-const adminEntry = '/admin/index.html';
+import AdminLayout from '../layouts/AdminLayout.astro';
+import AdminPanel from '../components/admin/AdminPanel.astro';
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content={`0;url=${adminEntry}`} />
-    <title>Opening Admin</title>
-  </head>
-  <body>
-    <p>Opening the <a href={adminEntry}>admin panel</a>…</p>
-    <script is:inline>
-      window.location.replace('/admin/index.html');
-    </script>
-  </body>
-</html>
+<AdminLayout title="Admin" requiresAuth={false} login={true}>
+  <AdminPanel title="Opening Admin" icon="bi-shield-lock" class="admin-login-panel">
+    <p class="admin-entry-message"><span class="admin-entry-dot"></span> Checking your session…</p>
+  </AdminPanel>
+  <script>
+    let token = null;
+    try { token = localStorage.getItem('jwt') || sessionStorage.getItem('jwt'); } catch (_) {}
+    window.location.replace(token ? '/admin/blogs/' : '/admin/login/');
+  </script>
+</AdminLayout>
