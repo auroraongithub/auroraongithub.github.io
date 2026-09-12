@@ -5,18 +5,43 @@ import AdminField from '../../components/admin/AdminField.astro';
 import AdminStatus from '../../components/admin/AdminStatus.astro';
 ---
 <AdminLayout title="Now Editor" active="now">
-  <AdminPanel title="Now Editor" icon="bi-clock-history">
+  <AdminPanel title="Now Editor" icon="bi-clock-history" class="now-editor-panel">
+    <div class="now-editor-intro">
+      <div class="now-editor-mark" aria-hidden="true"><i class="bi bi-broadcast-pin"></i></div>
+      <div>
+        <h3>Keep the public pulse current.</h3>
+        <p>These values are shown in the homepage Now widget.</p>
+      </div>
+      <span class="now-editor-channel"><i class="bi bi-globe2" aria-hidden="true"></i> Public feed</span>
+    </div>
+
     <form id="nowForm" class="admin-form">
-      <AdminField label="Working On" forId="workingOn"><input id="workingOn" type="text" placeholder="Scanlation, YouTube videos…" /></AdminField>
-      <AdminField label="Learning" forId="learning"><input id="learning" type="text" placeholder="Japanese, Web Development…" /></AdminField>
-      <AdminField label="Open to Collaborations?">
+      <div class="now-editor-fields">
+        <AdminField label="Working On" forId="workingOn" class="now-field">
+          <input id="workingOn" type="text" placeholder="Scanlation, YouTube videos…" />
+        </AdminField>
+        <AdminField label="Learning" forId="learning" class="now-field">
+          <input id="learning" type="text" placeholder="Japanese, Web Development…" />
+        </AdminField>
+      </div>
+
+      <AdminField label="Open to Collaborations?" class="now-collab-field">
         <div class="admin-choice-row">
-          <label><input type="radio" name="collabs" value="true" id="collabsYes" /> Yes</label>
-          <label><input type="radio" name="collabs" value="false" id="collabsNo" /> No</label>
+          <label class="now-choice">
+            <input type="radio" name="collabs" value="true" id="collabsYes" />
+            <span><strong>Yes</strong><small>Open to a good fit</small></span>
+          </label>
+          <label class="now-choice">
+            <input type="radio" name="collabs" value="false" id="collabsNo" />
+            <span><strong>No</strong><small>Keeping the queue focused</small></span>
+          </label>
         </div>
       </AdminField>
-      <AdminStatus id="nowMessage" />
-      <div><button class="btn btn-primary" type="submit">Save Now Panel</button></div>
+
+      <div class="now-editor-actions">
+        <AdminStatus id="nowMessage" />
+        <button class="btn btn-primary" type="submit"><i class="bi bi-cloud-arrow-up" aria-hidden="true"></i> Save Now Panel</button>
+      </div>
     </form>
   </AdminPanel>
   <script>
@@ -45,5 +70,212 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
       } catch (error) { setAdminStatus(message, error instanceof Error ? error.message : 'Error saving', 'error'); }
     });
   </script>
-  <style>.admin-choice-row{display:flex;gap:18px;align-items:center}.admin-choice-row label{display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;cursor:pointer}</style>
+  <style is:global>
+    .admin-page .now-editor-panel {
+      position: relative;
+      margin-top: 34px !important;
+      padding: 3px;
+      overflow: visible;
+      border: 2px solid var(--primary);
+      border-right-color: var(--primary-dark);
+      border-bottom-color: var(--primary-dark);
+      border-radius: 0 12px 12px 12px;
+      background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
+      box-shadow: 0 0 0 2px var(--halo), 4px 6px 0 color-mix(in srgb, var(--primary) 22%, var(--bg-elev)), var(--shadow);
+      transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
+    }
+
+    .admin-page .now-editor-panel:hover {
+      transform: none;
+      box-shadow: 0 0 0 2px var(--halo), 4px 6px 0 color-mix(in srgb, var(--primary) 22%, var(--bg-elev)), var(--shadow);
+    }
+
+    .admin-page .now-editor-panel > .admin-panel-header {
+      position: absolute;
+      top: -35px;
+      left: -4px;
+      z-index: 2;
+      display: inline-flex;
+      width: max-content;
+      min-width: 158px;
+      max-width: calc(100% - 12px);
+      box-sizing: border-box;
+      padding: 6px 20px;
+      background-image: repeating-linear-gradient(45deg, var(--primary-light), var(--primary-light) 6px, var(--primary) 6px, var(--primary) 12px);
+      background-size: 17px 17px;
+      border: 2px solid var(--halo);
+      border-bottom: none;
+      border-radius: 15px 15px 0 0;
+      color: #fff;
+      text-shadow: 2px 2px 0 color-mix(in srgb, var(--primary-dark) 85%, #000);
+      box-shadow: 2px -2px 5px color-mix(in srgb, var(--primary) 22%, transparent);
+      animation: now-editor-stripe-move 1s linear infinite;
+    }
+
+    .admin-page .now-editor-panel > .admin-panel-header h2 {
+      color: #fff;
+      font-size: .9rem;
+      letter-spacing: .08em;
+    }
+
+    .admin-page .now-editor-panel > .admin-panel-content {
+      position: relative;
+      z-index: 0;
+      padding: clamp(15px, 3vw, 26px);
+      background: var(--bg-elev);
+      border: 1px solid var(--primary-dark);
+      border-radius: 0 0 8px 8px;
+    }
+
+    .now-editor-intro {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 2px 0 16px;
+      border-bottom: 1px dashed var(--border-light);
+    }
+
+    .now-editor-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 1px solid var(--primary-dark);
+      border-radius: 8px;
+      background: var(--gradient);
+      color: #fff;
+      font-size: 1.15rem;
+      box-shadow: inset 1px 1px 0 rgba(255,255,255,.45), 0 3px 8px color-mix(in srgb, var(--primary) 18%, transparent);
+    }
+
+    .now-editor-intro h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(.95rem, 2vw, 1.08rem);
+      line-height: 1.3;
+    }
+
+    .now-editor-intro p {
+      margin: 3px 0 0;
+      color: var(--text-muted);
+      font-size: .78rem;
+      line-height: 1.45;
+    }
+
+    .now-editor-channel {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 7px;
+      border: 1px solid var(--border-light);
+      border-radius: 5px;
+      background: var(--gradient-subtle);
+      color: var(--primary-dark);
+      font: 700 .63rem/1.2 'Courier New', monospace;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .admin-page .now-editor-panel .admin-form {
+      max-width: none;
+      margin: 0;
+      gap: 16px;
+    }
+
+    .now-editor-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .now-editor-panel .now-field,
+    .now-editor-panel .now-collab-field {
+      gap: 7px;
+      margin: 0;
+      padding: 12px;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      background: var(--gradient-subtle);
+    }
+
+    .now-editor-panel .now-field label,
+    .now-editor-panel .now-collab-field > label {
+      color: var(--primary-dark);
+      font-size: .68rem;
+      letter-spacing: .09em;
+    }
+
+    .admin-page .now-editor-panel input:not([type='checkbox']):not([type='radio']) {
+      min-height: 40px;
+      padding: 8px 10px;
+      border-color: var(--primary-dark);
+      border-top-color: var(--primary-light);
+      border-left-color: var(--primary-light);
+      border-radius: 6px;
+      background: linear-gradient(to bottom, color-mix(in srgb, var(--bg-elev) 94%, var(--primary-light)), var(--bg-elev));
+      box-shadow: inset 1px 1px 0 rgba(255,255,255,.72), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 30%, transparent), 1px 1px 2px rgba(0,0,0,.1);
+    }
+
+    .admin-page .now-editor-panel input:not([type='checkbox']):not([type='radio']):focus-visible {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: inset 1px 1px 0 rgba(255,255,255,.7), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 24%, transparent), 0 0 0 2px color-mix(in srgb, var(--primary) 24%, transparent);
+    }
+
+    .admin-choice-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .now-choice {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 10px;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      background: var(--bg-elev);
+      color: var(--text);
+      cursor: pointer;
+      text-transform: none;
+      letter-spacing: 0;
+      transition: border-color .2s ease, background-color .2s ease, transform .2s ease;
+    }
+
+    .now-choice:hover { border-color: var(--primary); transform: translateY(-1px); }
+    .now-choice:has(input:checked) { border-color: var(--primary-dark); background: color-mix(in srgb, var(--primary-light) 24%, var(--bg-elev)); box-shadow: inset 3px 0 0 var(--primary); }
+    .now-choice input[type='radio'] { flex: 0 0 auto; width: 15px; height: 15px; margin: 0; accent-color: var(--primary-dark); }
+    .now-choice span { display: grid; gap: 2px; min-width: 0; }
+    .now-choice strong { font-size: .78rem; line-height: 1.2; }
+    .now-choice small { overflow: hidden; color: var(--text-muted); font-size: .67rem; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+
+    .now-editor-actions {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
+    }
+
+    .now-editor-actions .admin-status { margin: 0; }
+    .now-editor-actions .btn { align-self: stretch; min-height: 38px; padding: 8px 14px; border: 1px solid var(--primary-dark); border-radius: 7px; box-shadow: inset 1px 1px 0 rgba(255,255,255,.7), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 24%, transparent), 1px 1px 2px rgba(0,0,0,.12); }
+    .now-editor-actions .btn-primary { background: linear-gradient(to bottom, var(--primary-light), var(--primary) 46%, var(--primary-dark) 52%, var(--primary-light)); color: #fff; text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000); }
+    .now-editor-actions .btn-primary:hover { background: linear-gradient(to bottom, var(--primary), var(--primary-dark)); }
+
+    @keyframes now-editor-stripe-move { from { background-position: 0 0; } to { background-position: 17px 0; } }
+    @media (prefers-reduced-motion: reduce) { .admin-page .now-editor-panel > .admin-panel-header { animation: none; } .now-choice { transition: none; } }
+    @media (max-width: 620px) {
+      .now-editor-intro { grid-template-columns: auto minmax(0, 1fr); }
+      .now-editor-channel { grid-column: 1 / -1; justify-self: start; }
+      .now-editor-fields, .admin-choice-row { grid-template-columns: 1fr; }
+      .now-editor-actions { grid-template-columns: 1fr; }
+      .now-editor-actions .btn { justify-self: stretch; }
+    }
+  </style>
 </AdminLayout>
