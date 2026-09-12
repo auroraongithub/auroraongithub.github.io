@@ -686,12 +686,136 @@ ul {
 }
 
 .site-banner .brand {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--primary-light);
   letter-spacing: 3px;
   font-family: 'Ecoder', sans-serif;
   filter: drop-shadow(0 3px var(--primary-dark)) drop-shadow(2px 0 var(--primary-dark)) drop-shadow(0 -1px var(--primary-light)) drop-shadow(-1px 0 var(--primary-dark)) drop-shadow(0 5px white) drop-shadow(5px 0 white) drop-shadow(0 -5px white) drop-shadow(-5px 0 white) drop-shadow(1px 1px 0 rgba(172,172,172,0.6)) drop-shadow(1px 1px 0 rgba(172,172,172,0.6)) drop-shadow(0 0 2px #424242);
+}
+
+.site-banner .brand-text,
+.site-banner .brand-echo {
+  display: block;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
+
+.site-banner .brand-text {
+  position: relative;
+  z-index: 2;
+  animation: brand-flicker 7s steps(1, end) infinite;
+}
+
+.site-banner .brand-echo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  text-shadow: none;
+}
+
+.site-banner .brand-echo-cyan {
+  color: var(--primary-light);
+  animation: brand-glitch-cyan 5.8s steps(1, end) infinite;
+}
+
+.site-banner .brand-echo-pink {
+  color: color-mix(in srgb, var(--primary-light) 35%, #ff6b9d);
+  animation: brand-glitch-pink 5.8s steps(1, end) infinite;
+}
+
+.site-banner .brand-scanline {
+  position: absolute;
+  top: 0;
+  left: -5%;
+  z-index: 3;
+  width: 110%;
+  height: 2px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, var(--primary-light) 22%, #fff 50%, var(--primary-light) 78%, transparent);
+  box-shadow: 0 0 5px color-mix(in srgb, var(--primary-light) 72%, transparent);
+  animation: brand-scanline 4.4s ease-in-out infinite;
+}
+
+.site-banner .brand-cursor {
+  position: absolute;
+  right: -9px;
+  bottom: 5px;
+  z-index: 3;
+  width: 0.42em;
+  height: 0.9em;
+  pointer-events: none;
+  background: var(--primary-light);
+  box-shadow: 0 0 3px var(--primary-dark);
+  animation: brand-cursor-blink 1.1s steps(1, end) infinite;
+}
+
+.site-banner .brand:hover .brand-text,
+.site-banner .brand:hover .brand-echo,
+.site-banner .brand:hover .brand-scanline,
+.site-banner .brand:hover .brand-cursor,
+.site-banner .brand:focus-visible .brand-text,
+.site-banner .brand:focus-visible .brand-echo,
+.site-banner .brand:focus-visible .brand-scanline,
+.site-banner .brand:focus-visible .brand-cursor {
+  animation-play-state: paused;
+}
+
+@keyframes brand-flicker {
+  0%, 47%, 49%, 76%, 78%, 100% { opacity: 1; }
+  48% { opacity: 0.82; }
+  77% { opacity: 0.9; }
+}
+
+@keyframes brand-glitch-cyan {
+  0%, 38%, 42%, 100% { opacity: 0; transform: translate(0); clip-path: inset(0); }
+  39% { opacity: 0.68; transform: translate(-2px, 1px); clip-path: inset(12% 0 54% 0); }
+  40% { opacity: 0.42; transform: translate(2px, -1px); clip-path: inset(62% 0 12% 0); }
+  41% { opacity: 0; }
+}
+
+@keyframes brand-glitch-pink {
+  0%, 64%, 68%, 100% { opacity: 0; transform: translate(0); clip-path: inset(0); }
+  65% { opacity: 0.62; transform: translate(2px, 0); clip-path: inset(48% 0 25% 0); }
+  66% { opacity: 0.38; transform: translate(-1px, 1px); clip-path: inset(8% 0 68% 0); }
+  67% { opacity: 0; }
+}
+
+@keyframes brand-scanline {
+  0%, 12% { opacity: 0; transform: translateY(-4px); }
+  18% { opacity: 0.78; }
+  48% { opacity: 0.22; }
+  70%, 100% { opacity: 0; transform: translateY(1.8em); }
+}
+
+@keyframes brand-cursor-blink {
+  0%, 48% { opacity: 0.9; }
+  49%, 100% { opacity: 0.18; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-banner .brand-text,
+  .site-banner .brand-echo,
+  .site-banner .brand-scanline,
+  .site-banner .brand-cursor {
+    animation: none;
+  }
+
+  .site-banner .brand-echo,
+  .site-banner .brand-scanline {
+    opacity: 0;
+  }
+
+  .site-banner .brand-cursor {
+    opacity: 0.75;
+  }
 }
 
 /* Header controls */
@@ -2153,7 +2277,22 @@ ul {
     url('../img/manga-bg.jpg');
   background-repeat: no-repeat;
   background-position: center, center;
-  background-size: cover, cover;
+    background-size: cover, cover;
+}
+
+.neo-sidebar .sidebar-links-box > .neo-content {
+  background-color: color-mix(in srgb, var(--bg-elev) 58%, transparent);
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--bg-elev) 48%, transparent),
+      color-mix(in srgb, var(--bg-elev) 48%, transparent)
+    ),
+    url('https://i.imgur.com/dVxebAx_d.webp?maxwidth=760&fidelity=grand');
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 236px 428px;
+  background-clip: padding-box;
+  overflow: hidden;
 }
 
 /* Sidebar cards don't add a separate hover shadow; only the existing lift remains. */
