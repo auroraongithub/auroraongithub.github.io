@@ -542,17 +542,16 @@ ul {
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 52px;
-  height: 24px;
-  gap: 4px;
-  padding: 2px 4px;
+  width: 42px;
+  height: 30px;
+  padding: 3px 5px;
   border: 1px solid var(--primary-dark);
   border-radius: 6px;
   background: linear-gradient(to bottom, var(--primary-light) 0%, var(--primary) 45%, var(--primary-dark) 50%, var(--primary-light) 100%);
   color: #fff;
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-  font-size: 0.72rem;
+  font-size: 0.9rem;
   box-shadow: inset 1px 1px 0 rgba(255,255,255,0.78), 0 1px 2px rgba(0,0,0,0.2);
   overflow: hidden;
 }
@@ -579,18 +578,6 @@ ul {
 .color-picker-toggle:active {
   background: linear-gradient(to top, var(--primary-light) 0%, var(--primary) 45%, var(--primary-dark) 50%, var(--primary-light) 100%);
   box-shadow: inset 1px 1px 2px var(--primary-dark);
-}
-
-.color-picker-swatch {
-  position: relative;
-  z-index: 1;
-  width: 13px;
-  height: 13px;
-  flex: 0 0 auto;
-  border: 1px solid rgba(255,255,255,0.9);
-  border-radius: 2px;
-  background: linear-gradient(to bottom, var(--primary-light) 0%, var(--primary) 45%, var(--primary-dark) 50%, var(--primary-light) 100%);
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.42), inset -1px -1px 0 rgba(0,0,0,0.16), 1px 1px 0 rgba(0,0,0,0.18);
 }
 
 .color-picker-toggle > i {
