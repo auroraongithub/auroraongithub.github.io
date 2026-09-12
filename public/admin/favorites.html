@@ -312,6 +312,10 @@
             <input type="url" id="editImage" placeholder="https://..." />
           </div>
           <div class="field">
+            <label for="editMalId">MAL ID</label>
+            <input type="number" id="editMalId" min="1" placeholder="e.g. 47917" />
+          </div>
+          <div class="field">
             <label for="editStatus">Status</label>
             <select id="editStatus">
               <option value="completed">Completed</option>
@@ -462,6 +466,10 @@
                     <input type="url" id="addImage" placeholder="https://..." />
                   </div>
                   <div class="field">
+                    <label for="addMalId">MAL ID</label>
+                    <input type="number" id="addMalId" min="1" placeholder="e.g. 47917" />
+                  </div>
+                  <div class="field">
                     <label for="addStatus">Status</label>
                     <select id="addStatus">
                       <option value="completed">Completed</option>
@@ -492,7 +500,12 @@
               </div>
 
               <!-- Favorites List -->
-              <h4 style="margin-top: 30px;"><i class="bi bi-grid"></i> Current Favorites (<span id="favCount">0</span>)</h4>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 30px;">
+                <h4 style="margin: 0;"><i class="bi bi-grid"></i> Current Favorites (<span id="favCount">0</span>)</h4>
+                <button type="button" class="btn btn-ghost" id="syncJikanBtn" onclick="syncJikanCache()" title="Fetch and save current MAL metadata">
+                  <i class="bi bi-arrow-repeat"></i> Sync Jikan cache
+                </button>
+              </div>
               <div class="favorites-list" id="favoritesList">
                 <div class="loading">Loading...</div>
               </div>
@@ -512,6 +525,119 @@
       let currentCategory = 'anime';
       let favorites = [];
       let editingItem = null;
+      const JIKAN_REQUEST_GAP = 1200;
+      let lastJikanRequestAt = 0;
+
+      function favoriteMalId(item) {
+        return item?.mal_id ?? item?.malId ?? item?.myanimelist_id ?? item?.myanimelistId ?? null;
+      }
+
+      function jikanYear(data) {
+        return data?.year || data?.aired?.from?.slice?.(0, 4) || data?.published?.from?.slice?.(0, 4) || null;
+      }
+
+      function characterSeries(data) {
+        return data?.anime?.[0]?.anime?.title
+          || data?.anime?.[0]?.title
+          || data?.manga?.[0]?.manga?.title
+          || data?.manga?.[0]?.title
+          || null;
+      }
+
+      async function fetchJikanRecord(item, category) {
+        const id = favoriteMalId(item);
+        if (!id || !['anime', 'manga', 'characters'].includes(category)) return null;
+        const endpoint = category === 'characters' ? `characters/${encodeURIComponent(id)}/full` : `${category}/${encodeURIComponent(id)}`;
+        for (let attempt = 0; attempt < 3; attempt += 1) {
+          const wait = Math.max(0, JIKAN_REQUEST_GAP - (Date.now() - lastJikanRequestAt));
+          if (wait) await new Promise(resolve => setTimeout(resolve, wait));
+          lastJikanRequestAt = Date.now();
+          try {
+            const response = await fetch(`${JIKAN_BASE}/${endpoint}`);
+            if (!response.ok) throw new Error(`Jikan ${response.status}`);
+            const payload = await response.json();
+            const data = payload.data;
+            if (!data) return null;
+            return {
+              url: data.url || null,
+              type: data.type || null,
+              status: data.status || null,
+              score: data.score ?? null,
+              year: jikanYear(data),
+              episodes: data.episodes ?? null,
+              chapters: data.chapters ?? null,
+              volumes: data.volumes ?? null,
+              image: data.images?.jpg?.large_image_url || data.images?.jpg?.image_url || null,
+              series: category === 'characters' ? characterSeries(data) : null,
+              synced_at: Date.now(),
+            };
+          } catch (error) {
+            if (attempt === 2) throw error;
+            await new Promise(resolve => setTimeout(resolve, 1800 * (attempt + 1)));
+          }
+        }
+        return null;
+      }
+
+      window.syncJikanCache = async () => {
+        const token = localStorage.getItem('jwt');
+        if (!token) return alert('Not logged in');
+        const category = currentCategory;
+        const indexed = favorites.map((item, index) => ({ item, index })).filter(({ item }) => favoriteMalId(item) && !item.jikan);
+        if (!indexed.length) return alert('All MAL-linked entries already have cached Jikan metadata.');
+        if (!indexed.length) return alert('No MAL-linked entries to sync in this category.');
+
+        const button = document.getElementById('syncJikanBtn');
+        const progressEl = document.getElementById('importProgress');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        if (button) button.disabled = true;
+        progressEl.classList.add('show');
+        progressFill.style.width = '0%';
+        progressText.textContent = `Syncing ${indexed.length} ${category} entries from Jikan...`;
+
+        const updated = [...favorites];
+        let synced = 0;
+        try {
+          for (const [{ item, index }, position] of indexed.map((entry, position) => [entry, position])) {
+            try {
+              const metadata = await fetchJikanRecord(item, category);
+              if (metadata) {
+                updated[index] = {
+                  ...item,
+                  score: category === 'characters' ? item.score ?? null : metadata.score ?? item.score ?? null,
+                  year: metadata.year || item.year || null,
+                  image: metadata.image || item.image || null,
+                  jikan: metadata,
+                };
+                synced += 1;
+              }
+            } catch (error) {
+              console.warn(`Could not sync ${item.title}`, error);
+            }
+            progressFill.style.width = `${Math.round(((position + 1) / indexed.length) * 75)}%`;
+            progressText.textContent = `Synced ${position + 1} of ${indexed.length}...`;
+          }
+
+          const response = await fetch(`${API_BASE}/admin/favorites?token=${token}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category, items: updated }),
+          });
+          if (!response.ok) throw new Error(`Save failed (${response.status})`);
+          favorites = updated;
+          renderFavorites();
+          progressFill.style.width = '100%';
+          progressText.textContent = `Saved ${synced} Jikan metadata records to the backend cache.`;
+          setTimeout(() => progressEl.classList.remove('show'), 2500);
+        } catch (error) {
+          console.error(error);
+          progressFill.style.width = '0%';
+          progressText.textContent = `Sync failed: ${error.message}`;
+        } finally {
+          if (button) button.disabled = false;
+        }
+      };
       
       // Category switch
       window.switchCategory = (category) => {
@@ -618,6 +744,7 @@
         const item = {
           title: document.getElementById('addTitle').value.trim(),
           image: document.getElementById('addImage').value.trim() || null,
+          mal_id: parseInt(document.getElementById('addMalId').value, 10) || null,
           status: document.getElementById('addStatus').value,
           score: parseFloat(document.getElementById('addScore').value) || null,
           year: parseInt(document.getElementById('addYear').value) || null,
@@ -655,6 +782,7 @@
         document.getElementById('editItemId').value = id;
         document.getElementById('editTitle').value = item.title || '';
         document.getElementById('editImage').value = item.image || '';
+        document.getElementById('editMalId').value = item.mal_id || '';
         document.getElementById('editStatus').value = item.status || 'completed';
         document.getElementById('editScore').value = item.score || '';
         document.getElementById('editYear').value = item.year || '';
@@ -677,6 +805,7 @@
         const updates = {
           title: document.getElementById('editTitle').value.trim(),
           image: document.getElementById('editImage').value.trim() || null,
+          mal_id: parseInt(document.getElementById('editMalId').value, 10) || null,
           status: document.getElementById('editStatus').value,
           score: parseFloat(document.getElementById('editScore').value) || null,
           year: parseInt(document.getElementById('editYear').value) || null,
@@ -771,7 +900,20 @@
                 score: null,
                 description: item.about?.substring(0, 200),
                 mal_id: item.mal_id,
-                status: 'completed'
+                status: 'completed',
+                jikan: {
+                  url: item.url || null,
+                  type: null,
+                  status: null,
+                  score: null,
+                  year: null,
+                  episodes: null,
+                  chapters: null,
+                  volumes: null,
+                  image: item.images?.jpg?.image_url || null,
+                  series: null,
+                  synced_at: Date.now()
+                }
               };
             } else {
               itemData = {
@@ -781,7 +923,20 @@
                 score: item.score,
                 description: item.synopsis?.substring(0, 200),
                 mal_id: item.mal_id,
-                status: item.status === 'Finished Airing' || item.status === 'Finished' ? 'completed' : 'watching'
+                status: item.status === 'Finished Airing' || item.status === 'Finished' ? 'completed' : 'watching',
+                jikan: {
+                  url: item.url || null,
+                  type: item.type || null,
+                  status: item.status || null,
+                  score: item.score ?? null,
+                  year: item.year || (item.aired?.from ? new Date(item.aired.from).getFullYear() : null) || (item.published?.from ? new Date(item.published.from).getFullYear() : null),
+                  episodes: item.episodes ?? null,
+                  chapters: item.chapters ?? null,
+                  volumes: item.volumes ?? null,
+                  image: item.images?.jpg?.large_image_url || item.images?.jpg?.image_url || null,
+                  series: null,
+                  synced_at: Date.now()
+                }
               };
             }
             

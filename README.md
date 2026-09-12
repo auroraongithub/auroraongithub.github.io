@@ -74,7 +74,7 @@ order: 10
 
 ### Favorites and changelog
 
-Favorites and changelog remain backend-managed through `/admin/`. Their public rendering is isolated in the Astro widget/page modules instead of being embedded in large HTML files.
+Favorites and changelog remain backend-managed through `/admin/`. Their public rendering is isolated in the Astro widget/page modules instead of being embedded in large HTML files. Use **Sync Jikan cache** in the favorites editor after adding or importing MAL-linked entries; the homepage reads the compact Jikan metadata stored on each backend record and does not make per-row Jikan requests.
 
 ## Navigation
 

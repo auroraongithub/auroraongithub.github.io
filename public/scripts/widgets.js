@@ -5,15 +5,6 @@ function text(id, value) {
   if (el) el.textContent = value;
 }
 
-const JIKAN_BASE = 'https://api.jikan.moe/v4';
-const JIKAN_CACHE_TTL = 86_400_000;
-const JIKAN_REQUEST_GAP = 450;
-const ANILIST_BASE = 'https://graphql.anilist.co';
-const ANILIST_CACHE_TTL = 86_400_000;
-const ANILIST_REQUEST_GAP = 450;
-const favoriteMetadataCache = new Map();
-let lastJikanRequestAt = 0;
-let lastAniListRequestAt = 0;
 let favoritesLoadToken = 0;
 
 const characterSeriesByMalId = {
@@ -45,6 +36,7 @@ function favoriteMalUrl(item, category) {
 function favoriteCardMarkup(item, index = 0, category = '') {
   const rank = String(index + 1).padStart(2, '0');
   const initialHref = favoriteMalUrl(item, category);
+  const initialMetadata = cachedFavoriteMetadata(item, category);
   const template = document.getElementById('favoriteCardTemplate');
   if (!template) {
     const imageMarkup = item.image ? `<img class="favorite-item-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : '';
@@ -81,18 +73,22 @@ function favoriteCardMarkup(item, index = 0, category = '') {
     }
   }
   if (year) {
-    year.textContent = item.year || '';
-    year.hidden = !item.year;
+    year.textContent = initialMetadata?.year || item.year || '';
+    year.hidden = !(initialMetadata?.year || item.year);
   }
   if (status) {
-    status.textContent = formatSavedStatus(item.status);
-    status.hidden = !item.status;
+    status.textContent = initialMetadata?.status || (category === 'characters' ? characterSeriesFromCatalog(null, item) : formatSavedStatus(item.status));
+    status.hidden = !status.textContent;
   }
-  if (format) format.hidden = true;
+  if (format) {
+    format.textContent = initialMetadata?.format || '';
+    format.hidden = !format.textContent;
+  }
   if (score) {
-    if (item.score) {
+    const initialScore = initialMetadata?.score || item.score;
+    if (initialScore) {
       score.className = 'favorite-score';
-      score.textContent = `★ ${item.score}`;
+      score.textContent = `★ ${initialScore}`;
       score.hidden = false;
     } else {
       score.textContent = '';
@@ -113,13 +109,6 @@ function formatSavedStatus(status = '') {
   return labels[status] || status;
 }
 
-function yearFromCatalog(data) {
-  return data?.year
-    || data?.aired?.from?.slice?.(0, 4)
-    || data?.published?.from?.slice?.(0, 4)
-    || '';
-}
-
 function compactCatalogStatus(status = '') {
   return status
     .replace('Currently Airing', 'Airing')
@@ -135,217 +124,25 @@ function characterSeriesFromCatalog(data, item) {
   return characterSeriesByMalId[malId] || item.series || item.series_title || item.source || item.from || anime || manga || '';
 }
 
-function catalogMetadata(data, category, item) {
-  if (!data) {
-    return {
-      year: item.year || '',
-      status: category === 'characters' ? characterSeriesFromCatalog(null, item) : formatSavedStatus(item.status),
-      score: item.score || '',
-    };
-  }
-
-  if (data.source === 'anilist') return data;
-
+function cachedFavoriteMetadata(item, category) {
+  const cached = item?.jikan || item?.jikan_metadata;
+  if (!cached) return null;
   const count = category === 'anime'
-    ? (data.episodes ? `${data.episodes} eps` : '')
+    ? (cached.episodes ? `${cached.episodes} eps` : '')
     : category === 'manga'
-      ? (data.chapters ? `${data.chapters} ch` : data.volumes ? `${data.volumes} vols` : '')
+      ? (cached.chapters ? `${cached.chapters} ch` : cached.volumes ? `${cached.volumes} vols` : '')
       : '';
-  const format = [data.type, count].filter(Boolean).join(' · ');
-
   return {
-    year: yearFromCatalog(data) || item.year || '',
+    source: 'jikan-cache',
+    year: cached.year || item.year || '',
     status: category === 'characters'
-      ? characterSeriesFromCatalog(data, item)
-      : compactCatalogStatus(data.status || '') || formatSavedStatus(item.status),
-    format,
-    score: data.score || item.score || '',
-    image: data.images?.jpg?.small_image_url || data.images?.jpg?.image_url || '',
+      ? cached.series || characterSeriesFromCatalog(null, item)
+      : compactCatalogStatus(cached.status || '') || formatSavedStatus(item.status),
+    format: [cached.type, count].filter(Boolean).join(' · '),
+    score: cached.score || item.score || '',
+    image: cached.image || item.image || '',
+    malUrl: cached.url || '',
   };
-}
-
-async function fetchJikanFavorite(category, id) {
-  const endpointType = ['anime', 'manga', 'characters'].includes(category) ? category : '';
-  if (!endpointType || !id) return null;
-  const cacheKey = `${endpointType}:${id}`;
-  if (favoriteMetadataCache.has(cacheKey)) return favoriteMetadataCache.get(cacheKey);
-
-  const storageKey = `elythria.favorite-metadata.${cacheKey}`;
-  try {
-    const stored = JSON.parse(sessionStorage.getItem(storageKey) || 'null');
-    if (stored && Date.now() - stored.time < JIKAN_CACHE_TTL) {
-      favoriteMetadataCache.set(cacheKey, stored.data);
-      return stored.data;
-    }
-  } catch (_) {}
-
-  const url = `${JIKAN_BASE}/${endpointType}/${encodeURIComponent(id)}`;
-
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    const wait = Math.max(0, JIKAN_REQUEST_GAP - (Date.now() - lastJikanRequestAt));
-    if (wait) await new Promise((resolve) => setTimeout(resolve, wait));
-    lastJikanRequestAt = Date.now();
-
-    try {
-      const payload = await cachedFetch(url, JIKAN_CACHE_TTL);
-      const data = payload?.data || null;
-      if (data) {
-        favoriteMetadataCache.set(cacheKey, data);
-        try {
-          sessionStorage.setItem(storageKey, JSON.stringify({ time: Date.now(), data }));
-        } catch (_) {}
-      }
-      return data;
-    } catch (_) {
-      if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 900));
-    }
-  }
-
-  return null;
-}
-
-function aniListStatus(status = '') {
-  return {
-    FINISHED: 'Finished',
-    RELEASING: 'Releasing',
-    NOT_YET_RELEASED: 'Upcoming',
-    CANCELLED: 'Cancelled',
-    HIATUS: 'Hiatus',
-  }[status] || '';
-}
-
-function aniListFormat(format = '') {
-  return {
-    TV: 'TV',
-    TV_SHORT: 'Short',
-    MOVIE: 'Movie',
-    SPECIAL: 'Special',
-    OVA: 'OVA',
-    ONA: 'ONA',
-    MUSIC: 'Music',
-    MANGA: 'Manga',
-    NOVEL: 'Novel',
-    ONE_SHOT: 'One-shot',
-  }[format] || format;
-}
-
-function normalizeAniListMetadata(data, category, item) {
-  if (!data) return null;
-  const count = category === 'anime'
-    ? (data.episodes ? `${data.episodes} eps` : '')
-    : (data.chapters ? `${data.chapters} ch` : data.volumes ? `${data.volumes} vols` : '');
-  const format = [aniListFormat(data.format), count].filter(Boolean).join(' · ');
-  const malId = data.idMal || favoriteExternalId(item);
-  return {
-    source: 'anilist',
-    malUrl: malId ? `https://myanimelist.net/${category}/${encodeURIComponent(malId)}` : '',
-    year: data.seasonYear || data.startDate?.year || item.year || '',
-    status: aniListStatus(data.status) || formatSavedStatus(item.status),
-    format,
-    score: data.averageScore ? (data.averageScore / 10).toFixed(2) : item.score || '',
-    image: data.coverImage?.large || data.coverImage?.medium || '',
-  };
-}
-
-async function fetchAniListFavorite(category, id, item) {
-  if (!['anime', 'manga'].includes(category) || !id) return null;
-  const mediaType = category.toUpperCase();
-  const cacheKey = `anilist:${category}:${id}`;
-  if (favoriteMetadataCache.has(cacheKey)) return favoriteMetadataCache.get(cacheKey);
-
-  const storageKey = `elythria.favorite-metadata.${cacheKey}`;
-  try {
-    const stored = JSON.parse(sessionStorage.getItem(storageKey) || 'null');
-    if (stored && Date.now() - stored.time < ANILIST_CACHE_TTL) {
-      favoriteMetadataCache.set(cacheKey, stored.data);
-      return stored.data;
-    }
-  } catch (_) {}
-
-  const query = `query ($idMal: Int!, $type: MediaType!) {
-    Media(idMal: $idMal, type: $type) {
-      idMal
-      format
-      status
-      startDate { year }
-      seasonYear
-      episodes
-      chapters
-      volumes
-      averageScore
-      coverImage { medium large }
-    }
-  }`;
-
-  const wait = Math.max(0, ANILIST_REQUEST_GAP - (Date.now() - lastAniListRequestAt));
-  if (wait) await new Promise((resolve) => setTimeout(resolve, wait));
-  lastAniListRequestAt = Date.now();
-
-  try {
-    const response = await fetch(ANILIST_BASE, {
-      method: 'POST',
-      headers: { accept: 'application/json', 'content-type': 'application/json' },
-      body: JSON.stringify({ query, variables: { idMal: Number(id), type: mediaType } }),
-    });
-    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-    const payload = await response.json();
-    const data = normalizeAniListMetadata(payload?.data?.Media, category, item);
-    if (data) {
-      favoriteMetadataCache.set(cacheKey, data);
-      try {
-        sessionStorage.setItem(storageKey, JSON.stringify({ time: Date.now(), data }));
-      } catch (_) {}
-    }
-    return data;
-  } catch (_) {
-    return null;
-  }
-}
-
-function setFavoriteField(row, selector, value) {
-  const field = row.querySelector(selector);
-  if (!field) return;
-  field.textContent = value || '';
-  field.hidden = !value;
-}
-
-function setFavoriteLink(row, item, data, category) {
-  const link = row?.querySelector?.('[data-favorite-link]') || row;
-  if (!link) return;
-  const href = data?.malUrl || data?.url || favoriteMalUrl(item, category);
-  link.href = href;
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
-  link.setAttribute('aria-label', `Open ${item.title || 'Favorite'} on MyAnimeList`);
-}
-
-function applyFavoriteMetadata(row, item, data, category) {
-  if (!row) return;
-  setFavoriteLink(row, item, data, category);
-  const metadata = catalogMetadata(data, category, item);
-  setFavoriteField(row, '[data-favorite-year]', metadata.year);
-  setFavoriteField(row, '[data-favorite-status]', metadata.status);
-  setFavoriteField(row, '[data-favorite-format]', metadata.format);
-  setFavoriteField(row, '[data-favorite-score]', metadata.score ? `★ ${metadata.score}` : '');
-
-  const image = row.querySelector('[data-favorite-image]');
-  if (image && !item.image && metadata.image) {
-    image.src = metadata.image;
-    image.alt = item.title || 'Favorite';
-  }
-}
-
-async function enrichFavoriteRows(track, items, category, loadToken) {
-  if (!['anime', 'manga', 'characters'].includes(category)) return;
-  const rows = [...track.querySelectorAll('.favorite-item')];
-  for (const [index, item] of items.entries()) {
-    if (loadToken !== favoritesLoadToken) return;
-    const id = favoriteExternalId(item);
-    let data = await fetchJikanFavorite(category, id);
-    if (!data) data = await fetchAniListFavorite(category, id, item);
-    if (loadToken !== favoritesLoadToken) return;
-    applyFavoriteMetadata(rows[index], item, data, category);
-  }
 }
 
 async function loadStatus() {
@@ -464,7 +261,6 @@ async function loadFavorites(category = favoriteCategory) {
     if (loadToken !== favoritesLoadToken) return;
     track.innerHTML = items.length ? items.map((item, index) => favoriteCardMarkup(item, index, category)).join('') : '<p class="favorites-state text-muted">No favorites added yet.</p>';
     window.dispatchEvent(new Event('favorites:rendered'));
-    void enrichFavoriteRows(track, items, category, loadToken);
   } catch (error) {
     console.warn('Favorites unavailable', error);
     if (loadToken !== favoritesLoadToken) return;
