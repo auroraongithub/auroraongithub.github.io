@@ -2883,6 +2883,10 @@ ul {
   background: color-mix(in srgb, #f1c40f 8%, var(--bg-elev));
 }
 
+.changelog-page .changelog-entry.pinned:first-child {
+  margin-top: 0;
+}
+
 .changelog-page .changelog-entry h3 {
   grid-area: title;
   margin: 0;
