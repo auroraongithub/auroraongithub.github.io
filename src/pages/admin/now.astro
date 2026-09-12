@@ -1,0 +1,49 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminPanel from '../../components/admin/AdminPanel.astro';
+import AdminField from '../../components/admin/AdminField.astro';
+import AdminStatus from '../../components/admin/AdminStatus.astro';
+---
+<AdminLayout title="Now Editor" active="now">
+  <AdminPanel title="Now Editor" icon="bi-clock-history">
+    <form id="nowForm" class="admin-form">
+      <AdminField label="Working On" forId="workingOn"><input id="workingOn" type="text" placeholder="Scanlation, YouTube videos…" /></AdminField>
+      <AdminField label="Learning" forId="learning"><input id="learning" type="text" placeholder="Japanese, Web Development…" /></AdminField>
+      <AdminField label="Open to Collaborations?">
+        <div class="admin-choice-row">
+          <label><input type="radio" name="collabs" value="true" id="collabsYes" /> Yes</label>
+          <label><input type="radio" name="collabs" value="false" id="collabsNo" /> No</label>
+        </div>
+      </AdminField>
+      <AdminStatus id="nowMessage" />
+      <div><button class="btn btn-primary" type="submit">Save Now Panel</button></div>
+    </form>
+  </AdminPanel>
+  <script>
+    import { adminFetch, setAdminStatus } from '../../lib/admin/api';
+    const workingOn = document.querySelector<HTMLInputElement>('#workingOn')!;
+    const learning = document.querySelector<HTMLInputElement>('#learning')!;
+    const yes = document.querySelector<HTMLInputElement>('#collabsYes')!;
+    const no = document.querySelector<HTMLInputElement>('#collabsNo')!;
+    const message = document.querySelector<HTMLElement>('#nowMessage');
+    (async () => {
+      setAdminStatus(message, 'Loading current panel…', 'loading');
+      try {
+        const response = await adminFetch('/site/now', {}, { auth: false });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to load');
+        workingOn.value = data.working_on || ''; learning.value = data.learning || '';
+        yes.checked = Boolean(data.open_to_collabs); no.checked = !yes.checked; setAdminStatus(message);
+      } catch (error) { setAdminStatus(message, error instanceof Error ? error.message : 'Failed to load', 'error'); }
+    })();
+    document.querySelector<HTMLFormElement>('#nowForm')?.addEventListener('submit', async (event) => {
+      event.preventDefault(); setAdminStatus(message, 'Saving…', 'loading');
+      try {
+        const response = await adminFetch('/admin/now', { method: 'PUT', body: JSON.stringify({ working_on: workingOn.value, learning: learning.value, open_to_collabs: yes.checked }) });
+        const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || 'Failed to save');
+        setAdminStatus(message, 'Now panel saved.', 'success');
+      } catch (error) { setAdminStatus(message, error instanceof Error ? error.message : 'Error saving', 'error'); }
+    });
+  </script>
+  <style>.admin-choice-row{display:flex;gap:18px;align-items:center}.admin-choice-row label{display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;cursor:pointer}</style>
+</AdminLayout>

@@ -1,0 +1,66 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminPanel from '../../components/admin/AdminPanel.astro';
+import AdminField from '../../components/admin/AdminField.astro';
+import AdminStatus from '../../components/admin/AdminStatus.astro';
+---
+<AdminLayout title="Status Editor" active="status">
+  <AdminPanel title="Status Editor" icon="bi-broadcast">
+    <form id="statusForm" class="admin-form">
+      <AdminField label="Feeling" forId="feeling"><input id="feeling" type="text" placeholder="Happy, Tired, Excited…" /></AdminField>
+      <AdminField label="Currently Doing" forId="doing"><input id="doing" type="text" placeholder="Working on projects…" /></AdminField>
+      <AdminField label="Marquee Text" forId="marquee" hint="This text scrolls across the public status bar."><input id="marquee" type="text" placeholder="Scrolling message…" /></AdminField>
+      <AdminStatus id="statusMessage" />
+      <div><button class="btn btn-primary" type="submit">Save Status</button></div>
+    </form>
+  </AdminPanel>
+  <AdminPanel title="Live Preview" icon="bi-eye">
+    <div class="status-strip-screen admin-status-preview">
+      <div class="status-strip-content">
+        <div class="status-info">
+          <span class="status-feeling"><i class="bi bi-emoji-smile"></i> <span id="previewFeeling">Feeling</span></span>
+          <span class="status-divider">|</span>
+          <span class="status-doing"><i class="bi bi-activity"></i> <span id="previewDoing">Doing</span></span>
+        </div>
+        <div class="status-marquee"><div class="marquee-track"><span class="marquee-text" id="previewMarquee">Marquee</span></div></div>
+      </div>
+    </div>
+  </AdminPanel>
+  <script>
+    import { adminFetch, setAdminStatus } from '../../lib/admin/api';
+    const feeling = document.querySelector<HTMLInputElement>('#feeling')!;
+    const doing = document.querySelector<HTMLInputElement>('#doing')!;
+    const marquee = document.querySelector<HTMLInputElement>('#marquee')!;
+    const message = document.querySelector<HTMLElement>('#statusMessage');
+    const previewFeeling = document.querySelector<HTMLElement>('#previewFeeling')!;
+    const previewDoing = document.querySelector<HTMLElement>('#previewDoing')!;
+    const previewMarquee = document.querySelector<HTMLElement>('#previewMarquee')!;
+    const updatePreview = () => {
+      previewFeeling.textContent = feeling.value || 'Feeling';
+      previewDoing.textContent = doing.value || 'Doing';
+      previewMarquee.textContent = marquee.value || 'Marquee';
+    };
+    [feeling, doing, marquee].forEach((input) => input.addEventListener('input', updatePreview));
+    (async () => {
+      setAdminStatus(message, 'Loading current status…', 'loading');
+      try {
+        const response = await adminFetch('/site/status', {}, { auth: false });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to load status');
+        feeling.value = data.feeling || '';
+        doing.value = data.doing || '';
+        marquee.value = data.currently_marquee || '';
+        updatePreview(); setAdminStatus(message);
+      } catch (error) { setAdminStatus(message, error instanceof Error ? error.message : 'Failed to load status', 'error'); }
+    })();
+    document.querySelector<HTMLFormElement>('#statusForm')?.addEventListener('submit', async (event) => {
+      event.preventDefault(); setAdminStatus(message, 'Saving…', 'loading');
+      try {
+        const response = await adminFetch('/admin/status', { method: 'PUT', body: JSON.stringify({ feeling: feeling.value, doing: doing.value, currently_marquee: marquee.value }) });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Failed to save');
+        setAdminStatus(message, 'Status saved.', 'success');
+      } catch (error) { setAdminStatus(message, error instanceof Error ? error.message : 'Error saving status', 'error'); }
+    });
+  </script>
+</AdminLayout>

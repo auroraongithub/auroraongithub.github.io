@@ -1,0 +1,40 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminPanel from '../../components/admin/AdminPanel.astro';
+import AdminField from '../../components/admin/AdminField.astro';
+import AdminStatus from '../../components/admin/AdminStatus.astro';
+import AdminModal from '../../components/admin/AdminModal.astro';
+---
+<AdminLayout title="Changelog" active="changelog">
+  <AdminPanel title="Add Changelog Entry" icon="bi-plus-square">
+    <form id="changelogAddForm" class="admin-form admin-changelog-form">
+      <AdminField label="Title (optional)" forId="newTitle"><input id="newTitle" type="text" placeholder="v1.0.0, Feature Update…" /></AdminField>
+      <AdminField label="Description" forId="newBody" required><textarea id="newBody" rows="3" placeholder="What changed?"></textarea></AdminField>
+      <label class="admin-check"><input type="checkbox" id="newPinned" /> <span>Pin this entry</span></label>
+      <AdminStatus id="changelogMessage" />
+      <div><button class="btn btn-primary" type="submit">Add Entry</button></div>
+    </form>
+  </AdminPanel>
+  <AdminPanel title="Changelog Entries" icon="bi-clock-history"><div id="changelogList" class="admin-list"><p class="admin-status" data-state="loading">Loading…</p></div></AdminPanel>
+  <AdminModal id="editChangelogModal" title="Edit Changelog Entry">
+    <form id="changelogEditForm" class="admin-form">
+      <input type="hidden" id="editId" />
+      <AdminField label="Title" forId="editTitle"><input id="editTitle" type="text" /></AdminField>
+      <AdminField label="Description" forId="editBody" required><textarea id="editBody"></textarea></AdminField>
+      <AdminStatus id="editChangelogMessage" />
+      <div class="admin-modal-actions"><button class="btn btn-primary" type="submit">Save Changes</button><button class="btn btn-ghost" type="button" data-modal-close="editChangelogModal">Cancel</button></div>
+    </form>
+  </AdminModal>
+  <script>
+    import { adminFetch, escapeHtml, setAdminStatus } from '../../lib/admin/api';
+    type Entry = { id:string; title?:string; body:string; date?:string; pinned?:boolean };
+    const list=document.querySelector<HTMLElement>('#changelogList')!; const message=document.querySelector<HTMLElement>('#changelogMessage'); const editMessage=document.querySelector<HTMLElement>('#editChangelogMessage'); let entries:Entry[]=[];
+    const modal=document.querySelector<HTMLElement>('#editChangelogModal')!; const closeModal=()=>{modal.classList.remove('active');modal.setAttribute('aria-hidden','true')}; const openModal=(entry:Entry)=>{(document.querySelector<HTMLInputElement>('#editId')!).value=entry.id;(document.querySelector<HTMLInputElement>('#editTitle')!).value=entry.title||'';(document.querySelector<HTMLTextAreaElement>('#editBody')!).value=entry.body||'';setAdminStatus(editMessage);modal.classList.add('active');modal.setAttribute('aria-hidden','false')};
+    document.querySelectorAll('[data-modal-close="editChangelogModal"]').forEach((button)=>button.addEventListener('click',closeModal)); modal.addEventListener('click',(event)=>{if(event.target===modal)closeModal()});
+    async function load(){list.innerHTML='<p class="admin-status" data-state="loading">Loading…</p>';try{const response=await adminFetch('/site/changelog?limit=50',{}, {auth:false});const data=await response.json();if(!response.ok)throw new Error(data.error||'Failed to load');entries=Array.isArray(data)?data:[];if(!entries.length){list.innerHTML='<div class="admin-empty-state"><i class="bi bi-inbox"></i><span>No changelog entries yet.</span></div>';return;}list.innerHTML=entries.map((entry)=>`<article class="admin-list-item ${entry.pinned?'admin-pinned':''}" data-id="${escapeHtml(entry.id)}"><div class="admin-list-item-head"><div class="admin-change-head"><span>${entry.date?escapeHtml(new Date(entry.date).toLocaleDateString()):'No date'}</span><div><button class="btn btn-ghost" data-edit="${escapeHtml(entry.id)}">Edit</button><button class="btn btn-ghost admin-danger" data-delete="${escapeHtml(entry.id)}">Delete</button></div></div></div><div class="admin-list-item-body">${entry.title?`<strong>${escapeHtml(entry.title)}</strong>`:''}<span>${escapeHtml(entry.body)}</span></div></article>`).join('');}catch(error){list.innerHTML=`<p class="admin-status" data-state="error">${escapeHtml(error instanceof Error?error.message:'Failed to load')}</p>`}}
+    document.querySelector<HTMLFormElement>('#changelogAddForm')?.addEventListener('submit',async(event)=>{event.preventDefault();const title=(document.querySelector<HTMLInputElement>('#newTitle')!).value;const body=(document.querySelector<HTMLTextAreaElement>('#newBody')!).value;const pinned=(document.querySelector<HTMLInputElement>('#newPinned')!).checked;if(!body.trim()){setAdminStatus(message,'Description is required.','error');return;}setAdminStatus(message,'Adding…','loading');try{const response=await adminFetch('/admin/changelog',{method:'POST',body:JSON.stringify({title,body,pinned})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Failed to add');(event.currentTarget as HTMLFormElement).reset();setAdminStatus(message,'Entry added.','success');await load();}catch(error){setAdminStatus(message,error instanceof Error?error.message:'Failed to add','error')}});
+    list.addEventListener('click',async(event)=>{const target=event.target as HTMLElement;const edit=target.closest<HTMLButtonElement>('[data-edit]');const del=target.closest<HTMLButtonElement>('[data-delete]');if(edit){const entry=entries.find((item)=>item.id===edit.dataset.edit);if(entry)openModal(entry);}if(del&&del.dataset.delete&&window.confirm('Delete this entry?')){try{const response=await adminFetch(`/admin/changelog/${encodeURIComponent(del.dataset.delete)}`,{method:'DELETE'});if(!response.ok)throw new Error('Failed to delete');await load();}catch(error){window.alert(error instanceof Error?error.message:'Failed to delete')}}});
+    document.querySelector<HTMLFormElement>('#changelogEditForm')?.addEventListener('submit',async(event)=>{event.preventDefault();const id=(document.querySelector<HTMLInputElement>('#editId')!).value;const title=(document.querySelector<HTMLInputElement>('#editTitle')!).value;const body=(document.querySelector<HTMLTextAreaElement>('#editBody')!).value;if(!body.trim()){setAdminStatus(editMessage,'Description is required.','error');return;}setAdminStatus(editMessage,'Saving…','loading');try{const response=await adminFetch(`/admin/changelog/${encodeURIComponent(id)}`,{method:'PATCH',body:JSON.stringify({title,body})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Failed to update');closeModal();await load();}catch(error){setAdminStatus(editMessage,error instanceof Error?error.message:'Failed to update','error')}}); load();
+  </script>
+  <style>.admin-check{display:flex;align-items:center;gap:6px;font-size:.78rem}.admin-change-head{display:flex;justify-content:space-between;gap:8px;align-items:center;color:var(--text-muted);font-size:.74rem}.admin-change-head>div,.admin-modal-actions{display:flex;gap:6px}.admin-pinned{border-color:var(--primary);background:var(--gradient-subtle)}</style>
+</AdminLayout>
