@@ -10,50 +10,47 @@ const siteSection = adminNavigation.find((section) => section.label === 'Site');
 const youtubeSection = adminNavigation.find((section) => section.label === 'YouTube CMS');
 
 const quickActions = [
-  { label: 'Add Post', href: '/admin/add-post/', icon: 'bi-plus-square' },
-  { label: 'Update status strip', href: '/admin/status/', icon: 'bi-broadcast' },
-  { label: 'Edit Now page', href: '/admin/now/', icon: 'bi-clock-history' },
-  { label: 'Review changelog', href: '/admin/changelog/', icon: 'bi-list-check' }
+  { label: 'Add post', href: '/admin/add-post/' },
+  { label: 'Update status strip', href: '/admin/status/' },
+  { label: 'Edit Now page', href: '/admin/now/' },
+  { label: 'Review changelog', href: '/admin/changelog/' }
 ];
 ---
 <AdminLayout title="Admin Dashboard" requiresAuth={true}>
-  <AdminPanel title="Admin Dashboard" icon="bi-grid-1x2" class="admin-dashboard-panel">
+  <AdminPanel title="Admin Dashboard" class="admin-dashboard-panel">
     <Fragment slot="actions">
-      <span class="admin-dashboard-session"><span class="admin-dashboard-session-dot"></span> Session active</span>
+      <span class="admin-dashboard-session"><span class="admin-dashboard-session-dot"></span> Online</span>
     </Fragment>
 
     <AdminTabs
       tabs={[
-        { id: 'overview', label: 'Overview', icon: 'bi-grid-1x2' },
-        { id: 'content', label: 'Content', icon: 'bi-journal-text' },
-        { id: 'site', label: 'Site', icon: 'bi-sliders' }
+        { id: 'overview', label: 'Overview' },
+        { id: 'content', label: 'Content' },
+        { id: 'site', label: 'Site' }
       ]}
     />
 
     <section class="admin-dashboard-tab-panel" data-dashboard-panel="overview" role="tabpanel" aria-label="Overview">
       <div class="admin-dashboard-overview">
-        <div class="admin-dashboard-block admin-dashboard-metrics-block">
-          <div class="admin-dashboard-block-heading">
-            <h3>Site snapshot</h3>
-            <span class="admin-dashboard-readout">LIVE</span>
+        <div class="admin-dashboard-status-sheet" aria-label="Site status">
+          <div class="admin-dashboard-status-heading">
+            <span>SYSTEM STATUS</span>
+            <span class="admin-dashboard-readout">ONLINE</span>
           </div>
           <div class="admin-dashboard-metrics" aria-label="Site metrics">
-            <div class="admin-dashboard-metric"><strong id="statProjects">--</strong><span>Projects</span></div>
-            <div class="admin-dashboard-metric"><strong id="statPosts">--</strong><span>Posts</span></div>
-            <div class="admin-dashboard-metric"><strong id="statPageviews">--</strong><span>Total visits</span></div>
+            <div class="admin-dashboard-metric"><strong id="statProjects">--</strong><span>PROJECTS</span></div>
+            <div class="admin-dashboard-metric"><strong id="statPosts">--</strong><span>POSTS</span></div>
+            <div class="admin-dashboard-metric"><strong id="statPageviews">--</strong><span>TOTAL VISITS</span></div>
           </div>
           <AdminStatus id="adminDashboardStatus" />
         </div>
 
-        <div class="admin-dashboard-block admin-dashboard-actions-block">
-          <div class="admin-dashboard-block-heading">
-            <h3>Quick actions</h3>
-            <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
-          </div>
-          <nav aria-label="Quick actions">
+        <div class="admin-dashboard-link-section">
+          <div class="admin-dashboard-section-heading"><h3>QUICK ACTIONS</h3></div>
+          <nav class="admin-dashboard-links" aria-label="Quick actions">
             {quickActions.map((action) => (
               <a class="admin-dashboard-action" href={action.href}>
-                <i class={`bi ${action.icon}`} aria-hidden="true"></i><span>{action.label}</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+                <span>{action.label}</span><span class="admin-dashboard-action-arrow" aria-hidden="true">→</span>
               </a>
             ))}
           </nav>
@@ -64,24 +61,24 @@ const quickActions = [
     <section class="admin-dashboard-tab-panel" data-dashboard-panel="content" role="tabpanel" aria-label="Content" hidden>
       <div class="admin-dashboard-link-groups">
         {contentSection && (
-          <div class="admin-dashboard-link-group">
-            <div class="admin-dashboard-block-heading"><h3>{contentSection.label}</h3><i class="bi bi-pencil-square" aria-hidden="true"></i></div>
-            <nav aria-label={`${contentSection.label} links`}>
+          <div class="admin-dashboard-link-section">
+            <div class="admin-dashboard-section-heading"><h3>{contentSection.label}</h3></div>
+            <nav class="admin-dashboard-links" aria-label={`${contentSection.label} links`}>
               {contentSection.items.map((item) => (
                 <a class="admin-dashboard-action" href={item.href}>
-                  <i class={`bi ${'icon' in item && item.icon ? item.icon : 'bi-arrow-right'}`} aria-hidden="true"></i><span>{item.label}</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+                  <span>{item.label}</span><span class="admin-dashboard-action-arrow" aria-hidden="true">→</span>
                 </a>
               ))}
             </nav>
           </div>
         )}
         {youtubeSection && (
-          <div class="admin-dashboard-link-group">
-            <div class="admin-dashboard-block-heading"><h3>{youtubeSection.label}</h3><i class="bi bi-youtube" aria-hidden="true"></i></div>
-            <nav aria-label={`${youtubeSection.label} links`}>
+          <div class="admin-dashboard-link-section">
+            <div class="admin-dashboard-section-heading"><h3>{youtubeSection.label}</h3></div>
+            <nav class="admin-dashboard-links" aria-label={`${youtubeSection.label} links`}>
               {youtubeSection.items.map((item) => (
                 <a class="admin-dashboard-action" href={item.href}>
-                  <i class={`bi ${'icon' in item && item.icon ? item.icon : 'bi-arrow-right'}`} aria-hidden="true"></i><span>{item.label}</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+                  <span>{item.label}</span><span class="admin-dashboard-action-arrow" aria-hidden="true">→</span>
                 </a>
               ))}
             </nav>
@@ -92,12 +89,12 @@ const quickActions = [
 
     <section class="admin-dashboard-tab-panel" data-dashboard-panel="site" role="tabpanel" aria-label="Site" hidden>
       {siteSection && (
-        <div class="admin-dashboard-link-group admin-dashboard-site-group">
-          <div class="admin-dashboard-block-heading"><h3>{siteSection.label}</h3><i class="bi bi-sliders" aria-hidden="true"></i></div>
-          <nav aria-label={`${siteSection.label} links`} class="admin-dashboard-site-links">
+        <div class="admin-dashboard-link-section admin-dashboard-site-group">
+          <div class="admin-dashboard-section-heading"><h3>{siteSection.label}</h3></div>
+          <nav aria-label={`${siteSection.label} links`} class="admin-dashboard-links admin-dashboard-site-links">
             {siteSection.items.map((item) => (
               <a class="admin-dashboard-action" href={item.href}>
-                <i class={`bi ${'icon' in item && item.icon ? item.icon : 'bi-arrow-right'}`} aria-hidden="true"></i><span>{item.label}</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+                <span>{item.label}</span><span class="admin-dashboard-action-arrow" aria-hidden="true">→</span>
               </a>
             ))}
           </nav>
@@ -153,36 +150,40 @@ const quickActions = [
 
 <style>
   .admin-dashboard-panel { margin-bottom: 0 !important; }
-  .admin-dashboard-panel .admin-panel-content { padding: 10px; }
-  .admin-dashboard-session { display: inline-flex; align-items: center; gap: 5px; color: var(--text-muted); font: 700 .64rem/1 'Courier New', monospace; letter-spacing: .06em; text-transform: uppercase; }
-  .admin-dashboard-session-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--admin-success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--admin-success) 17%, transparent); }
-  .admin-dashboard-panel .admin-tabs { margin: 0 0 10px; padding: 0 0 8px; }
-  .admin-dashboard-overview { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(220px, .8fr); gap: 8px; }
-  .admin-dashboard-block, .admin-dashboard-link-group { min-width: 0; border: 1px solid var(--border-light); border-radius: 6px; background: var(--bg-elev); }
-  .admin-dashboard-block-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 9px; border-bottom: 1px solid var(--border-light); background: var(--gradient-subtle); color: var(--primary-dark); }
-  .admin-dashboard-block-heading h3 { margin: 0; color: var(--text); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; }
-  .admin-dashboard-block-heading > i { font-size: .78rem; }
-  .admin-dashboard-readout { color: var(--primary-dark); font: 700 .6rem/1 'Courier New', monospace; letter-spacing: .08em; }
-  .admin-dashboard-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; padding: 1px; background: var(--border-light); }
-  .admin-dashboard-metric { display: grid; gap: 2px; min-height: 65px; place-content: center; padding: 8px; background: var(--card); text-align: center; }
-  .admin-dashboard-metric strong { color: var(--primary-dark); font-size: clamp(1.05rem, 2.8vw, 1.45rem); font-variant-numeric: tabular-nums; line-height: 1; }
-  .admin-dashboard-metric span { color: var(--text-muted); font-size: .66rem; text-transform: uppercase; }
-  .admin-dashboard-metrics-block .admin-status { margin: 7px; }
-  .admin-dashboard-actions-block nav, .admin-dashboard-link-group nav { display: grid; gap: 1px; padding: 1px; background: var(--border-light); }
-  .admin-dashboard-action { display: grid; grid-template-columns: 16px minmax(0, 1fr) 12px; align-items: center; gap: 6px; min-height: 31px; padding: 6px 8px; background: var(--card); color: var(--text); font-size: .73rem; text-decoration: none; }
-  .admin-dashboard-action:hover { background: var(--gradient-subtle); color: var(--primary-dark); }
-  .admin-dashboard-action > i:first-child { color: var(--primary-dark); font-size: .76rem; text-align: center; }
-  .admin-dashboard-action > i:last-child { color: var(--text-muted); font-size: .6rem; text-align: right; }
-  .admin-dashboard-link-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .admin-dashboard-panel .admin-panel-content { padding: 10px 11px 13px; }
+  .admin-dashboard-session { display: inline-flex; align-items: center; gap: 5px; color: var(--text-muted); font: 700 .64rem/1 'Courier New', monospace; letter-spacing: .08em; text-transform: uppercase; }
+  .admin-dashboard-session-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--admin-success); box-shadow: 0 0 0 2px color-mix(in srgb, var(--admin-success) 18%, transparent); }
+  .admin-dashboard-panel .admin-tabs { margin: 0 0 11px; padding: 0 0 8px; }
+  .admin-dashboard-panel .admin-tab { min-width: 78px; }
+  .admin-dashboard-overview { display: grid; gap: 13px; }
+  .admin-dashboard-status-sheet { overflow: hidden; border: 1px solid var(--border-light); border-radius: 5px; background: var(--card); }
+  .admin-dashboard-status-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 25px; padding: 4px 8px; border-bottom: 1px solid var(--primary-dark); background: var(--gradient); color: #fff; font: 700 .68rem/1 'Courier New', monospace; letter-spacing: .08em; text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 70%, #000); }
+  .admin-dashboard-readout { color: #fff; font: 700 .59rem/1 'Courier New', monospace; letter-spacing: .08em; }
+  .admin-dashboard-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .admin-dashboard-metric { display: grid; gap: 3px; min-height: 55px; place-content: center; padding: 7px 8px; background: color-mix(in srgb, var(--card) 94%, var(--primary-light)); text-align: center; }
+  .admin-dashboard-metric + .admin-dashboard-metric { border-left: 1px dotted var(--border-light); }
+  .admin-dashboard-metric strong { color: var(--primary-dark); font-size: 1.3rem; font-variant-numeric: tabular-nums; line-height: 1; }
+  .admin-dashboard-metric span { color: var(--text-muted); font: 700 .6rem/1.1 'Courier New', monospace; letter-spacing: .05em; }
+  .admin-dashboard-status-sheet .admin-status { margin: 0; padding: 5px 8px; border: 0; border-top: 1px dotted var(--border-light); border-radius: 0; background: transparent; font-size: .69rem; }
+  .admin-dashboard-link-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .admin-dashboard-link-section { min-width: 0; }
+  .admin-dashboard-section-heading { display: flex; align-items: center; min-height: 26px; border-bottom: 1px dotted var(--border-light); }
+  .admin-dashboard-section-heading h3 { margin: 0; color: var(--primary-dark); font: 700 .68rem/1 'Courier New', monospace; letter-spacing: .1em; text-transform: uppercase; }
+  .admin-dashboard-links { display: grid; }
+  .admin-dashboard-action { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 29px; padding: 5px 3px; border-bottom: 1px dotted color-mix(in srgb, var(--border-light) 78%, transparent); color: var(--text); font-size: .74rem; text-decoration: none; }
+  .admin-dashboard-action:hover { padding-left: 6px; background: var(--gradient-subtle); color: var(--primary-dark); }
+  .admin-dashboard-action-arrow { flex: 0 0 auto; color: var(--primary-dark); font-size: .8rem; }
   .admin-dashboard-site-group { max-width: none; }
-  .admin-dashboard-site-links { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .admin-dashboard-site-links { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
+  .admin-dashboard-site-links .admin-dashboard-action { padding-right: 3px; }
   @media (max-width: 640px) {
-    .admin-dashboard-overview, .admin-dashboard-link-groups { grid-template-columns: 1fr; }
-    .admin-dashboard-site-links { grid-template-columns: 1fr !important; }
+    .admin-dashboard-link-groups { grid-template-columns: 1fr; gap: 13px; }
+    .admin-dashboard-site-links { grid-template-columns: 1fr; }
   }
   @media (max-width: 420px) {
     .admin-dashboard-panel .admin-panel-header { align-items: flex-start; flex-direction: column; }
     .admin-dashboard-metrics { grid-template-columns: 1fr; }
-    .admin-dashboard-metric { min-height: 48px; }
+    .admin-dashboard-metric { min-height: 42px; }
+    .admin-dashboard-metric + .admin-dashboard-metric { border-left: 0; border-top: 1px dotted var(--border-light); }
   }
 </style>
