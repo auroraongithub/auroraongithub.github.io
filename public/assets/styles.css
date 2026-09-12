@@ -2840,6 +2840,91 @@ ul {
   margin-bottom: 0;
 }
 
+.changelog-page > .neo-content {
+  padding: 10px;
+}
+
+.changelog-page #fullChangelogList {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+}
+
+.changelog-page .changelog-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  grid-template-areas:
+    "title date"
+    "body body";
+  gap: 3px 9px;
+  margin: 0;
+  padding: 10px 9px;
+  border: 0;
+  border-bottom: 1px dotted var(--border-light);
+  border-left: 0;
+  border-radius: 0;
+  background: var(--bg-elev);
+}
+
+.changelog-page .changelog-entry:nth-child(even) {
+  background: color-mix(in srgb, var(--primary-light) 8%, var(--bg-elev));
+}
+
+.changelog-page .changelog-entry:last-child {
+  border-bottom: 0;
+}
+
+.changelog-page .changelog-entry.pinned {
+  margin: 0;
+  padding: 10px 9px;
+  border-left: 0;
+  border-radius: 0;
+  background: color-mix(in srgb, #f1c40f 8%, var(--bg-elev));
+}
+
+.changelog-page .changelog-entry h3 {
+  grid-area: title;
+  margin: 0;
+  color: var(--primary-dark);
+  font-size: 0.86rem;
+  line-height: 1.25;
+}
+
+.changelog-page .changelog-entry .changelog-date {
+  grid-area: date;
+  align-self: start;
+  justify-self: end;
+  padding: 2px 5px;
+  border: 1px solid var(--primary-dark);
+  background: var(--bg);
+  color: var(--primary-dark);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.changelog-page .changelog-entry p {
+  grid-area: body;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.changelog-page .changelog-state {
+  display: grid;
+  min-height: 150px;
+  margin: 0;
+  place-items: center;
+  padding: 20px;
+  color: var(--text-muted);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.86rem;
+  text-align: center;
+}
+
 /* ==========================================================================
    RESOURCES PAGE
    ========================================================================== */
@@ -3818,7 +3903,8 @@ ul {
 .listening-section,
 .join-section,
 .resources-page,
-.experiments-page {
+.experiments-page,
+.changelog-page {
   padding: 3px;
   background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
   border: 2px solid var(--primary);
@@ -3845,7 +3931,8 @@ ul {
 .listening-section > .neo-header,
 .join-section > .neo-header,
 .resources-page > .neo-header,
-.experiments-page > .neo-header {
+.experiments-page > .neo-header,
+.changelog-page > .neo-header {
   width: max-content;
   min-width: 150px;
   max-width: calc(100% - 12px);
@@ -3884,7 +3971,8 @@ ul {
 .listening-section > .neo-header h2,
 .join-section > .neo-header h2,
 .resources-page > .neo-header h2,
-.experiments-page > .neo-header h2 {
+.experiments-page > .neo-header h2,
+.changelog-page > .neo-header h2 {
   font-size: 0.9rem;
   letter-spacing: 0.08em;
 }
@@ -3898,7 +3986,8 @@ ul {
 .listening-section > .neo-content,
 .join-section > .neo-content,
 .resources-page > .neo-content,
-.experiments-page > .neo-content {
+.experiments-page > .neo-content,
+.changelog-page > .neo-content {
   position: relative;
   z-index: 0;
   display: flex;

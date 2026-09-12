@@ -9,9 +9,9 @@ async function initChangelogPage() {
     root.innerHTML = entries.length ? entries.map((entry) => {
       const date = dateFromBackend(entry.date);
       return `<article class="changelog-entry ${entry.pinned ? 'pinned' : ''}"><div class="changelog-date">${date ? date.toLocaleDateString() : ''}</div>${entry.title ? `<h3>${escapeHtml(entry.title)}</h3>` : ''}<p>${escapeHtml(entry.body || '')}</p></article>`;
-    }).join('') : '<p class="text-muted">No updates yet.</p>';
+    }).join('') : '<p class="changelog-state text-muted">No updates yet.</p>';
   } catch (error) {
-    root.innerHTML = '<p class="text-muted">Changelog is temporarily unavailable.</p>';
+    root.innerHTML = '<p class="changelog-state text-muted">Changelog is temporarily unavailable.</p>';
   }
 }
 
