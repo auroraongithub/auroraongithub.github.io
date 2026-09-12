@@ -3508,11 +3508,6 @@ ul {
   justify-content: flex-start;
 }
 
-.neo-sidebar .neo-content ul.secondary-nav-list a.sidebar-button,
-.more-drawer .neo-content ul.secondary-nav-list a.sidebar-button {
-  justify-content: center;
-}
-
 .neo-sidebar .neo-content a.sidebar-button > i,
 .more-drawer .neo-content a.sidebar-button > i,
 .widget-resources a.sidebar-button > i {
@@ -3558,9 +3553,7 @@ ul {
 }
 
 .neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active,
-.neo-sidebar .neo-content ul.secondary-nav-list a.sidebar-button.active,
-.more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active,
-.more-drawer .neo-content ul.secondary-nav-list a.sidebar-button.active {
+.more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active {
   background: linear-gradient(
     to bottom,
     var(--primary) 0%,
@@ -3574,9 +3567,7 @@ ul {
 }
 
 .neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active:hover,
-.neo-sidebar .neo-content ul.secondary-nav-list a.sidebar-button.active:hover,
-.more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active:hover,
-.more-drawer .neo-content ul.secondary-nav-list a.sidebar-button.active:hover {
+.more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active:hover {
   color: #fff;
 }
 

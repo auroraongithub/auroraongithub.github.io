@@ -61,9 +61,7 @@
 }
 
 [data-theme='dark'] .neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active,
-[data-theme='dark'] .neo-sidebar .neo-content ul.secondary-nav-list a.sidebar-button.active,
-[data-theme='dark'] .more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active,
-[data-theme='dark'] .more-drawer .neo-content ul.secondary-nav-list a.sidebar-button.active {
+[data-theme='dark'] .more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active {
   border-color: var(--primary-light);
   background: linear-gradient(
     to bottom,
