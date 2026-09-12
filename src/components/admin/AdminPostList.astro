@@ -20,8 +20,43 @@ const { type, title, showIcon = true, panel = true } = Astro.props;
 <script>
   import { adminFetch, escapeHtml } from '../../lib/admin/api';
 
-  type PostItem = { id: string; title: string; date?: string; tags?: string };
+  type PostItem = { id: string; title: string; date?: string; tags?: string; description?: string; excerpt?: string; content?: string };
   type PostYear = { year: string | number; posts: PostItem[] };
+
+  function toExcerpt(value: unknown): string {
+    const holder = document.createElement('div');
+    holder.innerHTML = String(value ?? '')
+      .replace(/<br\s*\/?>/gi, ' ')
+      .replace(/<\/(?:p|div|li|h[1-6]|blockquote|pre|section|article)>/gi, ' ');
+    const text = (holder.textContent || '').replace(/\s+/g, ' ').trim();
+    return text.length > 180 ? `${text.slice(0, 177).trimEnd()}…` : text;
+  }
+
+  async function hydratePostDescriptions(root: HTMLElement, posts: PostItem[]) {
+    await Promise.all(posts.map(async (post) => {
+      let description = toExcerpt(post.description || post.excerpt || post.content || '');
+      if (!description) {
+        try {
+          const response = await adminFetch(`/post/${encodeURIComponent(post.id)}`, {}, { auth: false, redirectOnUnauthorized: false });
+          if (response.ok) {
+            const data = await response.json();
+            const detail = data?.data ?? data;
+            description = toExcerpt(detail?.description || detail?.excerpt || detail?.content || '');
+          }
+        } catch (_) {
+          // The title, date, and tags are still useful if a detail request fails.
+        }
+      }
+
+      const row = [...root.querySelectorAll<HTMLElement>('.admin-list-item')]
+        .find((item) => item.dataset.postId === String(post.id));
+      const descriptionElement = row?.querySelector<HTMLElement>('[data-post-description]');
+      if (descriptionElement) {
+        descriptionElement.textContent = description || 'No excerpt available.';
+        descriptionElement.classList.toggle('is-loading', !description);
+      }
+    }));
+  }
 
   async function loadPostList(root: HTMLElement) {
     const type = root.dataset.postType || 'blog';
@@ -35,6 +70,7 @@ const { type, title, showIcon = true, panel = true } = Astro.props;
         root.innerHTML = '<div class="admin-empty-state"><i class="bi bi-inbox"></i><strong>No entries</strong><span>Nothing has been published here yet.</span></div>';
         return;
       }
+      const posts = years.flatMap((year) => year.posts || []);
       root.innerHTML = years.map((year) => `
         <div class="admin-list-group-title">${escapeHtml(year.year)}</div>
         ${(year.posts || []).map((post) => `
@@ -44,6 +80,7 @@ const { type, title, showIcon = true, panel = true } = Astro.props;
               <h3><a href="/admin/post/?id=${encodeURIComponent(post.id)}">${escapeHtml(post.title)}</a></h3>
             </div>
             <div class="admin-list-item-body item-content">
+              <p class="post-card-description is-loading" data-post-description>Loading excerpt…</p>
               <div class="admin-list-meta item-meta">
                 <span class="post-date"><i class="bi bi-calendar3"></i> ${escapeHtml(post.date || '')}</span>
                 <span class="post-tags"><span class="chip"><i class="bi bi-tags"></i> ${escapeHtml(post.tags || 'No tags')}</span></span>
@@ -55,6 +92,7 @@ const { type, title, showIcon = true, panel = true } = Astro.props;
             </div>
           </article>`).join('')}
       `).join('');
+      void hydratePostDescriptions(root, posts);
     } catch (error) {
       root.innerHTML = `<p class="admin-status" data-state="error">${escapeHtml(error instanceof Error ? error.message : 'Failed to load')}</p>`;
     }

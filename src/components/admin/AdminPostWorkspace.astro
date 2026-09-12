@@ -186,7 +186,8 @@ const postTabs = [
   .admin-post-workspace .admin-post-list .admin-list-item {
     position: relative;
     display: flex;
-    min-height: 112px;
+    height: 146px;
+    min-height: 146px;
     flex-direction: column;
     min-width: 0;
     padding: 0;
@@ -209,6 +210,9 @@ const postTabs = [
     grid-template-columns: max-content minmax(0, 1fr);
     gap: 6px;
     align-items: center;
+    align-self: stretch;
+    width: 100%;
+    box-sizing: border-box;
     min-width: 0;
     padding: 7px 8px;
     padding-right: 94px;
@@ -248,7 +252,27 @@ const postTabs = [
     flex: 1;
     min-width: 0;
     flex-direction: column;
+    align-self: stretch;
+    width: 100%;
+    box-sizing: border-box;
     padding: 8px;
+  }
+
+  .admin-post-workspace .admin-post-list .post-card-description {
+    display: -webkit-box;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text);
+    font: .72rem/1.35 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .admin-post-workspace .admin-post-list .post-card-description.is-loading {
+    color: var(--text-muted);
+    font-style: italic;
   }
 
   .admin-post-workspace .admin-post-list .admin-list-meta {
@@ -315,17 +339,31 @@ const postTabs = [
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item-actions .btn {
-    min-height: 25px;
-    padding: 3px 6px;
-    border-radius: 4px;
-    border-color: color-mix(in srgb, #fff 62%, var(--primary-dark));
-    background: color-mix(in srgb, var(--bg-elev) 78%, transparent);
+    min-height: 20px;
+    padding: 3px 7px;
+    border: 1px solid color-mix(in srgb, var(--primary-dark) 72%, var(--border-light));
+    border-radius: 3px;
+    background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
+    color: var(--primary-dark);
     font: 700 .62rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .82), inset 0 -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
     text-transform: uppercase;
   }
 
   .admin-post-workspace .admin-post-list .admin-list-item-actions .btn:hover {
-    background: #fff;
+    border-color: var(--primary-dark);
+    background: linear-gradient(to bottom, var(--primary-light), var(--primary));
+    color: var(--bg);
+    transform: none;
+  }
+
+  .admin-post-workspace .admin-post-list .admin-list-item-actions .admin-danger {
+    color: var(--admin-danger, #b42318);
+  }
+
+  .admin-post-workspace .admin-post-list .admin-list-item-actions .admin-danger:hover {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--admin-danger, #b42318) 72%, #fff), var(--admin-danger, #b42318));
+    color: #fff;
   }
 
   .admin-post-workspace .admin-post-list > .admin-status {
@@ -343,7 +381,8 @@ const postTabs = [
 
   @media (max-width: 560px) {
     .admin-post-workspace .admin-post-list .admin-list-item {
-      min-height: 108px;
+      height: 146px;
+      min-height: 146px;
     }
 
     .admin-post-workspace .admin-post-list .admin-list-item-actions {

@@ -29,7 +29,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
         </div>
         <div class="blog-toolbar-footer tag-filters">
           <AdminTabs
-            tabs={[{ id: 'all', label: 'All posts' }, { id: 'tagged', label: 'Tagged' }, { id: 'untagged', label: 'No tags' }]}
+            tabs={[{ id: 'all', label: 'All' }, { id: 'tagged', label: 'Tagged' }, { id: 'untagged', label: 'No tags' }]}
             dataAttribute="category"
           />
         </div>
@@ -616,7 +616,9 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   }
 
   .blog-admin-page :global(.blog-toolbar .post-search .form-control) {
-    min-height: 0;
+    height: 28px;
+    min-height: 28px;
+    box-sizing: border-box;
     padding: 7px 9px 7px 25px;
     border: 1px solid var(--primary-dark);
     border-radius: 4px;
@@ -624,6 +626,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     color: var(--text);
     font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     font-size: .76rem;
+    line-height: normal;
     box-shadow: inset 1px 1px 2px rgba(0, 0, 0, .12), inset 0 1px 0 rgba(255, 255, 255, .75);
   }
 
@@ -641,7 +644,9 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   }
 
   .blog-admin-page :global(.blog-toolbar .admin-field select) {
-    min-height: 0;
+    height: 28px;
+    min-height: 28px;
+    box-sizing: border-box;
     padding: 7px 8px;
     border: 1px solid var(--primary-dark);
     border-radius: 4px;
@@ -649,6 +654,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     color: var(--text);
     font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     font-size: .76rem;
+    line-height: normal;
   }
 
   .blog-admin-page :global(.blog-toolbar-actions) {
@@ -662,13 +668,15 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   }
 
   .blog-admin-page :global(.blog-toolbar-actions .btn) {
-    min-height: 0;
-    padding: 7px 9px;
+    height: 20px;
+    min-height: 20px;
+    padding: 4px 8px;
+    box-sizing: border-box;
     border: 1px solid var(--border-light);
     border-radius: 4px;
     background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
     color: var(--text-muted);
-    font: 700 .66rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    font: 700 .66rem/normal "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .8);
     text-transform: uppercase;
   }
@@ -695,13 +703,15 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   }
 
   .blog-admin-page :global(.blog-toolbar-footer .admin-tab) {
-    min-height: 0 !important;
+    height: 20px;
+    min-height: 20px !important;
+    box-sizing: border-box;
     padding: 4px 8px !important;
     border: 1px solid var(--border-light);
     border-radius: 4px 4px 2px 2px !important;
     background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
     color: var(--text-muted);
-    font: 700 .66rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif !important;
+    font: 700 .66rem/normal "MS PGothic", "MS UI Gothic", Tahoma, sans-serif !important;
     letter-spacing: .02em;
     box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .8);
   }
@@ -746,8 +756,8 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item) {
     position: relative;
     display: flex;
-    height: 106px;
-    min-height: 106px;
+    height: 146px;
+    min-height: 146px;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
@@ -802,8 +812,28 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     display: flex;
     min-width: 0;
     flex: 1;
+    align-self: stretch;
+    width: 100%;
+    box-sizing: border-box;
     flex-direction: column;
     padding: 8px;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .post-card-description) {
+    display: -webkit-box;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text);
+    font: .72rem/1.35 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .post-card-description.is-loading) {
+    color: var(--text-muted);
+    font-style: italic;
   }
 
   .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-meta) {
@@ -832,18 +862,33 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   }
 
   .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-actions .btn) {
-    min-height: 22px;
-    padding: 3px 6px;
-    border: 1px solid color-mix(in srgb, #fff 62%, var(--primary-dark));
-    border-radius: 4px;
-    background: color-mix(in srgb, var(--bg-elev) 78%, transparent);
-    font: 700 .6rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    height: 20px;
+    min-height: 20px;
+    padding: 3px 7px;
+    box-sizing: border-box;
+    border: 1px solid color-mix(in srgb, var(--primary-dark) 72%, var(--border-light));
+    border-radius: 3px;
+    background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
+    color: var(--primary-dark);
+    font: 700 .6rem/normal "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .82), inset 0 -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
     text-transform: uppercase;
   }
 
   .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-actions .btn:hover) {
-    background: #fff;
+    border-color: var(--primary-dark);
+    background: linear-gradient(to bottom, var(--primary-light), var(--primary));
+    color: var(--bg);
     transform: none;
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-actions .admin-danger) {
+    color: var(--admin-danger, #b42318);
+  }
+
+  .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item-actions .admin-danger:hover) {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--admin-danger, #b42318) 72%, #fff), var(--admin-danger, #b42318));
+    color: #fff;
   }
 
   @media (max-width: 560px) {
