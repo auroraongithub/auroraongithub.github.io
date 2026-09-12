@@ -44,7 +44,7 @@
     <rect x="8" y="8" width="240" height="74" rx="6" fill="url(#pixels)" />
     <path d="M10 10h236c-21 13-56 19-107 19-54 0-94-6-129-19Z" fill="#fff" opacity=".22" clip-path="url(#buttonClip)" />
     <rect x="10" y="10" width="154" height="22" rx="5" fill="#fff" opacity=".12" />
-    <text x="17" y="35" font-family="MS PGothic, Tahoma, sans-serif" font-size="20" font-weight="700" letter-spacing="-1" stroke="#fff" stroke-opacity=".68" stroke-width="1" paint-order="stroke" filter="url(#rainbowGlow)">
+    <text x="17" y="39" font-family="MS PGothic, Tahoma, sans-serif" font-size="20" font-weight="700" letter-spacing="-1.6" stroke="#fff" stroke-opacity=".68" stroke-width="1" paint-order="stroke" filter="url(#rainbowGlow)">
       <tspan fill="#ff0000">e<animate attributeName="fill" values="#ff0000;#ff5500;#ffaa00;#ffff00;#aaff00;#55ff00;#00ff00;#00ff55;#00ffaa;#00ffff;#00aaff;#0055ff;#0000ff;#5500ff;#aa00ff;#ff00ff;#ff00aa;#ff0055" dur="1.8s" begin="0s" repeatCount="indefinite" calcMode="discrete" /></tspan>
       <tspan fill="#ff5500">l<animate attributeName="fill" values="#ff0000;#ff5500;#ffaa00;#ffff00;#aaff00;#55ff00;#00ff00;#00ff55;#00ffaa;#00ffff;#00aaff;#0055ff;#0000ff;#5500ff;#aa00ff;#ff00ff;#ff00aa;#ff0055" dur="1.8s" begin="-0.1s" repeatCount="indefinite" calcMode="discrete" /></tspan>
       <tspan fill="#ffaa00">y<animate attributeName="fill" values="#ff0000;#ff5500;#ffaa00;#ffff00;#aaff00;#55ff00;#00ff00;#00ff55;#00ffaa;#00ffff;#00aaff;#0055ff;#0000ff;#5500ff;#aa00ff;#ff00ff;#ff00aa;#ff0055" dur="1.8s" begin="-0.2s" repeatCount="indefinite" calcMode="discrete" /></tspan>
