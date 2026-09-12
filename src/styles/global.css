@@ -75,3 +75,48 @@
     inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000),
     0 1px 2px color-mix(in srgb, #000 54%, transparent);
 }
+
+/* Keep the Dumby-inspired stats readout cohesive on dark surfaces. */
+[data-theme='dark'] .stats-grid.sidebar-stats {
+  --stats-ink: color-mix(in srgb, var(--text) 92%, var(--primary-light));
+  --stats-muted: color-mix(in srgb, var(--text) 72%, var(--primary-light));
+  --stats-line: color-mix(in srgb, var(--primary-light) 52%, var(--border-light));
+  --stats-surface: color-mix(in srgb, var(--bg-elev) 86%, var(--primary-dark));
+  --stats-surface-alt: color-mix(in srgb, var(--bg-elev) 72%, var(--primary-dark));
+}
+
+[data-theme='dark'] .stats-grid.sidebar-stats .stat-item {
+  border-bottom-color: var(--stats-line);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--stats-surface-alt) 94%, var(--primary-light)) 0%,
+    var(--stats-surface) 48%,
+    color-mix(in srgb, var(--stats-surface) 92%, var(--bg)) 52%,
+    var(--stats-surface) 100%
+  );
+  color: var(--stats-ink);
+}
+
+[data-theme='dark'] .stats-grid.sidebar-stats .stat-item:first-child {
+  border-top-color: var(--primary-light);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--primary-dark) 42%, var(--bg-elev)) 0%,
+    color-mix(in srgb, var(--primary-dark) 22%, var(--bg-elev)) 48%,
+    var(--stats-surface) 52%,
+    var(--stats-surface) 100%
+  );
+}
+
+[data-theme='dark'] .stats-grid.sidebar-stats .stat-item:last-child {
+  border-bottom-color: color-mix(in srgb, var(--primary-dark) 68%, var(--bg-elev));
+}
+
+[data-theme='dark'] .stats-grid.sidebar-stats .stat-label {
+  color: var(--stats-muted);
+}
+
+[data-theme='dark'] .stats-grid.sidebar-stats .stat-value {
+  color: var(--primary-light);
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--bg) 84%, transparent);
+}
