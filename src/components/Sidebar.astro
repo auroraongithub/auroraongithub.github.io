@@ -11,9 +11,9 @@ import { socialLinks } from '../data/socialLinks';
   <div class="neo-box sidebar-animate">
     <div class="neo-header"><h3><i class="bi bi-link-45deg" aria-hidden="true"></i> Links</h3></div>
     <div class="neo-content">
-      <ul>
+      <ul class="sidebar-links">
         {socialLinks.map((link) => (
-          <li><a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{link.label}</a></li>
+          <li><a class="sidebar-button" href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}><span>{link.label}</span></a></li>
         ))}
       </ul>
     </div>

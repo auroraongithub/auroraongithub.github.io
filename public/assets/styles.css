@@ -3365,6 +3365,139 @@ ul {
   content: none;
 }
 
+/* Dumby-inspired beveled buttons for the primary sidebar controls. */
+.neo-sidebar .neo-content ul.primary-nav-list,
+.neo-sidebar .neo-content ul.sidebar-links,
+.widget-resources .resources-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.neo-sidebar .neo-content ul.primary-nav-list li,
+.neo-sidebar .neo-content ul.sidebar-links li,
+.widget-resources .resources-list li {
+  margin: 0;
+}
+
+.neo-sidebar .neo-content a.sidebar-button,
+.widget-resources a.sidebar-button {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  width: 100%;
+  min-height: 30px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  overflow: hidden;
+  padding: 6px 8px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 6px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, #fff 68%, var(--bg-elev)) 0%,
+    color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev)) 43%,
+    color-mix(in srgb, var(--primary-dark) 48%, var(--bg-elev)) 50%,
+    color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)) 100%
+  );
+  color: var(--primary-dark);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--bg-elev) 70%, #fff);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.16),
+    0 2px 4px rgba(0, 0, 0, 0.18);
+  transition: filter 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.neo-sidebar .neo-content a.sidebar-button::before,
+.widget-resources a.sidebar-button::before {
+  content: none;
+}
+
+.neo-sidebar .neo-content a.sidebar-button::after,
+.widget-resources a.sidebar-button::after {
+  position: absolute;
+  z-index: 0;
+  top: 2px;
+  right: 4px;
+  left: 4px;
+  height: 45%;
+  border-radius: 4px 4px 50% 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+  content: "";
+  pointer-events: none;
+}
+
+.neo-sidebar .neo-content a.sidebar-button > *,
+.widget-resources a.sidebar-button > * {
+  position: relative;
+  z-index: 1;
+}
+
+.neo-sidebar .neo-content ul.sidebar-links a.sidebar-button,
+.widget-resources a.sidebar-button {
+  justify-content: flex-start;
+}
+
+.widget-resources a.sidebar-button > i {
+  flex: 0 0 1rem;
+  color: currentColor;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.neo-sidebar .neo-content a.sidebar-button:hover,
+.widget-resources a.sidebar-button:hover {
+  filter: brightness(1.06);
+  color: var(--primary-dark);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.82),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.14),
+    0 2px 5px rgba(0, 0, 0, 0.22),
+    0 0 7px color-mix(in srgb, var(--primary) 28%, transparent);
+}
+
+.neo-sidebar .neo-content a.sidebar-button:active,
+.widget-resources a.sidebar-button:active {
+  filter: brightness(0.96);
+  box-shadow:
+    inset 1px 2px 3px rgba(0, 0, 0, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.16);
+}
+
+.neo-sidebar .neo-content a.sidebar-button:focus-visible,
+.widget-resources a.sidebar-button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active {
+  background: linear-gradient(
+    to bottom,
+    var(--primary-light) 0%,
+    var(--primary) 45%,
+    var(--primary-dark) 50%,
+    var(--primary-light) 100%
+  );
+  color: #fff;
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000);
+}
+
+.neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active:hover {
+  color: #fff;
+}
+
 .gallery-content img {
   display: block;
   width: 100%;

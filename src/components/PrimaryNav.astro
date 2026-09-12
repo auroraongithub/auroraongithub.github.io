@@ -10,6 +10,6 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
 ---
 <ul class="primary-nav-list">
   {primaryNavigation.map((item) => (
-    <li><a href={item.href} class:list={{ active: isActive(item.href) }}>{item.label}</a></li>
+    <li><a href={item.href} class:list={['sidebar-button', { active: isActive(item.href) }]}><span>{item.label}</span></a></li>
   ))}
 </ul>
