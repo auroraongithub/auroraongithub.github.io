@@ -2172,6 +2172,30 @@ ul {
   overflow: hidden;
 }
 
+.widget-webring > .neo-content {
+  max-height: none;
+  overflow: visible;
+}
+
+.widget-webring .webring-content {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.widget-webring .webring-badge {
+  display: block;
+  line-height: 0;
+}
+
+.widget-webring .webring-badge img {
+  display: block;
+  width: 88px;
+  height: 31px;
+}
+
 .neo-sidebar .sidebar-more > .neo-content,
 .more-drawer .sidebar-more > .neo-content {
   background-color: color-mix(in srgb, var(--bg-elev) 58%, transparent);
@@ -7989,7 +8013,7 @@ body.more-drawer-open {
 }
 
 /* Keep the copied left-rail panels at the same compact, internally-scrollable size. */
-.more-drawer .more-drawer-section:not(.widget-now):not(.widget-changelog):not(.widget-shoutbox-sidebar):not(.sidebar-stats-box):not(.widget-resources) > .neo-content {
+.more-drawer .more-drawer-section:not(.widget-now):not(.widget-changelog):not(.widget-shoutbox-sidebar):not(.sidebar-stats-box):not(.widget-resources):not(.widget-webring) > .neo-content {
   max-height: clamp(80px, 15vh, 140px);
   overflow-y: auto;
   overflow-x: hidden;
