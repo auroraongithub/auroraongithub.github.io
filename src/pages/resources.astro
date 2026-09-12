@@ -3,12 +3,22 @@ import ContentLayout from '../layouts/ContentLayout.astro';
 import SiteSection from '../components/SiteSection.astro';
 ---
 <ContentLayout title="Resources">
-  <SiteSection title="Resources">
-    <div class="resource-category-tabs">
-      <button class="btn btn-ghost" data-resource-category="scanlation"><i class="bi bi-translate"></i> Scanlation</button>
-      <button class="btn btn-ghost" data-resource-category="youtube"><i class="bi bi-youtube"></i> YouTube</button>
+  <SiteSection title="Resource Desk" icon="bi-book" class="resources-page">
+    <div class="resource-intro">
+      <span class="resource-kicker"><i class="bi bi-folder2-open"></i> Reference shelf</span>
+      <p>Practical notes, guides, and tools collected for the work behind the site.</p>
     </div>
-    <div id="resourcePanels"><div class="loading">Loading...</div></div>
+    <div class="resource-category-tabs" role="tablist" aria-label="Resource categories">
+      <button class="resource-category-tab active" type="button" data-resource-category="scanlation" role="tab" aria-selected="true">
+        <i class="bi bi-translate" aria-hidden="true"></i><span>Scanlation</span>
+      </button>
+      <button class="resource-category-tab" type="button" data-resource-category="youtube" role="tab" aria-selected="false">
+        <i class="bi bi-youtube" aria-hidden="true"></i><span>YouTube</span>
+      </button>
+    </div>
+    <div id="resourcePanels" class="resource-panels">
+      <div class="resource-state loading-small">Loading resources...</div>
+    </div>
   </SiteSection>
   <script is:inline type="module" src="/scripts/resources.js"></script>
 </ContentLayout>
