@@ -676,9 +676,11 @@ ul {
 
 .color-picker-options {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 64px));
+  grid-auto-rows: 64px;
   gap: 8px;
   padding: 10px;
+  justify-content: center;
   border: 1px solid var(--primary-dark);
   border-top: none;
   background: var(--bg-elev);
@@ -687,9 +689,8 @@ ul {
 .color-option {
   min-width: 0;
   position: relative;
-  width: min(100%, 64px);
-  aspect-ratio: 1;
-  justify-self: center;
+  width: 64px;
+  height: 64px;
   padding: 0;
   border: 2px solid #fff;
   border-radius: 10px;
@@ -726,8 +727,7 @@ ul {
   border-color: var(--option-from);
   background: linear-gradient(to top, var(--option-to) 0%, var(--option-from) 45%, color-mix(in srgb, var(--option-from) 78%, #000) 50%, var(--option-to) 100%);
   filter: brightness(0.96);
-  box-shadow: inset 0 2px 5px color-mix(in srgb, var(--option-from) 55%, transparent), 0 0 0 2px var(--option-from), 0 0 0 4px rgba(255,255,255,0.92), 0 0 0 6px color-mix(in srgb, var(--option-from) 78%, #000);
-  transform: translateY(1px);
+  box-shadow: inset 0 2px 5px color-mix(in srgb, var(--option-from) 55%, transparent), inset 0 0 0 2px rgba(255,255,255,0.92), inset 0 0 0 4px color-mix(in srgb, var(--option-from) 78%, #000), 0 0 0 2px var(--option-from);
 }
 
 .theme-mode-row {
@@ -798,7 +798,7 @@ ul {
 
 @media (max-width: 500px) {
   .color-picker-options {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 64px));
   }
 
   .theme-mode-row {
