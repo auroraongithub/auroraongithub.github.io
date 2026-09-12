@@ -4679,30 +4679,40 @@ ul {
 .favorites-section .favorites-carousel .carousel-track {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 6px;
+  gap: 0;
+  padding: 4px;
   transform: none !important;
 }
 
 .favorites-section .favorites-carousel .favorite-item {
+  position: relative;
   display: grid;
   width: 100%;
-  height: 66px;
-  min-height: 66px;
+  height: 62px;
+  min-height: 62px;
   grid-template-columns: 48px minmax(0, 1fr);
   align-items: stretch;
-  border: 1px solid var(--primary-dark);
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--bg-elev) 78%, var(--primary-light));
-  box-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 32%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 32%, var(--border-light));
+  border-bottom-style: dotted;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--primary-light) 7%, var(--bg-elev));
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.7);
+  transition: border-color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.favorites-section .favorites-carousel .favorite-item:nth-child(even) {
+  background: color-mix(in srgb, var(--primary-light) 15%, var(--bg-elev));
 }
 
 .favorites-section .favorites-carousel .favorite-item:hover {
   border-color: var(--primary);
-  background: color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev));
+  border-bottom-style: solid;
+  background: color-mix(in srgb, var(--accent) 32%, var(--bg-elev));
   box-shadow:
+    inset 3px 0 0 var(--primary),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
     inset 0 0 0 1px color-mix(in srgb, var(--primary-light) 60%, transparent),
-    1px 2px 0 color-mix(in srgb, var(--primary-dark) 42%, transparent);
+    0 1px 0 color-mix(in srgb, var(--primary-dark) 42%, transparent);
 }
 
 .favorites-section .favorites-carousel .favorite-item::before {
@@ -4712,19 +4722,22 @@ ul {
 .favorites-section .favorites-carousel .favorite-item img,
 .favorites-section .favorites-carousel .favorite-item .favorite-item-image {
   width: 48px;
-  height: 64px;
+  height: 60px;
   min-height: 0;
   flex: 0 0 48px;
-  border: 0;
+  border: 1px solid var(--primary-dark);
   border-right: 1px solid var(--primary-dark);
-  border-radius: 3px 0 0 3px;
+  border-radius: 1px 0 0 1px;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.75);
 }
 
 .favorites-section .favorites-carousel .favorite-item .favorite-info {
-  display: flex;
+  display: grid;
   min-width: 0;
-  justify-content: center;
-  gap: 2px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-content: center;
+  gap: 2px 8px;
   padding: 5px 8px;
   border-top: 0;
   background: transparent;
@@ -4732,6 +4745,7 @@ ul {
 
 .favorites-section .favorites-carousel .favorite-item .favorite-info strong {
   display: block;
+  grid-column: 1 / -1;
   overflow: hidden;
   color: var(--text);
   font-size: 0.75rem;
@@ -4744,7 +4758,14 @@ ul {
   margin: 0;
   color: var(--text-muted);
   font-size: 0.64rem;
+  font-weight: 600;
   line-height: 1.1;
+}
+
+.favorites-section .favorites-carousel .favorite-item .favorite-info small:last-child {
+  justify-self: end;
+  color: var(--primary-dark);
+  font-weight: 700;
 }
 
 .carousel-ctrl {
