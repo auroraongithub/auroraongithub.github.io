@@ -1,0 +1,25 @@
+---
+import { adminNavigation, type AdminNavKey } from '../../lib/admin/navigation';
+
+interface Props { active?: AdminNavKey }
+const { active } = Astro.props;
+---
+<aside class="neo-sidebar admin-nav" aria-label="Admin navigation">
+  {adminNavigation.map((section) => (
+    <div class="neo-box admin-nav-group">
+      <div class="neo-header"><h3>{section.label}</h3></div>
+      <div class="neo-content">
+        <ul>
+          {section.items.map((item) => (
+            <li>
+              <a href={item.href} class:list={['admin-nav-link', { active: item.key === active }]} aria-current={item.key === active ? 'page' : undefined}>
+                {'icon' in item && item.icon && <i class={`bi ${item.icon}`} aria-hidden="true"></i>}
+                <span>{item.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  ))}
+</aside>

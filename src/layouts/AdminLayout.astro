@@ -1,0 +1,76 @@
+---
+import '../styles/global.css';
+import '../styles/admin.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import ColorPickerModal from '../components/ColorPickerModal.astro';
+import AdminNav from '../components/admin/AdminNav.astro';
+import type { AdminNavKey } from '../lib/admin/navigation';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  active?: AdminNavKey;
+  requiresAuth?: boolean;
+  login?: boolean;
+  wide?: boolean;
+  bodyClass?: string;
+}
+const {
+  title,
+  description = `${title} · ${site.name} admin`,
+  active,
+  requiresAuth = true,
+  login = false,
+  wide = false,
+  bodyClass = ''
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en" data-theme="light" data-color="cyan">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} · {site.name}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+    <link rel="preconnect" href="https://nijikade-backend.vercel.app" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <slot name="head" />
+    <script is:inline>
+      try {
+        const storedTheme = localStorage.getItem('theme');
+        const storedColor = localStorage.getItem('color');
+        if (storedTheme) document.documentElement.dataset.theme = storedTheme;
+        if (storedColor) document.documentElement.dataset.color = storedColor;
+      } catch (_) {}
+    </script>
+  </head>
+  <body class:list={['admin-page', { 'admin-login-page': login, 'admin-wide': wide }, bodyClass]} data-admin-theme data-admin-protected={requiresAuth ? 'true' : 'false'}>
+    <div class="neo-container admin-shell">
+      <SiteHeader />
+      {requiresAuth && (
+        <div class="admin-utility-bar">
+          <span><i class="bi bi-shield-lock" aria-hidden="true"></i> Admin</span>
+          <div>
+            <a class="admin-utility-link" href="/" target="_blank" rel="noopener noreferrer">View site</a>
+            <button class="admin-utility-link" type="button" data-admin-logout>Log out</button>
+          </div>
+        </div>
+      )}
+      {login ? (
+        <main class="admin-login-main"><slot /></main>
+      ) : (
+        <div class="admin-layout">
+          <AdminNav active={active} />
+          <main class="neo-main admin-main"><slot /></main>
+        </div>
+      )}
+    </div>
+    <ColorPickerModal />
+    <script is:inline type="module" src="/scripts/theme.js"></script>
+    <script is:inline type="module" src="/scripts/admin/auth.js"></script>
+    <slot name="scripts" />
+  </body>
+</html>

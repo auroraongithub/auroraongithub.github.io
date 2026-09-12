@@ -1,0 +1,13 @@
+---
+interface Props { id: string; title: string; class?: string }
+const { id, title, class: className = '' } = Astro.props;
+---
+<div class:list={['admin-modal', className]} id={id} aria-hidden="true">
+  <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby={`${id}-title`}>
+    <div class="admin-modal-header">
+      <h3 id={`${id}-title`}>{title}</h3>
+      <button class="btn btn-ghost admin-icon-button" type="button" data-modal-close={id} aria-label={`Close ${title}`}><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="admin-modal-body"><slot /></div>
+  </div>
+</div>

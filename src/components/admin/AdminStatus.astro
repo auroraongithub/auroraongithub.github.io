@@ -1,0 +1,5 @@
+---
+interface Props { id?: string; message?: string; state?: 'loading' | 'success' | 'error' | ''; hidden?: boolean }
+const { id, message = '', state = '', hidden = !message } = Astro.props;
+---
+<p id={id} class="admin-status" data-state={state} role="status" aria-live="polite" hidden={hidden}>{message}</p>

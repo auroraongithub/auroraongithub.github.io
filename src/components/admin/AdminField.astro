@@ -1,0 +1,15 @@
+---
+interface Props {
+  label: string;
+  forId?: string;
+  hint?: string;
+  required?: boolean;
+  class?: string;
+}
+const { label, forId, hint, required = false, class: className = '' } = Astro.props;
+---
+<div class:list={['field', 'admin-field', className]}>
+  <label for={forId}>{label}{required && <span class="admin-required" aria-hidden="true"> *</span>}</label>
+  <slot />
+  {hint && <small>{hint}</small>}
+</div>

@@ -1,0 +1,19 @@
+---
+interface Tab { id: string; label: string; icon?: string }
+interface Props { tabs: readonly Tab[]; active?: string; dataAttribute?: string }
+const { tabs, active = tabs[0]?.id, dataAttribute = 'admin-tab' } = Astro.props;
+---
+<div class="admin-tabs" role="tablist">
+  {tabs.map((tab) => (
+    <button
+      type="button"
+      class:list={['btn', 'btn-ghost', 'admin-tab', { active: tab.id === active }]}
+      data-admin-tab={dataAttribute === 'admin-tab' ? tab.id : undefined}
+      data-category={dataAttribute === 'category' ? tab.id : undefined}
+      role="tab"
+      aria-selected={tab.id === active ? 'true' : 'false'}
+    >
+      {tab.icon && <i class={`bi ${tab.icon}`} aria-hidden="true"></i>} {tab.label}
+    </button>
+  ))}
+</div>

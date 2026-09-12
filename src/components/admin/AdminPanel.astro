@@ -1,0 +1,16 @@
+---
+interface Props {
+  title: string;
+  icon?: string;
+  class?: string;
+  id?: string;
+}
+const { title, icon, class: className = '', id } = Astro.props;
+---
+<section id={id} class:list={['neo-box', 'admin-panel', className]}>
+  <div class="neo-header admin-panel-header">
+    <h2>{icon && <i class={`bi ${icon}`} aria-hidden="true"></i>} {title}</h2>
+    <div class="admin-panel-actions"><slot name="actions" /></div>
+  </div>
+  <div class="neo-content admin-panel-content"><slot /></div>
+</section>

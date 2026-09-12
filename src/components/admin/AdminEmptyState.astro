@@ -1,0 +1,9 @@
+---
+interface Props { title?: string; message: string; icon?: string }
+const { title, message, icon = 'bi-inbox' } = Astro.props;
+---
+<div class="admin-empty-state">
+  <i class={`bi ${icon}`} aria-hidden="true"></i>
+  {title && <strong>{title}</strong>}
+  <span>{message}</span>
+</div>
