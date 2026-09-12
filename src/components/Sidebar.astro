@@ -1,6 +1,5 @@
 ---
 import PrimaryNav from './PrimaryNav.astro';
-import { secondaryNavigation } from '../data/navigation';
 import { socialLinks } from '../data/socialLinks';
 ---
 <aside class="neo-sidebar">
@@ -16,15 +15,6 @@ import { socialLinks } from '../data/socialLinks';
         {socialLinks.map((link) => (
           <li><a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{link.label}</a></li>
         ))}
-      </ul>
-    </div>
-  </div>
-
-  <div class="neo-box sidebar-animate sidebar-more">
-    <div class="neo-header"><h3>More</h3></div>
-    <div class="neo-content">
-      <ul>
-        {secondaryNavigation.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
       </ul>
     </div>
   </div>
