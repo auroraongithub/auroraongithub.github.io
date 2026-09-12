@@ -27,63 +27,35 @@
     </div>
     <div class="neo-container admin-login-shell">
       <header class="site-banner">
-        <div class="admin-branding">
-          <a href="/" class="brand">elythria.dev</a>
-          <span class="admin-label"><i class="bi bi-shield-lock" aria-hidden="true"></i> Admin workspace</span>
-        </div>
+        <a href="/" class="brand">elythria.dev</a>
+        <span class="admin-label">Admin</span>
         <div class="admin-controls" aria-label="Display controls">
           <button class="color-picker-toggle" type="button" title="Change color" aria-label="Change color" data-color-picker><i class="bi bi-palette-fill" aria-hidden="true"></i></button>
         </div>
       </header>
       <main class="admin-login-main">
-        <section class="login-panel" aria-labelledby="loginTitle">
-          <header class="login-panel-header">
-            <div>
-              <span class="login-panel-kicker"><i class="bi bi-lock-fill" aria-hidden="true"></i> Private workspace</span>
-              <h1 id="loginTitle">Admin login</h1>
-            </div>
-            <span class="login-panel-code" aria-hidden="true">AUTH / 01</span>
-          </header>
-          <div class="login-panel-grid">
-            <aside class="login-intro" aria-label="Admin workspace details">
-              <div class="login-intro-emblem"><i class="bi bi-stars" aria-hidden="true"></i></div>
-              <h2>Keep the little things moving.</h2>
-              <p>Sign in to update posts, projects, resources, settings, and homepage widgets.</p>
-              <ul class="login-intro-list">
-                <li><span>CONTENT</span><strong>Posts &amp; stories</strong></li>
-                <li><span>SITE</span><strong>Widgets &amp; settings</strong></li>
-                <li><span>TOOLS</span><strong>Resources &amp; experiments</strong></li>
-              </ul>
-            </aside>
-            <div class="login-form-side">
-              <div class="login-form-heading">
-                <h2>Welcome back</h2>
-                <p>Use your admin account to continue.</p>
+        <section class="neo-box login-panel" aria-labelledby="loginTitle">
+          <div class="neo-header login-panel-header"><h1 id="loginTitle">Admin Login</h1></div>
+          <div class="neo-content login-content">
+            <form id="loginForm" class="login-form">
+              <div class="login-field">
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="name@example.com" autocomplete="username" required />
               </div>
-              <form id="loginForm" class="login-form">
-                <div class="login-field">
-                  <label for="email"><span>Email address</span><small>Required</small></label>
-                  <div class="login-input-wrap"><i class="bi bi-envelope" aria-hidden="true"></i><input id="email" type="email" placeholder="name@example.com" autocomplete="username" required /></div>
-                </div>
-                <div class="login-field">
-                  <label for="password"><span>Password</span><small>Required</small></label>
-                  <div class="login-input-wrap"><i class="bi bi-key" aria-hidden="true"></i><input id="password" type="password" placeholder="Enter your password" autocomplete="current-password" required /></div>
-                </div>
-                <p class="login-status" id="loginStatus" role="status" aria-live="polite"></p>
-                <button class="btn btn-primary login-submit" type="submit"><span>Log in</span><i class="bi bi-arrow-right" aria-hidden="true"></i></button>
-              </form>
-              <div class="login-form-footer">
-                <a href="/"><i class="bi bi-arrow-left" aria-hidden="true"></i> Return to site</a>
-                <span><i class="bi bi-circle-fill" aria-hidden="true"></i> Private area</span>
+              <div class="login-field">
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Password" autocomplete="current-password" required />
               </div>
-            </div>
+              <p class="login-status" id="loginStatus" role="status" aria-live="polite"></p>
+              <div class="login-actions">
+                <button class="btn btn-primary login-submit" type="submit"><span>Login</span></button>
+                <a class="login-back" href="/">Back</a>
+              </div>
+            </form>
           </div>
         </section>
       </main>
-      <footer class="admin-login-footer">
-        <span>elythria.dev · admin</span>
-        <span>Theme follows your site preference</span>
-      </footer>
+      <footer class="admin-login-footer"><span>elythria.dev · admin</span></footer>
     </div>
     <script type="module">
       import './login_logic.js';

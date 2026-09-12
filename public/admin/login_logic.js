@@ -33,8 +33,7 @@ form?.addEventListener('submit', async (e) => {
   if (submitButton) {
     submitButton.disabled = true;
     submitButton.dataset.loading = 'true';
-    submitButton.querySelector('span').textContent = 'Checking…';
-    submitButton.querySelector('i').className = 'bi bi-arrow-repeat';
+    submitButton.querySelector('span').textContent = 'Checking...';
   }
 
   try {
@@ -54,8 +53,7 @@ form?.addEventListener('submit', async (e) => {
     if (submitButton) {
       submitButton.disabled = false;
       submitButton.dataset.loading = 'false';
-      submitButton.querySelector('span').textContent = 'Log in';
-      submitButton.querySelector('i').className = 'bi bi-arrow-right';
+      submitButton.querySelector('span').textContent = 'Login';
     }
   }
 });
