@@ -1,8 +1,16 @@
 @import './tokens.css';
 
+@font-face {
+  font-family: 'MS PGothic Local';
+  src: url('/assets/MS%20PGothic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Migration-only additions. The legacy stylesheet remains authoritative for visual parity. */
 html body {
-  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-family: 'MS PGothic Local', "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
 }
 
 .primary-nav-list a.active { font-weight: 700; }
