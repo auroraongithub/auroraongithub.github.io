@@ -6,6 +6,7 @@ import MobileNav from '../components/MobileNav.astro';
 import MoreDrawer from '../components/MoreDrawer.astro';
 import SiteModals from '../components/SiteModals.astro';
 import ColorPickerModal from '../components/ColorPickerModal.astro';
+import ImageLightbox from '../components/ImageLightbox.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -45,6 +46,7 @@ const pageTitle = title === site.title ? title : `${title} · ${site.name}`;
       <slot />
       <Footer />
     </div>
+    <ImageLightbox />
     <ColorPickerModal />
     <MobileNav />
     <MoreDrawer />

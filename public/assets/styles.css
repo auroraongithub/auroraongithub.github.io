@@ -7986,6 +7986,10 @@ body.more-drawer-open {
 }
 
 /* ==================== IMAGE LIGHTBOX ==================== */
+.gallery-content img,
+.blog-post .article-content img,
+.story-post .article-content img { cursor: zoom-in; }
+
 .lightbox-overlay {
   display: none;
   position: fixed;
