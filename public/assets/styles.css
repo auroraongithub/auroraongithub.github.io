@@ -3508,6 +3508,11 @@ ul {
   justify-content: flex-start;
 }
 
+.neo-sidebar .neo-content ul.secondary-nav-list a.sidebar-button,
+.more-drawer .neo-content ul.secondary-nav-list a.sidebar-button {
+  justify-content: center;
+}
+
 .neo-sidebar .neo-content a.sidebar-button > i,
 .more-drawer .neo-content a.sidebar-button > i,
 .widget-resources a.sidebar-button > i {
