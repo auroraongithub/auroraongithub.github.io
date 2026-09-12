@@ -210,13 +210,13 @@ async function loadChangelog() {
 }
 
 async function loadStats() {
-  if (!document.getElementById('statProjects')) return;
+  if (!document.getElementById('statProjects') && !document.getElementById('drawerStatProjects')) return;
   try {
     const data = await cachedFetch('/site/stats', 120_000);
-    text('statProjects', data.projects ?? data.projects_count ?? '0');
-    text('statPosts', data.posts ?? data.posts_count ?? '0');
-    text('statVisitors', data.visitors ?? data.online ?? data.online_now ?? '0');
-    text('statPageviews', data.pageviews ?? data.total_visits ?? data.total ?? '0');
+    for (const id of ['statProjects', 'drawerStatProjects']) text(id, data.projects ?? data.projects_count ?? '0');
+    for (const id of ['statPosts', 'drawerStatPosts']) text(id, data.posts ?? data.posts_count ?? '0');
+    for (const id of ['statVisitors', 'drawerStatVisitors']) text(id, data.visitors ?? data.online ?? data.online_now ?? '0');
+    for (const id of ['statPageviews', 'drawerStatPageviews']) text(id, data.pageviews ?? data.total_visits ?? data.total ?? '0');
   } catch (error) {
     console.warn('Stats unavailable', error);
   }
@@ -319,6 +319,7 @@ function initMoreDrawer() {
   const setDrawerState = (isOpen) => {
     drawer.classList.toggle('active', isOpen);
     toggle?.setAttribute('aria-expanded', String(isOpen));
+    drawer.setAttribute('aria-hidden', String(!isOpen));
     document.body.classList.toggle('more-drawer-open', isOpen);
   };
   toggle?.addEventListener('click', (event) => {
