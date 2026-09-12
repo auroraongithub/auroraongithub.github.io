@@ -647,15 +647,6 @@ ul {
   margin-right: 5px;
 }
 
-.color-picker-kicker {
-  display: block;
-  margin-bottom: 2px;
-  color: rgba(255,255,255,0.78);
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-}
-
 .color-picker-close {
   width: 24px;
   height: 24px;
@@ -677,35 +668,11 @@ ul {
   transform: translateY(-1px);
 }
 
-.color-picker-section-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px 10px 6px;
-  border: 1px solid var(--primary-dark);
-  border-top: none;
-  background: var(--bg-elev);
-  color: var(--primary-dark);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.color-picker-section-heading small {
-  color: var(--text-muted);
-  font-size: 0.62rem;
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: none;
-}
-
 .color-picker-options {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 5px;
-  padding: 7px;
+  gap: 6px;
+  padding: 9px;
   border: 1px solid var(--primary-dark);
   border-top: none;
   background: var(--bg-elev);
@@ -715,17 +682,18 @@ ul {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 7px;
-  border: 1px solid var(--border-light);
-  border-radius: 4px;
-  background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 15%, var(--bg-elev)));
+  gap: 8px;
+  min-height: 38px;
+  padding: 6px 8px;
+  border: 1px solid color-mix(in srgb, var(--primary-dark) 42%, var(--border-light));
+  border-radius: 5px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bg-elev) 94%, #fff), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
   color: #243333;
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.72);
-  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.78), 1px 1px 1px rgba(0,0,0,0.1);
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .color-option:hover {
@@ -733,24 +701,25 @@ ul {
   background: linear-gradient(to bottom, var(--primary-light), var(--primary));
   color: #243333;
   transform: translateY(-1px);
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.78), 1px 2px 2px rgba(0,0,0,0.16);
 }
 
 .color-option.active {
   border-color: var(--primary-dark);
-  background: color-mix(in srgb, var(--primary-light) 30%, var(--bg-elev));
-  box-shadow: inset 0 0 0 1px var(--primary), inset 1px 1px 0 rgba(255,255,255,0.74);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--primary-light) 42%, var(--bg-elev)), color-mix(in srgb, var(--primary) 22%, var(--bg-elev)));
+  box-shadow: inset 0 0 0 1px var(--primary), inset 1px 1px 0 rgba(255,255,255,0.74), 1px 1px 1px rgba(0,0,0,0.12);
 }
 
 .color-preview {
-  width: 19px;
-  height: 19px;
+  width: 22px;
+  height: 22px;
   flex: 0 0 auto;
-  border-radius: 3px;
-  border: 1px solid rgba(255,255,255,0.86);
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.48), 1px 1px 1px rgba(0,0,0,0.22);
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.95);
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.58), 1px 1px 2px rgba(0,0,0,0.22);
 }
 
-.color-option span {
+.color-option-label {
   min-width: 0;
   display: flex;
   align-items: center;
@@ -765,17 +734,17 @@ ul {
   text-overflow: ellipsis;
 }
 
-.color-option:hover span {
+.color-option:hover .color-option-label {
   color: #243333;
 }
 
-.color-option span i {
+.color-option-label i {
   display: none;
   color: #243333;
   font-size: 0.76rem;
 }
 
-.color-option.active span i {
+.color-option.active .color-option-label i {
   display: inline-block;
 }
 
@@ -848,12 +817,6 @@ ul {
 @media (max-width: 500px) {
   .color-picker-options {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .color-picker-section-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 2px;
   }
 
   .theme-mode-row {
