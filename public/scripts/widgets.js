@@ -245,10 +245,12 @@ async function loadPortfolio() {
     const payload = await cachedFetch('/site/projects', 300_000);
     const projects = Array.isArray(payload) ? payload : (payload.projects || []);
     if (!projects.length) return;
-    grid.innerHTML = projects.map((project) => `<a href="${escapeHtml(project.github_url || project.url || '#')}" class="portfolio-item" target="_blank" rel="noopener noreferrer"><h4>${escapeHtml(project.name)}</h4><p>${escapeHtml(project.description || 'No description')}</p><div class="portfolio-meta">${project.language ? `<span class="language">${escapeHtml(project.language)}</span>` : ''}<span class="stars">★ ${Number(project.stars) || 0}</span><span class="forks">⑂ ${Number(project.forks) || 0}</span></div></a>`).join('');
+    grid.innerHTML = projects.map((project, index) => `<a href="${escapeHtml(project.github_url || project.url || '#')}" class="portfolio-item" target="_blank" rel="noopener noreferrer" data-portfolio-item data-portfolio-index="${index}"${index >= 4 ? ' hidden' : ''}><h4>${escapeHtml(project.name)}</h4><p>${escapeHtml(project.description || 'No description')}</p><div class="portfolio-meta">${project.language ? `<span class="language">${escapeHtml(project.language)}</span>` : ''}<span class="stars">★ ${Number(project.stars) || 0}</span><span class="forks">⑂ ${Number(project.forks) || 0}</span></div></a>`).join('');
+    window.dispatchEvent(new Event('portfolio:rendered'));
   } catch (error) {
     console.warn('Portfolio unavailable', error);
     grid.innerHTML = fallback;
+    window.dispatchEvent(new Event('portfolio:rendered'));
   }
 }
 

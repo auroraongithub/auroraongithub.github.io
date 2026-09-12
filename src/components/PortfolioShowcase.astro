@@ -20,9 +20,9 @@ const { projects } = Astro.props;
   </div>
 
   <section class="portfolio-panel" id="portfolioContentPanel" role="tabpanel" data-portfolio-panel="content">
-    <div class="portfolio-content-grid">
-      {contentPortfolio.map((item) => (
-        <a class="portfolio-highlight-card" href={item.href} target="_blank" rel="noopener noreferrer">
+    <div class="portfolio-content-grid" data-portfolio-items>
+      {contentPortfolio.map((item, index) => (
+        <a class="portfolio-highlight-card" href={item.href} target="_blank" rel="noopener noreferrer" data-portfolio-item data-portfolio-index={index} hidden={index >= 4}>
           <div class="portfolio-highlight-topline">
             <img class="portfolio-highlight-avatar" src={item.avatar} alt={`${item.title} profile picture`} loading="lazy" />
             <span class="portfolio-highlight-title">{item.title}</span>
@@ -35,13 +35,23 @@ const { projects } = Astro.props;
         </a>
       ))}
     </div>
+    <div class="portfolio-pagination" data-portfolio-pagination hidden={contentPortfolio.length <= 4}>
+      <button class="carousel-ctrl" type="button" data-portfolio-prev aria-label="Previous content portfolio page"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+      <span class="page-info" data-portfolio-page-info aria-live="polite">1 / 1</span>
+      <button class="carousel-ctrl" type="button" data-portfolio-next aria-label="Next content portfolio page"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+    </div>
   </section>
 
   <section class="portfolio-panel" id="portfolioCodingPanel" role="tabpanel" data-portfolio-panel="coding" hidden>
-    <div class="neo-grid" id="portfolioGrid">
+    <div class="neo-grid" id="portfolioGrid" data-portfolio-items>
       {projects.length
-        ? projects.map((project) => <ProjectCard name={project.data.name} description={project.data.description} href={project.data.githubUrl || project.data.url || '#'} language={project.data.language} stars={project.data.stars} forks={project.data.forks} />)
+        ? projects.map((project, index) => <ProjectCard index={index} initialHidden={index >= 4} name={project.data.name} description={project.data.description} href={project.data.githubUrl || project.data.url || '#'} language={project.data.language} stars={project.data.stars} forks={project.data.forks} />)
         : <div class="loading-small">Loading coding projects...</div>}
+    </div>
+    <div class="portfolio-pagination" data-portfolio-pagination hidden={projects.length <= 4}>
+      <button class="carousel-ctrl" type="button" data-portfolio-prev aria-label="Previous coding portfolio page"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+      <span class="page-info" data-portfolio-page-info aria-live="polite">1 / 1</span>
+      <button class="carousel-ctrl" type="button" data-portfolio-next aria-label="Next coding portfolio page"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
     </div>
   </section>
 </div>
