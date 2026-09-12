@@ -901,4 +901,111 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       grid-template-columns: 1fr;
     }
   }
+
+  /* The archive is a single-column touch surface on narrow screens. Keep the
+     tab rail out of the content flow so it cannot cover the search controls. */
+  .blog-admin-page :global(.blog-toolbar-footer.tag-filters .admin-tabs) {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  @media (max-width: 700px) {
+    .blog-admin-page :global(.admin-post-workspace .admin-post-list) {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-admin-page :global(.admin-post-workspace .admin-post-list .admin-list-item) {
+      height: auto;
+      min-height: 146px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .blog-admin-page :global(.admin-post-workspace > .admin-post-workspace-header) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      width: calc(100% - 8px);
+      max-width: none;
+      left: 0;
+    }
+
+    .blog-admin-page :global(.admin-post-workspace-header .admin-tabs) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      min-width: 0;
+      gap: 2px;
+      padding: 0 2px;
+    }
+
+    .blog-admin-page :global(.admin-post-workspace-header .admin-tab) {
+      width: 100%;
+      min-width: 0;
+      padding-inline: 6px !important;
+      font-size: .72rem !important;
+      white-space: nowrap;
+    }
+
+    .blog-admin-page :global(.admin-post-workspace-actions) {
+      min-width: 0;
+      padding: 0 4px 0 2px;
+    }
+
+    .blog-admin-page :global(.admin-post-workspace-actions .btn) {
+      padding-inline: 7px;
+      white-space: nowrap;
+    }
+
+    .blog-admin-page :global(.blog-toolbar-controls) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    .blog-admin-page :global(.blog-toolbar-controls .post-search) {
+      grid-column: 1 / -1;
+    }
+
+    .blog-admin-page :global(.blog-toolbar-controls .blog-year-field) {
+      grid-column: 1;
+      min-width: 0;
+    }
+
+    .blog-admin-page :global(.blog-toolbar-actions) {
+      grid-column: 2;
+      justify-content: flex-end;
+    }
+
+    .blog-admin-page :global(.blog-toolbar-footer.tag-filters) {
+      display: block;
+      width: 100%;
+    }
+
+    .blog-admin-page :global(.blog-toolbar-footer.tag-filters .admin-tabs) {
+      display: flex !important;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .blog-admin-page :global(.blog-toolbar-footer.tag-filters .admin-tab) {
+      flex: 0 0 auto;
+      min-width: 46px;
+    }
+  }
+
+  @media (max-width: 350px) {
+    .blog-admin-page :global(.admin-post-workspace-header .admin-tab) {
+      padding-inline: 4px !important;
+      font-size: .66rem !important;
+      letter-spacing: .04em;
+    }
+
+    .blog-admin-page :global(.admin-post-workspace-actions .btn) {
+      padding-inline: 5px;
+      font-size: .6rem;
+    }
+  }
 </style>
