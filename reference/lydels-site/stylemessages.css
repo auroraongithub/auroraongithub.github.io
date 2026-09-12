@@ -1,0 +1,197 @@
+:root {
+    --textColor: #345b2f;
+    --darkPink: #f72c5b;
+    --pink: #ff748b;
+    --lightPink: #ffd7d7;
+    --darkGreen: #345b2f;
+    --green: #a7d477;
+    --lightGreen:#e4f1ac;
+    --white: #fbf7f7;
+    
+    --greenOpaco: #d2ebb7;
+    --pinkOpaco: #ddbbbb;
+    --darkPinkOpaco: #df315a;
+
+    --brightGreen: #5cb300;
+    --darkGreenTransparente:#345b2f81;
+    --darkPinkTransparente: #df315a60;
+}
+
+.more{
+    width: 170px;
+    height: 40px;
+    border-radius: 8px;
+    border: 4px solid var(--lightGreen);
+    align-content: center;
+    display: flex;
+    flex-direction: row;
+    opacity: 80%;
+    color: var(--green);
+    margin-left: 10px;
+    background-color: rgba(255, 255, 255, 0.479);
+}
+
+.more:hover{
+    opacity: 100%;
+    border: 4px solid var(--green);
+}
+
+.messages{
+    width: 100%;
+    align-content: center;
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+    margin-left: -17px;
+}
+
+.info{
+    width: 100%;
+    align-content: center;
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+}
+
+.izquierda{
+    width: 35%;
+    margin: auto;
+    margin-top: 0;
+}
+
+.derecha{
+    width: 60%;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.credits{
+    text-align: left;
+    background-image: url('imagenes/index/bg3.gif');
+    background-color: #e4f1ac5d;
+    height: 200px;
+    align-content: center;
+    border-radius: 10px;
+    border: 3px solid var(--green);
+}
+
+.buy{
+    width: 100%;
+    background-color: var(--lightPink);
+    height: 280px;
+    overflow: hidden;
+}
+
+.buyM{
+    width: 100%;
+    background-color: var(--lightPink);
+    height: 280px;
+    overflow: hidden;
+    background-image: url('imagenes/music/BUY.gif');
+    border: 6px solid var(--lightGreen);
+}
+
+.buy:hover{
+    background-color: var(--pink);
+}
+
+.text{
+    width: 90%;
+    margin: auto;
+    border: 1px solid var(--lightGreen);
+    background-color: var(--lightGreen);
+    background-image: url('imagenes/music/paper.gif');
+    background-repeat: repeat-y;
+}
+
+.lyric {
+  margin: auto;
+  white-space: pre-line;
+  padding-bottom: 10px;
+  margin-top: 10px;
+
+  color: var(--dark-pink);
+  text-align: center;
+}
+
+.tracklist{
+  align-content: center; 
+  width: 90%;
+  background-color: var(--darkPink);
+  background-image: url('imagenes/music/bg1.gif');
+  background-blend-mode: soft-light;
+
+  height: 400px;
+  max-height: 85%;
+  margin: auto;
+
+  border-radius: 10px;
+
+  scrollbar-color: var(--pink) transparent;
+}
+
+.innerTracklist{
+  width: 90%; 
+  height: 90%; 
+  overflow: auto; 
+  margin: auto; 
+  text-align: left; 
+  background-color: var(--bg-color);
+
+  border-radius: 10px;
+  border: 2px solid var(--pink);
+
+  align-content: space-evenly;
+}
+
+.summaryStyle{
+  list-style: none;
+  font-size:medium;
+
+  border-bottom: 1px dotted var(--pink);
+  margin: auto;
+
+  height: 32px;
+  align-content: center;
+}
+
+details{
+    margin: auto;
+}
+
+
+.pinklink{
+  color: var(--darkPink);
+  text-shadow: 1px 1px 0px var(--lightPink);
+  background-color: var(--lightPink);
+}
+
+.pinklink:hover{
+  background-color: var(--bg-color);
+  color: var(--pink);
+  cursor: url(imagenes/cursorlink.png), auto;
+}
+
+a{
+    cursor: url(imagenes/cursorlink.png), auto;
+}
+
+h3{
+    font-family: 'Enhanced Dot Digital';
+    text-shadow: none;
+    color: var(--darkGreen);
+    text-shadow: 1px 1px 0px var(--lightGreen);
+}
+
+.gradient{
+    -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%,rgba(0,0,0,1) 62%,rgba(0,0,0,0) 100%);
+}
+
+.videoEmbed{
+    mix-blend-mode: screen;
+}
+
+.videoEmbed:hover{
+    mix-blend-mode: normal;
+}

@@ -1,0 +1,217 @@
+:root {
+    --bg-color: #90908e;
+    --text-color: #1f1f1f;
+    --red: #8c0000;
+    --darkRed: #630000;
+    --pink: #ac7471;
+    --shadow: #00000093;
+    --brightRed: #db0000;
+  }
+
+#home, #join, #buttons, #about, #list{
+    display: none;
+}
+  
+#home:target, #join:target, #buttons:target, #about:target, #list:target, #open{
+    display: block;
+}
+
+body {
+  color: var(--text-color);
+  font-size: 15px;
+  font-family: "Averia";
+  cursor: url('imagenes/fanlisting/cursor.png'), auto;
+  /* scrollbar-color: var(--pink) var(--soft-pink); */
+
+  background-image: url('imagenes/fanlisting/design.jpg'); 
+  background-position: 50% 0; 
+  overflow-x: hidden; 
+  background-repeat: no-repeat; 
+  background-color: var(--bg-color);
+}
+
+@font-face {
+    font-family: "Averia";
+    src: 
+      url("font/Averia.ttf") format("truetype"),
+      url("font/Averia.woff2") format('woff2'),
+      url("font/Averia.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Bitch Cakes";
+    src: 
+      url("font/bitchcakes.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.flex-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin-top: 0;
+  }
+
+.main{
+    margin-inline: calc(auto + 30px);
+    width: 702px;
+    height: 870px;
+    margin-top: -10px;
+    position: relative;
+}
+
+.header{
+    margin-left: 58px;
+    height: 342px;
+    display: flex;
+    position: relative;
+}
+
+.pic{
+  width: 455px; 
+  height: 342px; 
+  border: 1px solid var(--shadow); 
+  background-size: cover;
+  
+  border-image-slice: 33 33 34 33;
+  border-image-width: 10px 10px 10px 10px;
+  border-image-outset: 9px 9px 9px 9px;
+  border-image-repeat: repeat repeat; 
+  border-image-source: url("imagenes/border12.png");
+  border-style: solid;
+}
+
+.content{
+    margin-left: 110px;
+    margin-top: 15px;
+    height: 415px;
+    width: 570px;
+    border-radius: 10px;
+    display: flex;
+    align-content: center;
+}
+
+.insideContent{
+  width: 95%; 
+  height: 95%; 
+  margin: auto; 
+  overflow-y: auto; 
+  overflow-x: hidden;
+  scrollbar-color: var(--pink) transparent;
+}
+
+.menu{
+  position: absolute;
+  height: 590px;
+  width: 139px;
+  left: -75px;
+  top: 0px;
+}
+
+.menuItem{
+  width: 100%;
+  background-color: #5a0000;
+  margin-bottom: 14px;
+  height: 85px;
+  align-content: center;
+  text-align: center;
+  border-radius: 10px;
+  color: var(--pink);
+
+  background-blend-mode: normal;
+  background-size: 0;
+
+  background-repeat: no-repeat;
+  box-shadow: 0px 0px 3px var(--shadow);
+
+  font-size: 25px;
+  text-shadow: 2px 2px 0px var(--shadow);
+
+  border: 4px solid transparent;
+  display: block;
+}
+
+.clickable:hover{
+  background-blend-mode: soft-light;
+  background-size: cover;
+  background-color: var(--darkRed);
+  box-shadow: 0px 0px 8px var(--shadow);
+  font-family: Bitch Cakes;
+  font-size: 35px;
+  color: white;
+
+  text-shadow: 1px 1px 0px black;
+  
+  letter-spacing: 3px;
+  border: 4px solid var(--red);
+}
+
+.redText{
+  color: var(--red);
+  font-size: 16px;
+  text-shadow: 0px 0px 2px var(--pink);
+}
+
+h2{
+  text-shadow: 1px 1px 0px white;
+  color: black;
+  font-family: Bitch Cakes;
+  font-size: 40px;
+  margin-block: 0px;
+  letter-spacing: 3px;
+}
+
+.footer{
+  margin-top: 30px; margin-left: -180px;
+  color: var(--bg-color);
+  height:60px;
+  font-size: small;
+}
+
+a{
+  color: #72726e; 
+  text-shadow: 0px 0px 3px gainsboro;
+}
+
+a:hover{
+  color: var(--red);
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.219);
+  cursor: url('imagenes/fanlisting/cursorlink.png'), auto;
+}
+
+p{
+  letter-spacing: 0px;
+  font-weight: normal;
+}
+
+.fan{
+  width: 100%; border-bottom: 1px dotted var(--red); display: flex; flex-direction: column; margin-top: 10px;
+}
+
+.tflButton{
+  border: 2px solid transparent;
+}
+
+.tflButton:hover{
+  border: 2px solid var(--red);
+}
+
+.menuSelected{
+  background-blend-mode: soft-light;
+  background-size: cover;
+  background-color: var(--darkRed);
+  font-family: Bitch Cakes;
+  font-size: 35px;
+  box-shadow: 0px 0px 8px var(--shadow);
+  color: white;
+
+  text-shadow: 1px 1px 0px black;
+  
+  letter-spacing: 3px;
+  border: 4px solid var(--darkRed);
+}

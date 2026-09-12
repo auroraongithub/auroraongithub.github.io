@@ -1,0 +1,240 @@
+:root {
+    --whiteTransparent: #ffffff8a;
+}
+
+.flex-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .moremusiccontainer {
+    width: 988px;
+    height: 576px;
+    background-color: var(--bg-color);
+    margin-top: 2.5%;
+  
+    border-image-slice: 27 26 27 27;
+    border-image-width: 27px 26px 27px 27px;
+    border-image-outset: 0px 0px 0px 0px;
+    border-image-repeat: repeat repeat;
+    border-image-source: url("imagenes/bg.png");
+    border-style: solid;
+    background-clip:padding-box ;
+  
+    padding: 20px;
+    border: none; 
+    background: transparent; 
+    width: 1100px; 
+    position: relative;
+  }
+  
+.mainMM{
+    width: 800px;
+    margin-inline: auto;
+    margin-top: 35px;
+    position: relative;
+    margin-bottom: 70px;
+}
+
+.descriptionMM{
+    height: 70px; 
+    margin-top: 30px; 
+    width: 100%; 
+    align-content: center; 
+    border-radius: 10px;
+    background-color: #a7d477a8;
+    background-position: -5px -5px;
+    border: 1px solid var(--green);
+}
+
+.tabscontainer{
+    width: 100%;
+}
+
+.tabselection{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-content: space-evenly;
+    height: 100px;
+    margin-top: 30px;
+}
+
+.tab{
+    width: 50%; 
+    height: 106px;
+    text-align: center;
+    align-content: center;
+    
+    transform: translateY(-6px);
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+    font-family: 'Enhanced Dot Digital';
+    font-size: xx-large;
+    color: var(--whiteTransparent);
+    text-decoration: none;
+    background-blend-mode: soft-light;
+}
+
+.tab:hover{
+    cursor: url(imagenes/cursorlink.png), auto;
+    filter: brightness(110%);
+}
+
+.tabSelected{
+    color: var(--white);
+    transform: none;
+}
+
+.tabSelected:hover{
+    filter: none;
+}
+
+#mixesTab{
+    background-color: var(--pink);
+    color: var(--white);
+    text-shadow: 1px 1px 0px var(--darkPink);
+}
+
+#remixesTab{
+    background-color: var(--green);
+    color: var(--white);
+    text-shadow: 1px 1px 0px var(--darkGreen);
+}
+
+.tabcontent{
+    width: 100%;
+    height: 500px;
+    align-content: center;
+    overflow: auto;
+    border-bottom-left-radius: 20px;
+}
+
+.innerTabContent{
+    width: 98.5%;
+    height: 97.5%;
+    background-color: var(--white);
+    overflow: auto;
+    margin: auto;
+    border-bottom-left-radius: 15px;
+}
+
+#mixes{
+    background-color: var(--pink);
+}
+
+#remixes{
+    background-color: var(--green);
+}
+
+#mixes, #remixes {
+    display: none;
+  }
+  
+#mixes:target, #remixes:target{
+    display: block;
+}
+
+.innerTab{
+    width: 97%; 
+    height: 100px; 
+    margin: auto; 
+    margin-top: 6px; 
+    border-top-right-radius: 15px; 
+    border-top-left-radius: 15px; 
+    align-content: center;
+    background-blend-mode: overlay;
+    background-size: cover;
+}
+
+
+.separator{
+    margin-block: 20px;
+}
+
+.separatorGreen{
+    margin-block: 40px;
+}
+
+.mixDescription{
+    text-align: left;
+    margin-top: -20px;
+}
+
+.mixDate{
+    font-size: large;
+    margin-bottom: 0;
+    color: var(--pink);
+    text-decoration: 2px dotted underline;
+}
+
+.playerframe{
+    width: 100%;
+    height: 300px;
+    background-color: var(--pink);
+    border-radius: 15px;
+    background-image: url('imagenes/background-pattern10.gif');
+    align-content: center;
+}
+
+.playerframeGreen{
+    width: 100%;
+    height: 250px;
+    background-color: var(--darkGreen);
+    border-radius: 15px;
+    background-image: url('imagenes/background-pattern10.gif');
+    background-blend-mode: luminosity;
+    align-content: center;
+}
+
+.scPlayerBackground{
+    background-color: #8e0022;
+    width: 97%;
+    height: 93%;
+    margin: auto;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 3px solid var(--pink);
+}
+
+.scPlayerBackgroundGreen{
+    background-color: #476322;
+    width: 97%;
+    height: 91%;
+    margin: auto;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 3px solid var(--green);
+}
+
+.scPlayer{
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: screen;
+    filter: grayscale(50%);
+}
+  
+.scPlayer:hover{
+    mix-blend-mode: normal;
+    filter: none;
+} 
+
+.soundcloudMargin{
+    margin-top: -5px;
+    height: 250px;
+}
+
+.link{
+    background-color: var(--lighterGreen);
+    margin-left: -130px;
+    color: var(--darkPinkOpaco);
+}
+
+.link:hover{
+    background-color: var(--darkGreen);
+    color: var(--white);
+    opacity: 100%;
+}

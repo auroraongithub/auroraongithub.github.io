@@ -1,0 +1,134 @@
+:root {
+    --red: #f73a13;
+    --orange: #f0783c;
+    --yellow: #f1ce24;
+    --blue: #3466a3;
+    --green: #3ab12e;
+    --lightblue: #6fcae1;
+    --black: #0c0d0f;
+    --white: #fdfef7;
+    --brown: #4d3e30;
+    --grey: #a6a479;
+    --shadow: #68361a9f;
+
+}
+
+@font-face {
+  font-family: "Averia";
+  src: 
+    url("font/Averia.ttf") format("truetype"),
+    url("font/Averia.woff2") format('woff2'),
+    url("font/Averia.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Imperium";
+  src: 
+    url("font/TypoLatinserif-Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+    background-color: var(--black);
+    color: var(--black);
+    background-image: url('imagenes/thingsilike/shrines/pizzicato/bg.gif');
+    background-position: -9px 0px;
+    font-size: 14px;
+    font-family: "Averia";
+    color: var(--brown);
+    cursor: url('imagenes/thingsilike/shrines/pizzicato/cursor.png'), auto;
+    scrollbar-color: #111111 #4b4b4b;
+} 
+
+.gradient{
+    -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%,rgba(0,0,0,1) 62%,rgba(0,0,0,0) 100%);
+}
+
+#top{
+    position: relative;
+}
+
+#intro{
+    width: 95%;
+    margin: auto;
+    margin-top: 25px;
+}
+
+#albums{
+    width: 100%;
+}
+
+.bellissima{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-left: -40px;
+    color: var(--black);
+}
+
+.majesty{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-left: 40px;
+}
+
+.softlanding{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-left: -40px;
+    color: var(--black);
+}
+
+h2{
+    font-family: 'Imperium';
+    margin-block: 0;
+    font-size: 25px;
+}
+
+a{
+    color: var(--lightblue);
+}
+
+a:hover{
+    color: var(--blue);
+    cursor: url('imagenes/thingsilike/shrines/pizzicato/cursorHover.png'), auto;
+}
+
+.image{
+    max-width: 50%; 
+    height: 100%;
+    position: relative;
+}
+  
+.imageZoom{
+    max-width: 130%;
+    visibility: hidden; 
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+  
+.image:hover .imageZoom {
+    visibility: visible;
+    z-index: 1;
+    border: 2px solid var(--blue);
+}
+
+.albumLink{
+    margin: auto; 
+    margin-top: -5px; 
+    color: var(--white); 
+    text-decoration: dotted underline;
+}
+
+.albumLink:hover{
+    color: var(--blue);
+}

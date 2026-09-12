@@ -1,0 +1,70 @@
+@font-face {
+    font-family: "candy";
+    src: url("font/Y1CandyCore.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+
+dl {
+    padding: 5px;
+    padding-inline: 40px;
+}
+
+dt {
+    font-size:medium;
+    color: var(--brightGreen);
+    text-shadow: 1px 1px 0px var(--lightGreen);
+}
+
+dd{
+    margin-bottom: 10px;
+}
+
+body {
+    background-image: url('imagenes/bg1.png');
+    background-color: #f1fac7;
+    background-blend-mode:soft-light;
+}
+
+.questionsborder {
+  background-color:#fdfffa;
+  border: 20px solid transparent;
+  border-image: url("imagenes/border7.png") 30 round; 
+  background-clip: padding-box;
+
+  margin: auto; 
+  width: 700px; 
+  margin-bottom: 2%;
+  align-content: center;
+}
+
+h2{
+    font-family: "Enhanced Dot Digital";
+    font-size:xx-large;
+    text-align: center;
+    margin: 0;
+    text-shadow: 1px 1px 0px var(--pink);
+}
+
+.title {
+    background-image: url('imagenes/index/bg2.gif');
+    height: 50px;
+    margin: 10px;
+    margin-bottom: 0;
+    align-content: center;
+    border: 1px solid var(--lightPink);
+
+    border-radius: 10px;
+}
+
+.pinklink{
+    color: var(--pink);
+    background-color: var(--white);
+  }
+  
+  .pinklink:hover{
+    color: var(--darkPink);
+    background-color: var(--pink);
+  }

@@ -1,0 +1,97 @@
+# Lydels reference mirror
+
+- Source: https://lydels.neocities.org/
+- Host scope: lydels.neocities.org
+- Downloaded files: 783
+- Failed references: 86
+
+The archive is for local design and layout reference. It is not part of the Astro build.
+
+## Failed references
+
+- `https://lydels.neocities.org/imagenes/background-pattern.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/index.html` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/phoenixFanlisting/index.html` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/underscores/index.html` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/phoenix/index.html` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/hiyungalgo@gmail.com` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/thingsilike/shrines/phoenix/mtv.jpg` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/background-pattern5.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/fanlisting2/favicon.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/webringstyle.css` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/banner.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/borderwhite.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/bubble.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/guy.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/bar.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/bg3.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/midnight-channel.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/kittyboy.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/und3adpr0ductions.jpg` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/technoangel.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/lycentropy.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/mysweetluna.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/elliotwren.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/ofeliafirelight.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/ihatetehbsod.PNG` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/fourtwo2k.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/retri.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/dustbunnybedroom.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/dogystuff.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/weollex.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/nekokittygirl.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/scythewalker.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/badgraph1csghost.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/lysurps.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/Opalesque.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/milk-tea.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/greenteabitches.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/cherrycomet.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/theonlylivinggirlinpa.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/guest1013.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/yourhands.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/downhill2k01.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/cyanidedansen.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/spaceyboiis.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/stylrtechnologies.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/TDL.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/idestykk.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/samswaggedout.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/YourLivingIllusion.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/ledaheavyindustry.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/nogbadthebad.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/addison.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/bailey.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/zoxoland.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/encountersltd.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/upsidedownhourglass.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/lyer.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/milkyway.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/kerchunkle.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/caminus.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/smorb.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/14-4ml.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/jevi.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/alleycat.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/dequake.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/atomicbolts.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/rocket.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/brooklynights.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/conallia.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/juneflip.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/sap.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/johndavid.webp` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/isobel.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/LEIZY8499.jpeg` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/xsolimini.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/botones/lydelsbutton.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/logo3.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/logo4.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/menu.js` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/music/bg1.gif` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/bg.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/font/KILBY.ttf` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/font/KILBY.woff2` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/font/KILBY.woff` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/border10.png` — HTTP Error 404: Not Found
+- `https://lydels.neocities.org/imagenes/thingsilike/shrines/phoenix/bordenaranja.gif` — HTTP Error 404: Not Found

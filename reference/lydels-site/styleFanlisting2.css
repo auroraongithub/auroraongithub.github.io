@@ -1,0 +1,187 @@
+:root {
+    --white: #fafaf2;
+    --whitetransparente: #fafaf2be;
+    --lightblue1: #caf0f6;
+    --lightblue2: #a9c9dd;
+    --lightblue3: #88a2c4;
+    --blue1: #677bab;
+    --blue2: #475492;
+    --blue3: #262d79;
+    --blue4: #03045e;
+}
+
+@font-face {
+    font-family: "gopixel";
+    src: url("imagenes/fanlisting2/BMREA___.TTF") format("truetype");
+    font-style: normal;
+    font-size: 11px;
+}
+
+@font-face {
+    font-family: "bitlow";
+    src: url("imagenes/fanlisting2/FrancophilSans.ttf") format("truetype");
+    font-style: normal;
+}
+
+::selection {
+    background: var(--lightblue2); /* WebKit/Blink Browsers */
+  }
+  ::-moz-selection {
+    background: var(--lightblue2); /* Gecko Browsers */
+  }
+
+body {
+    background-color: var(--white);
+    font-family: "bitlow";
+    color: var(--blue4);
+    cursor: url('imagenes/fanlisting2/cursor.png'), auto;
+}
+
+#main{
+    align-content: center;
+    width: 850px;
+    margin: auto;
+    position: relative;
+    margin-bottom: 70px;
+    
+}
+
+.header{   
+    width: 100%;
+    margin: auto;
+    position:relative;
+}
+
+.headerText {
+  font-family: 'gopixel';
+  font-size: 22px;
+  position: absolute;
+  left: 460px;
+  top: 95px;
+}
+
+details{
+    width: 100%;
+}
+
+summary{
+    font-family: 'gopixel';
+    font-size: 22px;
+    background: linear-gradient(to right, var(--lightblue1), #475492d7, var(--lightblue1)); 
+    background-size: 1600px 25px;
+    height: 30px;
+    transition: 0.5s;
+    width: 820px;
+    padding-left: 10px;
+    
+    color: var(--blue3);
+    text-shadow: 1px 1px 0px var(--white);
+    margin-left: 9px;
+    margin-bottom: 5px;
+
+    box-shadow: 2px 2px 0px var(--blue1);
+}
+
+summary:hover{
+    font-family: 'bitlow';
+    font-size: 20px;
+    background-position: -700px 0px;
+    color: var(--white);
+    text-shadow: 1px 1px 0px var(--blue3);
+    width: 800px;
+    margin-left: 30px;
+    height: 30px;
+}
+
+@keyframes slide {
+    0% {
+    background-position-x: 0%;
+    }
+    100% {
+    background-position-x: 300vw;
+    }
+  }
+  
+.gradientAnimation {
+    background-size: 300vw 10px;
+    background: repeating-linear-gradient(90deg, var(--lightblue2) 0%, var(--lightblue3) 10%, var(--blue1) 20%, var(--blue3) 30%, var(--blue1) 40%, var(--lightblue2) 50%);
+    
+    animation: infinite;
+    background-clip: text;
+    -webkit-animation: 'slide' 50s infinite linear forwards;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+
+    text-shadow: 0px 0px 4px #88a2c49a;
+}
+/* 
+.gradient {
+    -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%,rgba(0,0,0,1) 50%,rgba(0,0,0,0) 100%);
+    mix-blend-mode: darken;
+    pointer-events: none;
+    position: absolute;
+    top: 130px;
+    left: 470px;
+} */
+
+.sectionText{
+    margin-inline: 20px;
+}
+
+.subtitle{
+    font-family: 'gopixel';
+    text-shadow: 1px 1px 3px var(--lightblue3);
+    color: var(--blue3);
+    font-size: 22px;
+    text-decoration: dotted underline;
+    background-color: transparent;
+}
+
+.bluetext{
+    background-color: var(--lightblue1);
+}
+
+.gradientImg{
+    -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+    mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%,rgba(0,0,0,1) 62%,rgba(0,0,0,0) 100%);
+    float: right;
+    mix-blend-mode: soft-light;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.link{
+    color: var(--blue1);
+    text-shadow: 0px 0px 4px var(--lightblue1);
+    transition: 0.4s;
+    text-decoration: underline;
+}
+
+.link:hover{
+    color: var(--lightblue1);
+    background-color: var(--blue3);
+}
+
+.gifbutton{
+    border: 1px solid var(--lightblue3);
+    width: 100px;
+    height: 30px;
+    align-content: center;
+    text-align: center;
+}
+
+.freeze{
+    opacity: 80%;
+}
+
+.tfl{
+    border: 2px solid var(--lightblue2);
+    transition: 0.3s;
+}
+
+.tfl:hover{
+    border: 2px solid var(--blue3);
+    transition: 0.3s;
+}

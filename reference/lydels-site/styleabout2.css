@@ -1,0 +1,247 @@
+:root {
+    --textColor: #345b2f;
+    --darkPink: #f72c5b;
+    --pink: #ff748b;
+    --lightPink: #ffd7d7;
+    --lighterPink: #ffe9e9;
+    --darkGreen: #345b2f;
+    --green: #a7d477;
+    --lightGreen:#e4f1ac;
+    --lighterGreen:#f1fac7;
+    --white: #fbf7f7;
+    
+    --greenOpaco: #c8f09e;
+    --greenOpacoTransparente: #d2ebb7af;
+    --pinkOpaco: #ddbbbb;
+    --darkPinkOpaco: #b11c3f;
+
+    --brightGreen: #5cb300;
+    --brightGreenTransparente: #56a006b0;
+
+    --darkPink: #850E35;
+    --pink: #e27288;
+    --lightPink: #FFC4C4;
+    --lightPinkTransparente: #ffc4c4b9;
+    --white: #FCF5EE;
+    --lighterPink: #f8eded;
+
+    --greenGradient:  url('imagenes/about/bg2.gif'), linear-gradient(to bottom,var(--lightGreen) 0%,var(--greenOpaco) 50%,var(--green) 51%,var(--greenOpacoTransparente) 100%);
+    --pinkGradient: url('imagenes/about/bg1.gif'), linear-gradient(to bottom,var(--lighterPink) 0%,var(--lightPink) 50%,var(--pink) 51%,var(--pinkOpaco) 100%);
+}
+
+a {
+    cursor: url(imagenes/cursorlink.png), auto;
+}
+
+@font-face {
+    font-family: "Enhanced Dot Digital";
+    src: url("font/Y1CandyCore.otf") format("truetype");
+    font-style: normal;
+    font-size: 16px;
+}
+
+@font-face {
+    font-family: "Averia";
+    src: 
+      url("font/Averia.ttf") format("truetype"),
+      url("font/Averia.woff2") format('woff2'),
+      url("font/Averia.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+body {
+    background-color: #f6f3f3;
+    font-size: 14px;
+    font-family: "Averia";
+    cursor: url('imagenes/cursor.png'), auto;
+    scrollbar-color: var(--pink) var(--soft-pink);
+    color: var(--textColor);
+}
+  
+.columnaIzq{
+    width: 50%;
+    margin-right: 5px;
+}
+
+.columnaDer{
+    width: 50%;
+    margin-top: -18px;
+}
+
+.fanlistings{
+    width: fit-content; 
+    height: 220px; 
+    overflow-y: auto; 
+    overflow-x: hidden; 
+    scrollbar-color: var(--green) transparent; 
+    margin: auto; 
+    margin-left: 0; 
+    align-content: center;
+}
+
+.albums{
+    width: 85%; 
+    margin-left: 11%;
+    padding: 2%;
+    height: 319px; 
+    display: flex; 
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    overflow-y: auto; 
+    text-align: center; 
+    align-content: space-evenly; 
+    scrollbar-color: var(--pink) transparent;
+
+    backdrop-filter: blur(5px);
+    background-color: #ffc4c462;
+
+}
+  
+.fav{
+    border: none;
+    border-top: 1px solid var(--pink);
+    background-color:#6A2E3F;
+    background-size: 100px 100px;
+    width: 100px;
+    height: 100px;
+    align-content: center;
+    color: rgba(0, 0, 0, 0);
+    flex-wrap: wrap;
+    white-space: wrap;
+    margin: auto;
+    margin-bottom: 8px;
+    background-blend-mode: lighten;
+    filter: grayscale(30%);
+    font-size: smaller;
+    transition: 0.4s;
+}
+
+.fav:hover{
+    background-blend-mode: soft-light;
+    color: var(--white);
+    text-shadow: 1px 1px 0px var(--darkGreen);
+}
+
+.pinkBorder{
+    border-image-slice: 22% 33% 34% 33% fill;
+    border-image-width: 1.5em 1.5em 1.5em 1.5em;
+    border-image-outset: 0px 0px 0px 0px;
+    border-image-repeat: round round; 
+    border-image-source: url(imagenes/border6.png);
+    border-style: solid;
+  
+    
+    display: flex; 
+    align-items: center; 
+    text-align: center;
+    align-content: center;
+    background-clip: padding-box; 
+  }
+
+  
+.green{
+    border-image-slice: 22% 33% 34% 33% fill;
+    border-image-width: 1.5em 1.5em 1.5em 1.5em;
+    border-image-outset: 0px 0px 0px 0px;
+    border-image-repeat: round round; 
+    border-image-source: url(imagenes/border4.png);
+    border-style: solid; 
+  
+    display: flex; 
+    align-items: center; 
+    text-align: center;
+    align-content: center;
+    background-clip: padding-box; 
+    width: 100%;
+    height: 40px;
+    margin-block: 10px;
+    margin-inline: auto;
+  }
+
+.aboutTitle{
+    height: 30px; 
+    width: 100%; 
+    align-content: center; 
+    color: var(--darkGreen); 
+    text-shadow: 1px 1px 0px var(--green); 
+    border: 1px solid transparent; 
+    background: var(--greenGradient);
+    border-top: 1px solid var(--green);
+    font-family: 'Enhanced Dot Digital';
+    font-size: large;
+    margin-bottom: 5px;
+    margin-top: 1px;
+    
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.aboutTitlePink{
+    height: 30px; 
+    align-content: center; 
+    color: var(--darkPinkOpaco); 
+    text-shadow: 1px 1px 0px var(--lightPink); 
+    border: 1px solid transparent; 
+    background: var(--pinkGradient);
+    border-top: 1px solid var(--pink);
+    font-family: 'Enhanced Dot Digital';
+    font-size: large;
+    margin-bottom: 5px;
+
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+
+    margin-top: 0px;
+}
+
+::selection {
+    background: var(--lightPink);
+  }
+  
+::-moz-selection {
+    background: var(--lightPink);
+}
+
+.fanlisting{
+    background-clip: padding-box;
+    align-content: center;
+    background-color: var(--darkGreen); 
+    margin-left: 5px; 
+    margin-bottom: 5px;
+}
+
+.site{
+    mix-blend-mode: screen;
+    background-clip: padding-box;
+}
+  
+.site:hover{
+    mix-blend-mode:normal;
+}
+
+
+.newpinklink{
+    color: var(--pink); 
+    font-weight: bold;
+    text-decoration: dotted underline;
+    
+    cursor: url(imagenes/cursorlink.png), auto;
+}
+  
+.newpinklink:hover{
+    color: var(--lightPink); 
+    background-color: var(--darkPink);
+    text-shadow: none;
+}
+
+.corner{
+    filter: none;
+    opacity: 0.9;
+    transition: 0.5s;
+}
+  
+.corner:hover{
+    filter:brightness(1.5) grayscale(30%);
+    opacity: 1;
+}

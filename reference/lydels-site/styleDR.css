@@ -1,0 +1,220 @@
+:root {
+    --green: #7cb518;
+    --green2: #5c8001;
+    --yellow: #f3de2c;
+    --yellow2: #fbb02d;
+    --orange: #f66612;
+    --orange2: #9b3900;
+    --white: #fffde8;
+    --bg: #f8f0ac;
+    --lila: #cfaec0;
+    --purple0: #a37b91;
+    --purple: #8f5a77;
+    --purple2: #472538;
+
+    --gallery3: #a2a37b;
+
+    --gradient1: linear-gradient(0deg,rgb(236, 204, 189) 26%, rgba(255, 253, 232, 1) 100%); border-top: 1px dotted var(--purple);
+}
+
+@font-face {
+  font-family: "candycore";
+  src: url("font/Y1CandyCore.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+@font-face {
+    font-family: "Averia";
+    src: 
+      url("font/Averia.ttf") format("truetype"),
+      url("font/Averia.woff2") format('woff2'),
+      url("font/Averia.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "y2k";
+    src: 
+      url("font/Roboto-Light.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body{
+    background-color: var(--bg);
+    font-family: "y2k";
+    font-size: 14px;
+    background-image: url('imagenes/thingsilike/music/disc1/bgbottom2.gif');
+    background-repeat: repeat-y;
+    background-position: 3px 0;
+}
+
+p{
+    font-size: 15px;
+    margin:10px;
+}
+
+h4{
+    margin: 10px;
+    margin-bottom: 5px;
+    color: var(--orange);
+    font-size: 20px;
+    font-family: "candycore";
+}
+
+.menu{
+    text-align: right;
+    height: 30px;
+    align-content: center;
+    margin-top: -5px;
+}
+
+a{
+    color: var(--orange2);
+    font-size: 16px;
+}
+
+a:hover{
+    color: var(--green2);
+}
+
+.header{
+    width: 100%;
+    height: 350px;
+    position: relative;
+    background-image: url('imagenes/thingsilike/music/disc1/header2.jpg');
+    background-color: var(--green);
+    background-position: 0 -155px;
+    border-top: 1px solid var(--white);
+    background-blend-mode: soft-light;
+    border-top-left-radius: 70px;
+}
+
+.title{
+    width: 100%;
+    background-color: var(--orange);
+    font-family: "candycore";
+    border-bottom: 1px solid var(--orange2);
+    border-top: 1px solid var(--white);
+    border-top-left-radius: 30px;
+    text-align: right;
+    color: var(--white);
+    text-shadow: 1px 1px 0px var(--orange2);
+
+    background-image: url('imagenes/thingsilike/music/rayitasbg.png');
+    background-blend-mode: overlay;
+
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+}
+
+.subtitle{
+    width: 100%;
+    background-color: var(--white);
+    font-family: "candycore";
+    border-block: 1px solid var(--bg);
+    text-align: right;
+    background: linear-gradient(0deg,rgb(228, 237, 202) 26%, rgba(255, 253, 232, 1) 100%);
+    border-bottom: 1px dotted var(--purple2);
+    border-top: 1px dotted var(--purple2);
+    color: var(--green2);
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.61);
+}
+
+.intro{
+    width: 100%;
+    background-color: var(--purple);
+    border-block: 1px solid var(--purple);
+    color: var(--white);
+    min-height: 270px;
+}
+
+.texto{
+    border-block: 1px solid var(--white);
+    background-color: var(--white);
+    color: var(--purple2);
+}
+
+h5{
+    margin: 0;
+    margin-block: 13px;
+    font-size: 15px;
+    text-align: left;
+}
+
+.portadas{
+    float: left;
+    width: 120px;
+    align-content: center;
+    border: 1px solid var(--white);
+}
+
+.portada{
+    width: 100px; 
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 1px solid var(--purple0);
+}
+
+.yutuembed{
+    width: 220px;
+    height: 220px;
+    margin: auto;
+    margin-block: 11px;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    overflow: hidden;
+    border: 3px solid var(--purple);
+}
+
+.yutuembedframe{
+    width: 250px;
+    align-content: center;
+    background-color: var(--lila);
+    
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    overflow: hidden;
+
+    border-top: 1px solid var(--green2);
+    border-bottom: 1px solid var(--purple);
+}
+
+.yutuembedframeframe{
+    width: 250px;
+
+    background-color: var(--green);
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+
+    background-image: url('imagenes/thingsilike/music/rayitasbg.png');
+    border-top: 1px solid var(--white);
+    background-blend-mode: soft-light;
+}
+
+.gallery{
+    background-color: var(--gallery3);
+    border: 1px solid var(--purple);
+    margin-top: 40px;
+    height: fit-content;
+    display: block;
+    width: 60%;
+    margin-left: 30px;
+}
+
+.gallerypic{
+    mix-blend-mode: soft-light;
+    filter: grayscale(50%);
+    display: block;
+}
+
+.gallerypic:hover{
+    mix-blend-mode: normal;
+    filter: none;
+}
+

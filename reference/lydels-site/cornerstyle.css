@@ -1,0 +1,115 @@
+.pinkdiv{
+    width: 200px; 
+    position: absolute;
+    border: 1px solid var(--pink);
+    box-shadow: 2px 2px 0px var(--darkPink);
+    background-color: #ffeeee8a; 
+    border-radius: 4px;
+    text-align: left;
+    padding: 10px;
+    backdrop-filter: blur(2px);
+/* 
+    opacity:1;
+    transition: 0.3s; */
+
+    color: var(--darkPinkOpaco);
+    text-shadow: 1px 1px 0px var(--white);
+    transition: 0.5s;
+}
+
+.pinkdiv:hover{
+    animation-name: pinkTextBlink;  
+    animation-duration: 0.2s;
+    animation-timing-function: steps(2);
+    animation-fill-mode: forwards;
+    text-shadow: 1px 1px 0px var(--lightPink);
+    background-color: #fbf7f7e7; 
+}
+
+.pinkdiv:open{
+    background-color: #fbf7f7e7; 
+}
+
+.pinktitle{
+    font-family: 'Enhanced Dot Digital';
+    font-size: large;
+    padding-left: 5px;
+    width: 100%;
+}
+
+.pinktitle:hover{
+    cursor: url(imagenes/cursorlink.png), auto;
+}
+
+@keyframes pinkTextBlink {
+    0% {
+      color: var(--lightPink);
+    }
+    50% {
+      color: var(--darkPinkOpaco);
+    }
+    100%{
+      color: var(--pink);
+    }
+}
+
+.divtext{
+    color: var(--darkGreen);
+    text-shadow: none;
+}
+
+.greendiv{
+    width: 200px; 
+    position: absolute;
+    border: 1px solid var(--green);
+    box-shadow: 2px 2px 0px var(--darkGreen);
+    background-color: #e4f1ac6e; 
+    border-radius: 4px;
+    text-align: left;
+    padding: 10px;
+    backdrop-filter: blur(2px);
+/* 
+    opacity:1;
+    transition: 0.3s; */
+    
+    color: var(--darkGreen);
+    text-shadow: 1px 1px 0px var(--white);
+    transition: 0.5s;
+}
+
+.greendiv:hover{
+    background-color: #fbf7f7e7; 
+
+    animation-name: greenTextBlink;
+    animation-duration: 0.2s;
+    animation-timing-function: steps(2);
+    animation-fill-mode: forwards;
+    text-shadow: 1px 1px 0px var(--darkGreen);
+}
+
+.greendiv:open{
+    background-color: #fbf7f7e7; 
+}
+
+.greentitle{
+    font-family: 'Enhanced Dot Digital';
+    font-size: large;
+    padding-left: 5px;
+    width: 100%;
+}
+
+.greentitle:hover{
+    cursor: url(imagenes/cursorlink.png), auto;
+}
+
+@keyframes greenTextBlink {
+    0% {
+      color: var(--lightGreen);
+    }
+    50% {
+      color: var(--darkGreen);
+    }
+    100%{
+      color: var(--green);
+    }
+}

@@ -1,0 +1,218 @@
+@font-face {
+  font-family: "candycore";
+  src: url("font/Y1CandyCore.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+#blog1, #blog2, #blog3, #blog4, #blog5, #blog6, #blog7, #blog8, #blog9, #blog10, #blog11, #blog11, #blog12, #blog13, #blog14, #blog15, #blog16{
+    display: none;
+  }
+  
+#blog1:target, #blog2:target, #blog3:target, #blog4:target, #blog5:target, #blog6:target, #blog7:target, #blog8:target, #blog9:target, #blog10:target, #blog11:target, #blog12:target, #blog13:target, #blog14:target, #blog15:target, #blog16:target{
+    display: block;
+}
+
+body {
+  background-image: url("imagenes/blog/bg4.gif");
+}
+
+p{
+  color: #345b2f;
+  font-size: 15px;
+}
+
+.menuborder{
+  width: 230px;
+  height: 95%;
+  background-color: var(--soft-pink);
+  align-content: center;
+  border-radius: 2px;
+  border: 1px dotted var(--pink);
+  margin: auto;
+}
+
+.menu{
+  width: 90%;
+  height: 95%;
+  border-radius: 2px; 
+  background-color: var(--bg-color); 
+  /* background-image: url('imagenes/background-pattern3.gif'); 
+  background-blend-mode: overlay; 
+  background-position: 30px 30px;  */
+  border: 1px solid var(--pink);
+  margin: auto;
+  box-shadow: 0px 0px 4px var(--soft-green);
+
+  text-align: left;
+  overflow: auto;
+
+  scrollbar-color: var(--soft-pink) transparent;
+}
+
+.blogborder{
+  width: 72%; 
+  height: 95%;
+  background-color: #e4f1acd3;
+  margin: auto;
+  align-content: center;
+}
+
+.blogentry{
+  width: 93%; 
+  height: 95%; 
+
+  text-align: justify; 
+  margin: auto;
+  overflow:auto; 
+
+  margin-left: 35px;
+
+  background-color: #fdfffac9;
+  border: 1px solid var(--bright-text-color);
+  border-radius: 3px;
+
+  scrollbar-color: var(--bright-text-color) #ffffff85;
+}
+
+.blogtext{
+  margin-inline: 20px;
+  margin-top: 10px;
+  color: var(--dark-green);
+  align-content: center;
+}
+
+.blogtitle{
+  background-color: #fdfffab9;
+  width: 100%;
+  border-bottom: 1px dotted var(--bright-text-color);
+  border-top: 1px solid var(--bg-color);
+ 
+  text-shadow: 1px 1px 0px var(--text-color);
+}
+
+.blogimg{
+  border: 1px dotted var(--bright-pink);
+  border-radius: 3px;
+  max-width: 80%;
+  max-height: 90%;
+  margin-block: 5px;
+  margin-inline: auto;
+}
+
+.paperBorder{
+  border-image-slice: 0 0 0 30;
+  border-image-width: 0px 0px 0px 30px;
+  border-image-outset: 0px 0px 0px 0px;
+  border-image-repeat: repeat repeat; 
+  border-image-source: url("imagenes/blog/bg5.gif");
+  border-style: solid; 
+}
+
+.cuteBorder{
+  background-image: url("imagenes/blog/bg3.gif");
+  background-repeat: repeat-x;
+  border: 2px dotted var(--pink);
+  border-radius: 6px;
+  padding-top: 30px;
+/* 
+  border-image-slice: 82 0 0 0;
+  border-image-width: 82px 0px 0px 0px;
+  border-image-outset: 0px 0px 0px 0px;
+  border-image-repeat: repeat repeat; 
+  border-image-source: url("imagenes/blog/bg3.gif");
+  border-style: solid;  */
+
+}
+
+.blogItem{
+  display: block;
+  border-bottom: 1px dotted var(--bright-text-color);
+  margin-top: 0px;
+  padding-block: 10px;
+  text-decoration: none;
+  color: var(--pink);
+  width: 100%;
+}
+
+.blogItem:hover{
+  background-color: #e4f1ac94;
+  text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.308);
+}
+
+.textAnimationPink {
+  text-shadow: 0px 0px 4px var(--darkPinkTransparente);
+  --color1: #df315a;
+  --color2: #ff748bce;
+  background: repeating-linear-gradient(
+  45deg,
+  var(--color1),
+  var(--color1) 30px,
+  var(--color2) 30px,
+  var(--color2) 60px
+  );
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  animation: 40s linear 0s infinite move;
+  }
+  
+  @keyframes move {
+  from {
+  background-position: 0px;
+  }
+  to {
+  background-position: 1000px;
+  }
+}
+
+.personal{
+  color: #c78596;
+  background-color: #f0dadf;
+}
+
+.thoughts{
+  color:#91b97a;
+  background-color: #dbe7d4;
+}
+
+.concert{
+  color: #d0b784;
+  background-color: #f7ebd3;
+}
+
+.tag{
+  border-radius: 3px;
+  padding: 2px;
+  padding-inline: 3px;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  margin-left: 5px;
+  float: right;
+  opacity: 70%;
+}
+
+.botonfondo{
+  margin: auto;
+  margin-bottom: 5px;
+  background-color: #345214;
+  border: 1px solid var(--color2);
+}
+
+.botonfondo:hover{
+  border: 1px solid var(--color2);
+}
+
+.newpinklink{
+  color: #f72c5b; 
+  font-weight: bold;
+}
+
+.newpinklink:hover{
+  color:  #5cb300; 
+  background-color: transparent;
+  text-shadow: none;
+}
+

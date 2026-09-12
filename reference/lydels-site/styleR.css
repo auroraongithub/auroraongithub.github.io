@@ -1,0 +1,272 @@
+:root {
+    --blackP: #1c0c14;
+    --blackB: #0f0c1c;
+
+    --purple1: #662747;
+    --purple2: #543c53;
+    --purple3: #715c65;
+    --purple4: #8f6f7d;
+    --purple5: #9b2a70;
+
+    --text: #998394;
+    --textblue: #848399;
+    --blue1: #1e1b47;
+    --blue2: #294966;
+    --blue3:#4d6b91;
+
+    --blue1T: #1e1b478c;
+    --blackBT: #0f0c1c96;
+    --blackPT: #1c0c14da;
+    --purple1T: #662746b6;
+
+    /* --pink1: #47122c;
+    --pink2: #82375c;
+    --pink3: #c7367f;
+    --pink4: #e863a5; */
+}
+
+@font-face {
+    font-family: "basically";
+    src: url("imagenes/thingsilike/shrines/roy/font/Smorgasbord.otf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+@font-face {
+  font-family: "Averia";
+  src: 
+    url("font/Averia.ttf") format("truetype"),
+    url("font/Averia.woff2") format('woff2'),
+    url("font/Averia.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+    font-family: "Averia";
+    cursor: url(imagenes/thingsilike/shrines/roy/cursor2.png), auto;
+    color: var(--text);
+}
+
+a{
+   color: var(--blue2);
+   background-color: #0f0c1cd5;
+}
+
+a:hover{
+    background-color: var(--text);
+    color: var(--blackB);
+}
+
+i{
+    color: var(--purple2);
+}
+
+.titulo{
+   font-family: 'basically';
+   color: var(--blue2);
+   text-shadow: 1px 1px 0px var(--blue2);
+   font-size: 50px;
+
+   background-image: url("imagenes/thingsilike/shrines/roy/glitter.gif");
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.borderBlack{
+    border-image-slice: 33 36 36 35;
+    border-image-width: 33px 36px 36px 35px;
+    border-image-outset: 33px 36px 36px 35px;
+    border-image-repeat: repeat repeat; 
+    border-image-source: url("imagenes/thingsilike/shrines/roy/border4.gif");
+    border-style: solid;
+    background-color: black;
+}
+
+.borderBlack2{
+    border-image-slice: 10 4 11 5;
+    border-image-width: 10px 4px 11px 5px;
+    border-image-outset: 0px 0px 0px 0px;
+    border-image-repeat: repeat repeat; 
+    border-image-source: url("imagenes/thingsilike/shrines/roy/border3.gif");
+    border-style: solid;
+    background-color: black;
+}
+
+.borderGrey{
+    border-image-slice: 16 19 16 19;
+    border-image-width: 16px 19px 16px 19px;
+    border-image-outset: 5px 5px 5px 5px;
+    border-image-repeat: repeat repeat; 
+    border-image-source: url("imagenes/thingsilike/shrines/roy/border5.png");
+    border-style: solid;
+}
+
+.borderGrey2{
+    border-image-slice: 17 19 17 19;
+    border-image-width: 17px 19px 17px 19px;
+    border-image-outset: 17px 19px 17px 19px;
+    border-image-repeat: repeat repeat; 
+    border-image-source: url("imagenes/thingsilike/shrines/roy/border6.png");
+    border-style: solid;
+}
+
+.tabla{
+    color: var(--purple3);
+}
+
+.leftColumn{
+    width: 100px;
+    background: linear-gradient(var(--purple1), var(--blackP));
+    height: 25px;
+    padding-left: 10px;
+    color: var(--purple4);
+    text-shadow: 1px 1px 0px var(--blackB);
+    border-top: 1px solid var(--purple3);
+}
+
+.rightColumn{
+    padding-inline: 10px;
+    border-top: 1px solid var(--purple2);
+}
+
+.blueDiv{
+    background-image: url('imagenes/thingsilike/shrines/roy/bg1.gif'); 
+    border: 1px solid var(--blue1); 
+    background-blend-mode: screen; 
+    background-color: var(--blue1);
+    color: var(--blackB);
+}
+
+.purpleDiv{
+    background-image: url('imagenes/thingsilike/shrines/roy/bg3.gif'); 
+    background-blend-mode: screen; 
+    background-color: #9c6f83; 
+    border: 1px solid var(--purple1); 
+    color: var(--blackB);
+}
+
+.galleryImg{
+    width: 100%; 
+    margin-top: 20px;
+    border: 1px solid var(--blue3);
+}
+
+
+/* ---------------------- music player ---------------------- */
+
+#musicplayer{
+    background-color: var(--blackB);
+    background-image: url('imagenes/thingsilike/shrines/roy/royriza2.jpeg');
+    background-blend-mode: soft-light;
+    background-position: 0px -20px;
+    /* background: linear-gradient(var(--blue1T),var(--blackBT));  */
+    border:1px solid var(--blue2); /* border around player */
+    width:220px; /* width of the player - make it 100% if you want it to fill your container */
+    padding:10px;
+    text-align:center; 
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.songtitle, .track-info, .now-playing{
+    padding:5px;
+}
+
+.controls{
+    display:flex; 
+    flex-direction:column; 
+    gap:10px;
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    font-size:17px !important; /* size of controls */
+    width:100%;
+}
+
+.buttons div{
+    width:33.3%;
+}
+
+.playpause-track, .prev-track, .next-track{
+    color:var(--purple4); /* color of buttons */
+    font-size:35px !important; /* size of buttons */
+}
+
+.volume-icon{
+    font-size:22px !important; /* size of volume icon */
+}
+
+.volume_slider{
+    background-color: transparent;
+}
+
+.seek_slider{
+    background-color: transparent;
+}
+
+.seeking, .volume{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:5px;
+}
+
+.now-playing, .track-info{
+    /* background-color: var(--blue1);  */
+    border-top: 1px solid var(--blue2);
+    background: linear-gradient(var(--blue1T),var(--blackBT)); 
+}
+
+.now-playing{
+    font-weight:bold;
+}
+
+input[type=range]{
+    -webkit-appearance:none; /* removes default appearance of the tracks */
+    appearance: none;
+    width:100%;
+}
+
+input[type=range]:focus{
+    outline:none; /* removes outline around tracks when focusing */
+}
+
+input[type=range]::-webkit-slider-runnable-track{
+    width:100%;
+    height:4px; /* thickness of seeking track */
+    background: var(--blue1); /* color of seeking track */
+}
+
+input[type=range]::-webkit-slider-thumb{
+    height:10px; /* height of seeking square */
+    width:10px; /* width of seeking square */
+    border-radius:0px; /* change to 5px if you want a circle seeker */
+    background:var(--blue2); /* color of seeker square */
+    -webkit-appearance:none;
+    margin-top:-3px; /* fixes the weird margin around the seeker square in chrome */
+}
+
+input[type=range]::-moz-range-track{
+    width:100%;
+    height:4px; /* thickness of seeking track */
+    background:var(--blue2); /* color of seeking track */
+}
+
+input[type=range]::-moz-range-thumb{
+    height:10px; /* height of seeking square */
+    width:10px; /* width of seeking square */
+    border-radius:0px; /* change to 5px if you want a circle seeker */
+    background:var(--blue2); /* color of seeker square */
+    border:none; /* removes weird border around seeker square in firefox */
+    
+}
+
+/* ---------------------- music player ---------------------- */
