@@ -600,7 +600,7 @@ ul {
 }
 
 .color-picker-content {
-  width: min(360px, 100%);
+  width: min(330px, 100%);
   padding: 3px;
   box-sizing: border-box;
   background: var(--border-light);
@@ -687,7 +687,9 @@ ul {
 .color-option {
   min-width: 0;
   position: relative;
-  min-height: 35px;
+  width: min(100%, 84px);
+  aspect-ratio: 1;
+  justify-self: center;
   padding: 0;
   border: 2px solid #fff;
   border-radius: 10px;
@@ -723,8 +725,8 @@ ul {
 .color-option.active {
   border-color: var(--option-from);
   background: linear-gradient(to top, var(--option-to) 0%, var(--option-from) 45%, color-mix(in srgb, var(--option-from) 78%, #000) 50%, var(--option-to) 100%);
-  filter: brightness(0.98);
-  box-shadow: inset 0 2px 5px color-mix(in srgb, var(--option-from) 55%, transparent), 0 0 0 2px var(--option-from);
+  filter: brightness(0.96);
+  box-shadow: inset 0 2px 5px color-mix(in srgb, var(--option-from) 55%, transparent), 0 0 0 2px var(--option-from), 0 0 0 4px rgba(255,255,255,0.92), 0 0 0 6px color-mix(in srgb, var(--option-from) 78%, #000);
   transform: translateY(1px);
 }
 
@@ -796,7 +798,7 @@ ul {
 
 @media (max-width: 500px) {
   .color-picker-options {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .theme-mode-row {

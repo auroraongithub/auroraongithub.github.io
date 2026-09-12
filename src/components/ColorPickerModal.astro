@@ -13,7 +13,7 @@ import { themes } from '../data/themes';
     </div>
     <div class="color-picker-options">
       {themes.map((theme) => (
-        <button class="color-option" data-color={theme.id} style={`--option-from: ${theme.from}; --option-to: ${theme.to};`} aria-label={`Use ${theme.label} theme`} title={`Use ${theme.label} theme`}></button>
+        <button class="color-option" data-color={theme.id} style={`--option-from: ${theme.from}; --option-to: ${theme.to};`} aria-label={`Use ${theme.label} theme`} aria-pressed="false" title={`Use ${theme.label} theme`}></button>
       ))}
     </div>
     <div class="theme-mode-row">

@@ -41,7 +41,9 @@ function applyColor(color) {
   
   // Update active state in color picker
   document.querySelectorAll('.color-option').forEach(option => {
-    option.classList.toggle('active', option.dataset.color === color);
+    const isActive = option.dataset.color === color;
+    option.classList.toggle('active', isActive);
+    option.setAttribute('aria-pressed', String(isActive));
   });
 }
 
