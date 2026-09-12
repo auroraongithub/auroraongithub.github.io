@@ -1,0 +1,185 @@
+/*
+ * Elythria admin theme controls
+ *
+ * Add data-admin-theme to the small wrapper around the controls and include
+ * this file after the site's main stylesheet. The markup intentionally uses
+ * the homepage's color-picker-* and theme-* class names, so the control keeps
+ * the same compact Dumby/old-web surface while remaining admin-scoped.
+ */
+[data-admin-theme] {
+  --admin-bg: var(--bg, var(--elythria-bg, #f7fcfc));
+  --admin-surface: var(--bg-elev, var(--elythria-surface, #fff));
+  --admin-text: var(--text, var(--elythria-text, #2c3e3e));
+  --admin-muted: var(--text-muted, var(--elythria-muted, #5a7070));
+  --admin-primary: var(--primary, var(--elythria-primary, #6de6e2));
+  --admin-primary-light: var(--primary-light, var(--elythria-primary-light, #a8f5f2));
+  --admin-primary-dark: var(--primary-dark, var(--elythria-primary-dark, #4fc9c5));
+  --admin-border-light: var(--border-light, var(--elythria-border-soft, #c0f5f3));
+  --admin-halo: var(--halo, #fff);
+}
+
+[data-admin-theme] .header-controls {
+  display: flex;
+  align-items: center;
+}
+
+[data-admin-theme] .color-picker-toggle {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 30px;
+  padding: 3px 5px;
+  overflow: hidden;
+  border: 1px solid var(--admin-primary-dark);
+  border-radius: 6px;
+  background: linear-gradient(to bottom, var(--admin-primary-light) 0%, var(--admin-primary) 45%, var(--admin-primary-dark) 50%, var(--admin-primary-light) 100%);
+  color: #fff;
+  cursor: pointer;
+  font-size: .9rem;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .78), 0 1px 2px rgba(0, 0, 0, .2);
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+[data-admin-theme] .color-picker-toggle::before {
+  position: absolute;
+  inset: 1px 3px auto;
+  height: 45%;
+  border-radius: 4px 4px 60% 60% / 4px 4px 40% 40%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .72), transparent);
+  content: "";
+  pointer-events: none;
+}
+
+[data-admin-theme] .color-picker-toggle:hover {
+  border-color: #fff;
+  background: linear-gradient(to bottom, #fffef5, color-mix(in srgb, var(--admin-primary-light) 72%, #fffef5));
+  color: var(--admin-primary-dark);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .92), 0 1px 3px rgba(0, 0, 0, .22);
+}
+
+[data-admin-theme] .color-picker-toggle:active {
+  background: linear-gradient(to top, var(--admin-primary-light), var(--admin-primary) 45%, var(--admin-primary-dark) 50%, var(--admin-primary-light));
+  box-shadow: inset 1px 1px 2px var(--admin-primary-dark);
+}
+
+[data-admin-theme] .color-picker-toggle > i { position: relative; z-index: 1; }
+
+[data-admin-theme] .color-picker-modal {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background: color-mix(in srgb, var(--admin-surface) 26%, transparent);
+  backdrop-filter: blur(8px) saturate(.78);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+
+[data-admin-theme] .color-picker-modal.active { opacity: 1; pointer-events: auto; }
+[data-admin-theme] .color-picker-content {
+  width: min(300px, 100%);
+  box-sizing: border-box;
+  padding: 3px;
+  border: 2px solid var(--admin-halo);
+  border-right-color: var(--admin-primary-dark);
+  border-bottom-color: var(--admin-primary-dark);
+  border-radius: 9px;
+  background: var(--admin-border-light);
+  box-shadow: 0 0 0 2px var(--admin-halo), 3px 3px 0 var(--admin-halo), 6px 6px 0 var(--admin-border-light), 3px 4px 14px rgba(0, 0, 0, .38);
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  transform: scale(.9);
+  transition: transform .2s ease;
+}
+
+[data-admin-theme] .color-picker-modal.active .color-picker-content { transform: scale(1); }
+[data-admin-theme] .color-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 10px;
+  border: 1px solid var(--admin-primary-dark);
+  border-bottom: 0;
+  border-radius: 5px 5px 0 0;
+  background: linear-gradient(to bottom, var(--admin-primary-light), var(--admin-primary) 45%, var(--admin-primary-dark) 50%, var(--admin-primary-light));
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .62);
+}
+
+[data-admin-theme] .color-picker-header h3 { margin: 0; color: #fff; font-size: 1rem; letter-spacing: .08em; text-shadow: 1px 1px 0 color-mix(in srgb, var(--admin-primary-dark) 80%, #000); }
+[data-admin-theme] .color-picker-header h3 i { margin-right: 5px; }
+[data-admin-theme] .color-picker-close {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid #fff;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, var(--admin-primary), var(--admin-primary-dark) 52%, var(--admin-primary));
+  color: #fff;
+  cursor: pointer;
+  font-size: .7rem;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .55);
+}
+
+[data-admin-theme] .color-picker-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--admin-primary-dark);
+  border-top: 0;
+  background: var(--admin-surface);
+}
+
+[data-admin-theme] .color-option {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  background: linear-gradient(to bottom, var(--option-to, var(--admin-primary-light)), var(--option-from, var(--admin-primary)) 45%, color-mix(in srgb, var(--option-from, var(--admin-primary)) 78%, #000) 50%, var(--option-to, var(--admin-primary-light)));
+  cursor: pointer;
+  box-shadow: 0 0 0 2px var(--option-from, var(--admin-primary)), 0 2px 5px rgba(0, 0, 0, .2), inset 0 3px 6px rgba(255, 255, 255, .9), inset 0 -3px 6px rgba(0, 0, 0, .2);
+  transition: filter .15s ease, box-shadow .15s ease;
+}
+
+[data-admin-theme] .color-option::after { position: absolute; inset: 2px 5px auto; height: 45%; border-radius: 7px 7px 60% 60% / 7px 7px 40% 40%; background: linear-gradient(to bottom, rgba(255, 255, 255, .9), rgba(255, 255, 255, .35), transparent); content: ""; pointer-events: none; }
+[data-admin-theme] .color-option[data-color="cyan"] { --option-from: #6de6e2; --option-to: #a8f5f2; }
+[data-admin-theme] .color-option[data-color="pink"] { --option-from: #ff6b9d; --option-to: #ffa4c4; }
+[data-admin-theme] .color-option[data-color="purple"] { --option-from: #9b59b6; --option-to: #bb8fce; }
+[data-admin-theme] .color-option[data-color="green"] { --option-from: #2ecc71; --option-to: #7fd99f; }
+[data-admin-theme] .color-option[data-color="orange"] { --option-from: #ff9f43; --option-to: #ffbe76; }
+[data-admin-theme] .color-option[data-color="blue"] { --option-from: #5dade2; --option-to: #85c1e9; }
+[data-admin-theme] .color-option[data-color="red"] { --option-from: #e74c3c; --option-to: #ec7063; }
+[data-admin-theme] .color-option[data-color="yellow"] { --option-from: #f1c40f; --option-to: #f7dc6f; }
+[data-admin-theme] .color-option[data-color="teal"] { --option-from: #1abc9c; --option-to: #48c9b0; }
+[data-admin-theme] .color-option:hover { filter: brightness(1.06); }
+[data-admin-theme] .color-option.active { filter: brightness(.96); box-shadow: inset 0 2px 5px color-mix(in srgb, var(--option-from, var(--admin-primary)) 55%, transparent), inset 0 0 0 2px rgba(255, 255, 255, .92), inset 0 0 0 4px color-mix(in srgb, var(--option-from, var(--admin-primary)) 78%, #000), 0 0 0 2px var(--option-from, var(--admin-primary)); }
+
+[data-admin-theme] .theme-mode-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 7px; padding: 8px 9px; border: 1px solid var(--admin-primary-dark); border-radius: 0 0 5px 5px; background: linear-gradient(to bottom, var(--admin-surface), color-mix(in srgb, var(--admin-primary-light) 14%, var(--admin-surface))); }
+[data-admin-theme] .theme-mode-copy { display: grid; gap: 2px; }
+[data-admin-theme] .theme-mode-kicker { color: var(--admin-primary-dark); font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+[data-admin-theme] .theme-mode-kicker i { margin-right: 4px; }
+[data-admin-theme] .theme-mode-copy small { color: var(--admin-muted); font-size: .64rem; }
+[data-admin-theme] .theme-toggle { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; min-height: 0; padding: 6px 8px; border: 1px solid var(--admin-primary-dark); border-radius: 4px; background: linear-gradient(to bottom, var(--admin-primary-light), var(--admin-primary) 48%, var(--admin-primary-dark) 52%, var(--admin-primary)); color: var(--admin-bg); cursor: pointer; font: 700 .68rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; white-space: nowrap; box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .65), 1px 1px 2px rgba(0, 0, 0, .16); }
+[data-admin-theme] button:focus-visible { outline: 2px solid var(--admin-primary-dark); outline-offset: 3px; }
+
+@media (max-width: 500px) {
+  [data-admin-theme] .theme-mode-row { align-items: stretch; flex-direction: column; }
+  [data-admin-theme] .theme-toggle { justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-admin-theme] .color-picker-modal,
+  [data-admin-theme] .color-picker-content,
+  [data-admin-theme] button { transition-duration: .01ms; }
+}
