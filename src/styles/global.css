@@ -20,3 +20,60 @@
 .changelog-entry { padding: 14px 0; border-bottom: 1px solid var(--border); }
 .changelog-date { color: var(--text-muted); font-size: 0.85rem; }
 @media (max-width: 700px) { .post-navigation { grid-template-columns: 1fr; } .post-navigation > :last-child { text-align: left; } }
+
+/* Keep the old-web button treatment readable on the darker theme surfaces. */
+[data-theme='dark'] .neo-sidebar .neo-content a.sidebar-button,
+[data-theme='dark'] .more-drawer .neo-content a.sidebar-button,
+[data-theme='dark'] .widget-resources a.sidebar-button {
+  border-color: color-mix(in srgb, var(--primary-light) 64%, var(--primary-dark));
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--primary) 36%, var(--bg-elev)) 0%,
+    color-mix(in srgb, var(--primary-dark) 32%, var(--bg-elev)) 47%,
+    color-mix(in srgb, var(--primary-dark) 50%, var(--bg-elev)) 53%,
+    color-mix(in srgb, var(--primary) 22%, var(--bg-elev)) 100%
+  );
+  color: var(--primary-light);
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--bg) 84%, #000);
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 58%, #fff),
+    inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 68%, #000),
+    0 1px 2px color-mix(in srgb, #000 46%, transparent);
+}
+
+[data-theme='dark'] .neo-sidebar .neo-content a.sidebar-button:hover,
+[data-theme='dark'] .more-drawer .neo-content a.sidebar-button:hover,
+[data-theme='dark'] .widget-resources a.sidebar-button:hover {
+  border-color: var(--primary-light);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev)) 0%,
+    color-mix(in srgb, var(--primary) 46%, var(--bg-elev)) 47%,
+    color-mix(in srgb, var(--primary-dark) 48%, var(--bg-elev)) 53%,
+    color-mix(in srgb, var(--primary) 28%, var(--bg-elev)) 100%
+  );
+  color: #fff;
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 78%, #000);
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 72%, #fff),
+    inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 62%, #000),
+    0 1px 3px color-mix(in srgb, #000 58%, transparent);
+}
+
+[data-theme='dark'] .neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active,
+[data-theme='dark'] .neo-sidebar .neo-content ul.secondary-nav-list a.sidebar-button.active,
+[data-theme='dark'] .more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active,
+[data-theme='dark'] .more-drawer .neo-content ul.secondary-nav-list a.sidebar-button.active {
+  border-color: var(--primary-light);
+  background: linear-gradient(
+    to bottom,
+    var(--primary) 0%,
+    var(--primary-dark) 50%,
+    color-mix(in srgb, var(--primary-dark) 86%, #000) 100%
+  );
+  color: #fff;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 74%, #fff),
+    inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000),
+    0 1px 2px color-mix(in srgb, #000 54%, transparent);
+}
