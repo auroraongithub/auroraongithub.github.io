@@ -8,25 +8,15 @@ const embedCode = `<a href="${siteUrl}/" target="_blank" rel="noopener noreferre
 </a>`;
 ---
 <div class="button-showcase">
-  <div class="button-intro">
-    <p class="button-kicker">a tiny piece of my web garden</p>
-    <p>Put this little badge on your site and send your visitors my way.</p>
-  </div>
-
   <div class="button-preview-area">
-    <div class="button-preview-label">live preview <span aria-hidden="true">✦</span></div>
     <a class="button-preview" href={siteUrl} target="_blank" rel="noopener noreferrer">
       <img src="/img/elythria-button.svg" width="256" height="90" alt={`Visit ${site.name}`} />
     </a>
-    <p class="button-size-note">256 × 90 pixels · animated rainbow text · WebP mascot</p>
   </div>
 
   <div class="button-embed-area">
     <div class="button-embed-heading">
-      <div>
-        <p class="button-kicker">copy + paste</p>
-        <h3>Put it on your site</h3>
-      </div>
+      <h3>Put it on your site</h3>
       <button class="button-copy" type="button" data-button-copy data-button-code={embedCode}>
         <i class="bi bi-clipboard" aria-hidden="true"></i><span>Copy code</span>
       </button>

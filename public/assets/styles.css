@@ -8434,34 +8434,6 @@ body.more-drawer-open {
   color: var(--text);
 }
 
-.button-intro {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 1px 2px 8px;
-  border-bottom: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
-}
-
-.button-intro p {
-  margin: 0;
-  font-size: 0.82rem;
-}
-
-.button-kicker,
-.button-preview-label {
-  color: var(--primary-dark);
-  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.button-intro .button-kicker {
-  flex: 0 0 auto;
-}
-
 .button-preview-area {
   display: grid;
   justify-items: center;
@@ -8469,15 +8441,6 @@ body.more-drawer-open {
   padding: 16px 8px 13px;
   border-bottom: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
   text-align: center;
-}
-
-.button-preview-label {
-  justify-self: stretch;
-  text-align: left;
-}
-
-.button-preview-label span {
-  color: var(--accent);
 }
 
 .button-preview {
@@ -8512,13 +8475,6 @@ body.more-drawer-open {
   max-width: 100%;
 }
 
-.button-size-note {
-  margin: 0;
-  color: var(--text-muted);
-  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-  font-size: 0.72rem;
-}
-
 .button-embed-area {
   padding: 14px 2px 8px;
 }
@@ -8531,14 +8487,10 @@ body.more-drawer-open {
   margin-bottom: 7px;
 }
 
-.button-embed-heading .button-kicker {
-  margin: 0 0 2px;
-}
-
 .button-embed-heading h3 {
   margin: 0;
   color: var(--text);
-  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
   font-size: 0.9rem;
 }
 
@@ -8586,7 +8538,7 @@ body.more-drawer-open {
   border-radius: 5px;
   background: color-mix(in srgb, var(--bg) 90%, var(--primary-light));
   color: var(--text);
-  font-family: "MS PGothic", "MS UI Gothic", Consolas, monospace;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
   font-size: 0.72rem;
   line-height: 1.45;
   box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.12);
@@ -8607,16 +8559,7 @@ body.more-drawer-open {
   text-align: right;
 }
 
-.button-footer-note {
-  margin: 3px 2px 0;
-  color: var(--text-muted);
-  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-  font-size: 0.75rem;
-  text-align: center;
-}
-
 @media (max-width: 540px) {
-  .button-intro,
   .button-embed-heading {
     align-items: flex-start;
     flex-direction: column;
