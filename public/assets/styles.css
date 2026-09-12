@@ -3817,7 +3817,8 @@ ul {
 .stories-section,
 .listening-section,
 .join-section,
-.resources-page {
+.resources-page,
+.experiments-page {
   padding: 3px;
   background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
   border: 2px solid var(--primary);
@@ -3843,7 +3844,8 @@ ul {
 .stories-section > .neo-header,
 .listening-section > .neo-header,
 .join-section > .neo-header,
-.resources-page > .neo-header {
+.resources-page > .neo-header,
+.experiments-page > .neo-header {
   width: max-content;
   min-width: 150px;
   max-width: calc(100% - 12px);
@@ -3881,7 +3883,8 @@ ul {
 .stories-section > .neo-header h2,
 .listening-section > .neo-header h2,
 .join-section > .neo-header h2,
-.resources-page > .neo-header h2 {
+.resources-page > .neo-header h2,
+.experiments-page > .neo-header h2 {
   font-size: 0.9rem;
   letter-spacing: 0.08em;
 }
@@ -3894,7 +3897,8 @@ ul {
 .stories-section > .neo-content,
 .listening-section > .neo-content,
 .join-section > .neo-content,
-.resources-page > .neo-content {
+.resources-page > .neo-content,
+.experiments-page > .neo-content {
   position: relative;
   z-index: 0;
   display: flex;

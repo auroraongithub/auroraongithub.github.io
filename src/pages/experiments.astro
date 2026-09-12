@@ -3,34 +3,5 @@ import ContentLayout from '../layouts/ContentLayout.astro';
 import SiteSection from '../components/SiteSection.astro';
 ---
 <ContentLayout title="Experiments">
-  <SiteSection title="Experiments" icon="bi-beaker" class="experiments-page">
-    <div class="experiments-intro">
-      <span class="experiments-kicker"><i class="bi bi-lightning-charge-fill"></i> Side lab / 001</span>
-      <p>Small interactive work, prototypes, and playful tests live here while they are still taking shape.</p>
-    </div>
-    <div class="experiment-log" aria-label="Experiment status">
-      <article class="experiment-entry">
-        <span class="experiment-index">01</span>
-        <div>
-          <h3>Prototype shelf</h3>
-          <p>New interface ideas and tiny web experiments will land here.</p>
-        </div>
-        <span class="experiment-status">IN PROGRESS</span>
-      </article>
-      <article class="experiment-entry">
-        <span class="experiment-index">02</span>
-        <div>
-          <h3>Arcade cabinet</h3>
-          <p>Game experiments stay secondary, but still get a place to play.</p>
-        </div>
-        <a class="experiment-action" href="#games">View shelf <i class="bi bi-arrow-down"></i></a>
-      </article>
-    </div>
-  </SiteSection>
-  <SiteSection title="Arcade / Games" id="games" icon="bi-controller" class="experiments-page experiments-secondary">
-    <div class="experiments-secondary-copy">
-      <span class="experiments-kicker"><i class="bi bi-joystick"></i> Secondary shelf</span>
-      <p>Arcade and game experiments are kept here so the main navigation can stay focused.</p>
-    </div>
-  </SiteSection>
+  <SiteSection title="Experiments" class="experiments-page"></SiteSection>
 </ContentLayout>
