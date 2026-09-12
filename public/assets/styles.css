@@ -1052,7 +1052,7 @@ ul {
   margin-bottom: 4px;
 }
 
-/* Stats are a fixed summary, not a scrollbox. */
+/* Stats are a fixed 2x2 summary, not a scrollbox. */
 .neo-sidebar .sidebar-stats-box .neo-content {
   max-height: none !important;
   overflow: visible !important;
@@ -7168,15 +7168,7 @@ select option {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
-.contact-links {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  width: 100%;
-}
-
 .contact-label {
-  flex: 0 0 100%;
   color: var(--contact-ink);
   display: flex;
   align-items: center;
@@ -7193,9 +7185,7 @@ select option {
 .contact-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 4px;
-  min-width: 0;
   padding: 3px 7px;
   background: linear-gradient(
     to bottom,
@@ -7215,7 +7205,6 @@ select option {
     inset 1px 1px 1px rgba(255, 255, 255, 0.8),
     0 1px 2px rgba(0, 0, 0, 0.15);
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-  white-space: nowrap;
 }
 
 .contact-link:hover {
@@ -7287,10 +7276,6 @@ body.dark .contact-link.twitter:hover {
     width: 100%;
     justify-content: center;
     margin-bottom: 4px;
-  }
-
-  .contact-links {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
