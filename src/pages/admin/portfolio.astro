@@ -1,0 +1,61 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminPanel from '../../components/admin/AdminPanel.astro';
+import AdminField from '../../components/admin/AdminField.astro';
+import AdminStatus from '../../components/admin/AdminStatus.astro';
+import AdminModal from '../../components/admin/AdminModal.astro';
+---
+<AdminLayout title="Portfolio Editor" active="portfolio">
+  <AdminPanel title="Portfolio Editor" icon="bi-briefcase">
+    <div class="admin-import-block">
+      <h3><i class="bi bi-github"></i> Add from GitHub</h3>
+      <div class="admin-toolbar">
+        <AdminField label="Repository URL" forId="githubUrl"><input id="githubUrl" type="url" placeholder="https://github.com/owner/repository" /></AdminField>
+        <button class="btn btn-primary" id="fetchGithub" type="button">Fetch Repository</button>
+      </div>
+      <AdminStatus id="portfolioMessage" />
+      <div id="repoPreview" class="admin-repo-preview" hidden>
+        <div class="admin-compact-card">
+          <header><strong id="previewName"></strong></header>
+          <div><p id="previewDescription"></p><div id="previewMeta" class="admin-list-meta"></div></div>
+        </div>
+        <div class="admin-split admin-custom-project-fields">
+          <AdminField label="Custom Name" forId="customName" hint="Optional override shown on the public portfolio."><input id="customName" type="text" /></AdminField>
+          <AdminField label="Custom Description" forId="customDescription" hint="Optional override shown on the public portfolio."><textarea id="customDescription"></textarea></AdminField>
+        </div>
+        <div class="admin-preview-actions"><button class="btn btn-primary" id="addProject" type="button">Add Project</button><button class="btn btn-ghost" id="cancelProjectPreview" type="button">Cancel</button></div>
+      </div>
+    </div>
+    <div class="admin-list-toolbar"><h3>Projects <span class="admin-count" id="projectCount">0</span></h3><button class="btn btn-ghost" id="refreshProjects" type="button">Refresh</button></div>
+    <div id="projectsList" class="admin-grid"><p class="admin-status" data-state="loading">Loading projects…</p></div>
+  </AdminPanel>
+
+  <AdminModal id="editProjectModal" title="Edit Project">
+    <form id="editProjectForm" class="admin-form">
+      <input type="hidden" id="editProjectId" />
+      <AdminField label="Custom Name" forId="editCustomName"><input id="editCustomName" type="text" /></AdminField>
+      <AdminField label="Custom Description" forId="editCustomDescription"><textarea id="editCustomDescription"></textarea></AdminField>
+      <AdminStatus id="editProjectMessage" />
+      <div class="admin-modal-actions"><button class="btn btn-primary" type="submit">Save Changes</button><button class="btn btn-ghost" type="button" data-modal-close="editProjectModal">Cancel</button></div>
+    </form>
+  </AdminModal>
+
+  <script>
+    import { adminFetch, escapeHtml, setAdminStatus } from '../../lib/admin/api';
+    type Project={id:string;name:string;description?:string;github_url?:string;language?:string;stars?:number;stargazers_count?:number;forks?:number;forks_count?:number;custom_name?:string|null;custom_description?:string|null};
+    let projects:Project[]=[]; let fetched:any=null;
+    const list=document.querySelector<HTMLElement>('#projectsList')!; const count=document.querySelector<HTMLElement>('#projectCount')!; const message=document.querySelector<HTMLElement>('#portfolioMessage'); const preview=document.querySelector<HTMLElement>('#repoPreview')!; const modal=document.querySelector<HTMLElement>('#editProjectModal')!; const editMessage=document.querySelector<HTMLElement>('#editProjectMessage');
+    function closeModal(){modal.classList.remove('active');modal.setAttribute('aria-hidden','true')}
+    document.querySelectorAll('[data-modal-close="editProjectModal"]').forEach((button)=>button.addEventListener('click',closeModal)); modal.addEventListener('click',(event)=>{if(event.target===modal)closeModal()});
+    function render(){count.textContent=String(projects.length);if(!projects.length){list.innerHTML='<div class="admin-empty-state"><i class="bi bi-inbox"></i><span>No projects yet. Add one above.</span></div>';return;}list.innerHTML=projects.map((project)=>{const name=project.custom_name||project.name;const desc=project.custom_description||project.description||'No description';const stars=project.stars??project.stargazers_count??0;const forks=project.forks??project.forks_count??0;return `<article class="admin-compact-card" data-id="${escapeHtml(project.id)}"><header><strong>${escapeHtml(name)}</strong></header><div><p class="admin-project-desc">${escapeHtml(desc)}</p><div class="admin-list-meta">${project.language?`<span>${escapeHtml(project.language)}</span>`:''}<span>★ ${escapeHtml(stars)}</span><span>⑂ ${escapeHtml(forks)}</span></div>${project.github_url?`<a href="${escapeHtml(project.github_url)}" target="_blank" rel="noopener noreferrer">Open repository</a>`:''}</div><footer><button class="btn btn-ghost" type="button" data-sync="${escapeHtml(project.id)}">Sync</button><button class="btn btn-ghost" type="button" data-edit="${escapeHtml(project.id)}">Edit</button><button class="btn btn-ghost admin-danger" type="button" data-delete="${escapeHtml(project.id)}">Delete</button></footer></article>`}).join('')}
+    async function load(){list.innerHTML='<p class="admin-status" data-state="loading">Loading projects…</p>';try{const response=await adminFetch('/admin/projects');const data=await response.json();if(!response.ok)throw new Error(data.error||'Failed to load projects');projects=Array.isArray(data.projects)?data.projects:[];render();}catch(error){list.innerHTML=`<p class="admin-status" data-state="error">${escapeHtml(error instanceof Error?error.message:'Failed to load projects')}</p>`}}
+    function resetPreview(){fetched=null;preview.hidden=true;(document.querySelector<HTMLInputElement>('#githubUrl')!).value='';(document.querySelector<HTMLInputElement>('#customName')!).value='';(document.querySelector<HTMLTextAreaElement>('#customDescription')!).value='';setAdminStatus(message)}
+    document.querySelector('#fetchGithub')?.addEventListener('click',async()=>{const input=document.querySelector<HTMLInputElement>('#githubUrl')!;const url=input.value.trim();if(!url){setAdminStatus(message,'Enter a GitHub repository URL.','error');return;}setAdminStatus(message,'Fetching repository…','loading');try{const response=await adminFetch('/admin/projects/fetch-github',{method:'POST',body:JSON.stringify({url})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Failed to fetch repository');fetched={...data,github_url:url};(document.querySelector<HTMLElement>('#previewName')!).textContent=data.name||'Unnamed repository';(document.querySelector<HTMLElement>('#previewDescription')!).textContent=data.description||'No description';(document.querySelector<HTMLElement>('#previewMeta')!).innerHTML=`${data.language?`<span>${escapeHtml(data.language)}</span>`:''}<span>★ ${escapeHtml(data.stargazers_count??0)}</span><span>⑂ ${escapeHtml(data.forks_count??0)}</span>`;preview.hidden=false;setAdminStatus(message)}catch(error){setAdminStatus(message,error instanceof Error?error.message:'Failed to fetch repository','error')}});
+    document.querySelector('#cancelProjectPreview')?.addEventListener('click',resetPreview);
+    document.querySelector('#addProject')?.addEventListener('click',async()=>{if(!fetched)return;const customName=(document.querySelector<HTMLInputElement>('#customName')!).value.trim();const customDescription=(document.querySelector<HTMLTextAreaElement>('#customDescription')!).value.trim();setAdminStatus(message,'Adding project…','loading');try{const response=await adminFetch('/admin/projects',{method:'POST',body:JSON.stringify({name:fetched.name,description:fetched.description,github_url:fetched.github_url,language:fetched.language,stars:fetched.stargazers_count,forks:fetched.forks_count,custom_name:customName||null,custom_description:customDescription||null})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Failed to add project');resetPreview();await load();}catch(error){setAdminStatus(message,error instanceof Error?error.message:'Failed to add project','error')}});
+    list.addEventListener('click',async(event)=>{const target=event.target as HTMLElement;const sync=target.closest<HTMLButtonElement>('[data-sync]');const edit=target.closest<HTMLButtonElement>('[data-edit]');const del=target.closest<HTMLButtonElement>('[data-delete]');if(sync?.dataset.sync){sync.disabled=true;const original=sync.textContent;sync.textContent='Syncing…';try{const response=await adminFetch(`/admin/projects/${encodeURIComponent(sync.dataset.sync)}/sync`,{method:'POST'});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Sync failed');await load();}catch(error){window.alert(error instanceof Error?error.message:'Sync failed')}finally{sync.disabled=false;sync.textContent=original||'Sync'}}if(edit?.dataset.edit){const project=projects.find((item)=>item.id===edit.dataset.edit);if(project){(document.querySelector<HTMLInputElement>('#editProjectId')!).value=project.id;(document.querySelector<HTMLInputElement>('#editCustomName')!).value=project.custom_name||'';(document.querySelector<HTMLTextAreaElement>('#editCustomDescription')!).value=project.custom_description||'';setAdminStatus(editMessage);modal.classList.add('active');modal.setAttribute('aria-hidden','false')}}if(del?.dataset.delete&&window.confirm('Are you sure you want to delete this project?')){try{const response=await adminFetch(`/admin/projects/${encodeURIComponent(del.dataset.delete)}`,{method:'DELETE'});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Delete failed');projects=projects.filter((item)=>item.id!==del.dataset.delete);render();}catch(error){window.alert(error instanceof Error?error.message:'Delete failed')}}});
+    document.querySelector<HTMLFormElement>('#editProjectForm')?.addEventListener('submit',async(event)=>{event.preventDefault();const id=(document.querySelector<HTMLInputElement>('#editProjectId')!).value;const custom_name=(document.querySelector<HTMLInputElement>('#editCustomName')!).value.trim()||null;const custom_description=(document.querySelector<HTMLTextAreaElement>('#editCustomDescription')!).value.trim()||null;setAdminStatus(editMessage,'Saving…','loading');try{const response=await adminFetch(`/admin/projects/${encodeURIComponent(id)}`,{method:'PATCH',body:JSON.stringify({custom_name,custom_description})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Update failed');closeModal();await load();}catch(error){setAdminStatus(editMessage,error instanceof Error?error.message:'Update failed','error')}});
+    document.querySelector('#refreshProjects')?.addEventListener('click',load); load();
+  </script>
+  <style>.admin-import-block{padding-bottom:14px;margin-bottom:13px;border-bottom:1px dashed var(--border-light)}.admin-import-block h3,.admin-list-toolbar h3{margin:0 0 9px;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}.admin-repo-preview{display:grid;gap:10px;margin-top:10px;padding:10px;border:1px solid var(--border-light);border-radius:7px;background:var(--bg-elev)}.admin-preview-actions,.admin-modal-actions{display:flex;gap:6px}.admin-list-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 8px}.admin-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--primary);color:var(--bg);font-size:.68rem}.admin-project-desc{margin:0 0 8px;color:var(--text-muted);font-size:.78rem;line-height:1.5}.admin-compact-card a{font-size:.72rem}</style>
+</AdminLayout>
