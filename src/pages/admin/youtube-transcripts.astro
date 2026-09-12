@@ -5,34 +5,65 @@ import AdminModal from '../../components/admin/AdminModal.astro';
 import AdminField from '../../components/admin/AdminField.astro';
 ---
 <AdminLayout title="YouTube Transcripts" active="youtube-transcripts" wide={true} bodyClass="admin-tool admin-transcripts">
-  <AdminPanel title="YouTube Transcript Extractor" icon="bi-card-text">
+  <AdminPanel title="YouTube Transcript Extractor" icon="bi-card-text" class="transcript-admin-panel">
+    <div class="transcript-intro">
+      <div>
+        <h3>Transcript desk</h3>
+        <p>Add a video, shape the source text, and keep the working version moving through your queue.</p>
+      </div>
+      <span class="transcript-mode"><i class="bi bi-record-circle" aria-hidden="true"></i> Workspace ready</span>
+    </div>
+
     <div class="transcript-layout">
-      <aside class="transcript-source-panel">
-        <label class="admin-label" for="urlInput">Add Videos</label>
-        <textarea id="urlInput" class="transcript-url-input" placeholder="Paste YouTube URLs here (one per line)…"></textarea>
-        <div class="transcript-add-actions"><button class="btn btn-primary" id="extractTranscripts" type="button">Extract</button><button class="btn btn-ghost" id="createBlankTranscript" type="button">Create Blank</button></div>
-        <p id="extractStatus" class="admin-status" hidden></p>
-        <div class="transcript-progress" id="extractProgress" hidden><span id="extractProgressFill"></span></div>
-        <div class="transcript-stats"><div><strong id="statTotal">0</strong><span>Total</span></div><div><strong id="statPending">0</strong><span>Pending</span></div><div><strong id="statOngoing">0</strong><span>Ongoing</span></div><div><strong id="statDone">0</strong><span>Done</span></div></div>
-        <div class="transcript-list-head"><strong>Transcripts</strong><div><button class="transcript-filter active" type="button" data-transcript-filter="all">All</button><button class="transcript-filter" type="button" data-transcript-filter="pending">Pending</button><button class="transcript-filter" type="button" data-transcript-filter="ongoing">Ongoing</button><button class="transcript-filter" type="button" data-transcript-filter="done">Done</button></div></div>
-        <div id="transcriptList" class="transcript-list"><div class="admin-empty-state">No transcripts yet.</div></div>
+      <aside class="transcript-source-panel" aria-label="Transcript source queue">
+        <div class="transcript-source-heading">
+          <div class="transcript-heading-mark"><i class="bi bi-collection-play" aria-hidden="true"></i></div>
+          <div><h3>Source queue</h3><p>Bring in a video or start from a blank script.</p></div>
+        </div>
+
+        <div class="transcript-intake">
+          <label class="admin-label" for="urlInput">Add Videos</label>
+          <textarea id="urlInput" class="transcript-url-input" placeholder="Paste YouTube URLs here (one per line)…"></textarea>
+          <div class="transcript-add-actions"><button class="btn btn-primary" id="extractTranscripts" type="button"><i class="bi bi-download" aria-hidden="true"></i> Extract</button><button class="btn btn-ghost" id="createBlankTranscript" type="button"><i class="bi bi-file-earmark-plus" aria-hidden="true"></i> Create Blank</button></div>
+          <p id="extractStatus" class="admin-status" aria-live="polite" hidden></p>
+          <div class="transcript-progress" id="extractProgress" hidden><span id="extractProgressFill"></span></div>
+        </div>
+
+        <div class="transcript-stats" aria-label="Transcript status counts">
+          <div><strong id="statTotal">0</strong><span>Total</span></div>
+          <div><strong id="statPending">0</strong><span>Pending</span></div>
+          <div><strong id="statOngoing">0</strong><span>Ongoing</span></div>
+          <div><strong id="statDone">0</strong><span>Done</span></div>
+        </div>
+
+        <div class="transcript-list-head">
+          <strong>Transcripts</strong>
+          <div role="group" aria-label="Filter transcripts"><button class="transcript-filter active" type="button" data-transcript-filter="all">All</button><button class="transcript-filter" type="button" data-transcript-filter="pending">Pending</button><button class="transcript-filter" type="button" data-transcript-filter="ongoing">Ongoing</button><button class="transcript-filter" type="button" data-transcript-filter="done">Done</button></div>
+        </div>
+        <div id="transcriptList" class="transcript-list"><div class="admin-empty-state"><i class="bi bi-inbox" aria-hidden="true"></i><span>No transcripts yet.</span></div></div>
       </aside>
 
-      <section class="transcript-editor-panel">
-        <div class="transcript-editor-head"><input id="editorTitle" placeholder="Video Title (select a transcript)" disabled /><div class="transcript-editor-actions"><span id="wordCount">0 words</span><button class="btn btn-ghost" id="expandEditor" type="button" disabled>Expand</button><button class="btn btn-ghost" id="toggleTranscriptStatus" type="button" disabled>Ongoing</button><button class="btn btn-primary" id="saveTranscript" type="button" disabled>Save</button><button class="btn btn-ghost admin-danger" id="deleteTranscript" type="button" disabled>Delete</button></div></div>
-        <div class="transcript-split"><div><header>Original Transcript <small>(editable)</small></header><textarea id="originalTranscript" disabled></textarea></div><div><header>Your Version</header><textarea id="editedTranscript" disabled></textarea></div></div>
+      <section class="transcript-editor-panel" aria-label="Transcript editor">
+        <div class="transcript-editor-head">
+          <div class="transcript-editor-title"><span class="transcript-editor-icon"><i class="bi bi-pencil-square" aria-hidden="true"></i></span><input id="editorTitle" placeholder="Video Title (select a transcript)" disabled /></div>
+          <div class="transcript-editor-actions"><span id="wordCount">0 words</span><button class="btn btn-ghost" id="expandEditor" type="button" disabled><i class="bi bi-arrows-fullscreen" aria-hidden="true"></i> Expand</button><button class="btn btn-ghost" id="toggleTranscriptStatus" type="button" disabled>Ongoing</button><button class="btn btn-primary" id="saveTranscript" type="button" disabled><i class="bi bi-check2" aria-hidden="true"></i> Save</button><button class="btn btn-ghost admin-danger" id="deleteTranscript" type="button" disabled><i class="bi bi-trash3" aria-hidden="true"></i> Delete</button></div>
+        </div>
+        <div class="transcript-split">
+          <div><header><span><i class="bi bi-file-text" aria-hidden="true"></i> Original Transcript</span><small>(editable)</small></header><textarea id="originalTranscript" disabled></textarea></div>
+          <div><header><span><i class="bi bi-stars" aria-hidden="true"></i> Your Version</span><small>Working copy</small></header><textarea id="editedTranscript" disabled></textarea></div>
+        </div>
       </section>
     </div>
   </AdminPanel>
 
   <div class="expanded-transcript-editor" id="expandedEditor" hidden>
     <div class="expanded-transcript-card">
-      <header class="expanded-transcript-head"><h2 id="expandedTitle">Transcript</h2><div><span id="expandedWordCount">0 words</span><button class="btn btn-ghost" id="expandedToggleStatus" type="button">Ongoing</button><button class="btn btn-primary" id="expandedSave" type="button">Save</button><button class="btn btn-ghost" id="expandedClose" type="button">Close</button></div></header>
+      <header class="expanded-transcript-head"><div class="expanded-title"><span class="expanded-title-mark"><i class="bi bi-pencil-square" aria-hidden="true"></i></span><div><h2 id="expandedTitle">Transcript</h2><small>Focused editing mode</small></div></div><div><span id="expandedWordCount">0 words</span><button class="btn btn-ghost" id="expandedToggleStatus" type="button">Ongoing</button><button class="btn btn-primary" id="expandedSave" type="button"><i class="bi bi-check2" aria-hidden="true"></i> Save</button><button class="btn btn-ghost" id="expandedClose" type="button"><i class="bi bi-x-lg" aria-hidden="true"></i> Close</button></div></header>
       <div class="expanded-transcript-body">
-        <aside class="expanded-transcript-list" id="expandedTranscriptList"></aside>
-        <div class="expanded-transcript-panes"><div><header>Original Transcript</header><textarea id="expandedOriginal"></textarea></div><div><header>Your Version <small>AI output will appear here</small></header><textarea id="expandedEdited"></textarea></div></div>
+        <aside class="expanded-transcript-list" id="expandedTranscriptList" aria-label="Expanded transcript queue"></aside>
+        <div class="expanded-transcript-panes"><div><header><span>Original Transcript</span><small>Source</small></header><textarea id="expandedOriginal"></textarea></div><div><header><span>Your Version</span><small>AI output will appear here</small></header><textarea id="expandedEdited"></textarea></div></div>
         <section class="transcript-ai-panel">
-          <header><strong>AI Assistant</strong><div><button class="btn btn-ghost" id="addCheckpoint" type="button">Checkpoint</button><button class="btn btn-ghost" id="openAISettings" type="button">Settings</button><button class="btn btn-ghost" id="clearAIChat" type="button">Clear</button></div></header>
+          <header><div class="ai-panel-title"><span class="ai-panel-icon"><i class="bi bi-stars" aria-hidden="true"></i></span><div><strong>AI Assistant</strong><small>Shape the working copy</small></div></div><div><button class="btn btn-ghost" id="addCheckpoint" type="button">Checkpoint</button><button class="btn btn-ghost" id="openAISettings" type="button">Settings</button><button class="btn btn-ghost" id="clearAIChat" type="button">Clear</button></div></header>
           <div class="ai-chat-tabs"><div id="chatTabsList"></div><button class="ai-tab-new" id="newChatTab" type="button">+</button></div>
           <div id="aiMessages" class="ai-messages"><div class="ai-message system">Use a quick action or type a message to start.</div></div>
           <div class="ai-compose"><textarea id="aiInput" rows="1" placeholder="Ask AI to revise, improve, or rewrite…"></textarea><button class="btn btn-primary" id="aiSend" type="button">Send</button><div class="ai-quick-actions"><button type="button" data-ai-quick="rewrite">Rewrite</button><button type="button" data-ai-quick="hook">Hook</button><button type="button" data-ai-quick="shorter">Shorter</button><button type="button" data-ai-quick="punchier">Punchy</button><button type="button" data-ai-quick="broll">B-Roll</button></div></div>
@@ -100,5 +131,207 @@ import AdminField from '../../components/admin/AdminField.astro';
   </script>
   <style>
     .transcript-layout{display:grid;grid-template-columns:minmax(220px,.72fr) minmax(0,1.6fr);gap:10px}.transcript-source-panel{display:grid;align-content:start;gap:9px;min-width:0}.admin-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}.transcript-url-input{min-height:120px}.transcript-add-actions{display:flex;gap:6px}.transcript-add-actions>.btn{flex:1}.transcript-progress{height:6px;overflow:hidden;border-radius:3px;background:var(--bg-secondary)}.transcript-progress span{display:block;height:100%;width:0;background:var(--primary);transition:width .2s}.transcript-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.transcript-stats>div{display:grid;gap:1px;padding:6px;border:1px solid var(--border-light);border-radius:6px;background:var(--bg-elev);text-align:center}.transcript-stats strong{color:var(--primary-dark);font-size:.95rem}.transcript-stats span{color:var(--text-muted);font-size:.6rem;text-transform:uppercase}.transcript-list-head{display:flex;align-items:center;justify-content:space-between;gap:5px;padding-bottom:5px;border-bottom:1px solid var(--border-light);font-size:.7rem;text-transform:uppercase}.transcript-list-head>div{display:flex;gap:2px;flex-wrap:wrap}.transcript-filter{padding:3px 5px;border:1px solid transparent;border-radius:999px;background:transparent;color:var(--text-muted);font:inherit;font-size:.64rem;cursor:pointer}.transcript-filter.active,.transcript-filter:hover{background:var(--primary);color:var(--bg);border-color:var(--primary)}.transcript-list{display:grid;max-height:520px;overflow:auto}.transcript-item{display:grid;grid-template-columns:64px minmax(0,1fr);gap:7px;align-items:center;width:100%;padding:7px;border:0;border-bottom:1px solid var(--border-light);background:transparent;color:var(--text);text-align:left;cursor:pointer}.transcript-item:hover,.transcript-item.active{background:var(--gradient-subtle)}.transcript-item>img,.transcript-item>.transcript-placeholder{width:64px;height:36px;object-fit:cover;border-radius:4px;background:var(--bg-secondary)}.transcript-placeholder{display:grid;place-items:center;color:var(--text-muted);font-size:.62rem}.transcript-item>span{display:grid;gap:3px;min-width:0}.transcript-item strong{font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.transcript-item small{font-size:.62rem;color:var(--text-muted)}.transcript-status.pending{color:var(--text-muted)}.transcript-status.ongoing{color:var(--primary-dark)}.transcript-status.done{color:#2ecc71}.transcript-editor-panel{min-width:0}.transcript-editor-head{display:flex;gap:6px;align-items:center;padding-bottom:7px;border-bottom:1px solid var(--border-light)}.transcript-editor-head>input{flex:1;font-weight:600}.transcript-editor-actions{display:flex;gap:4px;align-items:center}.transcript-editor-actions>span{color:var(--text-muted);font-size:.65rem;white-space:nowrap}.transcript-split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:7px}.transcript-split>div{border:1px solid var(--border-light);border-radius:6px;overflow:hidden;background:var(--bg-elev)}.transcript-split header,.expanded-transcript-panes header{padding:6px 8px;border-bottom:1px solid var(--border-light);background:var(--gradient-subtle);font-size:.68rem;font-weight:700;text-transform:uppercase}.transcript-split textarea{min-height:470px;border:0!important;border-radius:0!important;resize:vertical}.expanded-transcript-editor{position:fixed;inset:0;z-index:10500;padding:10px;background:color-mix(in srgb,var(--bg) 94%,transparent)}.expanded-transcript-card{display:grid;grid-template-rows:auto 1fr;width:100%;height:100%;overflow:hidden;border:2px solid var(--border);border-radius:8px;background:var(--bg)}.expanded-transcript-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);background:var(--bg-elev)}.expanded-transcript-head h2{margin:0;font-size:.86rem}.expanded-transcript-head>div{display:flex;align-items:center;gap:5px}.expanded-transcript-head span{color:var(--text-muted);font-size:.66rem}.expanded-transcript-body{display:grid;grid-template-columns:180px minmax(0,1.3fr) minmax(280px,.8fr);min-height:0}.expanded-transcript-list{overflow:auto;border-right:1px solid var(--border-light);background:var(--bg-elev)}.expanded-list-item{display:grid;grid-template-columns:48px minmax(0,1fr);gap:6px;align-items:center;width:100%;padding:6px;border:0;border-bottom:1px solid var(--border-light);background:transparent;color:var(--text);text-align:left;cursor:pointer}.expanded-list-item.active{background:var(--primary);color:var(--bg)}.expanded-list-item img,.expanded-list-item .transcript-placeholder{width:48px;height:27px;object-fit:cover}.expanded-list-item span{display:grid;min-width:0}.expanded-list-item strong{font-size:.66rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.expanded-list-item small{font-size:.58rem;opacity:.75}.expanded-transcript-panes{display:grid;grid-template-rows:1fr 1fr;gap:7px;padding:8px;overflow:auto}.expanded-transcript-panes>div{display:grid;grid-template-rows:auto 1fr;min-height:150px;border:1px solid var(--border-light);border-radius:6px;overflow:hidden}.expanded-transcript-panes textarea{min-height:160px;border:0!important;border-radius:0!important;resize:none}.transcript-ai-panel{display:grid;grid-template-rows:auto auto 1fr auto;min-height:0;border-left:1px solid var(--border-light);background:var(--card)}.transcript-ai-panel>header{display:flex;align-items:center;justify-content:space-between;gap:5px;padding:7px;border-bottom:1px solid var(--border-light);background:var(--gradient-subtle)}.transcript-ai-panel>header>div{display:flex;gap:3px}.ai-chat-tabs{display:flex;gap:4px;padding:5px;border-bottom:1px solid var(--border-light);overflow:auto}.ai-chat-tabs>div{display:flex;gap:4px;flex:1}.ai-chat-tab,.ai-tab-new{display:flex;align-items:center;gap:3px;padding:4px 6px;border:1px solid var(--border-light);border-radius:4px;background:var(--bg-elev);color:var(--text-muted);font-size:.62rem;cursor:pointer;white-space:nowrap}.ai-chat-tab.active{background:var(--primary);color:var(--bg)}.ai-chat-tab i{font-style:normal;opacity:.7}.ai-messages{display:flex;flex-direction:column;gap:7px;overflow:auto;padding:8px}.ai-message{max-width:92%;padding:7px 9px;border:1px solid var(--border-light);border-radius:8px;background:var(--bg-elev);font-size:.72rem;line-height:1.5}.ai-message.user{align-self:flex-end;background:var(--primary);color:var(--bg);border-color:var(--primary)}.ai-message.system{align-self:center;border:0;background:transparent;color:var(--text-muted);font-size:.65rem;text-align:center}.ai-message button{margin-top:5px;padding:2px 5px;border:0;background:transparent;color:inherit;font:inherit;font-size:.6rem;text-decoration:underline;cursor:pointer}.ai-checkpoint{align-self:center;padding:3px 7px;border:1px dashed var(--primary);border-radius:999px;background:transparent;color:var(--primary-dark);font-size:.6rem;cursor:pointer}.ai-compose{display:grid;grid-template-columns:1fr auto;gap:5px;padding:7px;border-top:1px solid var(--border-light)}.ai-compose textarea{min-height:38px;max-height:100px}.ai-quick-actions{grid-column:1/-1;display:flex;gap:3px;flex-wrap:wrap}.ai-quick-actions button{padding:3px 5px;border:1px solid var(--border-light);border-radius:4px;background:var(--bg-elev);color:var(--text-muted);font:inherit;font-size:.6rem;cursor:pointer}.admin-modal-actions{display:flex;gap:5px;flex-wrap:wrap}@media(max-width:1000px){.expanded-transcript-body{grid-template-columns:minmax(0,1fr) minmax(280px,.8fr)}.expanded-transcript-list{display:none}}@media(max-width:850px){.transcript-layout{grid-template-columns:1fr}.transcript-split textarea{min-height:230px}.expanded-transcript-body{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) minmax(260px,.8fr)}.transcript-ai-panel{border-left:0;border-top:1px solid var(--border-light)}}@media(max-width:600px){.transcript-editor-head{align-items:stretch;flex-direction:column}.transcript-editor-actions{flex-wrap:wrap}.transcript-split{grid-template-columns:1fr}.expanded-transcript-editor{padding:0}.expanded-transcript-card{border-radius:0}.expanded-transcript-head{align-items:flex-start;flex-direction:column}.expanded-transcript-head>div{flex-wrap:wrap}}
+  </style>
+  <style>
+    /* Focused visual layer for the transcript desk. Behaviour and hooks remain above. */
+    .admin-transcripts {
+      --transcript-line: color-mix(in srgb, var(--primary-dark) 28%, var(--border-light));
+      --transcript-soft: color-mix(in srgb, var(--primary-light) 18%, var(--card));
+      --transcript-deep: color-mix(in srgb, var(--primary-dark) 10%, var(--bg-elev));
+    }
+    .admin-transcripts .transcript-admin-panel {
+      overflow: visible;
+      border-color: var(--primary);
+      background: color-mix(in srgb, var(--primary-light) 23%, var(--card));
+      box-shadow: 0 0 0 2px var(--halo), 3px 3px 0 var(--halo), 6px 6px 0 color-mix(in srgb, var(--primary) 18%, var(--bg-elev)), var(--shadow);
+    }
+    .admin-transcripts .transcript-admin-panel:hover { transform: none; }
+    .admin-transcripts .transcript-admin-panel > .admin-panel-header {
+      min-height: 42px;
+      padding: 9px 14px;
+      background-image: repeating-linear-gradient(45deg, var(--primary-light), var(--primary-light) 7px, var(--primary) 7px, var(--primary) 14px);
+      background-size: 20px 20px;
+      border-color: var(--primary-dark);
+      text-shadow: 2px 2px 0 color-mix(in srgb, var(--primary-dark) 85%, #000);
+      animation: transcript-header-drift 1.4s linear infinite;
+    }
+    .admin-transcripts .transcript-admin-panel > .admin-panel-header h2 { font-size: .92rem; }
+    .admin-transcripts .transcript-admin-panel > .admin-panel-content {
+      padding: clamp(12px, 2vw, 20px);
+      border: 1px solid var(--primary-dark);
+      border-top: 0;
+      border-radius: 0 0 8px 8px;
+      background: var(--bg-elev);
+    }
+    .transcript-intro {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 0 0 16px;
+      padding: 14px 16px;
+      border: 1px solid color-mix(in srgb, var(--primary) 42%, var(--border-light));
+      border-radius: 8px;
+      background: linear-gradient(115deg, color-mix(in srgb, var(--primary-light) 24%, var(--card)), var(--card) 68%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 4px 12px color-mix(in srgb, var(--primary) 7%, transparent);
+    }
+    .transcript-intro h3 { margin: 0 0 3px; font-size: 1rem; letter-spacing: .02em; }
+    .transcript-intro p { max-width: 62ch; margin: 0; color: var(--text-muted); font-size: .76rem; line-height: 1.5; }
+    .transcript-mode {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 0 0 auto;
+      padding: 7px 9px;
+      border: 1px solid color-mix(in srgb, var(--primary) 45%, var(--border-light));
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--primary-light) 30%, var(--card));
+      color: var(--primary-dark);
+      font: 700 .64rem/1 'Courier New', monospace;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .transcript-mode i { font-size: .7rem; }
+    .admin-transcripts .transcript-layout { grid-template-columns: minmax(250px, .68fr) minmax(0, 1.85fr); gap: 14px; align-items: start; }
+    .admin-transcripts .transcript-source-panel {
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--transcript-line);
+      border-radius: 8px;
+      background: linear-gradient(160deg, var(--transcript-soft), var(--card) 38%);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 7%, transparent);
+    }
+    .transcript-source-heading { display: flex; align-items: center; gap: 9px; padding-bottom: 10px; border-bottom: 1px dashed var(--transcript-line); }
+    .transcript-source-heading h3 { margin: 0 0 2px; font-size: .82rem; letter-spacing: .04em; text-transform: uppercase; }
+    .transcript-source-heading p { margin: 0; color: var(--text-muted); font-size: .68rem; line-height: 1.4; }
+    .transcript-heading-mark, .transcript-editor-icon, .expanded-title-mark, .ai-panel-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--primary-dark);
+      background: color-mix(in srgb, var(--primary-light) 28%, var(--card));
+    }
+    .transcript-heading-mark { width: 30px; height: 30px; border: 1px solid var(--primary); border-radius: 7px; font-size: .9rem; }
+    .transcript-intake { display: grid; gap: 7px; padding: 10px; border: 1px solid var(--transcript-line); border-radius: 7px; background: var(--transcript-deep); }
+    .admin-transcripts .admin-label { color: var(--primary-dark); font-size: .68rem; letter-spacing: .1em; }
+    .admin-transcripts .transcript-url-input { min-height: 112px; resize: vertical; }
+    .admin-transcripts .transcript-add-actions { gap: 7px; }
+    .admin-transcripts .transcript-add-actions > .btn { min-height: 35px; }
+    .admin-transcripts .transcript-add-actions i { margin-right: 3px; }
+    .admin-transcripts .admin-status { font-size: .72rem; }
+    .admin-transcripts .transcript-progress { height: 7px; border: 1px solid var(--transcript-line); border-radius: 999px; background: var(--bg-secondary); }
+    .admin-transcripts .transcript-progress span { border-radius: inherit; box-shadow: 0 0 8px color-mix(in srgb, var(--primary) 58%, transparent); }
+    .admin-transcripts .transcript-stats { gap: 1px; padding: 1px; border: 1px solid var(--transcript-line); border-radius: 7px; background: var(--transcript-line); }
+    .admin-transcripts .transcript-stats > div { min-height: 54px; padding: 7px 4px; border: 0; border-radius: 0; background: var(--card); }
+    .admin-transcripts .transcript-stats > div:first-child { border-radius: 6px 0 0 6px; }
+    .admin-transcripts .transcript-stats > div:last-child { border-radius: 0 6px 6px 0; }
+    .admin-transcripts .transcript-stats strong { font-size: 1.05rem; line-height: 1; }
+    .admin-transcripts .transcript-stats span { font-size: .58rem; letter-spacing: .05em; }
+    .admin-transcripts .transcript-list-head { align-items: center; padding: 4px 0 7px; border-bottom: 1px dashed var(--transcript-line); font-size: .72rem; }
+    .admin-transcripts .transcript-list-head > div { justify-content: flex-end; gap: 3px; }
+    .admin-transcripts .transcript-filter { padding: 4px 6px; border: 1px solid transparent; border-radius: 5px; font-size: .61rem; }
+    .admin-transcripts .transcript-filter.active, .admin-transcripts .transcript-filter:hover { background: linear-gradient(to bottom, var(--primary-light), var(--primary)); color: #fff; border-color: var(--primary-dark); box-shadow: inset 0 1px 0 rgba(255,255,255,.45); }
+    .admin-transcripts .transcript-list { max-height: 510px; margin: -2px -4px -4px; padding: 2px 4px 4px; scrollbar-color: var(--primary) var(--bg-secondary); }
+    .admin-transcripts .transcript-item { grid-template-columns: 72px minmax(0, 1fr); gap: 9px; min-height: 54px; padding: 8px 7px; border: 1px solid transparent; border-bottom-color: var(--transcript-line); border-radius: 6px; }
+    .admin-transcripts .transcript-item:hover, .admin-transcripts .transcript-item.active { border-color: color-mix(in srgb, var(--primary) 52%, var(--border-light)); background: linear-gradient(105deg, color-mix(in srgb, var(--primary-light) 24%, var(--card)), var(--card)); box-shadow: 0 3px 8px color-mix(in srgb, var(--primary) 9%, transparent); }
+    .admin-transcripts .transcript-item.active { box-shadow: inset 3px 0 0 var(--primary), 0 3px 8px color-mix(in srgb, var(--primary) 9%, transparent); }
+    .admin-transcripts .transcript-item > img, .admin-transcripts .transcript-item > .transcript-placeholder { width: 72px; height: 42px; border: 1px solid var(--transcript-line); border-radius: 5px; background: linear-gradient(135deg, var(--bg-secondary), var(--transcript-soft)); }
+    .admin-transcripts .transcript-placeholder { font: 700 .62rem/1 'Courier New', monospace; letter-spacing: .06em; }
+    .admin-transcripts .transcript-item strong { font-size: .74rem; }
+    .admin-transcripts .transcript-item small { font-size: .63rem; }
+    .admin-transcripts .transcript-status { display: inline-flex; align-items: center; gap: 4px; text-transform: capitalize; }
+    .admin-transcripts .transcript-status::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 18%, transparent); }
+    .admin-transcripts .transcript-editor-panel { min-width: 0; padding: 12px; border: 1px solid var(--transcript-line); border-radius: 8px; background: var(--card); box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 7%, transparent); }
+    .admin-transcripts .transcript-editor-head { align-items: stretch; gap: 12px; padding: 0 0 12px; border-bottom: 1px dashed var(--transcript-line); }
+    .transcript-editor-title { display: flex; align-items: center; min-width: 220px; flex: 1; gap: 8px; }
+    .transcript-editor-icon { width: 28px; height: 28px; border: 1px solid var(--primary); border-radius: 6px; }
+    .admin-transcripts .transcript-editor-title > input { min-height: 34px; padding: 6px 8px; border: 0; border-bottom: 1px solid var(--primary); border-radius: 0; background: transparent; font-size: .92rem; }
+    .admin-transcripts .transcript-editor-title > input:disabled { color: var(--text-muted); opacity: 1; }
+    .admin-transcripts .transcript-editor-actions { flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+    .admin-transcripts .transcript-editor-actions > span { align-self: center; margin-right: 3px; color: var(--primary-dark); font: 700 .62rem/1 'Courier New', monospace; }
+    .admin-transcripts .transcript-editor-actions .btn { min-height: 34px; }
+    .admin-transcripts .transcript-split { gap: 10px; margin-top: 12px; }
+    .admin-transcripts .transcript-split > div { border: 1px solid var(--transcript-line); border-radius: 8px; background: var(--card); box-shadow: inset 0 1px 0 rgba(255,255,255,.38); }
+    .admin-transcripts .transcript-split header, .admin-transcripts .expanded-transcript-panes header { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 34px; padding: 7px 10px; background: linear-gradient(110deg, color-mix(in srgb, var(--primary-light) 24%, var(--card)), var(--card)); color: var(--text); font-size: .68rem; letter-spacing: .07em; }
+    .admin-transcripts .transcript-split header span, .admin-transcripts .expanded-transcript-panes header span { display: inline-flex; align-items: center; gap: 6px; }
+    .admin-transcripts .transcript-split header i { color: var(--primary-dark); font-size: .82rem; }
+    .admin-transcripts .transcript-split header small, .admin-transcripts .expanded-transcript-panes header small { color: var(--text-muted); font-size: .58rem; font-weight: 400; letter-spacing: 0; text-transform: none; }
+    .admin-transcripts .transcript-split textarea { min-height: 480px; padding: 12px; border: 0 !important; border-radius: 0 0 7px 7px !important; background: var(--card); font-size: .82rem; line-height: 1.7; }
+    .admin-transcripts .transcript-split textarea:disabled { color: var(--text-muted); opacity: .88; }
+    .admin-transcripts .transcript-split > div:nth-child(2) textarea { background: linear-gradient(180deg, var(--card), color-mix(in srgb, var(--primary-light) 8%, var(--card))); }
+    .admin-transcripts .admin-empty-state { min-height: 118px; border-color: var(--transcript-line); background: color-mix(in srgb, var(--primary-light) 7%, var(--card)); }
+    .admin-transcripts .admin-empty-state i { color: var(--primary-dark); font-size: 1.1rem; }
+    .expanded-transcript-editor { padding: 14px; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(4px); }
+    .expanded-transcript-card { border: 2px solid var(--primary); border-right-color: var(--primary-dark); border-bottom-color: var(--primary-dark); border-radius: 10px; background: var(--bg-elev); box-shadow: 0 0 0 2px var(--halo), 4px 5px 0 color-mix(in srgb, var(--primary) 18%, var(--bg-elev)), var(--shadow-hover); }
+    .expanded-transcript-head { min-height: 52px; padding: 8px 12px; border-bottom-color: var(--primary-dark); background: linear-gradient(105deg, color-mix(in srgb, var(--primary-light) 24%, var(--bg-elev)), var(--bg-elev) 52%); }
+    .expanded-title { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .expanded-title-mark { width: 30px; height: 30px; border: 1px solid var(--primary); border-radius: 7px; }
+    .expanded-transcript-head h2 { overflow: hidden; margin: 0; font-size: .9rem; text-overflow: ellipsis; white-space: nowrap; }
+    .expanded-title small, .ai-panel-title small { display: block; margin-top: 2px; color: var(--text-muted); font-size: .6rem; }
+    .expanded-transcript-head > div:last-child { flex-wrap: wrap; justify-content: flex-end; }
+    .expanded-transcript-head span { color: var(--primary-dark); font: 700 .62rem/1 'Courier New', monospace; }
+    .expanded-transcript-body { grid-template-columns: 208px minmax(0, 1.3fr) minmax(330px, .82fr); }
+    .expanded-transcript-list { border-right-color: var(--transcript-line); background: var(--card); scrollbar-color: var(--primary) var(--bg-secondary); }
+    .expanded-list-item { grid-template-columns: 54px minmax(0, 1fr); gap: 7px; min-height: 48px; padding: 7px; border-bottom-color: var(--transcript-line); }
+    .expanded-list-item:hover { background: var(--transcript-soft); }
+    .expanded-list-item.active { background: linear-gradient(105deg, var(--primary-light), var(--primary)); color: #fff; }
+    .expanded-list-item img, .expanded-list-item .transcript-placeholder { width: 54px; height: 31px; border: 1px solid var(--transcript-line); border-radius: 4px; }
+    .expanded-transcript-panes { gap: 10px; padding: 10px; }
+    .expanded-transcript-panes > div { border-color: var(--transcript-line); border-radius: 8px; }
+    .expanded-transcript-panes textarea { min-height: 160px; padding: 11px; background: var(--card); font-size: .8rem; line-height: 1.65; }
+    .transcript-ai-panel { border-left-color: var(--transcript-line); background: var(--card); }
+    .transcript-ai-panel > header { min-height: 48px; padding: 8px 9px; background: linear-gradient(110deg, color-mix(in srgb, var(--primary-light) 24%, var(--card)), var(--card)); }
+    .ai-panel-title { display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .ai-panel-title strong { display: block; font-size: .76rem; }
+    .ai-panel-icon { width: 27px; height: 27px; border: 1px solid var(--primary); border-radius: 6px; }
+    .transcript-ai-panel > header > div:last-child { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 3px; }
+    .transcript-ai-panel > header .btn { min-height: 28px; padding: 4px 6px; font-size: .62rem; }
+    .ai-chat-tabs { gap: 5px; padding: 6px; border-bottom-color: var(--transcript-line); background: var(--transcript-deep); }
+    .ai-chat-tabs > div { gap: 5px; }
+    .ai-chat-tab, .ai-tab-new { min-height: 27px; padding: 5px 7px; border-color: var(--transcript-line); border-radius: 5px; background: var(--card); }
+    .ai-chat-tab.active { border-color: var(--primary-dark); background: linear-gradient(to bottom, var(--primary-light), var(--primary)); color: #fff; }
+    .ai-chat-tab i { font-size: .8rem; }
+    .ai-messages { gap: 8px; padding: 10px; scrollbar-color: var(--primary) var(--bg-secondary); }
+    .ai-message { padding: 8px 10px; border-color: var(--transcript-line); border-radius: 8px; background: var(--transcript-deep); font-size: .71rem; }
+    .ai-message.user { background: linear-gradient(135deg, var(--primary-light), var(--primary)); color: #fff; border-color: var(--primary-dark); }
+    .ai-message.system { color: var(--text-muted); }
+    .ai-checkpoint { border-color: var(--primary); color: var(--primary-dark); background: color-mix(in srgb, var(--primary-light) 11%, transparent); }
+    .ai-compose { gap: 6px; padding: 8px; border-top-color: var(--transcript-line); background: var(--transcript-deep); }
+    .ai-compose textarea { min-height: 39px; padding: 8px; font-size: .72rem; }
+    .ai-quick-actions { gap: 4px; }
+    .ai-quick-actions button { padding: 4px 6px; border-color: var(--transcript-line); border-radius: 5px; background: var(--card); color: var(--primary-dark); }
+    .ai-quick-actions button:hover { border-color: var(--primary); background: var(--transcript-soft); }
+    .admin-transcripts .btn { border-color: color-mix(in srgb, var(--primary-dark) 60%, var(--border-light)); }
+    .admin-transcripts .btn-primary { background: linear-gradient(to bottom, var(--primary-light), var(--primary) 48%, var(--primary-dark) 54%, var(--primary)); color: #fff; text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000); box-shadow: inset 1px 1px 0 rgba(255,255,255,.45), 1px 2px 3px color-mix(in srgb, var(--primary-dark) 18%, transparent); }
+    .admin-transcripts .btn-primary:hover { background: linear-gradient(to bottom, var(--primary), var(--primary-dark)); }
+    .admin-transcripts .btn-ghost { background: linear-gradient(to bottom, var(--card), color-mix(in srgb, var(--primary-light) 14%, var(--card))); }
+    .admin-transcripts .btn-ghost:hover { background: color-mix(in srgb, var(--primary-light) 25%, var(--card)); }
+    .admin-transcripts .admin-danger { border-color: color-mix(in srgb, var(--admin-danger) 34%, var(--border-light)); }
+    @keyframes transcript-header-drift { from { background-position: 0 0; } to { background-position: 20px 0; } }
+    @media (prefers-reduced-motion: reduce) { .admin-transcripts .transcript-admin-panel > .admin-panel-header { animation: none; } }
+    @media (max-width: 1000px) { .expanded-transcript-body { grid-template-columns: minmax(0, 1fr) minmax(310px, .82fr); } }
+    @media (max-width: 850px) {
+      .admin-transcripts .transcript-layout { grid-template-columns: 1fr; }
+      .admin-transcripts .transcript-source-panel { order: 1; }
+      .admin-transcripts .transcript-editor-panel { order: 2; }
+      .admin-transcripts .transcript-list { max-height: 280px; }
+      .admin-transcripts .transcript-split textarea { min-height: 260px; }
+      .expanded-transcript-body { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(280px, .8fr); }
+      .transcript-ai-panel { border-top-color: var(--transcript-line); }
+    }
+    @media (max-width: 600px) {
+      .transcript-intro { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .transcript-mode { align-self: flex-start; }
+      .admin-transcripts .transcript-admin-panel > .admin-panel-content { padding: 10px; }
+      .admin-transcripts .transcript-source-panel, .admin-transcripts .transcript-editor-panel { padding: 9px; }
+      .admin-transcripts .transcript-editor-head { flex-direction: column; gap: 8px; }
+      .admin-transcripts .transcript-editor-actions { justify-content: flex-start; }
+      .admin-transcripts .transcript-split { grid-template-columns: 1fr; }
+      .expanded-transcript-editor { padding: 0; }
+      .expanded-transcript-card { border-radius: 0; }
+      .expanded-transcript-head { align-items: flex-start; flex-direction: column; padding: 9px; }
+      .expanded-transcript-head > div:last-child { justify-content: flex-start; }
+    }
   </style>
 </AdminLayout>
