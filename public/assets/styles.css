@@ -4276,6 +4276,10 @@ ul {
 }
 
 .neo-widgets .widget-now {
+  background-image: none;
+}
+
+.neo-widgets .widget-now > .neo-content {
   background-image:
     linear-gradient(
       color-mix(in srgb, var(--bg-elev) 34%, transparent),
@@ -4285,10 +4289,9 @@ ul {
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-}
-
-.neo-widgets .widget-now > .neo-content {
   background-color: color-mix(in srgb, var(--bg-elev) 55%, transparent);
+  background-clip: padding-box;
+  overflow: hidden;
 }
 
 .manga-section .neo-carousel,
