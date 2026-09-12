@@ -600,7 +600,7 @@ ul {
 }
 
 .color-picker-content {
-  width: min(330px, 100%);
+  width: min(300px, 100%);
   padding: 3px;
   box-sizing: border-box;
   background: var(--border-light);
@@ -677,8 +677,8 @@ ul {
 .color-picker-options {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  padding: 12px;
+  gap: 8px;
+  padding: 10px;
   border: 1px solid var(--primary-dark);
   border-top: none;
   background: var(--bg-elev);
@@ -687,7 +687,7 @@ ul {
 .color-option {
   min-width: 0;
   position: relative;
-  width: min(100%, 84px);
+  width: min(100%, 64px);
   aspect-ratio: 1;
   justify-self: center;
   padding: 0;
