@@ -77,7 +77,7 @@ const { type, title, showIcon = true, panel = true } = Astro.props;
           <article class="admin-list-item masonry-item post-card" data-post-id="${escapeHtml(post.id)}">
             <div class="admin-list-item-head item-header">
               <span class="post-card-icon" aria-hidden="true"><i class="bi ${type === 'blog' ? 'bi-envelope-paper' : 'bi-book'}"></i></span>
-              <h3><a href="/admin/post/?id=${encodeURIComponent(post.id)}">${escapeHtml(post.title)}</a></h3>
+              <h3><a href="/admin/post/?id=${encodeURIComponent(post.id)}&type=${encodeURIComponent(type)}">${escapeHtml(post.title)}</a></h3>
             </div>
             <div class="admin-list-item-body item-content">
               <p class="post-card-description is-loading" data-post-description>Loading excerpt…</p>

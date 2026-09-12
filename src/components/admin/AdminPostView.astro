@@ -18,7 +18,18 @@
 
   const title = document.querySelector<HTMLElement>('#adminPostTitle');
   const content = document.querySelector<HTMLElement>('#adminPostContent');
-  const id = new URLSearchParams(window.location.search).get('id');
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const isStory = params.get('type') === 'story';
+  const article = document.querySelector<HTMLElement>('.admin-post-view');
+  const backLink = document.querySelector<HTMLAnchorElement>('.admin-post-back');
+  if (isStory) {
+    article?.classList.add('story-post');
+    if (backLink) {
+      backLink.href = '/admin/stories/';
+      backLink.textContent = 'Back to stories';
+    }
+  }
   if (!id) window.location.replace('/admin/blogs/');
   else if (title && content) {
     adminFetch(`/post/${encodeURIComponent(id)}`, {}, { auth: false })
