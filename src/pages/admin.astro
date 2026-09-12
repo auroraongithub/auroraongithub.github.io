@@ -1,5 +1,6 @@
 ---
 import AdminLayout from '../layouts/AdminLayout.astro';
+import SidebarButton from '../components/SidebarButton.astro';
 import { adminNavigation } from '../lib/admin/navigation';
 ---
 <AdminLayout title="Admin Dashboard" requiresAuth={true} dashboard={true}>
@@ -12,9 +13,7 @@ import { adminNavigation } from '../lib/admin/navigation';
             <ul class="admin-dashboard-list">
               {section.items.map((item) => (
                 <li>
-                  <a class="sidebar-button admin-dashboard-link" href={item.href}>
-                    <span>{item.label}</span><span class="admin-dashboard-link-arrow" aria-hidden="true">→</span>
-                  </a>
+                  <SidebarButton href={item.href} label={item.label} className="admin-dashboard-link" />
                 </li>
               ))}
             </ul>
@@ -80,18 +79,6 @@ import { adminNavigation } from '../lib/admin/navigation';
   }
   .admin-dashboard-list li {
     margin: 0 !important;
-  }
-  .admin-dashboard-link {
-    justify-content: space-between !important;
-    text-align: left;
-  }
-  .admin-dashboard-link::before {
-    content: none !important;
-  }
-  .admin-dashboard-link-arrow {
-    flex: 0 0 auto;
-    color: var(--primary-dark);
-    font-size: inherit;
   }
   @media (max-width: 860px) {
     .admin-dashboard-columns {
