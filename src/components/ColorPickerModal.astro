@@ -13,7 +13,7 @@ import { themes } from '../data/themes';
     </div>
     <div class="color-picker-options">
       {themes.map((theme) => (
-        <button class="color-option" data-color={theme.id} title={`Use ${theme.label} theme`}>
+        <button class="color-option" data-color={theme.id} style={`--option-from: ${theme.from}; --option-to: ${theme.to};`} title={`Use ${theme.label} theme`}>
           <span class="color-preview" style={`background: linear-gradient(135deg, ${theme.from}, ${theme.to});`} aria-hidden="true"></span>
           <span class="color-option-label"><b>{theme.label}</b><i class="bi bi-check2" aria-hidden="true"></i></span>
         </button>
