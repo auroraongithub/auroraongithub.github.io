@@ -7,11 +7,32 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
 <AdminLayout title="Resources Editor" active="resources">
   <Fragment slot="head"><link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" /></Fragment>
   <AdminPanel title="Resources Editor" icon="bi-journal-richtext">
-    <AdminTabs tabs={[{id:'scanlation',label:'Scanlation'},{id:'youtube',label:'YouTube'}]} dataAttribute="category" />
+    <div class="resources-editor-intro">
+      <div>
+        <p class="resources-editor-kicker"><i class="bi bi-pencil-square" aria-hidden="true"></i> Editorial workspace</p>
+        <h3>Shape the guides people come back to.</h3>
+        <p class="resources-editor-copy">Choose a channel, refine its panels, and save the complete set when the page reads right.</p>
+      </div>
+      <div class="resources-editor-signal" aria-label="Editor status">
+        <span class="resources-editor-signal-dot" aria-hidden="true"></span>
+        <span>Live content</span>
+      </div>
+    </div>
+    <div class="resources-editor-tabs">
+      <div class="resources-editor-section-label">Choose a resource channel</div>
+      <AdminTabs tabs={[{id:'scanlation',label:'Scanlation',icon:'bi-translate'},{id:'youtube',label:'YouTube',icon:'bi-youtube'}]} dataAttribute="category" />
+    </div>
+    <div class="resources-editor-list-heading">
+      <div>
+        <span class="resources-editor-section-label">Panels</span>
+        <p>Edit titles and rich content inline. Reorder panels to control the public reading flow.</p>
+      </div>
+      <span class="resources-editor-count"><i class="bi bi-layout-text-sidebar-reverse" aria-hidden="true"></i> Inline editing</span>
+    </div>
     <div id="resourcePanels" class="admin-resource-list"><p class="admin-status" data-state="loading">Loading…</p></div>
     <AdminStatus id="resourceMessage" />
-    <div class="admin-resource-actions"><button class="btn btn-primary" id="addResourcePanel" type="button">Add New Panel</button></div>
-    <div class="admin-sticky-actions"><button class="btn btn-ghost" id="discardResources" type="button">Discard Changes</button><button class="btn btn-primary" id="saveResources" type="button">Save All Panels</button></div>
+    <div class="admin-resource-actions"><button class="btn btn-primary" id="addResourcePanel" type="button"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add New Panel</button></div>
+    <div class="admin-sticky-actions"><span class="resources-save-hint"><i class="bi bi-cloud-check" aria-hidden="true"></i> Changes stay local until you save.</span><div><button class="btn btn-ghost" id="discardResources" type="button"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Discard Changes</button><button class="btn btn-primary" id="saveResources" type="button"><i class="bi bi-check2" aria-hidden="true"></i> Save All Panels</button></div></div>
   </AdminPanel>
   <script is:inline src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <script>
@@ -19,7 +40,7 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
     type Panel={title?:string;content?:string}; let category='scanlation'; let panels:Panel[]=[]; let editors:any[]=[];
     const list=document.querySelector<HTMLElement>('#resourcePanels')!; const message=document.querySelector<HTMLElement>('#resourceMessage'); const QuillCtor=(window as any).Quill;
     function collect(){panels.forEach((panel,index)=>{const input=list.querySelector<HTMLInputElement>(`[data-panel-title="${index}"]`);if(input)panel.title=input.value;if(editors[index])panel.content=editors[index].root.innerHTML;});}
-    function render(){editors=[];if(!panels.length){list.innerHTML='<div class="admin-empty-state"><i class="bi bi-inbox"></i><span>No panels yet. Add one below.</span></div>';return;}list.innerHTML=panels.map((panel,index)=>`<article class="admin-resource-panel" data-index="${index}"><header><input data-panel-title="${index}" value="${escapeHtml(panel.title||'')}" placeholder="Panel title…"><div><button class="btn btn-ghost" type="button" data-move="-1" data-index="${index}" ${index===0?'disabled':''}>Up</button><button class="btn btn-ghost" type="button" data-move="1" data-index="${index}" ${index===panels.length-1?'disabled':''}>Down</button><button class="btn btn-ghost admin-danger" type="button" data-remove data-index="${index}">Delete</button></div></header><div class="admin-resource-editor" id="resource-editor-${index}"></div></article>`).join('');panels.forEach((panel,index)=>{const el=document.getElementById(`resource-editor-${index}`);if(!el||!QuillCtor)return;const q=new QuillCtor(el,{theme:'snow',modules:{toolbar:[[{header:[1,2,3,false]}],['bold','italic','underline','strike'],[{color:[]},{background:[]}],[{list:'ordered'},{list:'bullet'}],['blockquote','code-block'],['link','image'],['clean']]}});q.root.innerHTML=panel.content||'';editors[index]=q;});}
+    function render(){editors=[];if(!panels.length){list.innerHTML='<div class="admin-empty-state"><i class="bi bi-inbox"></i><span>No panels yet. Add one below.</span></div>';return;}list.innerHTML=panels.map((panel,index)=>`<article class="admin-resource-panel" data-index="${index}"><header><div class="admin-resource-panel-title"><span class="admin-resource-panel-index">${String(index+1).padStart(2,'0')}</span><input data-panel-title="${index}" value="${escapeHtml(panel.title||'')}" placeholder="Panel title…"></div><div class="admin-resource-panel-actions"><button class="btn btn-ghost" type="button" data-move="-1" data-index="${index}" aria-label="Move panel up" ${index===0?'disabled':''}><i class="bi bi-arrow-up" aria-hidden="true"></i><span>Up</span></button><button class="btn btn-ghost" type="button" data-move="1" data-index="${index}" aria-label="Move panel down" ${index===panels.length-1?'disabled':''}><i class="bi bi-arrow-down" aria-hidden="true"></i><span>Down</span></button><button class="btn btn-ghost admin-danger" type="button" data-remove data-index="${index}" aria-label="Delete panel"><i class="bi bi-trash3" aria-hidden="true"></i><span>Delete</span></button></div></header><div class="admin-resource-editor" id="resource-editor-${index}"></div></article>`).join('');panels.forEach((panel,index)=>{const el=document.getElementById(`resource-editor-${index}`);if(!el||!QuillCtor)return;const q=new QuillCtor(el,{theme:'snow',modules:{toolbar:[[{header:[1,2,3,false]}],['bold','italic','underline','strike'],[{color:[]},{background:[]}],[{list:'ordered'},{list:'bullet'}],['blockquote','code-block'],['link','image'],['clean']]}});q.root.innerHTML=panel.content||'';editors[index]=q;});}
     async function load(){list.innerHTML='<p class="admin-status" data-state="loading">Loading…</p>';setAdminStatus(message);try{const response=await adminFetch(`/site/resources?category=${encodeURIComponent(category)}`,{}, {auth:false});const data=await response.json();if(!response.ok)throw new Error(data.error||'Failed to load');panels=Array.isArray(data.panels)?data.panels:[];render();}catch(error){list.innerHTML='';setAdminStatus(message,error instanceof Error?error.message:'Failed to load','error')}}
     document.querySelectorAll<HTMLButtonElement>('[data-category]').forEach((button)=>button.addEventListener('click',()=>{collect();category=button.dataset.category||'scanlation';document.querySelectorAll('[data-category]').forEach((item)=>{item.classList.toggle('active',item===button);item.setAttribute('aria-selected',String(item===button));});load();}));
     list.addEventListener('click',(event)=>{const target=event.target as HTMLElement;const remove=target.closest<HTMLButtonElement>('[data-remove]');const move=target.closest<HTMLButtonElement>('[data-move]');if(remove){const index=Number(remove.dataset.index);if(window.confirm('Delete this panel?')){collect();panels.splice(index,1);render();}}if(move){const index=Number(move.dataset.index);const delta=Number(move.dataset.move);const next=index+delta;if(next<0||next>=panels.length)return;collect();[panels[index],panels[next]]=[panels[next],panels[index]];render();}});
@@ -27,5 +48,50 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
     document.querySelector('#discardResources')?.addEventListener('click',load);
     document.querySelector('#saveResources')?.addEventListener('click',async()=>{collect();const valid=panels.filter((panel)=>panel.title||(panel.content&&panel.content!=='<p><br></p>'));setAdminStatus(message,'Saving…','loading');try{const response=await adminFetch('/admin/resources',{method:'PUT',body:JSON.stringify({category,panels:valid})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Failed to save');panels=valid;render();setAdminStatus(message,'Resources saved.','success');}catch(error){setAdminStatus(message,error instanceof Error?error.message:'Failed to save','error')}}); load();
   </script>
-  <style>.admin-resource-list{display:grid;gap:9px}.admin-resource-panel{border:1px solid var(--border-light);border-radius:7px;overflow:hidden;background:var(--card)}.admin-resource-panel>header{display:flex;align-items:center;gap:8px;padding:8px;background:var(--gradient-subtle);border-bottom:1px solid var(--border-light)}.admin-resource-panel>header>input{flex:1;background:transparent!important;border:0!important;font-weight:600}.admin-resource-panel>header>div{display:flex;gap:4px}.admin-resource-editor{min-height:150px}.admin-resource-editor .ql-editor{min-height:120px}.admin-resource-actions{margin-top:10px}@media(max-width:600px){.admin-resource-panel>header{align-items:stretch;flex-direction:column}.admin-resource-panel>header>div{justify-content:flex-end}}</style>
+  <style>
+    .resources-editor-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin:0 0 17px;padding:15px 16px;border:1px solid var(--border-light);border-radius:8px;background:linear-gradient(135deg,color-mix(in srgb,var(--primary-light) 23%,var(--card)),var(--card));}
+    .resources-editor-intro h3{margin:2px 0 5px;font-size:1.02rem;letter-spacing:.01em;}
+    .resources-editor-kicker,.resources-editor-copy,.resources-editor-list-heading p{margin:0;color:var(--text-muted);font-size:.76rem;line-height:1.55;}
+    .resources-editor-kicker{display:flex;align-items:center;gap:6px;color:var(--primary-dark);font:700 .67rem/1.2 'Courier New',monospace;letter-spacing:.08em;text-transform:uppercase;}
+    .resources-editor-signal{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;padding:6px 9px;border:1px solid color-mix(in srgb,var(--primary) 45%,var(--border-light));border-radius:999px;background:color-mix(in srgb,var(--primary-light) 28%,var(--card));color:var(--primary-dark);font:700 .66rem/1 'Courier New',monospace;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;}
+    .resources-editor-signal-dot{width:7px;height:7px;border-radius:50%;background:var(--admin-success);box-shadow:0 0 0 3px color-mix(in srgb,var(--admin-success) 18%,transparent);}
+    .resources-editor-tabs{margin-bottom:15px;padding:10px 11px 0;border:1px solid var(--border-light);border-radius:8px;background:var(--bg-elev);}
+    .resources-editor-section-label{display:block;color:var(--text-muted);font:700 .65rem/1.2 'Courier New',monospace;letter-spacing:.1em;text-transform:uppercase;}
+    .resources-editor-tabs .admin-tabs{margin:6px 0 0;padding-bottom:9px;border-bottom:0;}
+    .resources-editor-tabs .admin-tab{display:inline-flex;align-items:center;gap:6px;}
+    .resources-editor-list-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 1px 8px;padding-bottom:8px;border-bottom:1px dashed var(--border-light);}
+    .resources-editor-list-heading p{margin-top:3px;}
+    .resources-editor-count{display:inline-flex;align-items:center;gap:5px;color:var(--text-muted);font-size:.68rem;white-space:nowrap;}
+    .admin-resource-list{display:grid;gap:12px;}
+    .admin-resource-panel{border:1px solid var(--border-light);border-radius:8px;overflow:hidden;background:var(--card);box-shadow:0 4px 12px color-mix(in srgb,var(--primary) 8%,transparent);}
+    .admin-resource-panel:hover{border-color:color-mix(in srgb,var(--primary) 62%,var(--border-light));box-shadow:0 8px 22px color-mix(in srgb,var(--primary) 13%,transparent);}
+    .admin-resource-panel>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 11px;background:var(--gradient-subtle);border-bottom:1px solid var(--border-light);}
+    .admin-resource-panel-title{display:flex;align-items:center;gap:8px;min-width:0;flex:1;}
+    .admin-resource-panel-index{display:grid;place-items:center;flex:0 0 28px;height:24px;border:1px solid color-mix(in srgb,var(--primary) 36%,var(--border-light));border-radius:5px;background:color-mix(in srgb,var(--primary-light) 26%,var(--card));color:var(--primary-dark);font:700 .68rem/1 'Courier New',monospace;}
+    .admin-resource-panel>header>div>input{flex:1;background:transparent!important;border:0!important;font-weight:700;font-size:.84rem;}
+    .admin-resource-panel>header>div>input:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:4px;}
+    .admin-resource-panel-actions{display:flex;gap:4px;flex:0 0 auto;}
+    .admin-resource-panel-actions .btn{display:inline-flex;align-items:center;gap:4px;padding:5px 7px;font-size:.68rem;}
+    .admin-resource-editor{min-height:150px;background:var(--card);}
+    .admin-resource-editor .ql-toolbar.ql-snow{padding:7px 8px;background:var(--bg-elev);}
+    .admin-resource-editor .ql-container.ql-snow{background:var(--card);}
+    .admin-resource-editor .ql-editor{min-height:120px;padding:12px 13px;}
+    .admin-resource-actions{display:flex;justify-content:flex-start;margin-top:12px;}
+    .admin-resource-actions .btn{display:inline-flex;align-items:center;gap:6px;}
+    .admin-sticky-actions{align-items:center;margin-top:17px;padding-top:11px;}
+    .admin-sticky-actions>div{display:flex;gap:7px;}
+    .resources-save-hint{display:inline-flex;align-items:center;gap:6px;margin-right:auto;color:var(--text-muted);font-size:.68rem;}
+    .resources-save-hint i{color:var(--primary-dark);font-size:.9rem;}
+    @media(max-width:600px){
+      .resources-editor-intro{flex-direction:column;gap:11px;}
+      .resources-editor-list-heading{align-items:flex-start;flex-direction:column;gap:5px;}
+      .admin-resource-panel>header{align-items:stretch;flex-direction:column;gap:8px;}
+      .admin-resource-panel-actions{justify-content:flex-end;}
+      .admin-sticky-actions{align-items:stretch;flex-direction:column;}
+      .resources-save-hint{margin-right:0;}
+      .admin-sticky-actions>div{justify-content:stretch;}
+      .admin-sticky-actions>div .btn{flex:1;}
+    }
+    @media(max-width:420px){.admin-resource-panel-actions .btn span{display:none}.admin-resource-panel-actions .btn{min-width:32px;justify-content:center}.admin-sticky-actions>div{flex-direction:column;}}
+  </style>
 </AdminLayout>
