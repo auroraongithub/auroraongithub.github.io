@@ -4,5 +4,6 @@ export const primaryNavigation = [
   { label: 'Portfolio', href: '/portfolio/' },
   { label: 'Blogs', href: '/blogs/' },
   { label: 'Stories', href: '/stories/' },
-  { label: 'Experiments', href: '/experiments/' }
+  { label: 'Experiments', href: '/experiments/' },
+  { label: 'My Button', href: '/button/' }
 ] as const;
