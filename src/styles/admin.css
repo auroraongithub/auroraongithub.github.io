@@ -151,22 +151,22 @@
   border:1px solid var(--primary-dark);
   border-radius:0 0 8px 8px;
 }
-.admin-login-panel .admin-form { gap:12px; }
-.admin-login-panel .admin-field { gap:5px; }
-.admin-login-panel .admin-field label { font-size:.8rem;letter-spacing:.03em; }
+.admin-login-panel .admin-form { gap:10px; }
+.admin-login-panel .admin-field { gap:3px; }
+.admin-login-panel .admin-field label { font-size:.76rem;line-height:1.2;letter-spacing:.03em; }
 .admin-login-panel input:not([type='checkbox']):not([type='radio']) {
-  min-height:unset;
-  padding:9px 11px;
+  min-height:32px;
+  padding:6px 9px;
   border:1px solid var(--primary-dark);
   border-top-color:var(--primary-light);
   border-left-color:var(--primary-light);
-  border-radius:7px;
-  background:linear-gradient(to bottom,var(--bg-elev),color-mix(in srgb,var(--primary-light) 16%,var(--bg-elev)));
+  border-radius:5px;
+  background:linear-gradient(to bottom,color-mix(in srgb,var(--bg-elev) 94%,var(--primary-light)),var(--bg-elev));
   color:var(--text);
   font-family:Verdana,Geneva,sans-serif;
-  font-size:.82rem;
-  line-height:1.4;
-  box-shadow:inset 1px 1px 0 rgba(255,255,255,.7),inset -1px -1px 0 color-mix(in srgb,var(--primary-dark) 24%,transparent),1px 1px 2px rgba(0,0,0,.12);
+  font-size:.78rem;
+  line-height:1.25;
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.72),inset -1px -1px 0 color-mix(in srgb,var(--primary-dark) 30%,transparent),1px 1px 2px rgba(0,0,0,.1);
   transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease;
 }
 .admin-login-panel input::placeholder { color:var(--text-muted);opacity:.9; }
