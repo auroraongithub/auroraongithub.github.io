@@ -1,0 +1,66 @@
+---
+const badges = [
+  {
+    href: 'https://salamithecat.com/',
+    src: 'https://salamithecat.com/button.webp',
+    alt: 'Salami the Cat',
+    className: ''
+  },
+  {
+    href: 'https://elythria.dev/',
+    src: '/img/elythria-button.svg',
+    alt: 'Visit elythria.dev',
+    className: 'webring-badge--site'
+  },
+  {
+    href: 'https://vorlie.pl/',
+    src: 'https://vorlie.pl/images/vorlie.png',
+    alt: 'Vorlie',
+    className: ''
+  },
+  {
+    href: 'https://pre1ude.dev/',
+    src: 'https://pre1ude.dev/blankie.png',
+    alt: 'pre1ude.dev',
+    className: ''
+  },
+  {
+    href: 'https://piqs.eu/',
+    src: 'https://piqs.eu/assets/button/anim.webp',
+    alt: 'piqseu',
+    className: ''
+  }
+];
+
+const renderBadges = (duplicate = false) => badges.map((badge) => ({ ...badge, duplicate }));
+---
+<div class="webring-marquee" aria-label="Webring buttons">
+  <div class="webring-track">
+    <div class="webring-run">
+      {renderBadges().map((badge) => (
+        <a
+          class:list={['webring-badge', badge.className]}
+          href={badge.href}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={badge.src} width={badge.className ? 256 : 88} height={badge.className ? 90 : 31} alt={badge.alt} loading="lazy" />
+        </a>
+      ))}
+    </div>
+    <div class="webring-run" aria-hidden="true">
+      {renderBadges(true).map((badge) => (
+        <a
+          class:list={['webring-badge', badge.className]}
+          href={badge.href}
+          tabindex="-1"
+          aria-hidden="true"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={badge.src} width={badge.className ? 256 : 88} height={badge.className ? 90 : 31} alt="" loading="lazy" />
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
