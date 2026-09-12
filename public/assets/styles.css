@@ -1898,6 +1898,7 @@ ul {
 
 .widget-now .now-widget-item {
   padding: 6px 4px;
+  background: color-mix(in srgb, var(--bg-elev) 52%, transparent);
   border-bottom: 1px dotted var(--border-light);
 }
 
@@ -1906,14 +1907,18 @@ ul {
 }
 
 .widget-now .now-widget-label {
-  color: var(--primary-dark);
+  color: color-mix(in srgb, var(--primary-dark) 78%, var(--text));
   font-size: 0.65rem;
+  font-weight: 700;
   letter-spacing: 0.5px;
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--bg-elev) 82%, transparent);
 }
 
 .widget-now .now-widget-value {
   color: var(--text);
   font-size: 0.8rem;
+  font-weight: 600;
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--bg-elev) 82%, transparent);
 }
 
 /* Apply the Lilith window frame to every sidebar card. */
@@ -4420,7 +4425,7 @@ ul {
     2px 3px 0 color-mix(in srgb, var(--primary) 38%, transparent);
 }
 
-.manga-section .manga-card:hover::after {
+.manga-section .manga-card.is-shining::after {
   animation: manga-card-shine 0.55s ease-out;
 }
 

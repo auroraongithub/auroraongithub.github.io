@@ -39,6 +39,22 @@ function bind(prevSelector, nextSelector, track) {
   document.querySelector(nextSelector)?.addEventListener('click', () => move(track, 1));
 }
 
+function bindMangaShine() {
+  document.querySelectorAll('.manga-section .manga-card').forEach((card) => {
+    card.addEventListener('pointerenter', () => {
+      if (!card.classList.contains('is-shining')) {
+        card.classList.add('is-shining');
+      }
+    });
+
+    card.addEventListener('animationend', (event) => {
+      if (event.animationName === 'manga-card-shine') {
+        card.classList.remove('is-shining');
+      }
+    });
+  });
+}
+
 function initCarousels() {
   const series = document.getElementById('seriesTrack');
   if (series) bind('[data-carousel-prev]', '[data-carousel-next]', series);
@@ -56,6 +72,8 @@ function initCarousels() {
     state.set(favorites, 0);
     favorites.style.transform = 'translateX(0)';
   });
+
+  bindMangaShine();
 }
 
 document.addEventListener('DOMContentLoaded', initCarousels, { once: true });
