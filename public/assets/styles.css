@@ -731,10 +731,15 @@ ul {
 .color-preview::after {
   content: "";
   position: absolute;
-  inset: 50% 0 auto;
-  height: 1px;
-  background: rgba(255,255,255,0.52);
-  box-shadow: 0 -1px 0 rgba(255,255,255,0.18);
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.42) 0%,
+    rgba(255,255,255,0.12) 35%,
+    rgba(255,255,255,0.28) 50%,
+    rgba(255,255,255,0.08) 68%,
+    rgba(255,255,255,0) 100%
+  );
 }
 
 .color-option-label {
