@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Admin · elythria.dev</title>
     <link rel="stylesheet" href="./../assets/styles.css" />
+    <link rel="stylesheet" href="./admin-theme.css" />
     <style>
       body.admin-entry { display: grid; min-height: 100vh; place-items: center; padding: 20px; }
       .admin-entry .neo-container { width: min(520px, 100%); }
@@ -16,7 +17,7 @@
       @media (max-width: 500px) { body.admin-entry { padding: 12px; } .admin-entry .entry-panel { margin: 8px; } }
     </style>
   </head>
-  <body class="admin-entry">
+  <body class="admin-entry" data-admin-theme>
     <div class="neo-container" aria-live="polite">
       <header class="site-banner"><div class="brand">elythria.dev</div><span class="admin-label">Admin</span></header>
       <section class="neo-box entry-panel">
@@ -34,5 +35,6 @@
         }
       };
     </script>
+    <script src="./admin-theme.js"></script>
   </body>
 </html>

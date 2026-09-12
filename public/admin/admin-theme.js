@@ -53,11 +53,30 @@
     });
   }
 
+  function ensureThemeModeRow(modal) {
+    if (!modal || modal.querySelector('[data-toggle-theme]')) return;
+    const row = document.createElement('div');
+    row.className = 'theme-mode-row';
+    row.innerHTML = `
+      <div class="theme-mode-copy">
+        <span class="theme-mode-kicker"><i class="bi bi-circle-half" aria-hidden="true"></i> Display mode</span>
+        <small data-theme-mode-label>Light mode</small>
+      </div>
+      <button class="theme-toggle" type="button" title="Use dark mode" aria-label="Use dark mode" data-toggle-theme>
+        <i class="bi bi-brightness-high" aria-hidden="true"></i>
+        <span data-theme-toggle-label>Use dark mode</span>
+      </button>`;
+    const options = modal.querySelector('.color-picker-options');
+    if (options) options.insertAdjacentElement('afterend', row);
+    else modal.querySelector('.color-picker-content')?.append(row);
+  }
+
   function initAdminThemeControls(scope) {
     const target = scope && scope.querySelectorAll ? scope : document;
     const modal = target.querySelector('[data-color-modal]') || document.querySelector('[data-color-modal]');
+    ensureThemeModeRow(modal);
     const pickers = target.querySelectorAll('[data-color-picker]');
-    const toggles = target.querySelectorAll('[data-toggle-theme]');
+    const toggles = modal ? modal.querySelectorAll('[data-toggle-theme]') : target.querySelectorAll('[data-toggle-theme]');
     const options = target.querySelectorAll('.color-option');
     const closeButtons = target.querySelectorAll('[data-color-close]');
     if (!modal && !pickers.length && !toggles.length && !options.length) return false;

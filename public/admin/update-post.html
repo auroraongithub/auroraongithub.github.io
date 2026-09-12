@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./../assets/styles.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./admin-theme.css" />
     <style>
       .admin-publishing .neo-container { max-width: 1180px; }
       .admin-publishing .site-banner { min-height: 76px; padding: 14px 18px; }
@@ -35,7 +36,7 @@
       @media (max-width: 768px) { .admin-publishing .neo-layout { display: block; } .admin-publishing .neo-sidebar { display: none; } .admin-publishing #editor { min-height: 280px; } }
     </style>
   </head>
-  <body class="admin-publishing">
+  <body class="admin-publishing" data-admin-theme>
     <!-- Color Picker Modal -->
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
@@ -228,6 +229,7 @@
         alert('Post updated successfully');
       });
     </script>
+    <script src="./admin-theme.js"></script>
   </body>
 </html>
 

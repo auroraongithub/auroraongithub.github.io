@@ -6,6 +6,7 @@
     <title>YouTube Shorts Research · elythria.dev</title>
     <link rel="stylesheet" href="./../assets/styles.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="./admin-theme.css" />
     <style>
       /* Compact Dashboard styles */
       .dashboard-grid {
@@ -709,7 +710,7 @@
       @media (max-width: 700px) { .admin-tool .search-bar { align-items: stretch; } .admin-tool .search-bar input[type="text"] { min-width: 100%; } .admin-tool .search-bar select, .admin-tool .search-bar .btn { flex: 1; } }
     </style>
   </head>
-  <body>
+  <body data-admin-theme>
     <!-- Color Picker Modal -->
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
@@ -2012,5 +2013,6 @@
       loadSavedNiches();
       loadSavedResearch();
     </script>
+    <script src="./admin-theme.js"></script>
   </body>
 </html>

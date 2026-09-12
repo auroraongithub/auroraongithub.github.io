@@ -6,6 +6,7 @@
     <title>Admin Stories · elythria.dev</title>
     <link rel="stylesheet" href="./../assets/styles.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="./admin-theme.css" />
     <style>
       .admin-archive .neo-main { min-width: 0; }
       .admin-archive .neo-main > .neo-box { overflow: hidden; }
@@ -49,7 +50,7 @@
       }
     </style>
 </head>
-<body class="admin-archive">
+<body class="admin-archive" data-admin-theme>
     <!-- Color Picker Modal -->
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
@@ -224,5 +225,6 @@
       }
       load();
     </script>
+  <script src="./admin-theme.js"></script>
 </body>
 </html>

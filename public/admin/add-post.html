@@ -35,8 +35,9 @@
       @media (max-width: 768px) { .admin-publishing .neo-layout { display: block; } .admin-publishing .neo-sidebar { display: none; } .admin-publishing #editor { min-height: 280px; } }
     </style>
     <link href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./admin-theme.css" />
   </head>
-  <body class="admin-publishing">
+  <body class="admin-publishing" data-admin-theme>
     <!-- Color Picker Modal -->
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
@@ -213,6 +214,7 @@
         alert('Post added successfully');
       });
     </script>
+    <script src="./admin-theme.js"></script>
   </body>
 </html>
 

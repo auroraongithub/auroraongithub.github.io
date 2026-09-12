@@ -6,6 +6,7 @@
     <title>YouTube Transcripts · elythria.dev</title>
     <link rel="stylesheet" href="./../assets/styles.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="./admin-theme.css" />
     <style>
       /* Page-specific styles only */
       .transcript-layout {
@@ -1263,7 +1264,7 @@
       @media (max-width: 560px) { .admin-transcripts .editor-header { align-items: stretch; flex-direction: column; } .admin-transcripts .editor-actions { flex-wrap: wrap; } .admin-transcripts .editor-actions .word-count { margin-right: auto; } }
     </style>
   </head>
-  <body>
+  <body data-admin-theme>
     <!-- Color Picker Modal -->
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
@@ -3007,5 +3008,6 @@ All Minecraft facts must be verified and fact-checked before presenting them.`;
       // Load on start
       loadTranscripts();
     </script>
+    <script src="./admin-theme.js"></script>
   </body>
 </html>

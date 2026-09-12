@@ -65,6 +65,7 @@ function toggleTheme() {
 // ==========================================================================
 
 function initColorPicker() {
+  if (document.body?.hasAttribute('data-admin-theme')) return;
   const modal = document.querySelector('[data-color-modal]');
   const toggleBtn = document.querySelector('[data-color-picker]');
   const closeBtn = document.querySelector('[data-color-close]');
@@ -159,6 +160,7 @@ window.initScrollAnimations = initScrollAnimations;
 // ==========================================================================
 
 function initHeaderControls() {
+  if (document.body?.hasAttribute('data-admin-theme')) return;
   // Theme toggle buttons
   const toggleButtons = document.querySelectorAll('[data-toggle-theme]');
   toggleButtons.forEach(btn => btn.addEventListener('click', toggleTheme));

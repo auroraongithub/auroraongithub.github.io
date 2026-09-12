@@ -6,6 +6,7 @@
     <title>Changelog · elythria.dev Admin</title>
     <link rel="stylesheet" href="./../assets/styles.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="./admin-theme.css" />
     <style>
       .admin-changelog .neo-main { min-width: 0; }
       .admin-changelog .neo-main > .neo-box + .neo-box { margin-top: 12px !important; }
@@ -41,7 +42,7 @@
       }
     </style>
   </head>
-  <body class="admin-changelog">
+  <body class="admin-changelog" data-admin-theme>
     <!-- Color Picker Modal -->
     <div class="color-picker-modal" data-color-modal>
       <div class="color-picker-content">
@@ -299,5 +300,6 @@
       
       loadChangelog();
     </script>
+    <script src="./admin-theme.js"></script>
   </body>
 </html>
