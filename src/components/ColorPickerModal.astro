@@ -2,20 +2,37 @@
 import { themes } from '../data/themes';
 ---
 <div class="color-picker-modal" data-color-modal>
-  <div class="color-picker-content">
+  <div class="color-picker-content" role="dialog" aria-modal="true" aria-labelledby="color-picker-title">
     <div class="color-picker-header">
-      <h3>Choose Your Color</h3>
+      <div>
+        <span class="color-picker-kicker">APPEARANCE LAB</span>
+        <h3 id="color-picker-title"><i class="bi bi-palette-fill" aria-hidden="true"></i> Tune the site</h3>
+      </div>
       <button class="color-picker-close" aria-label="Close color picker" data-color-close>
         <i class="bi bi-x-lg"></i>
       </button>
+    </div>
+    <div class="color-picker-section-heading">
+      <span>Accent palette</span>
+      <small>Pick a flavor for the interface</small>
     </div>
     <div class="color-picker-options">
       {themes.map((theme) => (
         <button class="color-option" data-color={theme.id} title={theme.label}>
           <div class="color-preview" style={`background: linear-gradient(135deg, ${theme.from}, ${theme.to});`}></div>
-          <span>{theme.label}</span>
+          <span><b>{theme.label}</b><i class="bi bi-check2" aria-hidden="true"></i></span>
         </button>
       ))}
+    </div>
+    <div class="theme-mode-row">
+      <div class="theme-mode-copy">
+        <span class="theme-mode-kicker"><i class="bi bi-circle-half" aria-hidden="true"></i> Display mode</span>
+        <small data-theme-mode-label>Light mode</small>
+      </div>
+      <button class="theme-toggle" title="Use dark mode" aria-label="Use dark mode" data-toggle-theme>
+        <i class="bi bi-brightness-high" aria-hidden="true"></i>
+        <span data-theme-toggle-label>Use dark mode</span>
+      </button>
     </div>
   </div>
 </div>

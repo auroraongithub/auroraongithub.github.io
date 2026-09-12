@@ -9,6 +9,17 @@ function applyTheme(theme) {
   document.querySelectorAll('[data-toggle-theme] i').forEach((icon) => {
     icon.className = next === 'dark' ? 'bi bi-moon-stars' : 'bi bi-brightness-high';
   });
+  document.querySelectorAll('[data-theme-mode-label]').forEach((label) => {
+    label.textContent = next === 'dark' ? 'Dark mode' : 'Light mode';
+  });
+  document.querySelectorAll('[data-theme-toggle-label]').forEach((label) => {
+    label.textContent = next === 'dark' ? 'Use light mode' : 'Use dark mode';
+  });
+  document.querySelectorAll('[data-toggle-theme]').forEach((button) => {
+    const label = next === 'dark' ? 'Use light mode' : 'Use dark mode';
+    button.title = label;
+    button.setAttribute('aria-label', label);
+  });
 }
 
 function applyColor(color) {
