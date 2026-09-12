@@ -3,12 +3,6 @@ import ThemeControls from './ThemeControls.astro';
 import { site } from '../data/site';
 ---
 <header class="site-banner">
-  <a href="/" class="brand" data-brand={site.name} aria-label={site.name} style="text-decoration: none !important; color: var(--primary) !important;">
-    <span class="brand-text" aria-hidden="true">{site.name}</span>
-    <span class="brand-echo brand-echo-cyan" aria-hidden="true">{site.name}</span>
-    <span class="brand-echo brand-echo-pink" aria-hidden="true">{site.name}</span>
-    <span class="brand-scanline" aria-hidden="true"></span>
-    <span class="brand-cursor" aria-hidden="true"></span>
-  </a>
+  <a href="/" class="brand" style="text-decoration: none !important; color: var(--primary) !important;">{site.name}</a>
   <ThemeControls />
 </header>
