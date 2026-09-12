@@ -1,0 +1,114 @@
+---
+import AdminPanel from './AdminPanel.astro';
+import AdminField from './AdminField.astro';
+import AdminStatus from './AdminStatus.astro';
+
+interface Props { mode: 'create' | 'update' }
+const { mode } = Astro.props;
+const updating = mode === 'update';
+---
+<AdminPanel title={updating ? 'Update Post' : 'Add Post'} icon={updating ? 'bi-pencil-square' : 'bi-plus-square'}>
+  <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/blogs/">Back to blogs</a></Fragment>
+  <form class="admin-form" data-admin-post-editor data-mode={mode}>
+    <AdminField label="Title" forId="postTitle" required><input id="postTitle" type="text" placeholder="Title" /></AdminField>
+    {!updating && (
+      <AdminField label="Category" forId="postCategory" required>
+        <select id="postCategory"><option value="">Select</option><option value="blog">Blog</option><option value="story">Story</option></select>
+      </AdminField>
+    )}
+    <AdminField label="Tags" forId="postTags" hint="Comma-separated tags" required><input id="postTags" type="text" placeholder="tag1, tag2" /></AdminField>
+    <AdminField label="Content" required><div id="postEditor" class="admin-editor"></div></AdminField>
+    <AdminStatus id="postEditorStatus" />
+    <div><button class="btn btn-primary" type="submit">{updating ? 'Update Post' : 'Add Post'}</button></div>
+  </form>
+</AdminPanel>
+<script is:inline src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+  import { adminFetch, storeAdminToken } from '../../lib/admin/api';
+
+  const form = document.querySelector<HTMLFormElement>('[data-admin-post-editor]');
+  const titleInput = document.querySelector<HTMLInputElement>('#postTitle');
+  const tagsInput = document.querySelector<HTMLInputElement>('#postTags');
+  const categoryInput = document.querySelector<HTMLSelectElement>('#postCategory');
+  const status = document.querySelector<HTMLElement>('#postEditorStatus');
+  const QuillCtor = (window as any).Quill;
+
+  function setStatus(message = '', state: 'loading' | 'success' | 'error' | '' = '') {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.state = state;
+    status.hidden = !message;
+  }
+
+  if (form && titleInput && tagsInput && QuillCtor) {
+    const quill = new QuillCtor('#postEditor', {
+      theme: 'snow',
+      modules: { toolbar: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ color: [] }, { background: [] }],
+        [{ script: 'sub' }, { script: 'super' }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+        ['blockquote', 'code-block'],
+        ['link', 'image', 'video', 'formula'],
+        ['clean']
+      ] }
+    });
+
+    const mode = form.dataset.mode || 'create';
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    if (mode === 'update') {
+      if (!id) window.location.replace('/admin/blogs/');
+      else {
+        setStatus('Loading post…', 'loading');
+        adminFetch(`/post/${encodeURIComponent(id)}`, {}, { auth: false })
+          .then(async (response) => {
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Failed to load post');
+            titleInput.value = data.data?.title || '';
+            tagsInput.value = data.data?.tags || '';
+            quill.clipboard.dangerouslyPasteHTML(data.data?.content || '');
+            setStatus('');
+          })
+          .catch((error) => setStatus(error instanceof Error ? error.message : 'Failed to load post', 'error'));
+      }
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const title = titleInput.value.trim();
+      const tags = tagsInput.value.trim();
+      const content = quill.root.innerHTML;
+      const plain = quill.root.innerText.trim();
+      const type = categoryInput?.value.trim() || '';
+      if (!title || !tags || !plain || (mode === 'create' && !type)) {
+        setStatus('Fill all required fields.', 'error');
+        return;
+      }
+      if (mode === 'update' && !id) return;
+      setStatus(mode === 'update' ? 'Updating post…' : 'Publishing post…', 'loading');
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      try {
+        const response = await adminFetch(mode === 'update' ? `/post/${encodeURIComponent(id!)}` : '/post', {
+          method: mode === 'update' ? 'PATCH' : 'POST',
+          body: JSON.stringify(mode === 'update' ? { title, content, tags } : { title, type, content, tags })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Request failed');
+        if (data.token) storeAdminToken(data.token);
+        setStatus(mode === 'update' ? 'Post updated successfully.' : 'Post added successfully.', 'success');
+      } catch (error) {
+        setStatus(error instanceof Error ? error.message : 'Request failed', 'error');
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  } else if (form) {
+    setStatus('Editor failed to load.', 'error');
+  }
+</script>

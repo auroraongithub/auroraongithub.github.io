@@ -1,0 +1,8 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminPostEditor from '../../components/admin/AdminPostEditor.astro';
+---
+<AdminLayout title="Update Post" active="blogs">
+  <Fragment slot="head"><link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" /></Fragment>
+  <AdminPostEditor mode="update" />
+</AdminLayout>

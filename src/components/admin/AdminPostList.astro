@@ -1,0 +1,79 @@
+---
+import AdminPanel from './AdminPanel.astro';
+
+interface Props { type: 'blog' | 'story'; title: string }
+const { type, title } = Astro.props;
+---
+<AdminPanel title={title} icon={type === 'blog' ? 'bi-journal-text' : 'bi-book'} class="admin-post-panel">
+  <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/add-post/">Add Post</a></Fragment>
+  <div class="admin-list admin-post-list" data-admin-post-list data-post-type={type}>
+    <p class="admin-status" data-state="loading">Loading {type === 'blog' ? 'posts' : 'stories'}…</p>
+  </div>
+</AdminPanel>
+
+<script>
+  import { adminFetch, escapeHtml } from '../../lib/admin/api';
+
+  type PostItem = { id: string; title: string; date?: string; tags?: string };
+  type PostYear = { year: string | number; posts: PostItem[] };
+
+  async function loadPostList(root: HTMLElement) {
+    const type = root.dataset.postType || 'blog';
+    root.innerHTML = '<p class="admin-status" data-state="loading">Loading…</p>';
+    try {
+      const response = await adminFetch(`/post?type=${encodeURIComponent(type)}`, {}, { auth: false });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || 'Failed to load posts');
+      const years: PostYear[] = Array.isArray(data.posts) ? data.posts : [];
+      if (!years.length || years.every((year) => !year.posts?.length)) {
+        root.innerHTML = '<div class="admin-empty-state"><i class="bi bi-inbox"></i><strong>No entries</strong><span>Nothing has been published here yet.</span></div>';
+        return;
+      }
+      root.innerHTML = years.map((year) => `
+        <div class="admin-list-group-title">${escapeHtml(year.year)}</div>
+        ${(year.posts || []).map((post) => `
+          <article class="admin-list-item" data-post-id="${escapeHtml(post.id)}">
+            <div class="admin-list-item-head"><h3><a href="/admin/post/?id=${encodeURIComponent(post.id)}">${escapeHtml(post.title)}</a></h3></div>
+            <div class="admin-list-item-body">
+              <div class="admin-list-meta">
+                <span><i class="bi bi-calendar3"></i> ${escapeHtml(post.date || '')}</span>
+                <span><i class="bi bi-tags"></i> ${escapeHtml(post.tags || 'No tags')}</span>
+              </div>
+            </div>
+            <div class="admin-list-item-actions">
+              <a class="btn btn-ghost" href="/admin/update-post/?id=${encodeURIComponent(post.id)}">Edit</a>
+              <button class="btn btn-ghost admin-danger" type="button" data-delete-post="${escapeHtml(post.id)}">Delete</button>
+            </div>
+          </article>`).join('')}
+      `).join('');
+    } catch (error) {
+      root.innerHTML = `<p class="admin-status" data-state="error">${escapeHtml(error instanceof Error ? error.message : 'Failed to load')}</p>`;
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-admin-post-list]').forEach((root) => {
+    loadPostList(root);
+    root.addEventListener('click', async (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-delete-post]');
+      if (!button) return;
+      const id = button.dataset.deletePost;
+      if (!id || !window.confirm('Delete this post?')) return;
+      button.disabled = true;
+      try {
+        const response = await adminFetch(`/post/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Delete failed');
+        await loadPostList(root);
+      } catch (error) {
+        window.alert(error instanceof Error ? error.message : 'Delete failed');
+        button.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style>
+  .admin-post-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-post-list .admin-list-group-title { grid-column: 1 / -1; }
+  @media (max-width: 700px) { .admin-post-list { grid-template-columns: 1fr; } }
+</style>

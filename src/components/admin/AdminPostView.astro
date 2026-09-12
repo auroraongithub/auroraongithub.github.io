@@ -1,0 +1,58 @@
+---
+import AdminPanel from './AdminPanel.astro';
+---
+<AdminPanel title="View Post" icon="bi-file-earmark-text">
+  <Fragment slot="actions"><a class="btn btn-ghost" href="/admin/blogs/">Back to blogs</a></Fragment>
+  <article class="admin-post-view">
+    <h1 id="adminPostTitle">Loading…</h1>
+    <div id="adminPostContent" class="content"><p class="admin-status" data-state="loading">Loading post…</p></div>
+  </article>
+</AdminPanel>
+<div class="admin-lightbox" id="adminLightbox" aria-hidden="true">
+  <button class="btn btn-ghost admin-lightbox-close" type="button" aria-label="Close image"><i class="bi bi-x-lg"></i></button>
+  <img id="adminLightboxImage" alt="" />
+</div>
+<script>
+  import { adminFetch } from '../../lib/admin/api';
+
+  const title = document.querySelector<HTMLElement>('#adminPostTitle');
+  const content = document.querySelector<HTMLElement>('#adminPostContent');
+  const id = new URLSearchParams(window.location.search).get('id');
+  if (!id) window.location.replace('/admin/blogs/');
+  else if (title && content) {
+    adminFetch(`/post/${encodeURIComponent(id)}`, {}, { auth: false })
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to load post');
+        title.textContent = data.data?.title || 'Untitled';
+        content.innerHTML = data.data?.content || '<p>No content.</p>';
+      })
+      .catch((error) => { content.innerHTML = `<p class="admin-status" data-state="error">${error instanceof Error ? error.message : 'Failed to load post'}</p>`; });
+  }
+
+  const lightbox = document.querySelector<HTMLElement>('#adminLightbox');
+  const image = document.querySelector<HTMLImageElement>('#adminLightboxImage');
+  const close = () => { lightbox?.classList.remove('active'); lightbox?.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; };
+  content?.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    if (target instanceof HTMLImageElement && lightbox && image) {
+      image.src = target.src;
+      image.alt = target.alt || '';
+      lightbox.classList.add('active');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+  });
+  lightbox?.querySelector('.admin-lightbox-close')?.addEventListener('click', close);
+  lightbox?.addEventListener('click', (event) => { if (event.target === lightbox) close(); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(); });
+</script>
+<style>
+  .admin-post-view { max-width: 780px; margin: 0 auto; }
+  .admin-post-view h1 { margin: 0 0 16px; font-size: clamp(1.35rem, 3vw, 2rem); }
+  .admin-post-view :global(img) { max-width: 100%; height: auto; cursor: zoom-in; }
+  .admin-lightbox { position: fixed; inset: 0; z-index: 12000; display: none; align-items: center; justify-content: center; padding: 30px; background: rgba(0,0,0,.86); }
+  .admin-lightbox.active { display: flex; }
+  .admin-lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; }
+  .admin-lightbox-close { position: absolute; top: 14px; right: 14px; }
+</style>
