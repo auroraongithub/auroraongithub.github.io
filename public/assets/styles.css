@@ -2208,17 +2208,34 @@ ul {
     background-size: cover, cover;
 }
 
-.neo-sidebar .sidebar-links-box > .neo-content {
+.neo-sidebar .sidebar-links-box > .neo-content,
+.more-drawer .sidebar-links-box > .neo-content {
   background-color: color-mix(in srgb, var(--bg-elev) 58%, transparent);
   background-image:
     linear-gradient(
       color-mix(in srgb, var(--bg-elev) 48%, transparent),
       color-mix(in srgb, var(--bg-elev) 48%, transparent)
     ),
-    url('https://i.imgur.com/dVxebAx_d.webp?maxwidth=760&fidelity=grand');
+    url('https://s1.bwallpapers.com/wallpapers/2014/08/21/pink-dark-vector_035702946.jpg');
   background-position: center, center;
-  background-repeat: no-repeat, repeat;
-  background-size: cover, 236px 428px;
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-clip: padding-box;
+  overflow: hidden;
+}
+
+.neo-sidebar .sidebar-more > .neo-content,
+.more-drawer .sidebar-more > .neo-content {
+  background-color: color-mix(in srgb, var(--bg-elev) 58%, transparent);
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--bg-elev) 48%, transparent),
+      color-mix(in srgb, var(--bg-elev) 48%, transparent)
+    ),
+    url('https://s1.bwallpapers.com/wallpapers/2014/08/21/green-vector_035646577.jpg');
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
   background-clip: padding-box;
   overflow: hidden;
 }
