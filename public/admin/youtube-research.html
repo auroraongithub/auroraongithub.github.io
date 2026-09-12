@@ -677,6 +677,36 @@
       .load-more .btn {
         padding: 0.5rem 1.5rem;
       }
+      /* Compact homepage-aligned admin surface. */
+      .admin-tool .neo-main > .neo-box { margin-bottom: 0; }
+      .admin-tool .neo-main > .neo-box:hover { transform: none; }
+      .admin-tool .neo-content { padding: 0.75rem; color: var(--text); }
+      .admin-tool .neo-header { padding: 0.65rem 0.8rem; }
+      .admin-tool .neo-header h2 { font-size: 0.9rem; letter-spacing: 0.12em; }
+      .admin-tool .neo-header h2 i, .admin-tool .tab-btn i, .admin-tool .recommended-section h4 i, .admin-tool .recommendation-chip i { display: none; }
+      .admin-tool .tab-nav { gap: 0.25rem; margin: 0 -0.75rem 0.8rem; padding: 0 0.75rem 0.45rem; border-bottom: 1px solid var(--border-light); }
+      .admin-tool .tab-btn { border: 1px solid transparent; border-radius: 6px; padding: 0.4rem 0.6rem; color: var(--text-muted); background: transparent; font-weight: 600; }
+      .admin-tool .tab-btn:hover, .admin-tool .tab-btn.active { background: var(--primary); color: var(--bg); border-color: var(--primary); }
+      .admin-tool .recommended-section { margin: 0 0 0.75rem; padding: 0; border: 0; background: transparent; }
+      .admin-tool .recommended-section h4 { margin: 0 0 0.45rem; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.08em; }
+      .admin-tool .recommended-list { gap: 0.35rem; }
+      .admin-tool .recommendation-chip, .admin-tool .tag { border: 1px solid var(--border-light); border-radius: 999px; background: var(--bg-elev); color: var(--text-muted); padding: 0.3rem 0.55rem; font-size: 0.72rem; }
+      .admin-tool .recommendation-chip:hover, .admin-tool .tag:hover { color: var(--bg); background: var(--primary); border-color: var(--primary); }
+      .admin-tool .search-bar, .admin-tool .channel-input-group { gap: 0.45rem; margin-bottom: 0.75rem; }
+      .admin-tool .search-bar input, .admin-tool .search-bar select, .admin-tool .channel-input-group input { min-height: 2.25rem; padding: 0.45rem 0.65rem; border: 1px solid var(--border-light); border-radius: 6px; background: var(--bg-elev); color: var(--text); font: inherit; font-size: 0.78rem; }
+      .admin-tool input:focus, .admin-tool select:focus, .admin-tool textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 22%, transparent); }
+      .admin-tool .btn { min-height: 2.25rem; padding: 0.45rem 0.75rem; border-radius: 6px; font-size: 0.78rem; }
+      .admin-tool .search-bar .btn i, .admin-tool .btn > i { display: none; }
+      .admin-tool .search-bar .btn:not(.btn-ghost) { background: var(--primary); color: var(--bg); border-color: var(--primary); }
+      .admin-tool .video-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 0.65rem; }
+      .admin-tool .video-card { border: 1px solid var(--border-light); box-shadow: var(--shadow); }
+      .admin-tool .video-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+      .admin-tool .empty-state, .admin-tool .loading-spinner { min-height: 8rem; padding: 2rem 1rem; border: 1px dashed var(--border-light); border-radius: 6px; color: var(--text-muted); }
+      .admin-tool .empty-state i, .admin-tool .loading-spinner i { display: none; }
+      .admin-tool .empty-state p, .admin-tool .loading-spinner p { margin: 0; font-size: 0.8rem; }
+      .admin-tool .metric-box, .admin-tool .stat-card { border: 1px solid var(--border-light); border-radius: 6px; background: var(--bg-elev); }
+      .admin-tool .saved-item { padding: 0.65rem 0; border-color: var(--border-light); }
+      @media (max-width: 700px) { .admin-tool .search-bar { align-items: stretch; } .admin-tool .search-bar input[type="text"] { min-width: 100%; } .admin-tool .search-bar select, .admin-tool .search-bar .btn { flex: 1; } }
     </style>
   </head>
   <body>

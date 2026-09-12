@@ -1216,6 +1216,51 @@
         border-color: var(--primary);
         color: var(--text);
       }
+      /* Compact editor-first surface aligned to the homepage system. */
+      .admin-tool .neo-main > .neo-box { margin-bottom: 0; }
+      .admin-tool .neo-main > .neo-box:hover { transform: none; }
+      .admin-tool .neo-content { padding: 0.75rem; color: var(--text); }
+      .admin-tool .neo-header { padding: 0.65rem 0.8rem; }
+      .admin-tool .neo-header h2 { font-size: 0.9rem; letter-spacing: 0.12em; }
+      .admin-tool .neo-header h2 i, .admin-tool .pane-header i, .admin-tool .list-header h4 i, .admin-tool .ai-chat-header h4 i { display: none; }
+      .admin-transcripts .transcript-layout { grid-template-columns: minmax(210px, 0.72fr) minmax(0, 1.6fr); gap: 0.75rem; }
+      .admin-transcripts .input-panel, .admin-transcripts .editor-panel { min-width: 0; border: 0; border-radius: 0; background: transparent; }
+      .admin-transcripts .input-panel { display: flex; flex-direction: column; gap: 0.75rem; }
+      .admin-transcripts .input-panel > div, .admin-transcripts .transcript-list-container { padding: 0; border: 0; background: transparent; }
+      .admin-transcripts .input-panel label { margin-bottom: 0.4rem !important; color: var(--text-muted); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+      .admin-transcripts .url-input, .admin-transcripts .editor-title-input, .admin-transcripts .transcript-textarea, .admin-transcripts .expanded-pane textarea, .admin-transcripts .ai-chat-input, .admin-transcripts .ai-settings-group textarea, .admin-transcripts .ai-settings-group select { border: 1px solid var(--border-light); border-radius: 6px; background: var(--bg-elev); color: var(--text); font: inherit; }
+      .admin-transcripts .url-input { min-height: 8rem; padding: 0.6rem; font-size: 0.78rem; }
+      .admin-transcripts .input-panel .btn { min-height: 2.2rem; border-radius: 6px; font-size: 0.76rem; }
+      .admin-transcripts .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; }
+      .admin-transcripts .stat-box { padding: 0.45rem 0.25rem; border: 1px solid var(--border-light); border-radius: 6px; background: var(--bg-elev); }
+      .admin-transcripts .stat-value { color: var(--primary); font-size: 1rem; }
+      .admin-transcripts .stat-label { color: var(--text-muted); font-size: 0.62rem; text-transform: uppercase; }
+      .admin-transcripts .list-header { gap: 0.45rem; padding: 0 0 0.45rem; border-bottom: 1px solid var(--border-light); }
+      .admin-transcripts .list-header h4 { margin: 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+      .admin-transcripts .filter-btns { gap: 0.25rem; }
+      .admin-transcripts .filter-btn { padding: 0.3rem 0.45rem; border: 1px solid transparent; border-radius: 999px; background: transparent; color: var(--text-muted); font-size: 0.68rem; }
+      .admin-transcripts .filter-btn.active, .admin-transcripts .filter-btn:hover { border-color: var(--primary); background: var(--primary); color: var(--bg); }
+      .admin-transcripts .transcript-item { border-color: var(--border-light); border-radius: 0; background: transparent; }
+      .admin-transcripts .editor-header { gap: 0.5rem; padding: 0 0 0.55rem; border-bottom: 1px solid var(--border-light); }
+      .admin-transcripts .editor-title-input { min-height: 2.2rem; padding: 0.45rem 0.6rem; font-size: 0.82rem; font-weight: 600; }
+      .admin-transcripts .editor-actions { gap: 0.35rem; }
+      .admin-transcripts .word-count { color: var(--text-muted); font-size: 0.68rem; }
+      .admin-transcripts .btn-expand, .admin-transcripts .editor-actions .btn { min-height: 2.15rem; border-radius: 6px; font-size: 0.72rem; }
+      .admin-transcripts .btn-expand { border: 1px solid var(--border-light); background: var(--bg-elev); color: var(--text-muted); }
+      .admin-transcripts .split-editor { gap: 0.6rem; margin-top: 0.6rem; }
+      .admin-transcripts .editor-pane { border: 1px solid var(--border-light); border-radius: 6px; overflow: hidden; background: var(--bg-elev); }
+      .admin-transcripts .pane-header { padding: 0.4rem 0.55rem; border-bottom: 1px solid var(--border-light); background: color-mix(in srgb, var(--primary) 8%, var(--bg-elev)); color: var(--text-muted); font-size: 0.68rem; font-weight: 600; }
+      .admin-transcripts .transcript-textarea { min-height: 24rem; border: 0; border-radius: 0; padding: 0.6rem; resize: vertical; font-size: 0.78rem; line-height: 1.55; }
+      .admin-transcripts .empty-state { padding: 1.5rem 0.75rem; border: 1px dashed var(--border-light); color: var(--text-muted); }
+      .admin-transcripts .empty-state i { display: none; }
+      .admin-transcripts .expanded-editor-wrapper { border: 1px solid var(--border); border-radius: 8px; background: var(--bg-elev); }
+      .admin-transcripts .expanded-header { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border-light); }
+      .admin-transcripts .expanded-header h3 { font-size: 0.9rem; }
+      .admin-transcripts .ai-chat-panel { border-color: var(--border-light); border-radius: 6px; }
+      .admin-transcripts .ai-chat-header, .admin-transcripts .expanded-sidebar-header { padding: 0.5rem 0.6rem; background: color-mix(in srgb, var(--primary) 8%, var(--bg-elev)); }
+      .admin-transcripts .ai-chat-header h4 { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
+      @media (max-width: 900px) { .admin-transcripts .transcript-layout { grid-template-columns: 1fr; } .admin-transcripts .transcript-textarea { min-height: 14rem; } }
+      @media (max-width: 560px) { .admin-transcripts .editor-header { align-items: stretch; flex-direction: column; } .admin-transcripts .editor-actions { flex-wrap: wrap; } .admin-transcripts .editor-actions .word-count { margin-right: auto; } }
     </style>
   </head>
   <body>
