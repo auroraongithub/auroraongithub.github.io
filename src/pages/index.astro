@@ -61,7 +61,7 @@ const recentStories = sortByDate(await getCollection('stories', ({ data }) => !d
     </div>
     <div class="neo-carousel favorites-carousel">
       <div class="carousel-viewport"><div class="carousel-track" id="favoritesTrack"><div class="favorites-state loading-small">Loading favorites...</div></div></div>
-      <template id="favoriteCardTemplate"><FavoriteCard title="Favorite title" image="/img/favicon.png" year="2024" score={1} /></template>
+      <template id="favoriteCardTemplate"><FavoriteCard title="Favorite title" image="/img/favicon.png" /></template>
     </div>
   </SiteSection>
 

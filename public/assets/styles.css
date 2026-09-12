@@ -4780,6 +4780,17 @@ ul {
   overflow: hidden;
 }
 
+.favorites-section .favorites-carousel .favorite-item .favorite-stats {
+  display: flex;
+  min-width: 0;
+  grid-column: 2;
+  grid-row: 2;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  overflow: hidden;
+}
+
 .favorites-section .favorites-carousel .favorite-item .favorite-info small {
   margin: 0;
   color: var(--text-muted);
@@ -4789,39 +4800,36 @@ ul {
   white-space: nowrap;
 }
 
-.favorites-section .favorites-carousel .favorite-item .favorite-kind {
-  max-width: 100%;
+.favorites-section .favorites-carousel .favorite-item .favorite-meta [data-favorite-status],
+.favorites-section .favorites-carousel .favorite-item .favorite-meta [data-favorite-format] {
+  max-width: 42%;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--primary) 42%, var(--border-light));
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--primary-light) 13%, transparent);
-  color: var(--primary-dark);
-  padding: 1px 4px;
   text-overflow: ellipsis;
-  letter-spacing: 0.04em;
 }
 
-.favorites-section .favorites-carousel .favorite-item .favorite-score,
-.favorites-section .favorites-carousel .favorite-item .favorite-state {
-  grid-column: 2;
-  grid-row: 2;
+.favorites-section .favorites-carousel .favorite-item .favorite-stats [data-favorite-score],
+.favorites-section .favorites-carousel .favorite-item .favorite-stats [data-favorite-api-rank],
+.favorites-section .favorites-carousel .favorite-item .favorite-stats [data-favorite-popularity] {
+  max-width: 100%;
   align-self: center;
-  justify-self: end;
-  border: 1px solid color-mix(in srgb, var(--primary-dark) 60%, var(--border-light));
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primary-dark) 52%, var(--border-light));
   border-radius: 3px;
-  background: color-mix(in srgb, var(--primary-light) 22%, var(--bg-elev));
-  color: var(--primary-dark);
+  background: color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev));
+  color: var(--text-muted);
   padding: 1px 5px;
   font-size: 0.57rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   line-height: 1.1;
+  text-overflow: ellipsis;
   text-align: center;
 }
 
-.favorites-section .favorites-carousel .favorite-item .favorite-state {
-  background: color-mix(in srgb, var(--bg-elev) 82%, var(--primary-light));
-  color: var(--text-muted);
+.favorites-section .favorites-carousel .favorite-item .favorite-stats [data-favorite-score] {
+  border-color: var(--primary-dark);
+  background: color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev));
+  color: var(--primary-dark);
 }
 
 .favorites-section .favorites-carousel .carousel-track:has(.favorites-state) {
@@ -4859,8 +4867,9 @@ ul {
   }
 
   .favorites-section .favorites-carousel .favorite-item .favorite-info small,
-  .favorites-section .favorites-carousel .favorite-item .favorite-score,
-  .favorites-section .favorites-carousel .favorite-item .favorite-state {
+  .favorites-section .favorites-carousel .favorite-item .favorite-stats [data-favorite-score],
+  .favorites-section .favorites-carousel .favorite-item .favorite-stats [data-favorite-api-rank],
+  .favorites-section .favorites-carousel .favorite-item .favorite-stats [data-favorite-popularity] {
     font-size: 0.53rem;
   }
 }
