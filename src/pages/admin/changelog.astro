@@ -6,19 +6,50 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
 import AdminModal from '../../components/admin/AdminModal.astro';
 ---
 <AdminLayout title="Changelog" active="changelog">
-  <AdminPanel title="Add Changelog Entry" icon="bi-plus-square">
-    <form id="changelogAddForm" class="admin-form admin-changelog-form">
-      <AdminField label="Title (optional)" forId="newTitle"><input id="newTitle" type="text" placeholder="v1.0.0, Feature Update…" /></AdminField>
-      <AdminField label="Description" forId="newBody" required><textarea id="newBody" rows="3" placeholder="What changed?"></textarea></AdminField>
-      <label class="admin-check"><input type="checkbox" id="newPinned" /> <span>Pin this entry</span></label>
-      <AdminStatus id="changelogMessage" />
-      <div><button class="btn btn-primary" type="submit">Add Entry</button></div>
-    </form>
-  </AdminPanel>
-  <AdminPanel title="Changelog Entries" icon="bi-clock-history"><div id="changelogList" class="admin-list"><p class="admin-status" data-state="loading">Loading…</p></div></AdminPanel>
+  <div class="changelog-surface">
+    <header class="changelog-intro">
+      <div class="changelog-intro-icon" aria-hidden="true"><i class="bi bi-list-check"></i></div>
+      <div class="changelog-intro-copy">
+        <h1>Changelog</h1>
+        <p>Publish a clear trail of what changed, then keep the latest notes close at hand.</p>
+      </div>
+      <div class="changelog-intro-signal" aria-label="Changelog feed status">
+        <span class="changelog-signal-dot"></span>
+        <span>PUBLIC FEED</span>
+      </div>
+    </header>
+
+    <div class="changelog-workspace">
+      <AdminPanel title="Add Changelog Entry" icon="bi-plus-square" class="changelog-compose-panel">
+        <Fragment slot="actions"><span class="changelog-panel-state">READY</span></Fragment>
+        <form id="changelogAddForm" class="admin-form admin-changelog-form">
+          <div class="changelog-form-lead">
+            <strong>Ship the next update</strong>
+            <span>Keep it short, specific, and useful to future you.</span>
+          </div>
+          <AdminField label="Title (optional)" forId="newTitle"><input id="newTitle" type="text" placeholder="v1.0.0, Feature Update…" /></AdminField>
+          <AdminField label="Description" forId="newBody" required><textarea id="newBody" rows="5" placeholder="What changed?"></textarea></AdminField>
+          <label class="admin-check"><input type="checkbox" id="newPinned" /> <span>Pin this entry</span></label>
+          <AdminStatus id="changelogMessage" />
+          <div class="changelog-form-actions"><button class="btn btn-primary" type="submit"><i class="bi bi-send" aria-hidden="true"></i> Add Entry</button></div>
+        </form>
+      </AdminPanel>
+
+      <AdminPanel title="Changelog Entries" icon="bi-clock-history" class="changelog-history-panel">
+        <Fragment slot="actions"><span class="changelog-panel-state">LATEST FIRST</span></Fragment>
+        <div class="changelog-history-intro">
+          <span>Recent notes stay editable from the timeline.</span>
+          <span class="changelog-history-limit">50 entries max</span>
+        </div>
+        <div id="changelogList" class="admin-list"><p class="admin-status" data-state="loading">Loading…</p></div>
+      </AdminPanel>
+    </div>
+  </div>
+
   <AdminModal id="editChangelogModal" title="Edit Changelog Entry">
     <form id="changelogEditForm" class="admin-form">
       <input type="hidden" id="editId" />
+      <div class="changelog-edit-lead"><i class="bi bi-pencil-square" aria-hidden="true"></i><span>Adjust the note without leaving the timeline.</span></div>
       <AdminField label="Title" forId="editTitle"><input id="editTitle" type="text" /></AdminField>
       <AdminField label="Description" forId="editBody" required><textarea id="editBody"></textarea></AdminField>
       <AdminStatus id="editChangelogMessage" />
@@ -36,5 +67,65 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     list.addEventListener('click',async(event)=>{const target=event.target as HTMLElement;const edit=target.closest<HTMLButtonElement>('[data-edit]');const del=target.closest<HTMLButtonElement>('[data-delete]');if(edit){const entry=entries.find((item)=>item.id===edit.dataset.edit);if(entry)openModal(entry);}if(del&&del.dataset.delete&&window.confirm('Delete this entry?')){try{const response=await adminFetch(`/admin/changelog/${encodeURIComponent(del.dataset.delete)}`,{method:'DELETE'});if(!response.ok)throw new Error('Failed to delete');await load();}catch(error){window.alert(error instanceof Error?error.message:'Failed to delete')}}});
     document.querySelector<HTMLFormElement>('#changelogEditForm')?.addEventListener('submit',async(event)=>{event.preventDefault();const id=(document.querySelector<HTMLInputElement>('#editId')!).value;const title=(document.querySelector<HTMLInputElement>('#editTitle')!).value;const body=(document.querySelector<HTMLTextAreaElement>('#editBody')!).value;if(!body.trim()){setAdminStatus(editMessage,'Description is required.','error');return;}setAdminStatus(editMessage,'Saving…','loading');try{const response=await adminFetch(`/admin/changelog/${encodeURIComponent(id)}`,{method:'PATCH',body:JSON.stringify({title,body})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Failed to update');closeModal();await load();}catch(error){setAdminStatus(editMessage,error instanceof Error?error.message:'Failed to update','error')}}); load();
   </script>
-  <style>.admin-check{display:flex;align-items:center;gap:6px;font-size:.78rem}.admin-change-head{display:flex;justify-content:space-between;gap:8px;align-items:center;color:var(--text-muted);font-size:.74rem}.admin-change-head>div,.admin-modal-actions{display:flex;gap:6px}.admin-pinned{border-color:var(--primary);background:var(--gradient-subtle)}</style>
+  <style is:global>
+    .changelog-surface { display: grid; gap: 10px; }
+    .changelog-intro { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-light); border-radius: 8px; background: linear-gradient(135deg, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev))); box-shadow: var(--shadow); }
+    .changelog-intro-icon { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--primary-dark); border-radius: 8px; background: var(--gradient); color: #fff; font-size: 1.2rem; box-shadow: inset 1px 1px 0 rgba(255,255,255,.4), 0 3px 8px color-mix(in srgb, var(--primary) 20%, transparent); }
+    .changelog-intro-copy { min-width: 0; }
+    .changelog-intro-copy h1 { margin: 0; color: var(--text); font-size: 1rem; letter-spacing: .08em; text-transform: uppercase; }
+    .changelog-intro-copy p { max-width: 60ch; margin: 3px 0 0; color: var(--text-muted); font-size: .85rem; line-height: 1.45; }
+    .changelog-intro-signal, .changelog-panel-state { display: inline-flex; align-items: center; gap: 6px; color: var(--primary-dark); font: 700 .61rem/1 'Courier New', monospace; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+    .changelog-signal-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--admin-success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--admin-success) 17%, transparent); }
+    .changelog-workspace { display: grid; grid-template-columns: minmax(240px, .75fr) minmax(0, 1.35fr); gap: 10px; align-items: start; }
+    .changelog-workspace .admin-panel { margin: 0 !important; }
+    .changelog-compose-panel { position: sticky; top: 10px; }
+    .changelog-compose-panel .admin-panel-content { background: linear-gradient(160deg, color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev)), var(--bg-elev) 42%); }
+    .changelog-history-panel .admin-panel-content { padding: 12px; }
+    .changelog-form-lead { display: grid; gap: 2px; padding: 9px 10px; border: 1px solid var(--border-light); border-radius: 8px; background: var(--gradient-subtle); }
+    .changelog-form-lead strong { color: var(--text); font-size: .85rem; }
+    .changelog-form-lead span, .changelog-history-intro, .changelog-edit-lead { color: var(--text-muted); font-size: .85rem; line-height: 1.45; }
+    .changelog-form-actions { display: flex; justify-content: flex-end; padding-top: 2px; }
+    .changelog-form-actions .btn { display: inline-flex; align-items: center; gap: 6px; min-width: 112px; justify-content: center; }
+    .admin-check { display: flex; align-items: center; gap: 7px; padding: 2px 0; color: var(--text); font-size: .85rem; }
+    .admin-check input { accent-color: var(--primary-dark); }
+    .changelog-history-intro { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; padding: 0 1px 9px; border-bottom: 1px dashed var(--border-light); }
+    .changelog-history-limit { color: var(--primary-dark); font: 700 .63rem/1 'Courier New', monospace; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+    .changelog-history-panel .admin-list { gap: 9px; }
+    .changelog-history-panel .admin-list-item { position: relative; border-radius: 8px; box-shadow: 0 2px 7px rgba(0,0,0,.05); transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+    .changelog-history-panel .admin-list-item:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-1px); }
+    .changelog-history-panel .admin-list-item-head { padding: 8px 10px; background: var(--gradient-subtle); }
+    .changelog-history-panel .admin-list-item-body { gap: 4px; padding: 11px 12px 13px; font-size: .85rem; line-height: 1.55; }
+    .changelog-history-panel .admin-list-item-body strong { color: var(--text); font-size: 1rem; }
+    .changelog-history-panel .admin-list-item-body span { color: var(--text-muted); }
+    .admin-change-head { display: flex; justify-content: space-between; gap: 8px; align-items: center; color: var(--text-muted); font: 700 .65rem/1.2 'Courier New', monospace; letter-spacing: .04em; text-transform: uppercase; }
+    .admin-change-head > span { display: inline-flex; align-items: center; gap: 6px; }
+    .admin-change-head > span::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 18%, transparent); }
+    .admin-change-head > div, .admin-modal-actions { display: flex; gap: 6px; }
+    .admin-change-head .btn { min-height: 26px; padding: 4px 7px; font-size: .85rem; }
+    .admin-pinned { border-color: var(--primary); background: var(--gradient-subtle); }
+    .admin-pinned .admin-list-item-head { background: linear-gradient(135deg, color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev)), var(--gradient-subtle)); }
+    .admin-pinned .admin-list-item-head::after { content: 'PINNED'; float: right; margin-top: -16px; color: var(--primary-dark); font: 700 .58rem/1 'Courier New', monospace; letter-spacing: .08em; }
+    .changelog-edit-lead { display: flex; align-items: center; gap: 7px; padding: 8px 9px; border: 1px solid var(--border-light); border-radius: 8px; background: var(--gradient-subtle); }
+    .changelog-edit-lead i { color: var(--primary-dark); font-size: 1rem; }
+    #editChangelogModal .admin-modal-card { border-radius: 0 10px 10px 10px; }
+    #editChangelogModal .admin-modal-header { background-image: repeating-linear-gradient(45deg, var(--primary-light), var(--primary-light) 6px, var(--primary) 6px, var(--primary) 12px); background-size: 17px 17px; text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 85%, var(--text)); }
+    #editChangelogModal .admin-modal-body { background: color-mix(in srgb, var(--primary-light) 8%, var(--bg-elev)); }
+    #editChangelogModal .admin-form { max-width: none; }
+    @media (max-width: 760px) {
+      .changelog-workspace { grid-template-columns: 1fr; }
+      .changelog-compose-panel { position: static; }
+    }
+    @media (max-width: 500px) {
+      .changelog-intro { grid-template-columns: auto minmax(0, 1fr); }
+      .changelog-intro-signal { grid-column: 2; justify-self: start; }
+      .changelog-history-intro { align-items: flex-start; flex-direction: column; gap: 5px; }
+      .admin-change-head { align-items: flex-start; flex-direction: column; gap: 7px; }
+      .admin-change-head > div { width: 100%; }
+      .admin-change-head .btn { flex: 1; }
+      .admin-pinned .admin-list-item-head::after { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .changelog-history-panel .admin-list-item { transition: none; }
+    }
+  </style>
 </AdminLayout>
