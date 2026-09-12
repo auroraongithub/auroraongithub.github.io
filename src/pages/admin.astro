@@ -29,12 +29,15 @@ import { adminNavigation } from '../lib/admin/navigation';
   .admin-dashboard-page {
     min-width: 0;
     width: 100%;
+    padding: 8px 10px 20px;
   }
   .admin-dashboard-columns {
     display: grid;
-    grid-template-columns: minmax(150px, .9fr) minmax(220px, 1.35fr) minmax(150px, .9fr);
-    gap: 10px;
+    grid-template-columns: minmax(150px, .82fr) minmax(230px, 1.38fr) minmax(150px, .82fr);
+    gap: 0 14px;
     align-items: start;
+    min-height: 0;
+    padding: 0 6px 18px;
   }
   .admin-dashboard-columns.neo-sidebar {
     flex: none;
@@ -45,6 +48,21 @@ import { adminNavigation } from '../lib/admin/navigation';
   .admin-dashboard-column {
     min-width: 0;
     margin: 0 !important;
+  }
+  .admin-dashboard-column:nth-child(1) {
+    width: calc(100% - 10px);
+    margin-top: 28px !important;
+    justify-self: start;
+  }
+  .admin-dashboard-column:nth-child(2) {
+    width: 100%;
+    margin-top: 0 !important;
+    justify-self: center;
+  }
+  .admin-dashboard-column:nth-child(3) {
+    width: calc(100% - 14px);
+    margin-top: 66px !important;
+    justify-self: end;
   }
   .admin-dashboard-column:hover {
     transform: none;
@@ -73,11 +91,21 @@ import { adminNavigation } from '../lib/admin/navigation';
   .admin-dashboard-link-arrow {
     flex: 0 0 auto;
     color: var(--primary-dark);
-    font-size: .8rem;
+    font-size: inherit;
   }
-  @media (max-width: 760px) {
+  @media (max-width: 860px) {
     .admin-dashboard-columns {
       grid-template-columns: 1fr;
+      gap: 10px;
+      min-height: 0;
+      padding: 0 0 10px;
+    }
+    .admin-dashboard-column:nth-child(1),
+    .admin-dashboard-column:nth-child(2),
+    .admin-dashboard-column:nth-child(3) {
+      width: 100%;
+      margin-top: 0 !important;
+      justify-self: stretch;
     }
   }
 </style>

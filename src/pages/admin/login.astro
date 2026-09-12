@@ -73,7 +73,7 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
         storeAdminToken(data.token);
         setStatus('Login successful.', 'success');
         const next = new URLSearchParams(window.location.search).get('next');
-        const safeNext = next?.startsWith('/admin/') ? next : '/admin/blogs/';
+        const safeNext = next === '/admin' || next?.startsWith('/admin/') ? next : '/admin/';
         window.location.replace(safeNext);
       } catch (error) {
         setStatus(error instanceof Error ? error.message : 'Unable to sign in.', 'error');
