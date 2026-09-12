@@ -2,4 +2,288 @@
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import AdminPostView from '../../components/admin/AdminPostView.astro';
 ---
-<AdminLayout title="View Post" active="blogs"><AdminPostView /></AdminLayout>
+<AdminLayout title="View Post" active="blogs">
+  <div class="admin-post-page">
+    <AdminPostView />
+  </div>
+</AdminLayout>
+
+<style>
+  .admin-post-page {
+    min-width: 0;
+  }
+
+  .admin-post-page :global(.admin-panel) {
+    position: relative;
+    margin: 34px 0 10px !important;
+    padding: 3px;
+    overflow: visible;
+    border: 2px solid var(--primary);
+    border-right-color: var(--primary-dark);
+    border-bottom-color: var(--primary-dark);
+    border-radius: 0 12px 12px 12px;
+    background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
+    box-shadow:
+      0 0 0 2px var(--halo),
+      3px 3px 0 var(--halo),
+      6px 6px 0 color-mix(in srgb, var(--primary) 22%, var(--bg-elev)),
+      2px 2px 5px rgba(0, 0, 0, .25);
+  }
+
+  .admin-post-page :global(.admin-panel > .admin-panel-header) {
+    position: absolute;
+    top: -35px;
+    left: -4px;
+    z-index: 2;
+    display: flex;
+    width: max-content;
+    min-width: 150px;
+    max-width: calc(100% - 12px);
+    box-sizing: border-box;
+    align-items: center;
+    padding: 6px 9px 6px 20px;
+    border: 2px solid var(--halo);
+    border-bottom: none;
+    border-radius: 15px 15px 0 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--primary-light),
+      var(--primary-light) 6px,
+      var(--primary) 6px,
+      var(--primary) 12px
+    );
+    background-size: 17px 17px;
+    color: #fff;
+    text-shadow: 2px 2px 0 color-mix(in srgb, var(--primary-dark) 85%, #000);
+    box-shadow: 2px -2px 5px color-mix(in srgb, var(--primary) 22%, transparent);
+    animation: admin-post-stripe-move 1s linear infinite;
+  }
+
+  .admin-post-page :global(.admin-panel > .admin-panel-header h2) {
+    min-width: 0;
+    overflow: hidden;
+    color: #fff;
+    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    font-size: .82rem;
+    letter-spacing: .08em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .admin-post-page :global(.admin-panel > .admin-panel-header .admin-panel-actions) {
+    flex: 0 0 auto;
+    margin-left: 9px;
+  }
+
+  .admin-post-page :global(.admin-panel > .admin-panel-header .btn) {
+    min-height: 25px;
+    padding: 4px 7px;
+    border-color: color-mix(in srgb, var(--primary-dark) 80%, #000);
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--bg-elev) 82%, transparent);
+    color: var(--bg);
+    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    font-size: .68rem;
+    text-shadow: none;
+    white-space: nowrap;
+  }
+
+  .admin-post-page :global(.admin-panel > .admin-panel-header .btn:hover) {
+    background: var(--bg-elev);
+    color: var(--primary-dark);
+  }
+
+  .admin-post-page :global(.admin-panel > .admin-panel-content) {
+    position: relative;
+    z-index: 1;
+    padding: 12px;
+    border: 1px solid var(--primary-dark);
+    border-radius: 0 0 8px 8px;
+    background:
+      linear-gradient(to right, color-mix(in srgb, var(--primary-light) 8%, transparent), transparent 18%),
+      color-mix(in srgb, var(--bg-elev) 94%, var(--primary-light));
+  }
+
+  .admin-post-page :global(.admin-post-view) {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .admin-post-page :global(.admin-post-view h1) {
+    margin: 0 0 10px;
+    padding: 0 0 9px;
+    border-bottom: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
+    color: var(--text);
+    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+    line-height: 1.2;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--halo) 75%, transparent);
+  }
+
+  .admin-post-page :global(.admin-post-view .content) {
+    color: var(--text);
+    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    font-size: .9rem;
+    line-height: 1.7;
+  }
+
+  .admin-post-page :global(.admin-post-view .content > :first-child) {
+    margin-top: 0;
+  }
+
+  .admin-post-page :global(.admin-post-view .content > :last-child) {
+    margin-bottom: 0;
+  }
+
+  .admin-post-page :global(.admin-post-view .content p) {
+    max-width: 72ch;
+    margin: 0 0 1em;
+  }
+
+  .admin-post-page :global(.admin-post-view .content h2),
+  .admin-post-page :global(.admin-post-view .content h3),
+  .admin-post-page :global(.admin-post-view .content h4) {
+    margin: 1.25em 0 .45em;
+    padding-bottom: 4px;
+    border-bottom: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
+    color: var(--primary-dark);
+    font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    line-height: 1.25;
+  }
+
+  .admin-post-page :global(.admin-post-view .content h2) { font-size: 1.08rem; }
+  .admin-post-page :global(.admin-post-view .content h3) { font-size: .98rem; }
+  .admin-post-page :global(.admin-post-view .content h4) { font-size: .88rem; }
+
+  .admin-post-page :global(.admin-post-view .content a) {
+    color: var(--primary-dark);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .admin-post-page :global(.admin-post-view .content ul),
+  .admin-post-page :global(.admin-post-view .content ol) {
+    margin: 0 0 1em 1.35em;
+    padding-left: .8em;
+  }
+
+  .admin-post-page :global(.admin-post-view .content ul) { list-style: square; }
+  .admin-post-page :global(.admin-post-view .content ol) { list-style: decimal; }
+  .admin-post-page :global(.admin-post-view .content li + li) { margin-top: .35em; }
+
+  .admin-post-page :global(.admin-post-view .content blockquote) {
+    margin: 1em 0;
+    padding: 7px 10px;
+    border-left: 2px solid var(--primary-dark);
+    background: color-mix(in srgb, var(--primary-light) 10%, var(--bg-elev));
+    color: var(--text-muted);
+  }
+
+  .admin-post-page :global(.admin-post-view .content code) {
+    padding: 1px 4px;
+    border: 1px solid var(--border-light);
+    border-radius: 3px;
+    background: var(--bg-elev);
+    color: var(--primary-dark);
+    font-family: "Courier New", monospace;
+    font-size: .84em;
+  }
+
+  .admin-post-page :global(.admin-post-view .content pre) {
+    overflow-x: auto;
+    margin: 1em 0;
+    padding: 10px;
+    border: 1px solid var(--border-light);
+    border-radius: 5px;
+    background: var(--dark-bg, #0f1a1a);
+    color: var(--dark-text, #e4ffff);
+    font: .78rem/1.55 "Courier New", monospace;
+  }
+
+  .admin-post-page :global(.admin-post-view .content pre code) {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+  }
+
+  .admin-post-page :global(.admin-post-view .content img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1em auto;
+    border: 1px solid var(--border-light);
+    border-radius: 5px;
+    cursor: zoom-in;
+  }
+
+  .admin-post-page :global(.admin-post-view .content hr) {
+    margin: 1.25em 0;
+    border: 0;
+    border-top: 1px dotted var(--primary-dark);
+  }
+
+  .admin-post-page :global(.admin-post-view .content table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: .82rem;
+  }
+
+  .admin-post-page :global(.admin-post-view .content th),
+  .admin-post-page :global(.admin-post-view .content td) {
+    padding: 6px 8px;
+    border: 1px solid var(--border-light);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .admin-post-page :global(.admin-post-view .content th) {
+    background: color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev));
+    color: var(--primary-dark);
+    font-size: .72rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+
+  .admin-post-page :global(.admin-post-view .admin-status) {
+    margin: 0;
+    border-style: dashed;
+    text-align: center;
+  }
+
+  @keyframes admin-post-stripe-move {
+    from { background-position: 0 0; }
+    to { background-position: 17px 0; }
+  }
+
+  @media (max-width: 560px) {
+    .admin-post-page :global(.admin-panel > .admin-panel-header) {
+      width: calc(100% - 12px);
+      max-width: calc(100% - 12px);
+    }
+
+    .admin-post-page :global(.admin-panel > .admin-panel-header .admin-panel-actions) {
+      margin-left: auto;
+    }
+
+    .admin-post-page :global(.admin-panel > .admin-panel-header .btn) {
+      overflow: hidden;
+      max-width: 110px;
+      text-overflow: ellipsis;
+    }
+
+    .admin-post-page :global(.admin-panel > .admin-panel-content) {
+      padding: 10px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .admin-post-page :global(.admin-panel > .admin-panel-header) {
+      animation: none;
+    }
+  }
+</style>
