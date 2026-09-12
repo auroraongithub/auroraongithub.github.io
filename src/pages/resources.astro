@@ -3,11 +3,7 @@ import ContentLayout from '../layouts/ContentLayout.astro';
 import SiteSection from '../components/SiteSection.astro';
 ---
 <ContentLayout title="Resources">
-  <SiteSection title="Resource Desk" icon="bi-book" class="resources-page">
-    <div class="resource-intro">
-      <span class="resource-kicker"><i class="bi bi-folder2-open"></i> Reference shelf</span>
-      <p>Practical notes, guides, and tools collected for the work behind the site.</p>
-    </div>
+  <SiteSection title="Resource Desk" class="resources-page">
     <div class="resource-category-tabs" role="tablist" aria-label="Resource categories">
       <button class="resource-category-tab active" type="button" data-resource-category="scanlation" role="tab" aria-selected="true">
         <i class="bi bi-translate" aria-hidden="true"></i><span>Scanlation</span>

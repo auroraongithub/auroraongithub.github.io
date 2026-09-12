@@ -2977,7 +2977,6 @@ ul {
   padding: 10px;
 }
 
-.resources-page .resource-intro,
 .experiments-page .experiments-intro,
 .experiments-page .experiments-secondary-copy {
   margin-bottom: 8px;
@@ -2988,7 +2987,6 @@ ul {
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
 }
 
-.resource-intro p,
 .experiments-intro p,
 .experiments-secondary-copy p {
   margin: 3px 0 0;
@@ -2997,7 +2995,6 @@ ul {
   line-height: 1.35;
 }
 
-.resource-kicker,
 .experiments-kicker {
   color: var(--primary-dark);
   font-size: 0.68rem;
@@ -3006,52 +3003,49 @@ ul {
   text-transform: uppercase;
 }
 
-.resource-kicker i,
 .experiments-kicker i {
   margin-right: 4px;
 }
 
 .resources-page .resource-category-tabs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
   margin: 0 0 8px;
 }
 
 .resources-page .resource-category-tab {
-  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
   min-height: 30px;
-  padding: 4px 7px;
-  overflow: hidden;
+  padding: 7px 10px;
   border: 1px solid var(--primary-dark);
-  border-radius: 4px;
-  background: linear-gradient(to bottom, #fff 0%, color-mix(in srgb, #fff 72%, var(--primary-light)) 48%, color-mix(in srgb, var(--primary-light) 68%, var(--primary)) 100%);
-  color: var(--primary-dark);
+  border-radius: 6px 6px 3px 3px;
+  background: linear-gradient(to bottom, var(--bg-elev) 0%, color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)) 100%);
+  color: var(--text-muted);
   cursor: pointer;
   font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
-  text-shadow: 0 1px 0 #fff;
-  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
-  transition: background 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.75), 0 1px 1px rgba(0,0,0,0.12);
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .resources-page .resource-category-tab:hover {
-  background: linear-gradient(to bottom, #fffef5, var(--primary-light));
-  color: var(--primary-dark);
-  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.2);
+  border-color: var(--primary);
+  color: var(--text);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--primary-light) 25%, var(--bg-elev)), color-mix(in srgb, var(--primary) 12%, var(--bg-elev)));
 }
 
 .resources-page .resource-category-tab.active {
-  background: linear-gradient(to top, var(--primary-light), var(--primary));
-  color: #fff;
-  text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
-  box-shadow: inset 1px 1px 2px color-mix(in srgb, var(--primary-dark) 55%, transparent), 0 0 0 1px var(--primary-dark);
-  transform: translateY(1px);
+  border-color: var(--primary-dark);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--primary-light) 52%, var(--bg-elev)) 0%, color-mix(in srgb, var(--primary) 30%, var(--bg-elev)) 45%, color-mix(in srgb, var(--primary-dark) 24%, var(--bg-elev)) 50%, color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev)) 100%);
+  color: var(--text);
+  box-shadow: inset 1px 1px 1px rgba(255,255,255,0.8), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 35%, transparent), 0 1px 2px rgba(0,0,0,0.14);
 }
 
 .resources-page .resource-panels {
@@ -3822,7 +3816,8 @@ ul {
 .blogs-section,
 .stories-section,
 .listening-section,
-.join-section {
+.join-section,
+.resources-page {
   padding: 3px;
   background: color-mix(in srgb, var(--primary-light) 38%, var(--bg-elev));
   border: 2px solid var(--primary);
@@ -3847,7 +3842,8 @@ ul {
 .blogs-section > .neo-header,
 .stories-section > .neo-header,
 .listening-section > .neo-header,
-.join-section > .neo-header {
+.join-section > .neo-header,
+.resources-page > .neo-header {
   width: max-content;
   min-width: 150px;
   max-width: calc(100% - 12px);
@@ -3884,7 +3880,8 @@ ul {
 .blogs-section > .neo-header h2,
 .stories-section > .neo-header h2,
 .listening-section > .neo-header h2,
-.join-section > .neo-header h2 {
+.join-section > .neo-header h2,
+.resources-page > .neo-header h2 {
   font-size: 0.9rem;
   letter-spacing: 0.08em;
 }
@@ -3896,7 +3893,8 @@ ul {
 .blogs-section > .neo-content,
 .stories-section > .neo-content,
 .listening-section > .neo-content,
-.join-section > .neo-content {
+.join-section > .neo-content,
+.resources-page > .neo-content {
   position: relative;
   z-index: 0;
   display: flex;
