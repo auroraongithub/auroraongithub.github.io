@@ -4,9 +4,17 @@ import AdminField from '../../components/admin/AdminField.astro';
 import AdminStatus from '../../components/admin/AdminStatus.astro';
 import AdminTabs from '../../components/admin/AdminTabs.astro';
 import AdminPostList from '../../components/admin/AdminPostList.astro';
+
+const postTabs = [
+  { id: 'blogs', label: 'Blogs' },
+  { id: 'stories', label: 'Stories' }
+] as const;
 ---
 <AdminLayout title="Admin Blogs" active="blogs">
   <div class="blog-admin-page">
+    <div class="blog-post-type-tabs">
+      <AdminTabs tabs={postTabs} active="blogs" dataAttribute="category" />
+    </div>
     <div class="blog-toolbar" role="search" aria-label="Filter blog posts">
       <div class="blog-toolbar-controls">
         <AdminField label="Find posts" forId="blogSearch">
@@ -30,7 +38,7 @@ import AdminPostList from '../../components/admin/AdminPostList.astro';
       </div>
     </div>
 
-    <AdminPostList type="blog" title="Blogs" />
+    <AdminPostList type="blog" title="Blogs" showIcon={false} />
   </div>
 </AdminLayout>
 
@@ -41,6 +49,14 @@ import AdminPostList from '../../components/admin/AdminPostList.astro';
   const status = document.querySelector<HTMLElement>('#blogFilterStatus');
   const root = document.querySelector<HTMLElement>('[data-admin-post-list]');
   const tabs = [...document.querySelectorAll<HTMLButtonElement>('.blog-toolbar-footer [data-category]')];
+  const postRoutes: Record<string, string> = { blogs: '/admin/blogs/', stories: '/admin/stories/' };
+
+  document.querySelectorAll<HTMLButtonElement>('.blog-post-type-tabs [data-category]').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const route = postRoutes[tab.dataset.category || ''];
+      if (route && window.location.pathname !== route) window.location.assign(route);
+    });
+  });
 
   if (search && year && reset && status && root) {
     const searchInput = search;
@@ -402,6 +418,182 @@ import AdminPostList from '../../components/admin/AdminPostList.astro';
   @media (prefers-reduced-motion: reduce) {
     .blog-admin-page :global(.admin-post-list .admin-list-item) {
       transition: none;
+    }
+  }
+
+  .blog-post-type-tabs {
+    position: relative;
+    z-index: 2;
+    margin: 0 0 -1px;
+  }
+
+  .blog-post-type-tabs :global(.admin-tabs) {
+    display: flex;
+    gap: 2px;
+    margin: 0;
+    padding: 0 0 0 3px;
+    border: 0;
+  }
+
+  .blog-post-type-tabs :global(.admin-tab) {
+    min-height: 27px;
+    padding: 5px 10px;
+    border: 1px solid var(--primary-dark);
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    background: color-mix(in srgb, var(--primary-light) 25%, var(--bg-elev));
+    color: var(--text-muted);
+    font: 700 .68rem/1 'MS PGothic', 'MS UI Gothic', Tahoma, sans-serif;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  .blog-post-type-tabs :global(.admin-tab:hover) {
+    background: var(--gradient-subtle);
+    color: var(--primary-dark);
+  }
+
+  .blog-post-type-tabs :global(.admin-tab.active) {
+    border-bottom-color: var(--bg-elev);
+    background: var(--bg-elev);
+    color: var(--primary-dark);
+  }
+
+  .blog-toolbar {
+    gap: 5px;
+    margin-bottom: 8px;
+    padding: 6px 8px 5px;
+    border-color: var(--primary-dark);
+    border-radius: 0 6px 6px 6px;
+    background: color-mix(in srgb, var(--bg-elev) 94%, var(--primary-light));
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 48%, transparent), 1px 2px 0 var(--halo);
+  }
+
+  .blog-toolbar-controls {
+    grid-template-columns: minmax(0, 1fr) minmax(110px, 145px) auto;
+    gap: 6px;
+  }
+
+  .blog-toolbar :global(.admin-field label) {
+    color: var(--primary-dark);
+    font: 700 .62rem/1.2 'MS PGothic', 'MS UI Gothic', Tahoma, sans-serif;
+    letter-spacing: .08em;
+  }
+
+  .blog-toolbar :global(input),
+  .blog-toolbar :global(select) {
+    min-height: 29px;
+    padding: 5px 7px;
+    border-color: var(--border-light);
+    border-radius: 4px;
+    font-size: .72rem;
+  }
+
+  .blog-toolbar-actions,
+  .blog-toolbar-actions .btn {
+    min-height: 29px;
+  }
+
+  .blog-toolbar-actions .btn {
+    padding: 5px 8px;
+    border-radius: 4px;
+    font: 700 .66rem/1 'MS PGothic', 'MS UI Gothic', Tahoma, sans-serif;
+    text-transform: uppercase;
+  }
+
+  .blog-toolbar-footer {
+    min-height: 26px;
+    padding-top: 5px;
+  }
+
+  .blog-toolbar-footer :global(.admin-tab) {
+    min-height: 25px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: .64rem;
+  }
+
+  .blog-admin-page :global(.admin-post-panel) {
+    padding: 3px;
+    overflow: visible;
+    border: 2px solid var(--primary);
+    border-right-color: var(--primary-dark);
+    border-bottom-color: var(--primary-dark);
+    border-radius: 0 9px 9px 9px;
+    background: color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev));
+    box-shadow: 0 0 0 2px var(--halo), 3px 3px 0 var(--halo), 2px 2px 5px rgba(0, 0, 0, .18);
+  }
+
+  .blog-admin-page :global(.admin-post-panel:hover) {
+    transform: none;
+    box-shadow: 0 0 0 2px var(--halo), 3px 3px 0 var(--halo), 2px 2px 5px rgba(0, 0, 0, .18);
+  }
+
+  .blog-admin-page :global(.admin-post-panel > .admin-panel-header) {
+    padding: 7px 10px;
+    border: 1px solid var(--primary-dark);
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    background-image: repeating-linear-gradient(45deg, var(--primary-light), var(--primary-light) 6px, var(--primary) 6px, var(--primary) 12px);
+    background-size: 17px 17px;
+    color: #fff;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 85%, #000);
+  }
+
+  .blog-admin-page :global(.admin-post-panel > .admin-panel-header h2) {
+    color: #fff;
+    font: 700 .78rem/1 'MS PGothic', 'MS UI Gothic', Tahoma, sans-serif;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .blog-admin-page :global(.admin-post-panel > .admin-panel-content) {
+    padding: 8px;
+    border: 1px solid var(--primary-dark);
+    border-radius: 0 0 7px 7px;
+    background: var(--bg-elev);
+  }
+
+  .blog-admin-page :global(.admin-panel-actions .btn) {
+    min-height: 26px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font: 700 .64rem/1 'MS PGothic', 'MS UI Gothic', Tahoma, sans-serif;
+    text-transform: uppercase;
+  }
+
+  .blog-admin-page :global(.admin-post-list .admin-list-meta i) {
+    display: none;
+  }
+
+  .blog-admin-page :global(.admin-post-list .admin-list-item) {
+    border-radius: 4px;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--card) 94%, var(--primary-light)), var(--card));
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 34%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
+  }
+
+  .blog-admin-page :global(.admin-post-list .admin-list-item:hover) {
+    background: var(--gradient-subtle);
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 38%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 20%, transparent);
+  }
+
+  .blog-admin-page :global(.admin-post-list .admin-list-item-actions) {
+    border-left-color: var(--border-light);
+    background: color-mix(in srgb, var(--bg-elev) 76%, var(--primary-light));
+  }
+
+  .blog-admin-page :global(.admin-post-list .admin-list-item-actions .btn) {
+    min-height: 25px;
+    padding: 4px 7px;
+    border-radius: 4px;
+    font: 700 .62rem/1 'MS PGothic', 'MS UI Gothic', Tahoma, sans-serif;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 560px) {
+    .blog-post-type-tabs :global(.admin-tab) {
+      flex: 1;
+      justify-content: center;
     }
   }
 </style>
