@@ -3553,7 +3553,9 @@ ul {
 }
 
 .neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active,
-.more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active {
+.neo-sidebar .neo-content ul.secondary-nav-list a.sidebar-button.active,
+.more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active,
+.more-drawer .neo-content ul.secondary-nav-list a.sidebar-button.active {
   background: linear-gradient(
     to bottom,
     var(--primary) 0%,
@@ -3567,7 +3569,9 @@ ul {
 }
 
 .neo-sidebar .neo-content ul.primary-nav-list a.sidebar-button.active:hover,
-.more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active:hover {
+.neo-sidebar .neo-content ul.secondary-nav-list a.sidebar-button.active:hover,
+.more-drawer .neo-content ul.primary-nav-list a.sidebar-button.active:hover,
+.more-drawer .neo-content ul.secondary-nav-list a.sidebar-button.active:hover {
   color: #fff;
 }
 

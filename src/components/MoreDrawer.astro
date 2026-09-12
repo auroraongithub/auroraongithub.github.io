@@ -2,6 +2,8 @@
 import PrimaryNav from './PrimaryNav.astro';
 import SidebarButton from './SidebarButton.astro';
 import { socialLinks } from '../data/socialLinks';
+
+const isActive = (href: string) => Astro.url.pathname === href || Astro.url.pathname.startsWith(href);
 ---
 
 <div class="more-drawer" id="moreDrawer" role="dialog" aria-modal="true" aria-labelledby="more-drawer-title" aria-hidden="true">
@@ -18,7 +20,7 @@ import { socialLinks } from '../data/socialLinks';
         <div class="neo-content">
           <PrimaryNav />
           <ul class="sidebar-links secondary-nav-list">
-            <li><SidebarButton href="/experiments/" label="Experiments" /></li>
+            <li><SidebarButton href="/experiments/" label="Experiments" active={isActive('/experiments/')} /></li>
           </ul>
         </div>
       </section>
