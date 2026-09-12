@@ -1,0 +1,24 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  active?: boolean;
+  icon?: string;
+  className?: string;
+  target?: string;
+  rel?: string;
+}
+
+const { href, label, active = false, icon, className = '', target, rel } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['sidebar-button', className, { active }]}
+  target={target}
+  rel={rel}
+  aria-current={active ? 'page' : undefined}
+>
+  {icon && <i class={`bi ${icon}`} aria-hidden="true"></i>}
+  <span>{label}</span>
+</a>

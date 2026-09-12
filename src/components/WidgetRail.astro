@@ -1,3 +1,7 @@
+---
+import SidebarButton from './SidebarButton.astro';
+---
+
 <aside class="neo-widgets">
   <div class="neo-box sidebar-animate widget-now">
     <div class="neo-header"><h3><i class="bi bi-clock-history"></i> Now</h3></div>
@@ -48,8 +52,8 @@
     <div class="neo-header"><h3><i class="bi bi-book"></i> Resources</h3></div>
     <div class="neo-content">
       <ul class="resources-list">
-        <li><a class="sidebar-button" href="/resources/?cat=scanlation"><i class="bi bi-translate" aria-hidden="true"></i><span>Scanlation</span></a></li>
-        <li><a class="sidebar-button" href="/resources/?cat=youtube"><i class="bi bi-youtube" aria-hidden="true"></i><span>YouTube</span></a></li>
+        <li><SidebarButton href="/resources/?cat=scanlation" label="Scanlation" icon="bi-translate" /></li>
+        <li><SidebarButton href="/resources/?cat=youtube" label="YouTube" icon="bi-youtube" /></li>
       </ul>
     </div>
   </div>

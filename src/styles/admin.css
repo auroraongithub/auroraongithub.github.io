@@ -22,10 +22,6 @@
 .admin-nav-group .neo-header h3 { font-size:.72rem;letter-spacing:1.3px; }
 .admin-nav-group .neo-content { padding:6px; }
 .admin-nav-group:hover { transform:none;box-shadow:var(--shadow); }
-.admin-nav-list { display:grid;gap:4px;margin:0;padding:0;list-style:none; }
-.admin-nav-link i { width:13px;color:currentColor;font-size:.74rem;text-align:center; }
-.admin-nav-link.active { background:linear-gradient(to bottom,var(--primary),var(--primary-dark));color:#fff;text-shadow:1px 1px 0 color-mix(in srgb,var(--primary-dark) 80%,#000);box-shadow:inset 1px 1px 1px color-mix(in srgb,var(--primary-light) 62%,#fff),0 1px 2px rgba(0,0,0,.18); }
-.admin-nav-link.active:hover { color:#fff; }
 .admin-panel { margin:0 0 10px !important;overflow:hidden;border-radius:8px;box-shadow:var(--shadow); }
 .admin-panel:hover { transform:none;box-shadow:var(--shadow-hover); }
 .admin-panel-header { display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px; }

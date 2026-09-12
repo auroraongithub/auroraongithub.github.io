@@ -3497,6 +3497,7 @@ ul {
   justify-content: flex-start;
 }
 
+.neo-sidebar .neo-content a.sidebar-button > i,
 .widget-resources a.sidebar-button > i {
   flex: 0 0 1rem;
   color: currentColor;

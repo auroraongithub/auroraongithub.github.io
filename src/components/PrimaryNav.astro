@@ -1,5 +1,6 @@
 ---
 import { primaryNavigation } from '../data/navigation';
+import SidebarButton from './SidebarButton.astro';
 
 interface Props {
   currentPath?: string;
@@ -10,6 +11,6 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
 ---
 <ul class="primary-nav-list">
   {primaryNavigation.map((item) => (
-    <li><a href={item.href} class:list={['sidebar-button', { active: isActive(item.href) }]}><span>{item.label}</span></a></li>
+    <li><SidebarButton href={item.href} label={item.label} active={isActive(item.href)} /></li>
   ))}
 </ul>

@@ -1,5 +1,6 @@
 ---
 import PrimaryNav from './PrimaryNav.astro';
+import SidebarButton from './SidebarButton.astro';
 import { secondaryNavigation } from '../data/navigation';
 import { socialLinks } from '../data/socialLinks';
 
@@ -12,7 +13,7 @@ const isActive = (href: string) => Astro.url.pathname === href || Astro.url.path
       <PrimaryNav />
       <ul class="sidebar-links secondary-nav-list">
         {secondaryNavigation.map((item) => (
-          <li><a href={item.href} class:list={['sidebar-button', { active: isActive(item.href) }]}><span>{item.label}</span></a></li>
+          <li><SidebarButton href={item.href} label={item.label} active={isActive(item.href)} /></li>
         ))}
       </ul>
     </div>
@@ -23,7 +24,7 @@ const isActive = (href: string) => Astro.url.pathname === href || Astro.url.path
     <div class="neo-content">
       <ul class="sidebar-links">
         {socialLinks.map((link) => (
-          <li><a class="sidebar-button" href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}><span>{link.label}</span></a></li>
+          <li><SidebarButton href={link.href} label={link.label} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined} /></li>
         ))}
       </ul>
     </div>

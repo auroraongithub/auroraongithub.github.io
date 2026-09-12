@@ -1,5 +1,6 @@
 ---
 import { adminNavigation, type AdminNavKey } from '../../lib/admin/navigation';
+import SidebarButton from '../SidebarButton.astro';
 
 interface Props { active?: AdminNavKey }
 const { active } = Astro.props;
@@ -9,13 +10,10 @@ const { active } = Astro.props;
     <section class="neo-box admin-nav-group">
       <div class="neo-header"><h3>{section.label}</h3></div>
       <div class="neo-content">
-        <ul class="admin-nav-list">
+        <ul class="primary-nav-list admin-nav-list">
           {section.items.map((item) => (
             <li>
-              <a href={item.href} class:list={['sidebar-button', 'admin-nav-link', { active: item.key === active }]} aria-current={item.key === active ? 'page' : undefined}>
-                {'icon' in item && item.icon && <i class={`bi ${item.icon}`} aria-hidden="true"></i>}
-                <span>{item.label}</span>
-              </a>
+              <SidebarButton href={item.href} label={item.label} active={item.key === active} icon={'icon' in item ? item.icon : undefined} />
             </li>
           ))}
         </ul>
