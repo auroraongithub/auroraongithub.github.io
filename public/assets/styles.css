@@ -4261,10 +4261,10 @@ ul {
   pointer-events: none;
   background: var(--primary-dark);
   opacity: 0.1;
-  -webkit-mask: url('../img/chatbox-texture.svg') repeat;
-  -webkit-mask-size: 4px 4px;
-  mask: url('../img/chatbox-texture.svg') repeat;
-  mask-size: 4px 4px;
+  -webkit-mask: url('../img/parkay-floor.svg') repeat;
+  -webkit-mask-size: 40px 40px;
+  mask: url('../img/parkay-floor.svg') repeat;
+  mask-size: 40px 40px;
 }
 
 .manga-section > .neo-content > * {
