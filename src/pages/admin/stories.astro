@@ -1,5 +1,232 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminTabs from '../../components/admin/AdminTabs.astro';
 import AdminPostList from '../../components/admin/AdminPostList.astro';
+
+const postTabs = [
+  { id: 'blogs', label: 'Blogs', icon: 'bi-journal-text' },
+  { id: 'stories', label: 'Stories', icon: 'bi-book' }
+] as const;
 ---
-<AdminLayout title="Admin Stories" active="stories"><AdminPostList type="story" title="Stories" /></AdminLayout>
+<AdminLayout title="Admin Stories" active="stories">
+  <div class="admin-stories-page">
+    <AdminTabs tabs={postTabs} active="stories" dataAttribute="category" />
+    <AdminPostList type="story" title="Stories" />
+  </div>
+</AdminLayout>
+
+<script>
+  const postRoutes: Record<string, string> = {
+    blogs: '/admin/blogs/',
+    stories: '/admin/stories/'
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-category]').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const route = postRoutes[tab.dataset.category || ''];
+      if (route && window.location.pathname !== route) window.location.assign(route);
+    });
+  });
+</script>
+
+<style is:global>
+  .admin-stories-page {
+    min-width: 0;
+  }
+
+  .admin-stories-page > .admin-tabs {
+    display: flex;
+    gap: 2px;
+    margin: 0 0 8px;
+    padding: 3px;
+    border: 1px solid var(--border-light);
+    border-bottom-color: var(--primary-dark);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--bg-elev) 88%, var(--primary-light));
+  }
+
+  .admin-stories-page > .admin-tabs .admin-tab {
+    min-height: 28px;
+    padding: 5px 9px;
+    border-radius: 4px;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .admin-stories-page > .admin-tabs .admin-tab:not(.active) {
+    border-color: transparent;
+    background: transparent;
+    color: var(--text-muted);
+  }
+
+  .admin-stories-page > .admin-tabs .admin-tab:not(.active):hover {
+    border-color: var(--border-light);
+    background: var(--gradient-subtle);
+    color: var(--primary-dark);
+  }
+
+  .admin-stories-page > .admin-tabs .admin-tab.active {
+    border-color: var(--primary-dark);
+    border-bottom-color: var(--bg-elev);
+    background: var(--bg-elev);
+    color: var(--primary-dark);
+  }
+
+  .admin-stories-page .admin-post-panel {
+    padding: 3px;
+    overflow: visible;
+    border: 2px solid var(--primary);
+    border-right-color: var(--primary-dark);
+    border-bottom-color: var(--primary-dark);
+    border-radius: 0 10px 10px 10px;
+    background: color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev));
+    box-shadow:
+      0 0 0 2px var(--halo),
+      3px 3px 0 var(--halo),
+      2px 2px 5px rgba(0, 0, 0, .2);
+  }
+
+  .admin-stories-page .admin-post-panel > .admin-panel-header {
+    padding: 7px 10px;
+    border: 1px solid var(--primary-dark);
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    background-image: repeating-linear-gradient(45deg, var(--primary-light), var(--primary-light) 6px, var(--primary) 6px, var(--primary) 12px);
+    background-size: 17px 17px;
+    color: #fff;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 85%, #000);
+  }
+
+  .admin-stories-page .admin-post-panel > .admin-panel-header h2 {
+    color: #fff;
+    font-size: .8rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .admin-stories-page .admin-post-panel > .admin-panel-content {
+    padding: 10px;
+    border: 1px solid var(--primary-dark);
+    border-radius: 0 0 7px 7px;
+    background: var(--bg-elev);
+  }
+
+  .admin-stories-page .admin-panel-actions .btn {
+    min-height: 28px;
+    padding: 5px 8px;
+    border-color: var(--primary-dark);
+    border-top-color: var(--primary-light);
+    border-left-color: var(--primary-light);
+    border-radius: 4px;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--primary-light) 24%, var(--bg-elev)), var(--bg-elev));
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, #fff 55%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 22%, transparent);
+    font-size: .7rem;
+  }
+
+  .admin-stories-page .admin-panel-actions .btn:hover {
+    background: color-mix(in srgb, var(--primary-light) 28%, var(--bg-elev));
+  }
+
+  .admin-stories-page .admin-post-list {
+    gap: 7px;
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-group-title {
+    margin: 3px 0 0;
+    padding: 4px 7px;
+    border-bottom: 1px solid var(--border-light);
+    font-size: .68rem;
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "head actions" "body actions";
+    border-color: var(--border-light);
+    border-radius: 5px;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--card) 94%, var(--primary-light)), var(--card));
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 34%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-item:hover {
+    border-color: var(--primary);
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 38%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 20%, transparent), 0 3px 10px color-mix(in srgb, var(--primary) 12%, transparent);
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-item-head {
+    grid-area: head;
+    padding: 8px 10px 2px;
+    border: 0;
+    background: transparent;
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-item-head h3 {
+    font-size: .82rem;
+    line-height: 1.3;
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-item-body {
+    grid-area: body;
+    padding: 2px 10px 8px;
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-meta {
+    gap: 4px 9px;
+    font-size: .68rem;
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-item-actions {
+    grid-area: actions;
+    align-items: center;
+    padding: 8px;
+    border-left: 1px solid var(--border-light);
+    background: color-mix(in srgb, var(--bg-elev) 76%, var(--primary-light));
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-item-actions .btn {
+    min-height: 27px;
+    padding: 4px 7px;
+    border-radius: 4px;
+    font-size: .68rem;
+    border-color: var(--border-light);
+    background: linear-gradient(to bottom, var(--card), color-mix(in srgb, var(--bg-elev) 88%, var(--primary-light)));
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 42%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
+  }
+
+  .admin-stories-page .admin-post-list .admin-list-item-actions .btn:hover {
+    border-color: var(--primary);
+    background: var(--gradient-subtle);
+  }
+
+  @media (max-width: 700px) {
+    .admin-stories-page .admin-post-list .admin-list-item {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .admin-stories-page > .admin-tabs .admin-tab {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .admin-stories-page .admin-post-list .admin-list-item {
+      grid-template-columns: 1fr;
+      grid-template-areas: "head" "body" "actions";
+    }
+
+    .admin-stories-page .admin-post-list .admin-list-item-actions {
+      justify-content: flex-end;
+      border-top: 1px solid var(--border-light);
+      border-left: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .admin-stories-page .admin-post-list .admin-list-item {
+      transition: none;
+    }
+  }
+</style>
