@@ -2,7 +2,200 @@
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import AdminPostEditor from '../../components/admin/AdminPostEditor.astro';
 ---
-<AdminLayout title="Update Post" active="blogs">
+<AdminLayout title="Update Post" active="blogs" bodyClass="admin-editor-page">
   <Fragment slot="head"><link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" /></Fragment>
   <AdminPostEditor mode="update" />
 </AdminLayout>
+
+<style is:global>
+  .admin-editor-page .admin-main {
+    min-width: 0;
+  }
+
+  .admin-editor-page .admin-panel {
+    border-width: 2px;
+    border-radius: 0 10px 10px 10px;
+    box-shadow: var(--shadow);
+  }
+
+  .admin-editor-page .admin-panel-header {
+    min-height: 42px;
+    padding: 8px 11px;
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--primary-light),
+      var(--primary-light) 6px,
+      var(--primary) 6px,
+      var(--primary) 12px
+    );
+    background-size: 17px 17px;
+    color: #fff;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 80%, var(--text));
+  }
+
+  .admin-editor-page .admin-panel-header h2 {
+    color: #fff;
+    font-size: 0.92rem;
+    letter-spacing: 0.08em;
+  }
+
+  .admin-editor-page .admin-panel-header i {
+    font-size: 0.82rem;
+  }
+
+  .admin-editor-page .admin-panel-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .admin-editor-page .admin-panel-header .btn {
+    min-height: 27px;
+    padding: 4px 8px;
+    border-color: color-mix(in srgb, var(--primary-dark) 72%, #fff);
+    background: color-mix(in srgb, var(--bg-elev) 88%, transparent);
+    color: var(--primary-dark);
+    text-shadow: none;
+  }
+
+  .admin-editor-page .admin-panel-content {
+    padding: clamp(13px, 2.3vw, 22px);
+    background: var(--bg-elev);
+  }
+
+  .admin-editor-page [data-admin-post-editor] {
+    max-width: 980px;
+    grid-template-columns: minmax(0, 1.45fr) minmax(190px, 0.55fr);
+    gap: 15px 18px;
+  }
+
+  .admin-editor-page [data-admin-post-editor] > .admin-field:nth-child(3),
+  .admin-editor-page [data-admin-post-editor] > #postEditorStatus,
+  .admin-editor-page [data-admin-post-editor] > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .admin-editor-page .admin-field label {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+
+  .admin-editor-page input:not([type='checkbox']):not([type='radio']),
+  .admin-editor-page select {
+    min-height: 40px;
+    border-color: color-mix(in srgb, var(--primary-dark) 62%, var(--border-light));
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--bg-elev) 92%, var(--primary-light)),
+      var(--card)
+    );
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .admin-editor-page input:not([type='checkbox']):not([type='radio']):focus-visible,
+  .admin-editor-page select:focus-visible {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 24%, transparent);
+  }
+
+  .admin-editor-page #postEditor {
+    min-height: 330px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+  }
+
+  .admin-editor-page .ql-toolbar.ql-snow {
+    padding: 7px 8px;
+    border: 0;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--gradient-subtle);
+  }
+
+  .admin-editor-page .ql-container.ql-snow {
+    border: 0;
+    background: var(--card);
+  }
+
+  .admin-editor-page .ql-editor {
+    min-height: 280px;
+    padding: 14px;
+    line-height: 1.65;
+  }
+
+  .admin-editor-page .ql-editor.ql-blank::before {
+    color: var(--text-muted);
+    font-style: normal;
+  }
+
+  .admin-editor-page [data-admin-post-editor] > div:last-child {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
+    background: linear-gradient(to bottom, transparent, var(--bg-elev) 30%);
+  }
+
+  .admin-editor-page [data-admin-post-editor] > div:last-child .btn {
+    min-height: 36px;
+    padding-inline: 15px;
+    font-weight: 700;
+  }
+
+  .admin-editor-page #postEditorStatus {
+    margin-top: -2px;
+  }
+
+  @media (max-width: 700px) {
+    .admin-editor-page [data-admin-post-editor] {
+      grid-template-columns: 1fr;
+      gap: 13px;
+    }
+
+    .admin-editor-page [data-admin-post-editor] > .admin-field:nth-child(3),
+    .admin-editor-page [data-admin-post-editor] > #postEditorStatus,
+    .admin-editor-page [data-admin-post-editor] > div:last-child {
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .admin-editor-page .admin-panel-header {
+      align-items: center;
+      flex-direction: row;
+    }
+
+    .admin-editor-page .admin-panel-actions {
+      width: auto;
+    }
+
+    .admin-editor-page .admin-panel-content {
+      padding: 12px;
+    }
+
+    .admin-editor-page #postEditor {
+      min-height: 260px;
+    }
+
+    .admin-editor-page .ql-editor {
+      min-height: 210px;
+    }
+
+    .admin-editor-page [data-admin-post-editor] > div:last-child {
+      justify-content: stretch;
+    }
+
+    .admin-editor-page [data-admin-post-editor] > div:last-child .btn {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .admin-editor-page .admin-panel-header {
+      background-image: linear-gradient(to right, var(--primary), var(--primary-light));
+    }
+  }
+</style>
