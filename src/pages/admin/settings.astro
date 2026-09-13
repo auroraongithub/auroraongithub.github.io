@@ -58,11 +58,11 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     const iframe = document.createElement('iframe');
     iframe.src = embed;
     iframe.width = '100%';
-    iframe.height = '152';
+    iframe.height = /\/embed\/(track|episode)\//.test(embed) ? '80' : '152';
     iframe.loading = 'lazy';
     iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
     iframe.style.border = '0';
-    iframe.style.borderRadius = '4px';
+    iframe.style.display = 'block';
 
     const note = document.createElement('small');
     note.className = 'settings-preview-note';
@@ -169,7 +169,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   #spotifyPreview iframe {
     width: 100%;
     max-width: 100%;
-    border: 1px solid var(--border-light) !important;
+    border: 0 !important;
   }
 
   #spotifyPreview small {
