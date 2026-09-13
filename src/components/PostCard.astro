@@ -6,11 +6,12 @@ interface Props {
   tags?: string[];
   description?: string;
   icon?: string;
+  postId?: string;
 }
-const { title, href, date, tags = [], description, icon = 'bi-envelope-paper' } = Astro.props;
+const { title, href, date, tags = [], description, icon = 'bi-envelope-paper', postId } = Astro.props;
 const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
 ---
-<article class="masonry-item post-card animate-in" data-post-card data-title={title.toLowerCase()} data-tags={JSON.stringify(tags.map((tag) => tag.toLowerCase()))}>
+<article class="masonry-item post-card animate-in" data-post-card data-post-id={postId} data-title={title.toLowerCase()} data-tags={JSON.stringify(tags.map((tag) => tag.toLowerCase()))}>
   <a class="post-card-link" href={href} aria-label={`Read ${title}`}>
     <div class="item-header">
       <span class="post-card-icon" aria-hidden="true"><i class={`bi ${icon}`}></i></span>

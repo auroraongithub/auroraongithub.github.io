@@ -59,6 +59,31 @@ function readCardTags(card) {
   return String(card.dataset.tags || '').split('|').map((tag) => tag.trim()).filter(Boolean);
 }
 
+function readCardId(card) {
+  if (card.dataset.postId) return card.dataset.postId;
+  const href = card.querySelector('a')?.getAttribute('href') || '';
+  try { return new URL(href, location.href).searchParams.get('id') || ''; } catch (_) { return ''; }
+}
+
+function syncTagFilters(filterBar, tags) {
+  if (!filterBar) return;
+  const nextTags = tags.map((tag) => tag.toLowerCase());
+  const currentTags = [...filterBar.querySelectorAll('[data-tag-filter]')]
+    .map((button) => button.dataset.tagFilter || '')
+    .filter(Boolean);
+  if (currentTags.length === nextTags.length && currentTags.every((tag, index) => tag === nextTags[index])) return;
+
+  filterBar.innerHTML = '<button type="button" class="btn btn-ghost active" data-tag-filter="">All</button>';
+  tags.forEach((tag) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn-ghost';
+    button.dataset.tagFilter = tag.toLowerCase();
+    button.textContent = tag;
+    filterBar.append(button);
+  });
+}
+
 function initFilters(grid) {
   const input = document.querySelector('[data-post-search]');
   const filterBar = document.querySelector('[data-tag-filters]');
@@ -95,9 +120,7 @@ async function initLivePosts() {
   const grid = document.querySelector('[data-post-grid][data-live-posts]');
   if (!grid) return;
   const type = grid.dataset.livePosts || 'blog';
-  const loading = grid.querySelector('[data-post-loading]');
   const empty = document.querySelector('[data-post-empty]');
-  grid.classList.add('is-loading');
   const filters = initFilters(grid);
 
   try {
@@ -107,34 +130,30 @@ async function initLivePosts() {
     });
     if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
     const posts = flattenPosts(await response.json()).filter((post) => post && (post.id ?? post._id));
-    loading?.remove();
-    grid.querySelectorAll('[data-post-card], .year-header').forEach((element) => element.remove());
     if (!posts.length) {
-      setEmptyState(empty, 0);
-      grid.classList.remove('is-loading');
+      const fallbackCount = grid.querySelectorAll('[data-post-card]').length;
+      filters.update();
+      setEmptyState(empty, fallbackCount);
       return;
     }
 
     const tags = [...new Set(posts.flatMap((post) => normalizeTags(post.tags)))].sort((a, b) => a.localeCompare(b));
-    if (filters.filterBar) {
-      filters.filterBar.innerHTML = '<button type="button" class="btn btn-ghost active" data-tag-filter="">All</button>';
-      tags.forEach((tag) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'btn btn-ghost';
-        button.dataset.tagFilter = tag.toLowerCase();
-        button.textContent = tag;
-        filters.filterBar.append(button);
-      });
+    syncTagFilters(filters.filterBar, tags);
+
+    const liveIds = posts.map((post) => String(post.id ?? post._id ?? '')).filter(Boolean);
+    const existingCards = [...grid.querySelectorAll('[data-post-card]')];
+    const existingIds = existingCards.map(readCardId);
+    const canReuseExistingCards = liveIds.length === existingIds.length
+      && liveIds.every((id, index) => id === existingIds[index]);
+
+    if (!canReuseExistingCards) {
+      grid.querySelectorAll('[data-post-card], .year-header').forEach((element) => element.remove());
+      posts.forEach((post) => grid.append(createPostCard(post, type)));
+      window.dispatchEvent(new Event('posts:rendered'));
     }
-    posts.forEach((post) => grid.append(createPostCard(post, type)));
     filters.update();
-    grid.classList.remove('is-loading');
-    window.dispatchEvent(new Event('posts:rendered'));
   } catch (error) {
     console.warn(`Live ${type} posts unavailable`, error);
-    loading?.remove();
-    grid.classList.remove('is-loading');
     const fallbackCount = grid.querySelectorAll('[data-post-card]').length;
     if (!fallbackCount) grid.innerHTML = '<p class="text-muted">Unable to load posts right now.</p>';
     setEmptyState(empty, fallbackCount ? fallbackCount : 1);
