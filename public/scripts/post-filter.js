@@ -18,7 +18,7 @@ function createPostCard(post, type) {
   const prefix = type === 'story' ? '/stories/post/' : '/blogs/post/';
   const icon = type === 'story' ? 'bi-book-half' : 'bi-envelope-paper';
   const card = document.createElement('article');
-  card.className = 'masonry-item post-card';
+  card.className = 'masonry-item post-card animate-in';
   card.dataset.postCard = '';
   card.dataset.title = title.toLowerCase();
   card.dataset.tags = JSON.stringify(tags.map((tag) => tag.toLowerCase()));
