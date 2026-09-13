@@ -1,8 +1,31 @@
 export const ADMIN_API_BASE = 'https://nijikade-backend.vercel.app/api';
 
+function tokenTimestamp(token: string): number | null {
+  try {
+    const encodedPayload = token.split('.')[1];
+    if (!encodedPayload) return null;
+    const normalized = encodedPayload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = normalized.padEnd(normalized.length + ((4 - normalized.length % 4) % 4), '=');
+    const payload = JSON.parse(atob(padded)) as { iat?: unknown; exp?: unknown };
+    if (typeof payload.iat === 'number') return payload.iat;
+    if (typeof payload.exp === 'number') return payload.exp;
+  } catch (_) {}
+  return null;
+}
+
 export function getAdminToken(): string | null {
   try {
-    return localStorage.getItem('jwt') || sessionStorage.getItem('jwt');
+    const sessionToken = sessionStorage.getItem('jwt');
+    const localToken = localStorage.getItem('jwt');
+    if (!sessionToken) return localToken;
+    if (!localToken || sessionToken === localToken) return sessionToken;
+
+    // Both legacy login paths use a different storage area. If both are set,
+    // use the newer JWT so an old token cannot shadow the current session.
+    const sessionTime = tokenTimestamp(sessionToken);
+    const localTime = tokenTimestamp(localToken);
+    if (sessionTime !== null && localTime !== null) return sessionTime >= localTime ? sessionToken : localToken;
+    return sessionToken;
   } catch (_) {
     return null;
   }
