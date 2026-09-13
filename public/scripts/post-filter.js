@@ -97,6 +97,7 @@ async function initLivePosts() {
   const type = grid.dataset.livePosts || 'blog';
   const loading = grid.querySelector('[data-post-loading]');
   const empty = document.querySelector('[data-post-empty]');
+  grid.classList.add('is-loading');
   const filters = initFilters(grid);
 
   try {
@@ -110,6 +111,7 @@ async function initLivePosts() {
     grid.querySelectorAll('[data-post-card], .year-header').forEach((element) => element.remove());
     if (!posts.length) {
       setEmptyState(empty, 0);
+      grid.classList.remove('is-loading');
       return;
     }
 
@@ -127,10 +129,12 @@ async function initLivePosts() {
     }
     posts.forEach((post) => grid.append(createPostCard(post, type)));
     filters.update();
+    grid.classList.remove('is-loading');
     window.dispatchEvent(new Event('posts:rendered'));
   } catch (error) {
     console.warn(`Live ${type} posts unavailable`, error);
     loading?.remove();
+    grid.classList.remove('is-loading');
     const fallbackCount = grid.querySelectorAll('[data-post-card]').length;
     if (!fallbackCount) grid.innerHTML = '<p class="text-muted">Unable to load posts right now.</p>';
     setEmptyState(empty, fallbackCount ? fallbackCount : 1);
