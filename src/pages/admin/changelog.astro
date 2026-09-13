@@ -437,6 +437,212 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     max-width: none;
   }
 
+  /* Keep changelog controls and rows on the same compact, glossy admin
+     surface as the Blogs and Stories workspaces. */
+  .changelog-admin-page .changelog-compose input:not([type='checkbox']):not([type='radio']),
+  .changelog-admin-page .changelog-compose textarea,
+  #editChangelogModal input:not([type='checkbox']):not([type='radio']),
+  #editChangelogModal textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 32px;
+    padding: 6px 8px;
+    border: 1px solid var(--primary-dark);
+    border-top-color: var(--primary-light);
+    border-left-color: var(--primary-light);
+    border-radius: 4px;
+    background: linear-gradient(
+      to bottom,
+      var(--bg-elev) 0%,
+      color-mix(in srgb, var(--primary-light) 15%, var(--bg-elev)) 46%,
+      color-mix(in srgb, var(--primary-dark) 12%, var(--bg-elev)) 51%,
+      var(--bg-elev) 100%
+    );
+    color: var(--text);
+    font: .76rem/1.35 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .72), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 24%, transparent);
+  }
+
+  .changelog-admin-page .changelog-compose textarea,
+  #editChangelogModal textarea {
+    min-height: 128px;
+    resize: vertical;
+  }
+
+  .changelog-admin-page .changelog-compose input::placeholder,
+  .changelog-admin-page .changelog-compose textarea::placeholder,
+  #editChangelogModal input::placeholder,
+  #editChangelogModal textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+  }
+
+  .changelog-admin-page .changelog-compose input:focus-visible,
+  .changelog-admin-page .changelog-compose textarea:focus-visible,
+  #editChangelogModal input:focus-visible,
+  #editChangelogModal textarea:focus-visible {
+    border-color: var(--primary-dark);
+    outline: 2px solid color-mix(in srgb, var(--primary) 48%, transparent);
+    outline-offset: 1px;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .78), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 28%, transparent), 0 0 0 2px color-mix(in srgb, var(--primary-light) 24%, transparent);
+  }
+
+  .changelog-history {
+    overflow: hidden;
+  }
+
+  .changelog-history .changelog-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .changelog-history .changelog-list .admin-list-item {
+    position: relative;
+    display: flex;
+    height: 146px;
+    min-height: 146px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--bg-elev) 86%, transparent);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .75), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 30%, transparent), 1px 1px 2px rgba(0, 0, 0, .12);
+    transition: border-color .16s ease, background-color .16s ease, box-shadow .16s ease;
+  }
+
+  .changelog-history .changelog-list .admin-list-item:hover {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev));
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .85), 0 1px 3px color-mix(in srgb, var(--primary-dark) 22%, transparent);
+    transform: none;
+  }
+
+  .changelog-history .changelog-list .admin-list-item.is-pinned {
+    border-color: var(--primary);
+  }
+
+  .changelog-history .changelog-list .admin-list-item-head {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+    position: relative;
+    min-width: 0;
+    padding: 7px 8px;
+    padding-right: 96px;
+    border-bottom: 1px solid var(--primary-dark);
+    background: linear-gradient(to bottom, var(--primary-light) 0%, var(--primary) 45%, var(--primary-dark) 50%, var(--primary-light) 100%);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .6);
+  }
+
+  .changelog-history .changelog-list .admin-list-item-head h3 {
+    display: -webkit-box;
+    min-width: 0;
+    overflow: hidden;
+    margin: 0;
+    color: #fff;
+    font: 700 .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-overflow: ellipsis;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .changelog-history .changelog-list .admin-list-item-head .post-card-icon {
+    color: #fff;
+    font-size: .72rem;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
+  }
+
+  .changelog-history .changelog-list .admin-list-item-body {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    align-self: stretch;
+    width: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    padding: 8px;
+  }
+
+  .changelog-history .changelog-list .post-card-description {
+    display: -webkit-box;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text);
+    font: .72rem/1.35 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .changelog-history .changelog-list .admin-list-meta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
+    color: var(--text-muted);
+    font: .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  }
+
+  .changelog-history .changelog-list .post-date {
+    color: var(--primary-dark);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .changelog-history .changelog-list .admin-list-item-actions {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    gap: 5px;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .changelog-history .changelog-list .admin-list-item-actions .btn {
+    height: 20px;
+    min-height: 20px;
+    box-sizing: border-box;
+    padding: 3px 7px;
+    border: 1px solid color-mix(in srgb, var(--primary-dark) 72%, var(--border-light));
+    border-radius: 3px;
+    background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
+    color: var(--primary-dark);
+    font: 700 .6rem/normal "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .82), inset 0 -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
+    text-transform: uppercase;
+  }
+
+  .changelog-history .changelog-list .admin-list-item-actions .btn:hover {
+    border-color: var(--primary-dark);
+    background: linear-gradient(to bottom, var(--primary-light), var(--primary));
+    color: var(--bg);
+    transform: none;
+  }
+
+  .changelog-history .changelog-list .admin-list-item-actions .admin-danger {
+    color: var(--admin-danger, #b42318);
+  }
+
+  .changelog-history .changelog-list .admin-list-item-actions .admin-danger:hover {
+    border-color: color-mix(in srgb, var(--admin-danger, #b42318) 78%, #000);
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--admin-danger, #b42318) 72%, #fff), var(--admin-danger, #b42318) 54%, color-mix(in srgb, var(--admin-danger, #b42318) 82%, #000));
+    color: #fff !important;
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--admin-danger, #b42318) 78%, #000);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .5), inset -1px -1px 0 rgba(0, 0, 0, .28), 0 1px 3px rgba(0, 0, 0, .22);
+  }
+
   @media (max-width: 700px) {
     .changelog-layout {
       grid-template-columns: 1fr;
@@ -465,6 +671,36 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       padding: 5px 0 0;
       border-top: 1px solid var(--border-light);
       border-left: 0;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .changelog-admin-page .admin-post-workspace > .admin-post-workspace-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      width: calc(100% - 8px);
+      max-width: none;
+      left: 0;
+    }
+
+    .changelog-admin-page .admin-post-workspace-header .admin-tabs {
+      min-width: 0;
+      gap: 2px;
+    }
+
+    .changelog-admin-page .admin-post-workspace-header .admin-tab {
+      min-width: 0;
+      padding-right: 7px !important;
+      padding-left: 7px !important;
+      font-size: .66rem !important;
+    }
+  }
+
+  @media (max-width: 350px) {
+    .changelog-admin-page .admin-post-workspace-header .admin-tab {
+      padding-right: 5px !important;
+      padding-left: 5px !important;
+      font-size: .61rem !important;
     }
   }
 
