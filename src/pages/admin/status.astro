@@ -2,16 +2,11 @@
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import AdminField from '../../components/admin/AdminField.astro';
 import AdminStatus from '../../components/admin/AdminStatus.astro';
-import AdminTabs from '../../components/admin/AdminTabs.astro';
+import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro';
 ---
 <AdminLayout title="Admin Status" active="status">
   <div class="admin-status-page">
-    <section class="neo-box scroll-animate admin-post-workspace status-workspace">
-      <div class="neo-header admin-post-workspace-header">
-        <AdminTabs tabs={[{ id: 'status', label: 'Status' }]} active="status" />
-      </div>
-
-      <div class="neo-content admin-post-workspace-content status-workspace-content">
+    <AdminPostWorkspace active="status" tabs={[{ id: 'status', label: 'Status' }]}>
         <div class="status-layout">
           <form id="statusForm" class="admin-form status-form">
             <div class="status-form-fields">
@@ -49,8 +44,7 @@ import AdminTabs from '../../components/admin/AdminTabs.astro';
             </div>
           </div>
         </div>
-      </div>
-    </section>
+    </AdminPostWorkspace>
   </div>
 
   <script>
@@ -113,11 +107,7 @@ import AdminTabs from '../../components/admin/AdminTabs.astro';
     min-width: 0;
   }
 
-  .status-workspace {
-    margin-top: 30px !important;
-  }
-
-  .status-workspace-content {
+  .admin-status-page .admin-post-workspace-content {
     padding: 8px !important;
   }
 
