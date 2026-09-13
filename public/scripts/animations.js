@@ -1,4 +1,6 @@
-const animatedElements = document.querySelectorAll('.scroll-animate:not(.sidebar-animate), .masonry-item, .neo-box:not(.sidebar-animate)');
+const animatedSelector = '.scroll-animate:not(.sidebar-animate), .masonry-item, .neo-box:not(.sidebar-animate)';
+const unanimatedSelector = '.scroll-animate:not(.sidebar-animate):not(.animate-in), .masonry-item:not(.animate-in), .neo-box:not(.sidebar-animate):not(.animate-in)';
+const animatedElements = document.querySelectorAll(animatedSelector);
 
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver((entries, currentObserver) => {
@@ -9,7 +11,12 @@ if ('IntersectionObserver' in window) {
     }
   }, { threshold: 0.08 });
 
-  animatedElements.forEach((element) => observer.observe(element));
+  const observeUnanimated = () => document.querySelectorAll(unanimatedSelector).forEach((element) => observer.observe(element));
+  observeUnanimated();
+  window.addEventListener('posts:rendered', observeUnanimated);
 } else {
   animatedElements.forEach((element) => element.classList.add('animate-in'));
+  window.addEventListener('posts:rendered', () => {
+    document.querySelectorAll(unanimatedSelector).forEach((element) => element.classList.add('animate-in'));
+  });
 }
