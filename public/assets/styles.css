@@ -3,8 +3,6 @@
    Classic Neocities aesthetic with modern animations
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
 @font-face {
   font-family: 'Ecoder';
   src: url('https://dl.dropbox.com/s/2wrgv8i3jsqkv6p/Ecoder-Italic.otf');
@@ -442,7 +440,7 @@ body {
   margin: 0;
   padding: 20px;
   padding-bottom: 100px; /* Space for mobile bottom nav */
-  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   font-size: 15px;
   line-height: 1.6;
   background: var(--gradient-subtle);
@@ -2178,22 +2176,89 @@ ul {
 }
 
 .widget-webring .webring-content {
-  display: flex;
   min-height: 48px;
-  align-items: center;
-  justify-content: center;
   padding: 8px;
+}
+
+/* Dumby-style old-web type: keep browser controls in the same pixel-friendly voice. */
+button,
+input,
+select,
+textarea {
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+}
+
+.widget-webring .webring-marquee {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--primary-dark) 65%, transparent) transparent;
+}
+
+.widget-webring .webring-track {
+  display: flex;
+  width: max-content;
+  animation: webring-scroll 28s linear infinite;
+}
+
+.widget-webring .webring-run {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  padding-right: 8px;
 }
 
 .widget-webring .webring-badge {
   display: block;
+  flex: 0 0 88px;
+  width: 88px;
   line-height: 0;
+  scroll-snap-align: start;
+}
+
+.widget-webring .webring-badge--site {
+  flex-basis: 180px;
+  width: 180px;
 }
 
 .widget-webring .webring-badge img {
   display: block;
   width: 88px;
   height: 31px;
+  max-width: none;
+  object-fit: fill;
+}
+
+.widget-webring .webring-badge--site {
+  max-width: none;
+}
+
+.widget-webring .webring-badge--site img {
+  width: 180px;
+  height: auto;
+}
+
+.more-drawer .widget-webring .webring-content .webring-badge--site img {
+  width: 180px;
+  height: auto;
+}
+
+.widget-webring .webring-marquee:hover .webring-track,
+.widget-webring .webring-marquee:focus-within .webring-track {
+  animation-play-state: paused;
+}
+
+@keyframes webring-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .widget-webring .webring-track {
+    animation: none;
+  }
 }
 
 .neo-sidebar .sidebar-more > .neo-content,

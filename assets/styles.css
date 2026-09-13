@@ -3,8 +3,6 @@
    Classic Neocities aesthetic with modern animations
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
 @font-face {
   font-family: 'Ecoder';
   src: url('https://dl.dropbox.com/s/2wrgv8i3jsqkv6p/Ecoder-Italic.otf');
@@ -275,7 +273,7 @@ body {
   margin: 0;
   padding: 20px;
   padding-bottom: 100px; /* Space for mobile bottom nav */
-  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   font-size: 15px;
   line-height: 1.6;
   background: var(--gradient-subtle);
@@ -4538,4 +4536,12 @@ body.dark .contact-link.twitter:hover {
 }
 @keyframes lightbox-fade-in {
   from { opacity: 0; } to { opacity: 1; }
+}
+
+/* Dumby-style old-web type: keep browser controls in the same pixel-friendly voice. */
+button,
+input,
+select,
+textarea {
+  font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
 }
