@@ -21,9 +21,8 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
         {tags.map((tag) => <button type="button" class="btn btn-ghost" data-tag-filter={tag.toLowerCase()}>{tag}</button>)}
       </div>
     </div>
-    <div class="masonry-grid is-loading" data-post-grid data-live-posts="story">
-      <p class="post-archive-loading" data-post-loading>Loading stories…</p>
-      {posts.map((post) => <PostCard title={post.data.title} description={post.data.description} date={post.data.date} tags={post.data.tags} href={post.data.backendId ? `/stories/post/?id=${encodeURIComponent(post.data.backendId)}` : `/stories/${entrySlug(post.id)}/`} icon="bi-book-half" />)}
+    <div class="masonry-grid" data-post-grid data-live-posts="story">
+      {posts.map((post) => <PostCard postId={post.data.backendId} title={post.data.title} description={post.data.description} date={post.data.date} tags={post.data.tags} href={post.data.backendId ? `/stories/post/?id=${encodeURIComponent(post.data.backendId)}` : `/stories/${entrySlug(post.id)}/`} icon="bi-book-half" />)}
     </div>
     <p class="text-muted" data-post-empty hidden>No matching story chapters.</p>
   </SiteSection>
