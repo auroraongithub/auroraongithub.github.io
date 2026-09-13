@@ -121,6 +121,8 @@ async function initLivePosts() {
   if (!grid) return;
   const type = grid.dataset.livePosts || 'blog';
   const empty = document.querySelector('[data-post-empty]');
+  grid.querySelectorAll('[data-post-loading]').forEach((element) => element.remove());
+  grid.classList.remove('is-loading');
   const filters = initFilters(grid);
 
   try {
