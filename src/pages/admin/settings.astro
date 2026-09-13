@@ -130,7 +130,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     text-transform: uppercase;
   }
 
-  .settings-form input {
+  .admin-page .settings-form input:not([type='checkbox']):not([type='radio']) {
     min-height: 32px;
     padding: 6px 8px;
     border: 1px solid var(--primary-dark);
@@ -142,12 +142,12 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     font: .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   }
 
-  .settings-form input::placeholder {
+  .admin-page .settings-form input:not([type='checkbox']):not([type='radio'])::placeholder {
     color: var(--text-muted);
     opacity: .78;
   }
 
-  .settings-form input:focus-visible {
+  .admin-page .settings-form input:not([type='checkbox']):not([type='radio']):focus-visible {
     outline: 1px solid var(--primary);
     border-color: var(--primary-dark);
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-light) 30%, transparent), inset 1px 1px 0 rgba(255, 255, 255, .72);
