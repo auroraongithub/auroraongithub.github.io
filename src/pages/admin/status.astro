@@ -1,321 +1,289 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import AdminPanel from '../../components/admin/AdminPanel.astro';
 import AdminField from '../../components/admin/AdminField.astro';
 import AdminStatus from '../../components/admin/AdminStatus.astro';
+import AdminTabs from '../../components/admin/AdminTabs.astro';
 ---
-<AdminLayout title="Status Editor" active="status">
-  <div class="status-page">
-    <div class="status-page-heading">
-      <div>
-        <h1>Broadcast status</h1>
-        <p>Shape the small signal visitors see beneath the site header.</p>
+<AdminLayout title="Admin Status" active="status">
+  <div class="admin-status-page">
+    <section class="neo-box scroll-animate admin-post-workspace status-workspace">
+      <div class="neo-header admin-post-workspace-header">
+        <AdminTabs tabs={[{ id: 'status', label: 'Status' }]} active="status" />
       </div>
-      <span class="status-page-mode"><i class="bi bi-broadcast-pin" aria-hidden="true"></i> PUBLIC CHANNEL</span>
-    </div>
 
-    <div class="status-editor-grid">
-      <AdminPanel title="Status Editor" icon="bi-broadcast" class="status-editor-panel">
-        <form id="statusForm" class="admin-form status-form">
-          <div class="status-form-intro">
-            <span class="status-form-label">Message controls</span>
-            <span class="status-form-note">Updates appear on the public strip after saving.</span>
-          </div>
-          <div class="status-form-fields">
-            <AdminField label="Feeling" forId="feeling"><input id="feeling" type="text" placeholder="Happy, Tired, Excited…" /></AdminField>
-            <AdminField label="Currently Doing" forId="doing"><input id="doing" type="text" placeholder="Working on projects…" /></AdminField>
-          </div>
-          <AdminField label="Marquee Text" forId="marquee" hint="This text scrolls across the public status bar."><input id="marquee" type="text" placeholder="Scrolling message…" /></AdminField>
-          <div class="status-form-footer">
-            <AdminStatus id="statusMessage" />
-            <button class="btn btn-primary" type="submit"><i class="bi bi-cloud-arrow-up" aria-hidden="true"></i> Save Status</button>
-          </div>
-        </form>
-      </AdminPanel>
-
-      <AdminPanel title="Live Preview" icon="bi-eye" class="status-preview-panel">
-        <div class="status-preview-head">
-          <span>Rendered public view</span>
-          <span class="status-preview-live"><span aria-hidden="true"></span> LIVE</span>
-        </div>
-        <div class="status-strip-screen admin-status-preview">
-          <div class="status-strip-content">
-            <div class="status-info">
-              <span class="status-feeling"><i class="bi bi-emoji-smile"></i> <span id="previewFeeling">Feeling</span></span>
-              <span class="status-divider">|</span>
-              <span class="status-doing"><i class="bi bi-activity"></i> <span id="previewDoing">Doing</span></span>
+      <div class="neo-content admin-post-workspace-content status-workspace-content">
+        <div class="status-layout">
+          <form id="statusForm" class="admin-form status-form">
+            <div class="status-form-fields">
+              <AdminField label="Feeling" forId="feeling">
+                <input id="feeling" type="text" placeholder="Happy, tired, excited..." />
+              </AdminField>
+              <AdminField label="Currently doing" forId="doing">
+                <input id="doing" type="text" placeholder="Working on projects..." />
+              </AdminField>
             </div>
-            <div class="status-marquee"><div class="marquee-track"><span class="marquee-text" id="previewMarquee">Marquee</span></div></div>
+
+            <AdminField label="Marquee text" forId="marquee">
+              <input id="marquee" type="text" placeholder="Scrolling message..." />
+            </AdminField>
+
+            <div class="status-form-footer">
+              <AdminStatus id="statusMessage" />
+              <button class="btn btn-primary" type="submit">Save status</button>
+            </div>
+          </form>
+
+          <div class="status-preview" aria-label="Status preview">
+            <div class="status-preview-label">Preview</div>
+            <div class="status-strip-screen admin-status-preview">
+              <div class="status-strip-content">
+                <div class="status-info">
+                  <span class="status-feeling" id="previewFeeling">Feeling</span>
+                  <span class="status-divider" aria-hidden="true">|</span>
+                  <span class="status-doing" id="previewDoing">Doing</span>
+                </div>
+                <div class="status-marquee">
+                  <div class="marquee-track"><span class="marquee-text" id="previewMarquee">Marquee</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <p class="status-preview-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Preview updates as you type.</p>
-      </AdminPanel>
-    </div>
+      </div>
+    </section>
   </div>
+
   <script>
     import { adminFetch, setAdminStatus } from '../../lib/admin/api';
-    const feeling = document.querySelector<HTMLInputElement>('#feeling')!;
-    const doing = document.querySelector<HTMLInputElement>('#doing')!;
-    const marquee = document.querySelector<HTMLInputElement>('#marquee')!;
+
+    const feeling = document.querySelector<HTMLInputElement>('#feeling');
+    const doing = document.querySelector<HTMLInputElement>('#doing');
+    const marquee = document.querySelector<HTMLInputElement>('#marquee');
     const message = document.querySelector<HTMLElement>('#statusMessage');
-    const previewFeeling = document.querySelector<HTMLElement>('#previewFeeling')!;
-    const previewDoing = document.querySelector<HTMLElement>('#previewDoing')!;
-    const previewMarquee = document.querySelector<HTMLElement>('#previewMarquee')!;
-    const updatePreview = () => {
-      previewFeeling.textContent = feeling.value || 'Feeling';
-      previewDoing.textContent = doing.value || 'Doing';
-      previewMarquee.textContent = marquee.value || 'Marquee';
-    };
-    [feeling, doing, marquee].forEach((input) => input.addEventListener('input', updatePreview));
-    (async () => {
-      setAdminStatus(message, 'Loading current status…', 'loading');
-      try {
-        const response = await adminFetch('/site/status', {}, { auth: false });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Failed to load status');
-        feeling.value = data.feeling || '';
-        doing.value = data.doing || '';
-        marquee.value = data.currently_marquee || '';
-        updatePreview(); setAdminStatus(message);
-      } catch (error) { setAdminStatus(message, error instanceof Error ? error.message : 'Failed to load status', 'error'); }
-    })();
-    document.querySelector<HTMLFormElement>('#statusForm')?.addEventListener('submit', async (event) => {
-      event.preventDefault(); setAdminStatus(message, 'Saving…', 'loading');
-      try {
-        const response = await adminFetch('/admin/status', { method: 'PUT', body: JSON.stringify({ feeling: feeling.value, doing: doing.value, currently_marquee: marquee.value }) });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || 'Failed to save');
-        setAdminStatus(message, 'Status saved.', 'success');
-      } catch (error) { setAdminStatus(message, error instanceof Error ? error.message : 'Error saving status', 'error'); }
-    });
+    const previewFeeling = document.querySelector<HTMLElement>('#previewFeeling');
+    const previewDoing = document.querySelector<HTMLElement>('#previewDoing');
+    const previewMarquee = document.querySelector<HTMLElement>('#previewMarquee');
+
+    if (feeling && doing && marquee && message && previewFeeling && previewDoing && previewMarquee) {
+      const updatePreview = () => {
+        previewFeeling.textContent = feeling.value || 'Feeling';
+        previewDoing.textContent = doing.value || 'Doing';
+        previewMarquee.textContent = marquee.value || 'Marquee';
+      };
+
+      [feeling, doing, marquee].forEach((input) => input.addEventListener('input', updatePreview));
+
+      (async () => {
+        setAdminStatus(message, 'Loading...', 'loading');
+        try {
+          const response = await adminFetch('/site/status', {}, { auth: false });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || 'Failed to load status');
+          feeling.value = data.feeling || '';
+          doing.value = data.doing || '';
+          marquee.value = data.currently_marquee || '';
+          updatePreview();
+          setAdminStatus(message);
+        } catch (error) {
+          setAdminStatus(message, error instanceof Error ? error.message : 'Failed to load status', 'error');
+        }
+      })();
+
+      document.querySelector<HTMLFormElement>('#statusForm')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        setAdminStatus(message, 'Saving...', 'loading');
+        try {
+          const response = await adminFetch('/admin/status', {
+            method: 'PUT',
+            body: JSON.stringify({ feeling: feeling.value, doing: doing.value, currently_marquee: marquee.value })
+          });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(data.error || 'Failed to save');
+          setAdminStatus(message, 'Saved.', 'success');
+        } catch (error) {
+          setAdminStatus(message, error instanceof Error ? error.message : 'Error saving status', 'error');
+        }
+      });
+    }
   </script>
 </AdminLayout>
 
 <style is:global>
-  .status-page {
-    display: grid;
-    gap: 12px;
-  }
-
-  .status-page-heading {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 2px 2px 4px;
-  }
-
-  .status-page-heading h1 {
-    margin: 0;
-    color: var(--text);
-    font-size: 1.2rem;
-    letter-spacing: .06em;
-    line-height: 1.2;
-    text-transform: uppercase;
-  }
-
-  .status-page-heading p {
-    margin: 5px 0 0;
-    color: var(--text-muted);
-    font-size: .85rem;
-  }
-
-  .status-page-mode,
-  .status-form-label,
-  .status-preview-live {
-    color: var(--primary-dark);
-    font: 700 .64rem/1.2 'Courier New', monospace;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-  }
-
-  .status-page-mode {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 8px;
-    border: 1px solid var(--border-light);
-    border-radius: 5px;
-    background: var(--bg-elev);
-    white-space: nowrap;
-  }
-
-  .status-editor-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.12fr) minmax(290px, .88fr);
-    gap: 10px;
-    align-items: start;
-  }
-
-  .status-editor-grid .admin-panel {
+  .admin-status-page {
     min-width: 0;
-    height: 100%;
   }
 
-  .status-editor-grid .admin-panel-content {
-    height: calc(100% - 42px);
-    box-sizing: border-box;
+  .status-workspace {
+    margin-top: 30px !important;
+  }
+
+  .status-workspace-content {
+    padding: 8px !important;
+  }
+
+  .status-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(240px, .85fr);
+    gap: 10px;
+    min-width: 0;
   }
 
   .status-form {
+    display: grid;
+    align-content: start;
+    gap: 9px;
     max-width: none;
-    gap: 14px;
-  }
-
-  .status-form-intro,
-  .status-preview-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .status-form-intro {
-    padding-bottom: 9px;
-    border-bottom: 1px dashed var(--border-light);
-  }
-
-  .status-form-note {
-    color: var(--text-muted);
-    font-size: .85rem;
-    text-align: right;
+    margin: 0;
+    padding: 3px 4px 4px;
   }
 
   .status-form-fields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 9px;
+  }
+
+  .status-form .admin-field {
+    gap: 3px;
+  }
+
+  .status-form .admin-field label,
+  .status-preview-label {
+    color: var(--primary-dark);
+    font: 700 .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .status-form input {
+    min-height: 32px;
+    padding: 6px 8px;
+    border: 1px solid var(--primary-dark);
+    border-top-color: var(--primary-light);
+    border-left-color: var(--primary-light);
+    border-radius: 4px;
+    background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev)));
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .72), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
+    color: var(--text);
+    font: .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  }
+
+  .status-form input::placeholder {
+    color: var(--text-muted);
+    opacity: .78;
+  }
+
+  .status-form input:focus-visible {
+    outline: 1px solid var(--primary);
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-light) 30%, transparent), inset 1px 1px 0 rgba(255, 255, 255, .72);
   }
 
   .status-form-footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding-top: 10px;
-    border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 7px;
+    border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
   }
 
   .status-form-footer .admin-status {
     flex: 1 1 auto;
+    min-width: 0;
+    padding: 5px 7px;
+    border-radius: 4px;
+    font: .72rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   }
 
   .status-form-footer .btn {
-    flex: 0 0 auto;
-    white-space: nowrap;
+    min-height: 30px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font: 700 .7rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-transform: uppercase;
   }
 
-  .status-preview-panel .admin-panel-content {
+  .status-preview {
     display: grid;
     align-content: start;
-    gap: 12px;
-  }
-
-  .status-preview-head {
-    color: var(--text-muted);
-    font-size: .85rem;
-  }
-
-  .status-preview-live {
-    display: inline-flex;
-    align-items: center;
     gap: 5px;
+    min-width: 0;
+    padding: 3px 4px 4px 10px;
+    border-left: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
   }
 
-  .status-preview-live > span {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--admin-success);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--admin-success) 17%, transparent);
+  .status-preview-label {
+    color: var(--text-muted);
   }
 
   .admin-status-preview {
-    min-height: 88px;
     display: grid;
+    min-height: 76px;
     align-items: center;
-    border: 1px solid color-mix(in srgb, var(--primary) 55%, var(--text));
-    border-bottom-width: 2px;
-    border-radius: 8px;
-    box-shadow: var(--shadow-hover);
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--primary-dark) 72%, var(--border));
+    border-radius: 4px;
+    background: #102020;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .12), 1px 1px 2px rgba(0, 0, 0, .18);
   }
 
   .admin-status-preview .status-strip-content {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 11px;
+    display: grid;
+    gap: 7px;
+    padding: 10px;
   }
 
   .admin-status-preview .status-info {
+    display: flex;
+    align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 7px;
-    font-size: .85rem;
+    gap: 6px;
+    color: #a8f5f2;
+    font: .72rem/1.2 "Courier New", monospace;
+    text-align: center;
+  }
+
+  .admin-status-preview .status-divider {
+    color: var(--primary);
   }
 
   .admin-status-preview .status-marquee {
-    width: 100%;
-    padding-top: 9px;
-    border-top: 1px solid rgba(109, 230, 226, .2);
+    min-width: 0;
+    overflow: hidden;
+    padding-top: 7px;
+    border-top: 1px solid rgba(109, 230, 226, .24);
+    color: #a8f5f2;
+    font: .7rem/1.2 "Courier New", monospace;
+    white-space: nowrap;
   }
 
-  .status-preview-note {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 0;
-    color: var(--text-muted);
-    font-size: .85rem;
+  .admin-status-preview .marquee-track {
+    overflow: hidden;
   }
 
-  .status-preview-note i {
-    color: var(--primary-dark);
+  .admin-status-preview .marquee-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  @media (max-width: 900px) {
-    .status-editor-grid {
+  @media (max-width: 720px) {
+    .status-layout {
       grid-template-columns: 1fr;
     }
 
-    .status-editor-grid .admin-panel-content {
-      height: auto;
+    .status-preview {
+      padding: 9px 4px 4px;
+      border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
+      border-left: 0;
     }
   }
 
-  @media (max-width: 560px) {
-    .status-page-heading {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .status-page-mode {
-      align-self: flex-start;
-    }
-
+  @media (max-width: 520px) {
     .status-form-fields {
       grid-template-columns: 1fr;
-    }
-
-    .status-form-intro,
-    .status-form-footer {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-
-    .status-form-note {
-      text-align: left;
-    }
-
-    .status-form-footer,
-    .status-form-footer .btn {
-      width: 100%;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .admin-status-preview .marquee-track {
-      animation: none;
     }
   }
 </style>
