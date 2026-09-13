@@ -1,95 +1,207 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import AdminPanel from '../../components/admin/AdminPanel.astro';
 import AdminField from '../../components/admin/AdminField.astro';
-import AdminStatus from '../../components/admin/AdminStatus.astro';
+import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro';
 ---
-<AdminLayout title="Site Settings" active="settings" bodyClass="admin-settings-page">
-  <div class="settings-screen">
-    <header class="settings-intro">
-      <div class="settings-intro-copy">
-        <h1>Site Settings</h1>
-        <p>Keep the public widgets in tune from one small control room.</p>
+<AdminLayout title="Site Settings" active="settings">
+  <AdminPostWorkspace active="settings" tabs={[{ id: 'settings', label: 'Settings' }]}>
+    <form id="settingsForm" class="admin-form settings-form">
+      <div class="settings-fields">
+        <AdminField label="Spotify link" forId="spotifyUrl">
+          <input id="spotifyUrl" type="text" placeholder="https://open.spotify.com/track/…" />
+        </AdminField>
+        <AdminField label="Chat room" forId="chattableRoom">
+          <input id="chattableRoom" type="text" placeholder="nijikade" />
+        </AdminField>
       </div>
-      <div class="settings-signal"><span class="settings-signal-dot"></span><span>Widget channel</span><strong>READY</strong></div>
-    </header>
 
-    <div class="settings-grid">
-      <AdminPanel title="Widget Settings" icon="bi-gear" class="settings-panel settings-form-panel">
-        <div class="settings-panel-intro">
-          <span class="settings-panel-mark"><i class="bi bi-sliders2" aria-hidden="true"></i></span>
-          <div><strong>Public widget inputs</strong><p>These values feed the listening card and chat space on the homepage.</p></div>
-        </div>
-        <form id="settingsForm" class="admin-form">
-          <div class="settings-fields">
-            <AdminField label="Spotify Link" forId="spotifyUrl" hint="Paste a Spotify track, album, playlist, artist, episode, show, embed URL, or Spotify URI."><input id="spotifyUrl" type="text" placeholder="https://open.spotify.com/track/…" /></AdminField>
-            <AdminField label="Chattable Room Name" forId="chattableRoom" hint="Room name used by the public chat widget."><input id="chattableRoom" type="text" placeholder="nijikade" /></AdminField>
-          </div>
-          <AdminStatus id="settingsMessage" />
-          <div class="settings-actions"><span class="settings-save-note"><i class="bi bi-cloud-check" aria-hidden="true"></i> Changes apply after saving.</span><button class="btn btn-primary" type="submit">Save Settings</button></div>
-        </form>
-      </AdminPanel>
+      <div class="settings-preview">
+        <span class="settings-preview-label">Spotify preview</span>
+        <div id="spotifyPreview" class="admin-spotify-preview">Enter a Spotify URL to see preview.</div>
+      </div>
 
-      <AdminPanel title="Spotify Preview" icon="bi-eye" class="settings-panel settings-preview-panel">
-        <div class="settings-preview-intro"><span class="settings-live-chip"><i class="bi bi-broadcast-pin" aria-hidden="true"></i> Live preview</span><p>Paste a link on the left to check the embed before it reaches the site.</p></div>
-        <div id="spotifyPreview" class="admin-spotify-preview"><span class="admin-muted">Enter a Spotify URL to see preview.</span></div>
-        <div class="settings-preview-footer"><i class="bi bi-info-circle" aria-hidden="true"></i><span>The preview updates as you type.</span></div>
-      </AdminPanel>
-    </div>
-  </div>
-  <script>
-    import { adminFetch, setAdminStatus } from '../../lib/admin/api';
-    import { spotifyToEmbed } from '../../lib/admin/spotify';
-    const spotify = document.querySelector<HTMLInputElement>('#spotifyUrl')!;
-    const room = document.querySelector<HTMLInputElement>('#chattableRoom')!;
-    const preview = document.querySelector<HTMLElement>('#spotifyPreview')!;
-    const message = document.querySelector<HTMLElement>('#settingsMessage');
-    const updatePreview = () => {
-      const url = spotify.value.trim(); const embed = spotifyToEmbed(url); preview.replaceChildren();
-      if (!url) { preview.textContent = 'Enter a Spotify URL to see preview.'; return; }
-      if (!embed.includes('spotify.com/embed')) { preview.textContent = 'Could not parse Spotify URL. Please paste a valid Spotify link.'; return; }
-      const iframe = document.createElement('iframe'); iframe.src = embed; iframe.width = '100%'; iframe.height = '152'; iframe.loading = 'lazy'; iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'; iframe.style.border = '0'; iframe.style.borderRadius = '8px';
-      const note = document.createElement('small'); note.textContent = `Will be saved as: ${embed}`; preview.append(iframe, note);
-    };
-    spotify.addEventListener('input', updatePreview);
-    (async () => { setAdminStatus(message, 'Loading settings…', 'loading'); try { const response = await adminFetch('/site/settings', {}, { auth:false }); const data = await response.json(); if(!response.ok) throw new Error(data.error||'Failed to load'); spotify.value=data.spotify_embed_url||''; room.value=data.chattable_room||'nijikade'; updatePreview(); setAdminStatus(message); } catch(error){ setAdminStatus(message,error instanceof Error?error.message:'Failed to load','error'); } })();
-    document.querySelector<HTMLFormElement>('#settingsForm')?.addEventListener('submit', async (event) => { event.preventDefault(); setAdminStatus(message,'Saving…','loading'); try { const response=await adminFetch('/admin/settings',{method:'PUT',body:JSON.stringify({spotify_embed_url:spotifyToEmbed(spotify.value),chattable_room:room.value})}); const data=await response.json().catch(()=>({})); if(!response.ok) throw new Error(data.error||'Failed to save'); setAdminStatus(message,'Settings saved.','success'); } catch(error){ setAdminStatus(message,error instanceof Error?error.message:'Error saving settings','error'); } });
-  </script>
-  <style>
-    .settings-screen { display:grid; gap:12px; }
-    .settings-intro { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 16px; border:1px solid var(--border-light); border-radius:8px; background:linear-gradient(135deg,color-mix(in srgb,var(--primary-light) 24%,var(--bg-elev)),var(--bg-elev) 68%); box-shadow:0 5px 16px color-mix(in srgb,var(--primary-dark) 9%,transparent); }
-    .settings-intro-copy { min-width:0; }
-    .settings-intro h1 { margin:0; color:var(--text); font-size:clamp(1.18rem,2.2vw,1.48rem); line-height:1.2; letter-spacing:.01em; }
-    .settings-intro p { margin:5px 0 0; color:var(--text-muted); font-size:.78rem; line-height:1.5; }
-    .settings-signal { display:inline-flex; align-items:center; gap:7px; flex:0 0 auto; padding:7px 9px; border:1px solid color-mix(in srgb,var(--primary) 40%,var(--border-light)); border-radius:999px; background:color-mix(in srgb,var(--primary-light) 25%,var(--card)); color:var(--primary-dark); font:700 .63rem/1 'Courier New',monospace; letter-spacing:.07em; text-transform:uppercase; white-space:nowrap; }
-    .settings-signal strong { padding-left:2px; color:var(--text); }
-    .settings-signal-dot { width:6px; height:6px; border-radius:50%; background:var(--primary); box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 18%,transparent); }
-    .settings-grid { display:grid; grid-template-columns:minmax(0,1.18fr) minmax(250px,.82fr); gap:10px; align-items:start; }
-    :global(.settings-panel > .admin-panel-content) { min-height:100%; }
-    :global(.settings-form-panel > .admin-panel-content), :global(.settings-preview-panel > .admin-panel-content) { display:grid; align-content:start; gap:12px; }
-    .settings-panel-intro { display:flex; align-items:flex-start; gap:9px; padding:9px 10px; border:1px solid var(--border-light); border-radius:7px; background:var(--gradient-subtle); }
-    .settings-panel-mark { display:grid; place-items:center; flex:0 0 28px; height:28px; border:1px solid color-mix(in srgb,var(--primary) 40%,var(--border-light)); border-radius:6px; background:color-mix(in srgb,var(--primary-light) 24%,var(--card)); color:var(--primary-dark); }
-    .settings-panel-intro strong { display:block; color:var(--text); font-size:.76rem; }
-    .settings-panel-intro p, .settings-preview-intro p { margin:3px 0 0; color:var(--text-muted); font-size:.71rem; line-height:1.5; }
-    .settings-fields { display:grid; gap:12px; }
-    .settings-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:10px; border-top:1px dotted color-mix(in srgb,var(--primary-dark) 45%,transparent); }
-    .settings-save-note { display:inline-flex; align-items:center; gap:5px; color:var(--text-muted); font-size:.68rem; }
-    .settings-save-note i { color:var(--primary-dark); }
-    .settings-preview-intro { display:grid; gap:2px; }
-    .settings-live-chip { display:inline-flex; align-items:center; gap:5px; color:var(--primary-dark); font:700 .62rem/1 'Courier New',monospace; letter-spacing:.08em; text-transform:uppercase; }
-    .settings-live-chip i { font-size:.75rem; }
-    .admin-spotify-preview { display:grid; gap:7px; min-height:56px; padding:10px; border:1px dashed color-mix(in srgb,var(--primary-dark) 44%,var(--border-light)); border-radius:7px; background:color-mix(in srgb,var(--bg) 38%,var(--bg-elev)); }
-    .admin-spotify-preview small, .admin-muted { color:var(--text-muted); font-size:.72rem; overflow-wrap:anywhere; }
-    .settings-preview-footer { display:flex; align-items:flex-start; gap:6px; padding-top:9px; border-top:1px dashed var(--border-light); color:var(--text-muted); font-size:.67rem; line-height:1.4; }
-    .settings-preview-footer i { color:var(--primary-dark); }
-    @media (max-width:760px) {
-      .settings-intro { align-items:flex-start; flex-direction:column; }
-      .settings-signal { align-self:flex-start; }
-      .settings-grid { grid-template-columns:1fr; }
-    }
-    @media (max-width:460px) {
-      .settings-actions { align-items:stretch; flex-direction:column; }
-      .settings-actions .btn { width:100%; }
-    }
-  </style>
+      <div class="settings-actions">
+        <button class="btn btn-primary" id="settingsSaveButton" type="submit">Save</button>
+      </div>
+    </form>
+  </AdminPostWorkspace>
 </AdminLayout>
+
+<script>
+  import { adminFetch } from '../../lib/admin/api';
+  import { spotifyToEmbed } from '../../lib/admin/spotify';
+
+  const spotify = document.querySelector<HTMLInputElement>('#spotifyUrl')!;
+  const room = document.querySelector<HTMLInputElement>('#chattableRoom')!;
+  const preview = document.querySelector<HTMLElement>('#spotifyPreview')!;
+  const saveButton = document.querySelector<HTMLButtonElement>('#settingsSaveButton')!;
+  const defaultSaveLabel = saveButton.textContent || 'Save';
+
+  function setSaveState(label: string, disabled: boolean): void {
+    saveButton.textContent = label;
+    saveButton.disabled = disabled;
+  }
+
+  const updatePreview = () => {
+    const url = spotify.value.trim();
+    const embed = spotifyToEmbed(url);
+    preview.replaceChildren();
+
+    if (!url) {
+      preview.textContent = 'Enter a Spotify URL to see preview.';
+      return;
+    }
+
+    if (!embed.includes('spotify.com/embed')) {
+      preview.textContent = 'Could not parse Spotify URL.';
+      return;
+    }
+
+    const iframe = document.createElement('iframe');
+    iframe.src = embed;
+    iframe.width = '100%';
+    iframe.height = '152';
+    iframe.loading = 'lazy';
+    iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+    iframe.style.border = '0';
+    iframe.style.borderRadius = '4px';
+
+    const note = document.createElement('small');
+    note.textContent = `Will be saved as: ${embed}`;
+    preview.append(iframe, note);
+  };
+
+  spotify.addEventListener('input', updatePreview);
+
+  (async () => {
+    try {
+      const response = await adminFetch('/site/settings', {}, { auth: false });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to load');
+      spotify.value = data.spotify_embed_url || '';
+      room.value = data.chattable_room || 'nijikade';
+      updatePreview();
+    } catch (_) {}
+  })();
+
+  document.querySelector<HTMLFormElement>('#settingsForm')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    setSaveState('Saving…', true);
+    try {
+      const response = await adminFetch('/admin/settings', {
+        method: 'PUT',
+        body: JSON.stringify({
+          spotify_embed_url: spotifyToEmbed(spotify.value),
+          chattable_room: room.value
+        })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'Failed to save');
+      setSaveState('Saved.', true);
+      window.setTimeout(() => setSaveState(defaultSaveLabel, false), 1100);
+    } catch {
+      setSaveState('Retry', false);
+    }
+  });
+</script>
+
+<style is:global>
+  .settings-form {
+    max-width: none;
+    margin: 0;
+    gap: 9px;
+  }
+
+  .settings-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .settings-form .admin-field {
+    min-width: 0;
+    gap: 3px;
+  }
+
+  .settings-form .admin-field > label,
+  .settings-preview-label {
+    color: var(--primary-dark);
+    font: 700 .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .settings-form input {
+    min-height: 32px;
+    padding: 6px 8px;
+    border: 1px solid var(--primary-dark);
+    border-top-color: var(--primary-light);
+    border-left-color: var(--primary-light);
+    border-radius: 4px;
+    background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev)));
+    color: var(--text);
+    font: .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  }
+
+  .settings-form input::placeholder {
+    color: var(--text-muted);
+    opacity: .78;
+  }
+
+  .settings-form input:focus-visible {
+    outline: 1px solid var(--primary);
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-light) 30%, transparent), inset 1px 1px 0 rgba(255, 255, 255, .72);
+  }
+
+  .settings-preview {
+    display: grid;
+    gap: 5px;
+    padding-top: 8px;
+    border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
+  }
+
+  .admin-spotify-preview {
+    display: grid;
+    gap: 5px;
+    min-height: 30px;
+    color: var(--text-muted);
+    font: .72rem/1.35 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-spotify-preview iframe {
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid var(--border-light) !important;
+  }
+
+  .admin-spotify-preview small {
+    color: var(--text-muted);
+    font: .68rem/1.3 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+  }
+
+  .settings-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 8px;
+    border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
+  }
+
+  .settings-actions .btn {
+    min-height: 29px;
+    padding: 5px 12px;
+    font: 700 .7rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 560px) {
+    .settings-fields {
+      grid-template-columns: 1fr;
+    }
+
+    .settings-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
