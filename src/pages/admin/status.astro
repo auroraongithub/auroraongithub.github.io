@@ -3,47 +3,32 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 import AdminField from '../../components/admin/AdminField.astro';
 import AdminStatus from '../../components/admin/AdminStatus.astro';
 import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro';
+import StatusStrip from '../../components/StatusStrip.astro';
 ---
 <AdminLayout title="Admin Status" active="status">
   <div class="admin-status-page">
     <AdminPostWorkspace active="status" tabs={[{ id: 'status', label: 'Status' }]}>
-        <div class="status-layout">
-          <form id="statusForm" class="admin-form status-form">
-            <div class="status-form-fields">
-              <AdminField label="Feeling" forId="feeling">
-                <input id="feeling" type="text" placeholder="Happy, tired, excited..." />
-              </AdminField>
-              <AdminField label="Currently doing" forId="doing">
-                <input id="doing" type="text" placeholder="Working on projects..." />
-              </AdminField>
-            </div>
-
-            <AdminField label="Marquee text" forId="marquee">
-              <input id="marquee" type="text" placeholder="Scrolling message..." />
-            </AdminField>
-
-            <div class="status-form-footer">
-              <AdminStatus id="statusMessage" />
-              <button class="btn btn-primary" type="submit">Save status</button>
-            </div>
-          </form>
-
-          <div class="status-preview" aria-label="Status preview">
-            <div class="status-preview-label">Preview</div>
-            <div class="status-strip-screen admin-status-preview">
-              <div class="status-strip-content">
-                <div class="status-info">
-                  <span class="status-feeling" id="previewFeeling">Feeling</span>
-                  <span class="status-divider" aria-hidden="true">|</span>
-                  <span class="status-doing" id="previewDoing">Doing</span>
-                </div>
-                <div class="status-marquee">
-                  <div class="marquee-track"><span class="marquee-text" id="previewMarquee">Marquee</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <form id="statusForm" class="admin-form status-form">
+        <div class="status-form-fields">
+          <AdminField label="Feeling" forId="feeling">
+            <input id="feeling" type="text" placeholder="Happy, tired, excited..." />
+          </AdminField>
+          <AdminField label="Currently doing" forId="doing">
+            <input id="doing" type="text" placeholder="Working on projects..." />
+          </AdminField>
         </div>
+
+        <AdminField label="Marquee text" forId="marquee">
+          <input id="marquee" type="text" placeholder="Scrolling message..." />
+        </AdminField>
+
+        <div class="status-form-footer">
+          <AdminStatus id="statusMessage" />
+          <button class="btn btn-primary" type="submit">Save status</button>
+        </div>
+      </form>
+
+      <StatusStrip />
     </AdminPostWorkspace>
   </div>
 
@@ -54,9 +39,9 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     const doing = document.querySelector<HTMLInputElement>('#doing');
     const marquee = document.querySelector<HTMLInputElement>('#marquee');
     const message = document.querySelector<HTMLElement>('#statusMessage');
-    const previewFeeling = document.querySelector<HTMLElement>('#previewFeeling');
-    const previewDoing = document.querySelector<HTMLElement>('#previewDoing');
-    const previewMarquee = document.querySelector<HTMLElement>('#previewMarquee');
+    const previewFeeling = document.querySelector<HTMLElement>('#statusFeeling');
+    const previewDoing = document.querySelector<HTMLElement>('#statusDoing');
+    const previewMarquee = document.querySelector<HTMLElement>('#marqueeText');
 
     if (feeling && doing && marquee && message && previewFeeling && previewDoing && previewMarquee) {
       const updatePreview = () => {
@@ -109,13 +94,6 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 
   .admin-status-page .admin-post-workspace-content {
     padding: 8px !important;
-  }
-
-  .status-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(240px, .85fr);
-    gap: 10px;
-    min-width: 0;
   }
 
   .status-form {
@@ -194,81 +172,9 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     text-transform: uppercase;
   }
 
-  .status-preview {
-    display: grid;
-    align-content: start;
-    gap: 5px;
-    min-width: 0;
-    padding: 3px 4px 4px 10px;
-    border-left: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
-  }
-
-  .status-preview-label {
-    color: var(--text-muted);
-  }
-
-  .admin-status-preview {
-    display: grid;
-    min-height: 76px;
-    align-items: center;
-    overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--primary-dark) 72%, var(--border));
-    border-radius: 4px;
-    background: #102020;
-    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .12), 1px 1px 2px rgba(0, 0, 0, .18);
-  }
-
-  .admin-status-preview .status-strip-content {
-    display: grid;
-    gap: 7px;
-    padding: 10px;
-  }
-
-  .admin-status-preview .status-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    color: #a8f5f2;
-    font: .72rem/1.2 "Courier New", monospace;
-    text-align: center;
-  }
-
-  .admin-status-preview .status-divider {
-    color: var(--primary);
-  }
-
-  .admin-status-preview .status-marquee {
-    min-width: 0;
-    overflow: hidden;
-    padding-top: 7px;
-    border-top: 1px solid rgba(109, 230, 226, .24);
-    color: #a8f5f2;
-    font: .7rem/1.2 "Courier New", monospace;
-    white-space: nowrap;
-  }
-
-  .admin-status-preview .marquee-track {
-    overflow: hidden;
-  }
-
-  .admin-status-preview .marquee-text {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  @media (max-width: 720px) {
-    .status-layout {
-      grid-template-columns: 1fr;
-    }
-
-    .status-preview {
-      padding: 9px 4px 4px;
-      border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
-      border-left: 0;
-    }
+  .admin-status-page .status-strip-screen {
+    width: 100%;
+    box-sizing: border-box;
   }
 
   @media (max-width: 520px) {
