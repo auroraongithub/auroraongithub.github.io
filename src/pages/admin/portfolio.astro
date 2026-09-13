@@ -298,11 +298,19 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     }
 
     .admin-portfolio-page .portfolio-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 5px;
     }
 
-    .admin-portfolio-page .portfolio-project {
+    .admin-portfolio-page .admin-post-workspace .portfolio-project {
+      height: 118px;
+      min-height: 118px;
       font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .admin-portfolio-page .portfolio-project .admin-list-item-head {
+      padding-top: 6px;
+      padding-bottom: 6px;
     }
 
     .admin-portfolio-page .portfolio-project .admin-list-item-head h3 {
@@ -310,7 +318,8 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     }
 
     .admin-portfolio-page .portfolio-project .admin-list-item-body {
-      gap: 4px;
+      gap: 3px;
+      padding: 7px 8px;
     }
 
     .admin-portfolio-page .portfolio-project .post-card-description {
@@ -319,8 +328,9 @@ import AdminModal from '../../components/admin/AdminModal.astro';
 
     .admin-portfolio-page .portfolio-project .admin-list-meta {
       flex-wrap: wrap;
-      gap: 4px 9px;
-      margin-top: auto;
+      justify-content: flex-start;
+      gap: 3px 7px;
+      margin-top: 3px;
     }
 
     .admin-portfolio-page .portfolio-repository-link {
@@ -335,6 +345,11 @@ import AdminModal from '../../components/admin/AdminModal.astro';
       min-height: 20px;
       padding: 3px 6px;
       font: 700 .62rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      transform: none !important;
+    }
+
+    .admin-portfolio-page .portfolio-project .admin-list-item-actions .btn:hover,
+    .admin-portfolio-page .portfolio-project .admin-list-item-actions .btn:active {
       transform: none !important;
     }
 
@@ -375,7 +390,22 @@ import AdminModal from '../../components/admin/AdminModal.astro';
       }
     }
 
+    @media (max-width: 920px) {
+      .admin-portfolio-page .portfolio-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 560px) {
+      .admin-portfolio-page .portfolio-list {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-portfolio-page .admin-post-workspace .portfolio-project {
+        height: 118px;
+        min-height: 118px;
+      }
+
       .admin-portfolio-page .admin-custom-project-fields {
         grid-template-columns: 1fr;
       }
