@@ -10,10 +10,19 @@ function formatDate(value) {
   return date ? date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
 }
 
+function getPostPreview(post) {
+  const source = post.description || post.excerpt || post.content || '';
+  if (!source) return '';
+  const template = document.createElement('template');
+  template.innerHTML = String(source);
+  const text = (template.content.textContent || '').replace(/\s+/g, ' ').trim();
+  return text.length > 180 ? `${text.slice(0, 177).trimEnd()}…` : text;
+}
+
 function createPostCard(post, type) {
   const id = String(post.id ?? post._id ?? '');
   const title = String(post.title || 'Untitled');
-  const description = String(post.description || post.excerpt || '');
+  const description = getPostPreview(post);
   const tags = normalizeTags(post.tags);
   const prefix = type === 'story' ? '/stories/post/' : '/blogs/post/';
   const icon = type === 'story' ? 'bi-book-half' : 'bi-envelope-paper';
