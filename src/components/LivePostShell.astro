@@ -1,0 +1,25 @@
+---
+import PostLayout from '../layouts/PostLayout.astro';
+
+interface Props {
+  postType: 'blog' | 'story';
+}
+
+const { postType } = Astro.props;
+const isStory = postType === 'story';
+---
+<PostLayout title="Loading post…" className={isStory ? 'story-post live-post' : 'blog-post live-post'}>
+  <Fragment slot="meta">
+    <div class="article-meta" data-live-post-meta>
+      <span>Loading post…</span>
+    </div>
+  </Fragment>
+  <div data-live-post-content data-post-type={postType}>
+    <div class="loading">Loading post content...</div>
+  </div>
+  <Fragment slot="after">
+    <div data-live-post-kudos></div>
+    <nav class="post-navigation" data-live-post-navigation aria-label="Post navigation"></nav>
+  </Fragment>
+</PostLayout>
+<script is:inline type="module" src="/scripts/live-post.js"></script>

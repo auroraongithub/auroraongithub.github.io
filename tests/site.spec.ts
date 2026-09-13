@@ -71,13 +71,13 @@ test('local image assets render and a screenshot is captured', async ({ page, re
   await page.screenshot({ path: testInfo.outputPath('home-full.png'), fullPage: true });
 });
 
-test('blog and story detail routes are generated and navigable', async ({ page }) => {
+test('blog and story detail routes are live and navigable', async ({ page }) => {
   for (const section of ['blogs', 'stories']) {
     await page.goto(`/${section}/`);
     const first = page.locator('.post-card a').first();
     await expect(first).toBeVisible();
     const href = await first.getAttribute('href');
-    expect(href).toMatch(new RegExp(`^/${section}/.+/$`));
+    expect(href).toMatch(new RegExp(`^/${section}/post/\\?id=.+$`));
     const response = await page.goto(href!);
     expect(response?.status()).toBeLessThan(400);
     await expect(page.locator('.neo-article > .article-header > h1')).toBeVisible();

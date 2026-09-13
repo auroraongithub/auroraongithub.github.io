@@ -1,8 +1,11 @@
 import { API_BASE } from './site-api.js';
 
-async function initKudos() {
-  const root = document.querySelector('[data-kudos-root]');
+const initializedRoots = new WeakSet();
+
+export async function initKudos(root = document.querySelector('[data-kudos-root]')) {
   if (!root) return;
+  if (initializedRoots.has(root)) return;
+  initializedRoots.add(root);
   const postId = root.dataset.postId;
   const button = root.querySelector('[data-kudos-button]');
   const count = root.querySelector('[data-kudos-count]');
