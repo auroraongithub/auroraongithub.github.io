@@ -54,6 +54,10 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       <AdminField label="Description" forId="editBody" required>
         <textarea id="editBody" rows="7"></textarea>
       </AdminField>
+      <label class="admin-check changelog-pin-toggle">
+        <input type="checkbox" id="editPinned" />
+        <span>Pin entry</span>
+      </label>
       <AdminStatus id="editChangelogMessage" />
       <div class="admin-modal-actions">
         <button class="btn btn-primary" type="submit">Save</button>
@@ -75,6 +79,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   const newTitle = document.querySelector<HTMLInputElement>('#newTitle')!;
   const newBody = document.querySelector<HTMLTextAreaElement>('#newBody')!;
   const newPinned = document.querySelector<HTMLInputElement>('#newPinned')!;
+  const editPinned = document.querySelector<HTMLInputElement>('#editPinned')!;
   const modal = document.querySelector<HTMLElement>('#editChangelogModal')!;
   let entries: Entry[] = [];
 
@@ -87,6 +92,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     (document.querySelector<HTMLInputElement>('#editId')!).value = entry.id;
     (document.querySelector<HTMLInputElement>('#editTitle')!).value = entry.title || '';
     (document.querySelector<HTMLTextAreaElement>('#editBody')!).value = entry.body || '';
+    editPinned.checked = Boolean(entry.pinned);
     setAdminStatus(editMessage);
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
@@ -96,6 +102,10 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     if (!value) return 'No date';
     const parsed = new Date(value);
     return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString();
+  }
+
+  function pinnedConflict(exceptId?: string) {
+    return entries.find((entry) => entry.pinned && entry.id !== exceptId);
   }
 
   function renderEntries() {
@@ -155,6 +165,10 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       setAdminStatus(message, 'Description is required.', 'error');
       return;
     }
+    if (newPinned.checked && pinnedConflict()) {
+      setAdminStatus(message, 'Only one entry can be pinned. Unpin the current pinned entry first.', 'error');
+      return;
+    }
     setAdminStatus(message, 'Adding…', 'loading');
     try {
       const response = await adminFetch('/admin/changelog', {
@@ -199,11 +213,15 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       setAdminStatus(editMessage, 'Description is required.', 'error');
       return;
     }
+    if (editPinned.checked && pinnedConflict(id)) {
+      setAdminStatus(editMessage, 'Only one entry can be pinned. Unpin the current pinned entry first.', 'error');
+      return;
+    }
     setAdminStatus(editMessage, 'Saving…', 'loading');
     try {
       const response = await adminFetch(`/admin/changelog/${encodeURIComponent(id)}`, {
         method: 'PATCH',
-        body: JSON.stringify({ title, body })
+        body: JSON.stringify({ title, body, pinned: editPinned.checked })
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'Failed to update entry');
@@ -286,6 +304,20 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   }
 
   .changelog-compose .admin-check input {
+    accent-color: var(--primary-dark);
+  }
+
+  #editChangelogModal .changelog-pin-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    color: var(--text);
+    font: 700 .68rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-transform: uppercase;
+  }
+
+  #editChangelogModal .changelog-pin-toggle input {
     accent-color: var(--primary-dark);
   }
 
