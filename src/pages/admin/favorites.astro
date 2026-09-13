@@ -22,51 +22,45 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
         />
       </div>
 
-    <div class="favorite-tool-grid">
-      <div class="favorite-source-panel">
-        <section class="favorite-tool-block" id="malImportSection">
-          <h3>Import from MyAnimeList</h3>
-          <div class="admin-toolbar">
-            <AdminField label="Username" forId="malUsername"><input id="malUsername" type="text" placeholder="MyAnimeList username" /></AdminField>
-            <button class="btn btn-primary" id="importMal" type="button">Import</button>
-          </div>
-          <div class="admin-progress favorite-progress" id="importProgress" hidden><div><span id="importFill"></span></div><small id="importText">Importing...</small></div>
-        </section>
-
+      <div class="favorite-tools-column">
         <section class="favorite-tool-block favorite-search-block">
           <h3>Search MyAnimeList</h3>
-          <div class="admin-toolbar">
-            <AdminField label="Title" forId="favoriteSearch"><input id="favoriteSearch" type="text" placeholder="Search by title..." /></AdminField>
-            <button class="btn btn-ghost" id="searchFavorites" type="button">Search</button>
+          <div class="admin-toolbar favorite-search-toolbar">
+            <AdminField label="Title" forId="favoriteSearch">
+              <input id="favoriteSearch" type="search" placeholder="Search MyAnimeList..." autocomplete="off" />
+            </AdminField>
+            <button class="btn btn-primary" id="searchFavorites" type="button">Search</button>
           </div>
-          <div id="favoriteSearchResults" class="admin-search-results" hidden></div>
+          <div id="favoriteSearchResults" class="admin-search-results favorite-search-results" hidden></div>
+        </section>
+
+        <section class="favorite-tool-block favorite-manual-panel">
+          <h3>Add manually</h3>
+          <form id="favoriteAddForm" class="admin-favorite-form">
+            <AdminField label="Title" forId="addTitle" required><input id="addTitle" required /></AdminField>
+            <AdminField label="Image URL" forId="addImage"><input id="addImage" type="url" placeholder="https://..." /></AdminField>
+            <AdminField label="MAL ID" forId="addMalId"><input id="addMalId" type="number" min="1" /></AdminField>
+            <AdminField label="Status" forId="addStatus"><select id="addStatus"><option value="completed">Completed</option><option value="watching">Watching / Reading / Playing</option><option value="plan">Plan to Watch / Read / Play</option><option value="dropped">Dropped</option></select></AdminField>
+            <AdminField label="Score" forId="addScore"><input id="addScore" type="number" min="0" max="10" step="0.01" /></AdminField>
+            <AdminField label="Year" forId="addYear"><input id="addYear" type="number" min="1900" max="2100" /></AdminField>
+            <AdminField label="Description" forId="addDescription" class="admin-favorite-full"><textarea id="addDescription"></textarea></AdminField>
+            <div class="admin-favorite-full favorite-form-actions"><button class="btn btn-primary" type="submit">Add favorite</button></div>
+          </form>
         </section>
       </div>
 
-      <section class="favorite-manual-panel">
-        <h3>Add manually</h3>
-        <form id="favoriteAddForm" class="admin-favorite-form">
-          <AdminField label="Title" forId="addTitle" required><input id="addTitle" required /></AdminField>
-          <AdminField label="Image URL" forId="addImage"><input id="addImage" type="url" placeholder="https://..." /></AdminField>
-          <AdminField label="MAL ID" forId="addMalId"><input id="addMalId" type="number" min="1" /></AdminField>
-          <AdminField label="Status" forId="addStatus"><select id="addStatus"><option value="completed">Completed</option><option value="watching">Watching / Reading / Playing</option><option value="plan">Plan to Watch / Read / Play</option><option value="dropped">Dropped</option></select></AdminField>
-          <AdminField label="Score" forId="addScore"><input id="addScore" type="number" min="0" max="10" step="0.01" /></AdminField>
-          <AdminField label="Year" forId="addYear"><input id="addYear" type="number" min="1900" max="2100" /></AdminField>
-          <AdminField label="Description" forId="addDescription" class="admin-favorite-full"><textarea id="addDescription"></textarea></AdminField>
-          <div class="admin-favorite-full favorite-form-actions"><button class="btn btn-primary" type="submit">Add favorite</button></div>
-        </form>
+      <section class="favorite-library-section" aria-labelledby="favoriteLibraryTitle">
+        <div class="admin-list-toolbar admin-favorite-toolbar">
+          <div class="favorite-library-heading">
+            <h3 id="favoriteLibraryTitle">Current favorites</h3>
+            <span class="admin-count" id="favoriteCount">0</span>
+          </div>
+        </div>
+        <AdminStatus id="favoriteMessage" />
+        <div id="favoritesList" class="admin-grid favorite-grid">
+          <div class="favorite-loading" data-state="loading">Loading...</div>
+        </div>
       </section>
-    </div>
-
-    <section class="favorite-library-section" aria-labelledby="favoriteLibraryTitle">
-      <div class="admin-list-toolbar admin-favorite-toolbar">
-        <div class="favorite-library-title"><div class="favorite-library-heading"><h3 id="favoriteLibraryTitle">Current favorites</h3><span class="admin-count" id="favoriteCount">0</span></div></div>
-        <div class="favorite-library-actions"><span id="favoriteSyncStatus" class="admin-sync-label">Checking cache...</span><button class="btn btn-ghost" id="applyManualMetadata" type="button">Fill MAL data</button><button class="btn btn-ghost" id="syncJikan" type="button">Sync missing</button></div>
-      </div>
-      <div class="admin-progress favorite-progress" id="syncProgress" hidden><div><span id="syncFill"></span></div><small id="syncText">Syncing...</small></div>
-      <AdminStatus id="favoriteMessage" />
-      <div id="favoritesList" class="admin-grid favorite-grid"><p class="admin-status" data-state="loading">Loading...</p></div>
-    </section>
     </AdminPostWorkspace>
   </div>
 
@@ -85,613 +79,476 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 
   <script>
     import { adminFetch, escapeHtml, setAdminStatus } from '../../lib/admin/api';
-    type Favorite=Record<string,any> & {id?:string;title:string;image?:string|null;status?:string;score?:number|null;year?:number|null;description?:string|null;mal_id?:number|null;jikan?:Record<string,any>};
-    const JIKAN='https://api.jikan.moe/v4'; let category='anime'; let favorites:Favorite[]=[]; let searchItems:Favorite[]=[]; let lastJikan=0;
-    const list=document.querySelector<HTMLElement>('#favoritesList')!; const count=document.querySelector<HTMLElement>('#favoriteCount')!; const message=document.querySelector<HTMLElement>('#favoriteMessage'); const syncStatus=document.querySelector<HTMLElement>('#favoriteSyncStatus')!; const modal=document.querySelector<HTMLElement>('#editFavoriteModal')!; const editMessage=document.querySelector<HTMLElement>('#editFavoriteMessage');
-    const malId=(item:any)=>item?.mal_id??item?.malId??item?.myanimelist_id??item?.myanimelistId??null; const jikan=(item:any)=>item?.jikan&&typeof item.jikan==='object'?item.jikan:(item?.jikan_metadata&&typeof item.jikan_metadata==='object'?item.jikan_metadata:null);
-    function closeModal(){modal.classList.remove('active');modal.setAttribute('aria-hidden','true')} document.querySelectorAll('[data-modal-close="editFavoriteModal"]').forEach((button)=>button.addEventListener('click',closeModal));modal.addEventListener('click',(event)=>{if(event.target===modal)closeModal()});
-    function statusClass(value:string){return ['completed','watching','playing','plan','dropped'].includes(value)?value:'plan'}
-    function render(){count.textContent=String(favorites.length);if(!favorites.length){list.innerHTML='<div class="admin-empty-state"><i class="bi bi-heart"></i><span>No favorites in this category yet.</span></div>';updateSync();return;}list.innerHTML=favorites.map((item,index)=>`<article class="admin-favorite-card" data-index="${index}">${item.image?`<img src="${escapeHtml(item.image)}" alt="" loading="lazy">`:'<div class="admin-favorite-placeholder"><i class="bi bi-image"></i></div>'}<div class="admin-favorite-body"><strong>${escapeHtml(item.title)}</strong><div class="admin-list-meta"><span class="admin-favorite-status ${statusClass(item.status||'')}">${escapeHtml(item.status||'plan')}</span>${item.score!=null?`<span>★ ${escapeHtml(item.score)}</span>`:''}${item.year?`<span>${escapeHtml(item.year)}</span>`:''}${malId(item)?`<span>MAL ${escapeHtml(malId(item))}</span>`:''}</div>${item.description?`<p>${escapeHtml(item.description)}</p>`:''}</div><footer><button class="btn btn-ghost" data-edit="${index}" type="button">Edit</button><button class="btn btn-ghost admin-danger" data-delete="${escapeHtml(item.id??index)}" data-index="${index}" type="button">Delete</button></footer></article>`).join('');updateSync()}
-    function updateSync(){if(category==='games'){syncStatus.textContent='Jikan does not provide game stats';(document.querySelector<HTMLButtonElement>('#syncJikan')!).disabled=true;return;}const linked=favorites.filter((item)=>malId(item));const cached=linked.filter((item)=>jikan(item)).length;const missing=linked.length-cached;syncStatus.textContent=!linked.length?'No MAL IDs linked yet':missing?`${cached}/${linked.length} cached · ${missing} missing`:`All ${linked.length} MAL entries cached`;const button=document.querySelector<HTMLButtonElement>('#syncJikan')!;button.disabled=!linked.length;button.textContent=missing?`Sync ${missing} missing`:'Refresh cache'}
-    async function load(){list.innerHTML='<p class="admin-status" data-state="loading">Loading…</p>';setAdminStatus(message);try{const response=await adminFetch(`/site/favorites?category=${encodeURIComponent(category)}`,{}, {auth:false});const data=await response.json();if(!response.ok)throw new Error(data.error||'Failed to load');favorites=Array.isArray(data.items)?data.items:[];render()}catch(error){list.innerHTML='';setAdminStatus(message,error instanceof Error?error.message:'Failed to load','error')}}
-    async function switchCategory(next:string){category=next;document.querySelectorAll<HTMLButtonElement>('#favoriteTabs [data-category]').forEach((button)=>{const active=button.dataset.category===next;button.classList.toggle('active',active);button.setAttribute('aria-selected',String(active))});const importSection=document.querySelector<HTMLElement>('#malImportSection')!;importSection.hidden=next==='games';const search=document.querySelector<HTMLInputElement>('#favoriteSearch')!;search.placeholder=next==='games'?'Games are manual-only':'Search by title…';(document.querySelector<HTMLButtonElement>('#searchFavorites')!).disabled=next==='games';await load()}
-    document.querySelectorAll<HTMLButtonElement>('#favoriteTabs [data-category]').forEach((button)=>button.addEventListener('click',()=>switchCategory(button.dataset.category||'anime')));
-    document.querySelector<HTMLFormElement>('#favoriteAddForm')?.addEventListener('submit',async(event)=>{event.preventDefault();const item:Favorite={title:(document.querySelector<HTMLInputElement>('#addTitle')!).value.trim(),image:(document.querySelector<HTMLInputElement>('#addImage')!).value.trim()||null,mal_id:parseInt((document.querySelector<HTMLInputElement>('#addMalId')!).value,10)||null,status:(document.querySelector<HTMLSelectElement>('#addStatus')!).value,score:parseFloat((document.querySelector<HTMLInputElement>('#addScore')!).value)||null,year:parseInt((document.querySelector<HTMLInputElement>('#addYear')!).value,10)||null,description:(document.querySelector<HTMLTextAreaElement>('#addDescription')!).value.trim()||null};if(!item.title){setAdminStatus(message,'Title is required.','error');return;}try{const response=await adminFetch('/admin/favorites',{method:'POST',body:JSON.stringify({category,item})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Failed to add favorite');favorites.push(data.item||item);(event.currentTarget as HTMLFormElement).reset();render();setAdminStatus(message,'Favorite added.','success')}catch(error){setAdminStatus(message,error instanceof Error?error.message:'Failed to add favorite','error')}});
-    list.addEventListener('click',async(event)=>{const target=event.target as HTMLElement;const edit=target.closest<HTMLButtonElement>('[data-edit]');const del=target.closest<HTMLButtonElement>('[data-delete]');if(edit){const item=favorites[Number(edit.dataset.edit)];if(!item)return;(document.querySelector<HTMLInputElement>('#editFavoriteId')!).value=String(item.id??'');(document.querySelector<HTMLInputElement>('#editFavoriteTitle')!).value=item.title||'';(document.querySelector<HTMLInputElement>('#editFavoriteImage')!).value=item.image||'';(document.querySelector<HTMLSelectElement>('#editFavoriteStatus')!).value=item.status||'completed';(document.querySelector<HTMLInputElement>('#editFavoriteScore')!).value=String(item.score??'');(document.querySelector<HTMLInputElement>('#editFavoriteYear')!).value=String(item.year??'');(document.querySelector<HTMLTextAreaElement>('#editFavoriteDescription')!).value=item.description||'';modal.dataset.index=edit.dataset.edit||'';setAdminStatus(editMessage);modal.classList.add('active');modal.setAttribute('aria-hidden','false')}if(del&&window.confirm('Delete this favorite?')){const item=favorites[Number(del.dataset.index)];const itemId=item?.id??del.dataset.delete;try{const response=await adminFetch('/admin/favorites',{method:'DELETE',body:JSON.stringify({category,itemId})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Delete failed');favorites.splice(Number(del.dataset.index),1);render()}catch(error){window.alert(error instanceof Error?error.message:'Delete failed')}}});
-    document.querySelector<HTMLFormElement>('#favoriteEditForm')?.addEventListener('submit',async(event)=>{event.preventDefault();const index=Number(modal.dataset.index);const current=favorites[index];if(!current)return;const itemId=current.id??(document.querySelector<HTMLInputElement>('#editFavoriteId')!).value;const updates={title:(document.querySelector<HTMLInputElement>('#editFavoriteTitle')!).value.trim(),image:(document.querySelector<HTMLInputElement>('#editFavoriteImage')!).value.trim()||null,status:(document.querySelector<HTMLSelectElement>('#editFavoriteStatus')!).value,score:parseFloat((document.querySelector<HTMLInputElement>('#editFavoriteScore')!).value)||null,year:parseInt((document.querySelector<HTMLInputElement>('#editFavoriteYear')!).value,10)||null,description:(document.querySelector<HTMLTextAreaElement>('#editFavoriteDescription')!).value.trim()||null};if(!updates.title){setAdminStatus(editMessage,'Title is required.','error');return;}setAdminStatus(editMessage,'Saving…','loading');try{const response=await adminFetch('/admin/favorites/item',{method:'PATCH',body:JSON.stringify({category,itemId,updates})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Update failed');favorites[index]={...current,...updates};closeModal();render()}catch(error){setAdminStatus(editMessage,error instanceof Error?error.message:'Update failed','error')}});
-    async function jikanRequest(url:string){const wait=Math.max(0,1200-(Date.now()-lastJikan));if(wait)await new Promise((resolve)=>setTimeout(resolve,wait));lastJikan=Date.now();const response=await fetch(url);if(!response.ok)throw new Error(`Jikan ${response.status}`);return response.json()}
-    document.querySelector('#searchFavorites')?.addEventListener('click',async()=>{const query=(document.querySelector<HTMLInputElement>('#favoriteSearch')!).value.trim();const results=document.querySelector<HTMLElement>('#favoriteSearchResults')!;if(!query)return;if(category==='games'){results.hidden=false;results.innerHTML='<div class="admin-empty-state"><span>Jikan does not support games. Add them manually.</span></div>';return;}results.hidden=false;results.innerHTML='<p class="admin-status" data-state="loading">Searching…</p>';try{const endpoint=category==='characters'?'characters':category;const data=await jikanRequest(`${JIKAN}/${endpoint}?q=${encodeURIComponent(query)}&limit=10`);searchItems=(data.data||[]).map((item:any)=>category==='characters'?{title:item.name,image:item.images?.jpg?.image_url,year:null,score:null,description:item.about?.substring(0,200),mal_id:item.mal_id,status:'completed',jikan:{url:item.url||null,type:null,status:null,score:null,year:null,series:null,synced_at:Date.now()}}:{title:item.title,image:item.images?.jpg?.image_url||item.images?.jpg?.large_image_url,year:item.year||(item.aired?.from?new Date(item.aired.from).getFullYear():null)||(item.published?.from?new Date(item.published.from).getFullYear():null),score:item.score,description:item.synopsis?.substring(0,200),mal_id:item.mal_id,status:item.status==='Finished Airing'||item.status==='Finished'?'completed':'watching',jikan:{url:item.url||null,type:item.type||null,status:item.status||null,score:item.score??null,year:item.year??null,synced_at:Date.now()}});if(!searchItems.length){results.innerHTML='<div class="admin-empty-state"><span>No results found.</span></div>';return;}results.innerHTML=searchItems.map((item,index)=>`<button class="admin-search-item" type="button" data-search-index="${index}">${item.image?`<img src="${escapeHtml(item.image)}" alt="">`:''}<span><strong>${escapeHtml(item.title)}</strong><small>${item.year?escapeHtml(item.year):''}${item.score!=null?` · ★ ${escapeHtml(item.score)}`:''}</small></span></button>`).join('')}catch(error){results.innerHTML=`<p class="admin-status" data-state="error">${escapeHtml(error instanceof Error?error.message:'Search failed')}</p>`}});
-    document.querySelector('#favoriteSearchResults')?.addEventListener('click',async(event)=>{const button=(event.target as HTMLElement).closest<HTMLButtonElement>('[data-search-index]');if(!button)return;const item=searchItems[Number(button.dataset.searchIndex)];if(!item)return;if(favorites.some((favorite)=>malId(favorite)===malId(item)||favorite.title===item.title)){window.alert('This item is already in your favorites.');return;}try{const response=await adminFetch('/admin/favorites',{method:'POST',body:JSON.stringify({category,item})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Failed to add');favorites.push(data.item||item);render()}catch(error){window.alert(error instanceof Error?error.message:'Failed to add')}});
-    document.querySelector('#importMal')?.addEventListener('click',async()=>{const username=(document.querySelector<HTMLInputElement>('#malUsername')!).value.trim();if(!username)return;const progress=document.querySelector<HTMLElement>('#importProgress')!;const fill=document.querySelector<HTMLElement>('#importFill')!;const text=document.querySelector<HTMLElement>('#importText')!;progress.hidden=false;fill.style.width='10%';text.textContent='Fetching favorites from MyAnimeList…';try{const data=await jikanRequest(`${JIKAN}/users/${encodeURIComponent(username)}/favorites`);const source=category==='anime'?data.data?.anime:category==='manga'?data.data?.manga:data.data?.characters;const items=Array.isArray(source)?source:[];fill.style.width='50%';text.textContent=`Processing ${items.length} ${category}…`;const converted=items.map((item:any)=>category==='characters'?{id:Date.now().toString()+Math.random().toString(36).slice(2),title:item.name,image:item.images?.jpg?.image_url,year:null,score:null,mal_id:item.mal_id,status:'completed',description:null}:{id:Date.now().toString()+Math.random().toString(36).slice(2),title:item.title,image:item.images?.jpg?.image_url,year:item.start_year||null,score:null,mal_id:item.mal_id,status:'completed',description:null});const existing=new Set(favorites.map((item)=>malId(item)));const unique=converted.filter((item:any)=>!existing.has(item.mal_id));if(!unique.length){fill.style.width='100%';text.textContent=`All ${category} are already saved.`;return;}const merged=[...favorites,...unique];const response=await adminFetch('/admin/favorites',{method:'PUT',body:JSON.stringify({category,items:merged})});const saved=await response.json().catch(()=>({}));if(!response.ok)throw new Error(saved.error||'Import failed');favorites=merged;fill.style.width='100%';text.textContent=`Imported ${unique.length} new favorites.`;render()}catch(error){fill.style.width='0%';text.textContent=error instanceof Error?error.message:'Import failed'}});
-    async function fetchJikanRecord(item:Favorite){const id=malId(item);if(!id||category==='games')return null;const endpoint=category==='characters'?`characters/${encodeURIComponent(id)}/full`:`${category}/${encodeURIComponent(id)}`;for(let attempt=0;attempt<3;attempt++){try{const payload=await jikanRequest(`${JIKAN}/${endpoint}`);const data=payload.data;if(!data)return null;return {url:data.url||null,type:data.type||null,status:data.status||null,score:data.score??null,year:data.year||(data.aired?.from?new Date(data.aired.from).getFullYear():null)||(data.published?.from?new Date(data.published.from).getFullYear():null),episodes:data.episodes??null,chapters:data.chapters??null,volumes:data.volumes??null,image:data.images?.jpg?.image_url||null,series:category==='characters'?(data.anime?.[0]?.anime?.title||data.manga?.[0]?.manga?.title||null):null,synced_at:Date.now()}}catch(error){if(attempt===2)throw error;await new Promise((resolve)=>setTimeout(resolve,1200))}}return null}
-    document.querySelector('#syncJikan')?.addEventListener('click',async()=>{if(category==='games')return;const indexed=favorites.map((item,index)=>({item,index})).filter(({item})=>malId(item)&&!jikan(item));const targets=indexed.length?indexed:favorites.map((item,index)=>({item,index})).filter(({item})=>malId(item));if(!targets.length)return;const progress=document.querySelector<HTMLElement>('#syncProgress')!;const fill=document.querySelector<HTMLElement>('#syncFill')!;const text=document.querySelector<HTMLElement>('#syncText')!;progress.hidden=false;const updated=[...favorites];let saved=0;for(let position=0;position<targets.length;position++){const {item,index}=targets[position];try{const metadata=await fetchJikanRecord(item);if(metadata){updated[index]={...item,score:category==='characters'?item.score??null:metadata.score??item.score??null,year:metadata.year||item.year||null,image:item.image||metadata.image||null,jikan:metadata};saved++}}catch(_){}fill.style.width=`${Math.round(((position+1)/targets.length)*80)}%`;text.textContent=`Checked ${position+1}/${targets.length} · ${saved} saved`;}try{const response=await adminFetch('/admin/favorites',{method:'PUT',body:JSON.stringify({category,items:updated})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Save failed');favorites=updated;fill.style.width='100%';text.textContent=`Finished · ${saved} metadata records saved.`;render()}catch(error){fill.style.width='0%';text.textContent=error instanceof Error?error.message:'Sync failed'}});
-    document.querySelector('#applyManualMetadata')?.addEventListener('click',async()=>{const button=document.querySelector<HTMLButtonElement>('#applyManualMetadata')!;button.disabled=true;setAdminStatus(message,'Applying verified metadata…','loading');try{const metadataModulePath='/admin/manual-favorites-metadata.js';const module=await import(/* @vite-ignore */ metadataModulePath);for(const current of ['anime','manga','characters']){const response=await adminFetch(`/site/favorites?category=${current}`,{}, {auth:false});const data=await response.json();const source=Array.isArray(data.items)?data.items:[];const updated=source.map((item:any)=>{const metadata=module.manualMetadataFor(current,item);return metadata?{...item,score:current==='characters'?item.score??null:metadata.score??item.score??null,year:metadata.year||item.year||null,image:item.image||metadata.image||null,jikan:{...(jikan(item)||{}),...metadata}}:item});const save=await adminFetch('/admin/favorites',{method:'PUT',body:JSON.stringify({category:current,items:updated})});if(!save.ok)throw new Error(`${current} save failed`)}await load();setAdminStatus(message,'Verified MAL metadata saved.','success')}catch(error){setAdminStatus(message,error instanceof Error?error.message:'Metadata update failed','error')}finally{button.disabled=false}}); load();
+
+    type Favorite = Record<string, any> & {
+      id?: string;
+      title: string;
+      image?: string | null;
+      status?: string;
+      score?: number | null;
+      year?: number | null;
+      description?: string | null;
+      mal_id?: number | null;
+      jikan?: Record<string, any>;
+    };
+
+    const JIKAN = 'https://api.jikan.moe/v4';
+    let category = 'anime';
+    let favorites: Favorite[] = [];
+    let searchItems: Favorite[] = [];
+    let lastJikan = 0;
+
+    const list = document.querySelector<HTMLElement>('#favoritesList')!;
+    const count = document.querySelector<HTMLElement>('#favoriteCount')!;
+    const message = document.querySelector<HTMLElement>('#favoriteMessage');
+    const modal = document.querySelector<HTMLElement>('#editFavoriteModal')!;
+    const editMessage = document.querySelector<HTMLElement>('#editFavoriteMessage');
+    const searchInput = document.querySelector<HTMLInputElement>('#favoriteSearch')!;
+    const searchButton = document.querySelector<HTMLButtonElement>('#searchFavorites')!;
+    const searchResults = document.querySelector<HTMLElement>('#favoriteSearchResults')!;
+
+    const malId = (item: any) => item?.mal_id ?? item?.malId ?? item?.myanimelist_id ?? item?.myanimelistId ?? null;
+
+    function isRealFavorite(value: any) {
+      if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+      const title = String(value.title ?? value.name ?? '').trim();
+      const id = String(value.id ?? '').trim();
+      if (!title) return false;
+      if (id.startsWith('__') || title.startsWith('__')) return false;
+      return true;
+    }
+
+    function normalizeFavorites(source: any): Favorite[] {
+      const values = Array.isArray(source)
+        ? source
+        : source && typeof source === 'object'
+          ? Object.entries(source).filter(([key]) => !key.startsWith('__')).map(([, value]) => value)
+          : [];
+
+      const seen = new Set<string>();
+      return values.filter(isRealFavorite).filter((item: any) => {
+        const key = malId(item) ? `mal:${malId(item)}` : item.id ? `id:${item.id}` : `title:${String(item.title).trim().toLowerCase()}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      }) as Favorite[];
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    document.querySelectorAll('[data-modal-close="editFavoriteModal"]').forEach((button) => button.addEventListener('click', closeModal));
+    modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
+
+    function statusClass(value: string) {
+      return ['completed', 'watching', 'playing', 'plan', 'dropped'].includes(value) ? value : 'plan';
+    }
+
+    function render() {
+      count.textContent = String(favorites.length);
+      if (!favorites.length) {
+        list.innerHTML = '<div class="admin-empty-state"><i class="bi bi-heart"></i><span>No favorites in this category yet.</span></div>';
+        return;
+      }
+
+      list.innerHTML = favorites.map((item, index) => `
+        <article class="admin-favorite-card" data-index="${index}">
+          ${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy">` : '<div class="admin-favorite-placeholder"><i class="bi bi-image"></i></div>'}
+          <div class="admin-favorite-body">
+            <strong>${escapeHtml(item.title)}</strong>
+            <div class="admin-list-meta">
+              <span class="admin-favorite-status ${statusClass(item.status || '')}">${escapeHtml(item.status || 'plan')}</span>
+              ${item.score != null ? `<span>★ ${escapeHtml(item.score)}</span>` : ''}
+              ${item.year ? `<span>${escapeHtml(item.year)}</span>` : ''}
+              ${malId(item) ? `<span>MAL ${escapeHtml(malId(item))}</span>` : ''}
+            </div>
+          </div>
+          <footer>
+            <button class="btn btn-ghost" data-edit="${index}" type="button">Edit</button>
+            <button class="btn btn-ghost admin-danger" data-delete="${escapeHtml(item.id ?? index)}" data-index="${index}" type="button">Delete</button>
+          </footer>
+        </article>
+      `).join('');
+    }
+
+    async function load() {
+      list.innerHTML = '<div class="favorite-loading" data-state="loading">Loading...</div>';
+      setAdminStatus(message);
+      try {
+        const response = await adminFetch(`/site/favorites?category=${encodeURIComponent(category)}`, {}, { auth: false });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to load');
+        favorites = normalizeFavorites(data.items);
+        render();
+      } catch (error) {
+        list.innerHTML = '';
+        count.textContent = '0';
+        setAdminStatus(message, error instanceof Error ? error.message : 'Failed to load', 'error');
+      }
+    }
+
+    async function switchCategory(next: string) {
+      category = next;
+      document.querySelectorAll<HTMLButtonElement>('#favoriteTabs [data-category]').forEach((button) => {
+        const active = button.dataset.category === next;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-selected', String(active));
+      });
+
+      searchResults.hidden = true;
+      searchResults.innerHTML = '';
+      searchItems = [];
+      searchInput.value = '';
+      searchInput.placeholder = next === 'games' ? 'MyAnimeList search is unavailable for games' : 'Search MyAnimeList...';
+      searchInput.disabled = next === 'games';
+      searchButton.disabled = next === 'games';
+      await load();
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('#favoriteTabs [data-category]').forEach((button) => {
+      button.addEventListener('click', () => switchCategory(button.dataset.category || 'anime'));
+    });
+
+    document.querySelector<HTMLFormElement>('#favoriteAddForm')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const item: Favorite = {
+        title: document.querySelector<HTMLInputElement>('#addTitle')!.value.trim(),
+        image: document.querySelector<HTMLInputElement>('#addImage')!.value.trim() || null,
+        mal_id: parseInt(document.querySelector<HTMLInputElement>('#addMalId')!.value, 10) || null,
+        status: document.querySelector<HTMLSelectElement>('#addStatus')!.value,
+        score: parseFloat(document.querySelector<HTMLInputElement>('#addScore')!.value) || null,
+        year: parseInt(document.querySelector<HTMLInputElement>('#addYear')!.value, 10) || null,
+        description: document.querySelector<HTMLTextAreaElement>('#addDescription')!.value.trim() || null
+      };
+
+      if (!item.title) {
+        setAdminStatus(message, 'Title is required.', 'error');
+        return;
+      }
+
+      try {
+        const response = await adminFetch('/admin/favorites', { method: 'POST', body: JSON.stringify({ category, item }) });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to add favorite');
+        favorites = normalizeFavorites([...favorites, data.item || item]);
+        (event.currentTarget as HTMLFormElement).reset();
+        render();
+        setAdminStatus(message, 'Favorite added.', 'success');
+      } catch (error) {
+        setAdminStatus(message, error instanceof Error ? error.message : 'Failed to add favorite', 'error');
+      }
+    });
+
+    list.addEventListener('click', async (event) => {
+      const target = event.target as HTMLElement;
+      const edit = target.closest<HTMLButtonElement>('[data-edit]');
+      const del = target.closest<HTMLButtonElement>('[data-delete]');
+
+      if (edit) {
+        const item = favorites[Number(edit.dataset.edit)];
+        if (!item) return;
+        document.querySelector<HTMLInputElement>('#editFavoriteId')!.value = String(item.id ?? '');
+        document.querySelector<HTMLInputElement>('#editFavoriteTitle')!.value = item.title || '';
+        document.querySelector<HTMLInputElement>('#editFavoriteImage')!.value = item.image || '';
+        document.querySelector<HTMLSelectElement>('#editFavoriteStatus')!.value = item.status || 'completed';
+        document.querySelector<HTMLInputElement>('#editFavoriteScore')!.value = String(item.score ?? '');
+        document.querySelector<HTMLInputElement>('#editFavoriteYear')!.value = String(item.year ?? '');
+        document.querySelector<HTMLTextAreaElement>('#editFavoriteDescription')!.value = item.description || '';
+        modal.dataset.index = edit.dataset.edit || '';
+        setAdminStatus(editMessage);
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+      }
+
+      if (del && window.confirm('Delete this favorite?')) {
+        const index = Number(del.dataset.index);
+        const item = favorites[index];
+        const itemId = item?.id ?? del.dataset.delete;
+        try {
+          const response = await adminFetch('/admin/favorites', { method: 'DELETE', body: JSON.stringify({ category, itemId }) });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(data.error || 'Delete failed');
+          favorites.splice(index, 1);
+          render();
+        } catch (error) {
+          window.alert(error instanceof Error ? error.message : 'Delete failed');
+        }
+      }
+    });
+
+    document.querySelector<HTMLFormElement>('#favoriteEditForm')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const index = Number(modal.dataset.index);
+      const current = favorites[index];
+      if (!current) return;
+      const itemId = current.id ?? document.querySelector<HTMLInputElement>('#editFavoriteId')!.value;
+      const updates = {
+        title: document.querySelector<HTMLInputElement>('#editFavoriteTitle')!.value.trim(),
+        image: document.querySelector<HTMLInputElement>('#editFavoriteImage')!.value.trim() || null,
+        status: document.querySelector<HTMLSelectElement>('#editFavoriteStatus')!.value,
+        score: parseFloat(document.querySelector<HTMLInputElement>('#editFavoriteScore')!.value) || null,
+        year: parseInt(document.querySelector<HTMLInputElement>('#editFavoriteYear')!.value, 10) || null,
+        description: document.querySelector<HTMLTextAreaElement>('#editFavoriteDescription')!.value.trim() || null
+      };
+
+      if (!updates.title) {
+        setAdminStatus(editMessage, 'Title is required.', 'error');
+        return;
+      }
+
+      setAdminStatus(editMessage, 'Saving...', 'loading');
+      try {
+        const response = await adminFetch('/admin/favorites/item', { method: 'PATCH', body: JSON.stringify({ category, itemId, updates }) });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Update failed');
+        favorites[index] = { ...current, ...updates };
+        closeModal();
+        render();
+      } catch (error) {
+        setAdminStatus(editMessage, error instanceof Error ? error.message : 'Update failed', 'error');
+      }
+    });
+
+    async function jikanRequest(url: string) {
+      const wait = Math.max(0, 1200 - (Date.now() - lastJikan));
+      if (wait) await new Promise((resolve) => setTimeout(resolve, wait));
+      lastJikan = Date.now();
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`MyAnimeList search failed (${response.status})`);
+      return response.json();
+    }
+
+    function resultToFavorite(item: any): Favorite {
+      if (category === 'characters') {
+        return {
+          title: item.name,
+          image: item.images?.jpg?.image_url || null,
+          year: null,
+          score: null,
+          description: item.about?.substring(0, 200) || null,
+          mal_id: item.mal_id,
+          status: 'completed',
+          jikan: { url: item.url || null, synced_at: Date.now() }
+        };
+      }
+
+      const year = item.year
+        || (item.aired?.from ? new Date(item.aired.from).getFullYear() : null)
+        || (item.published?.from ? new Date(item.published.from).getFullYear() : null);
+
+      const finished = item.status === 'Finished Airing' || item.status === 'Finished';
+      return {
+        title: item.title,
+        image: item.images?.jpg?.large_image_url || item.images?.jpg?.image_url || null,
+        year,
+        score: item.score ?? null,
+        description: item.synopsis?.substring(0, 200) || null,
+        mal_id: item.mal_id,
+        status: finished ? 'completed' : 'watching',
+        jikan: {
+          url: item.url || null,
+          type: item.type || null,
+          status: item.status || null,
+          score: item.score ?? null,
+          year,
+          synced_at: Date.now()
+        }
+      };
+    }
+
+    async function runSearch() {
+      const query = searchInput.value.trim();
+      if (!query || category === 'games') return;
+
+      searchResults.hidden = false;
+      searchResults.innerHTML = '<div class="favorite-search-loading">Searching...</div>';
+      searchButton.disabled = true;
+
+      try {
+        const endpoint = category === 'characters' ? 'characters' : category;
+        const data = await jikanRequest(`${JIKAN}/${endpoint}?q=${encodeURIComponent(query)}&limit=10`);
+        searchItems = (data.data || []).map(resultToFavorite);
+
+        if (!searchItems.length) {
+          searchResults.innerHTML = '<div class="admin-empty-state favorite-search-empty"><span>No results found.</span></div>';
+          return;
+        }
+
+        searchResults.innerHTML = searchItems.map((item, index) => {
+          const alreadyAdded = favorites.some((favorite) => (malId(item) && malId(favorite) === malId(item)) || favorite.title.trim().toLowerCase() === item.title.trim().toLowerCase());
+          return `
+            <div class="admin-search-item favorite-search-item">
+              ${item.image ? `<img src="${escapeHtml(item.image)}" alt="" loading="lazy">` : '<div class="favorite-search-placeholder"><i class="bi bi-image"></i></div>'}
+              <span class="favorite-search-copy">
+                <strong>${escapeHtml(item.title)}</strong>
+                <small>${item.year ? escapeHtml(item.year) : ''}${item.score != null ? `${item.year ? ' · ' : ''}★ ${escapeHtml(item.score)}` : ''}</small>
+              </span>
+              <button class="btn btn-ghost favorite-result-add" type="button" data-search-index="${index}" ${alreadyAdded ? 'disabled' : ''}>${alreadyAdded ? 'Added' : 'Add'}</button>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        searchResults.innerHTML = `<p class="admin-status favorite-search-error" data-state="error">${escapeHtml(error instanceof Error ? error.message : 'Search failed')}</p>`;
+      } finally {
+        searchButton.disabled = category === 'games';
+      }
+    }
+
+    searchButton.addEventListener('click', runSearch);
+    searchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        runSearch();
+      }
+    });
+
+    searchResults.addEventListener('click', async (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-search-index]');
+      if (!button || button.disabled) return;
+      const item = searchItems[Number(button.dataset.searchIndex)];
+      if (!item) return;
+
+      if (favorites.some((favorite) => (malId(item) && malId(favorite) === malId(item)) || favorite.title.trim().toLowerCase() === item.title.trim().toLowerCase())) {
+        button.disabled = true;
+        button.textContent = 'Added';
+        return;
+      }
+
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = 'Adding...';
+      try {
+        const response = await adminFetch('/admin/favorites', { method: 'POST', body: JSON.stringify({ category, item }) });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to add favorite');
+        favorites = normalizeFavorites([...favorites, data.item || item]);
+        render();
+        button.textContent = 'Added';
+        setAdminStatus(message, `${item.title} added.`, 'success');
+      } catch (error) {
+        button.disabled = false;
+        button.textContent = originalText || 'Add';
+        setAdminStatus(message, error instanceof Error ? error.message : 'Failed to add favorite', 'error');
+      }
+    });
+
+    load();
   </script>
-  <style>.admin-subsection{padding:0 0 12px;margin:0 0 12px;border-bottom:1px dashed var(--border-light)}.admin-subsection h3,.admin-list-toolbar h3{margin:0 0 8px;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase}.admin-favorite-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.admin-favorite-full{grid-column:1/-1}.admin-list-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 8px}.admin-list-toolbar>div{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}.admin-sync-label{color:var(--text-muted);font-size:.7rem}.admin-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--primary);color:var(--bg);font-size:.68rem}.admin-progress{display:grid;gap:5px;margin:7px 0;padding:7px;border:1px solid var(--border-light);border-radius:6px}.admin-progress>div{height:6px;overflow:hidden;border-radius:3px;background:var(--bg-secondary)}.admin-progress>div>span{display:block;height:100%;width:0;background:var(--primary);transition:width .2s}.admin-progress small{color:var(--text-muted)}.admin-search-results{display:grid;gap:5px;max-height:310px;overflow:auto;margin-top:7px}.admin-search-item{display:flex;align-items:center;gap:9px;width:100%;padding:7px;border:1px solid var(--border-light);border-radius:6px;background:var(--card);color:var(--text);text-align:left;cursor:pointer}.admin-search-item:hover{border-color:var(--primary)}.admin-search-item img{width:42px;height:58px;object-fit:cover;border-radius:4px}.admin-search-item span{display:grid;gap:2px}.admin-search-item small{color:var(--text-muted)}.admin-favorite-card{display:grid;grid-template-rows:110px 1fr auto;border:1px solid var(--border-light);border-radius:7px;overflow:hidden;background:var(--card)}.admin-favorite-card>img,.admin-favorite-placeholder{width:100%;height:110px;object-fit:cover;background:var(--bg-secondary)}.admin-favorite-placeholder{display:grid;place-items:center;color:var(--text-muted);font-size:1.5rem}.admin-favorite-body{display:grid;align-content:start;gap:6px;padding:9px}.admin-favorite-body strong{font-size:.85rem}.admin-favorite-body p{margin:0;color:var(--text-muted);font-size:.72rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.admin-favorite-card footer{display:flex;gap:5px;padding:8px;border-top:1px solid var(--border-light)}.admin-favorite-status{padding:1px 5px;border-radius:4px}.admin-favorite-status.completed{background:#2ecc7122;color:#2ecc71}.admin-favorite-status.watching,.admin-favorite-status.playing{background:color-mix(in srgb,var(--primary) 18%,transparent);color:var(--primary-dark)}.admin-favorite-status.dropped{background:#e74c3c22;color:#e74c3c}.admin-modal-actions{display:flex;gap:6px}@media(max-width:800px){.admin-favorite-form{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.admin-favorite-form{grid-template-columns:1fr}.admin-favorite-full{grid-column:auto}}</style>
-  <style>
-    .favorites-admin-panel { overflow: visible; }
-    .favorites-admin-panel .admin-panel-content { padding: clamp(14px, 2.4vw, 24px); }
-    .favorites-admin-panel .admin-panel-header { min-height: 43px; }
-    .favorite-panel-mode { display: inline-flex; align-items: center; gap: 7px; color: #fff; font: 700 .68rem/1.2 "Courier New", monospace; letter-spacing: .08em; text-transform: uppercase; }
-    .favorite-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--primary-light); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-light) 24%, transparent); }
-
-    .favorite-overview { display: grid; grid-template-columns: minmax(0, 1fr) 1px auto; align-items: center; gap: 18px; padding: 14px 16px; margin-bottom: 18px; border: 1px solid var(--border-light); border-radius: 9px; background: linear-gradient(115deg, color-mix(in srgb, var(--primary-light) 17%, var(--card)), var(--card) 62%); box-shadow: inset 0 1px 0 rgba(255,255,255,.58), 0 4px 12px color-mix(in srgb, var(--primary) 8%, transparent); }
-    [data-theme='dark'] .favorite-overview { box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 4px 12px rgba(0,0,0,.18); }
-    .favorite-overview-copy { display: flex; align-items: center; gap: 13px; min-width: 0; }
-    .favorite-overview-icon { display: grid; place-items: center; flex: 0 0 40px; width: 40px; height: 40px; border: 1px solid var(--primary-dark); border-radius: 8px; background: var(--gradient); color: #fff; font-size: 1.15rem; box-shadow: inset 1px 1px 0 rgba(255,255,255,.45), 0 3px 8px color-mix(in srgb, var(--primary) 22%, transparent); }
-    .favorite-overview h3 { margin: 0 0 3px; color: var(--text); font-size: 1rem; letter-spacing: .01em; }
-    .favorite-overview p { max-width: 66ch; margin: 0; color: var(--text-muted); font-size: .78rem; line-height: 1.55; }
-    .favorite-overview-rule { align-self: stretch; background: var(--border-light); }
-    .favorite-overview-note { display: inline-flex; align-items: center; gap: 7px; color: var(--primary-dark); font: 700 .68rem/1.3 "Courier New", monospace; white-space: nowrap; }
-
-    .favorites-admin-panel .favorite-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; margin: 0 0 18px; padding: 5px; border: 1px solid var(--border-light); border-radius: 8px; background: var(--bg); }
-    .favorites-admin-panel .favorite-tabs .admin-tab { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 7px 9px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--text-muted); font-size: .78rem; font-weight: 700; }
-    .favorites-admin-panel .favorite-tabs .admin-tab:hover { border-color: var(--border-light); background: var(--gradient-subtle); color: var(--text); }
-    .favorites-admin-panel .favorite-tabs .admin-tab.active { border-color: var(--primary-dark); background: linear-gradient(to bottom, color-mix(in srgb, var(--primary-light) 48%, var(--card)), color-mix(in srgb, var(--primary) 19%, var(--card))); color: var(--text); box-shadow: inset 1px 1px 0 rgba(255,255,255,.6), 0 2px 6px color-mix(in srgb, var(--primary) 16%, transparent); }
-    .favorite-tabs .admin-tab i { color: var(--primary-dark); font-size: .92rem; }
-    .favorite-tabs .admin-tab.active i { color: var(--text); }
-
-    .favorite-tool-grid { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: 12px; align-items: stretch; }
-    .favorite-tool-panel { min-width: 0; overflow: hidden; border: 1px solid var(--border-light); border-radius: 8px; background: var(--card); box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 7%, transparent); }
-    [data-theme='dark'] .favorite-tool-panel { box-shadow: 0 4px 12px rgba(0,0,0,.18); }
-    .favorite-tool-heading { display: flex; align-items: flex-start; gap: 10px; padding: 13px 14px; border-bottom: 1px solid var(--border-light); background: var(--gradient-subtle); }
-    .favorite-tool-icon { display: grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px; border: 1px solid var(--primary); border-radius: 7px; color: var(--primary-dark); background: color-mix(in srgb, var(--primary-light) 24%, var(--card)); font-size: .95rem; }
-    .favorite-tool-heading h3 { margin: 0 0 2px; font-size: .9rem; letter-spacing: .03em; }
-    .favorite-tool-heading p { margin: 0; color: var(--text-muted); font-size: .73rem; line-height: 1.45; }
-    .favorite-tool-block { padding: 13px 14px; }
-    .favorite-tool-block + .favorite-tool-block { border-top: 1px dashed var(--border-light); }
-    .favorite-block-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
-    .favorite-block-heading h4 { margin: 0; color: var(--text); font-size: .77rem; letter-spacing: .06em; text-transform: uppercase; }
-    .favorite-block-key { color: var(--primary-dark); font: 700 .62rem/1.2 "Courier New", monospace; letter-spacing: .04em; text-transform: uppercase; }
-    .favorite-tool-block .admin-toolbar { margin: 0; }
-    .favorite-tool-block .admin-field { flex-basis: 160px; }
-    .favorite-tool-block .btn { min-height: 38px; white-space: nowrap; }
-    .favorite-manual-panel { display: flex; flex-direction: column; }
-    .favorite-manual-panel .admin-favorite-form { flex: 1; align-content: start; padding: 14px; gap: 11px; }
-    .favorite-manual-panel .admin-field label { font-size: .69rem; }
-    .favorite-form-actions { display: flex; justify-content: flex-end; margin-top: 2px; padding-top: 11px; border-top: 1px dashed var(--border-light); }
-    .favorite-form-actions .btn { min-height: 36px; }
-
-    .favorite-progress { margin: 10px 0 0; padding: 9px 10px; border-color: var(--border-light); background: var(--bg-elev); }
-    .favorite-progress > div { height: 7px; border: 1px solid var(--border-light); border-radius: 4px; background: var(--bg); }
-    .favorite-progress > div > span { background: linear-gradient(to right, var(--primary-dark), var(--primary-light)); }
-    .favorite-progress small { font: 700 .68rem/1.4 "Courier New", monospace; }
-    .favorite-search-results { scrollbar-color: var(--primary) var(--bg); scrollbar-width: thin; }
-    .favorite-tool-panel .admin-search-results { max-height: 220px; }
-    .favorite-tool-panel .admin-search-item { min-height: 58px; border-radius: 6px; background: var(--bg-elev); }
-    .favorite-tool-panel .admin-search-item:hover { background: var(--gradient-subtle); box-shadow: 0 3px 10px color-mix(in srgb, var(--primary) 12%, transparent); }
-    .favorite-tool-panel .admin-search-item strong { font-size: .76rem; }
-    .favorite-tool-panel .admin-search-item small { font: .68rem/1.35 "Courier New", monospace; }
-
-    .favorite-library-section { margin-top: 20px; padding-top: 16px; border-top: 2px solid var(--primary); }
-    .favorites-admin-panel .admin-favorite-toolbar { align-items: flex-end; margin: 0 0 11px; }
-    .favorite-library-title { display: grid; gap: 3px; }
-    .favorite-library-heading { display: flex; align-items: center; gap: 8px; }
-    .favorite-library-heading h3 { margin: 0; font-size: .92rem; letter-spacing: .05em; text-transform: uppercase; }
-    .favorite-library-mark { color: var(--primary-dark); font-size: .8rem; }
-    .favorite-library-subtitle { color: var(--text-muted); font-size: .7rem; }
-    .favorites-admin-panel .admin-count { min-width: 22px; height: 21px; border-radius: 6px; background: var(--primary); color: var(--bg); font: 700 .68rem/1 "Courier New", monospace; }
-    .favorite-library-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
-    .favorite-library-actions .btn { white-space: nowrap; }
-    .favorite-library-actions .btn i { margin-right: 3px; }
-    .favorite-library-actions .admin-sync-label { display: inline-flex; align-items: center; gap: 5px; margin-right: 3px; color: var(--primary-dark); font: 700 .68rem/1.35 "Courier New", monospace; }
-    .favorite-grid { grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 10px; }
-    .favorite-grid .admin-favorite-card { grid-template-rows: 142px 1fr auto; min-width: 0; border: 1px solid var(--border-light); border-radius: 8px; background: var(--card); box-shadow: inset 0 1px 0 rgba(255,255,255,.42), 0 3px 9px color-mix(in srgb, var(--primary) 6%, transparent); transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
-    .favorite-grid .admin-favorite-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 18px color-mix(in srgb, var(--primary) 16%, transparent); }
-    [data-theme='dark'] .favorite-grid .admin-favorite-card { box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 3px 9px rgba(0,0,0,.18); }
-    .favorite-grid .admin-favorite-card > img, .favorite-grid .admin-favorite-placeholder { width: 100%; height: 142px; object-fit: cover; background: linear-gradient(135deg, var(--bg-secondary), var(--bg)); }
-    .favorite-grid .admin-favorite-placeholder { display: grid; place-items: center; color: var(--primary-dark); font-size: 1.35rem; }
-    .favorite-grid .admin-favorite-body { gap: 7px; padding: 11px 11px 12px; }
-    .favorite-grid .admin-favorite-body strong { display: -webkit-box; overflow: hidden; font-size: .82rem; line-height: 1.35; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-    .favorite-grid .admin-favorite-body p { font-size: .7rem; line-height: 1.45; }
-    .favorite-grid .admin-list-meta { gap: 5px 8px; font: .66rem/1.35 "Courier New", monospace; }
-    .favorite-grid .admin-favorite-status { border: 1px solid currentColor; border-radius: 4px; padding: 2px 5px; font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; font-size: .62rem; text-transform: capitalize; }
-    .favorite-grid .admin-favorite-card footer { gap: 5px; padding: 8px 10px; border-top: 1px dashed var(--border-light); background: var(--gradient-subtle); }
-    .favorite-grid .admin-favorite-card footer .btn { flex: 1; min-height: 29px; padding: 4px 7px; font-size: .68rem; }
-    .favorite-grid .admin-favorite-card footer .admin-danger { flex: 0 0 auto; }
-    .favorites-admin-panel .admin-empty-state { grid-column: 1 / -1; min-height: 145px; padding: 22px; border-radius: 8px; background: var(--gradient-subtle); }
-    .favorites-admin-panel .admin-status { margin-top: 10px; }
-    .favorites-admin-panel .admin-modal-actions .btn { min-height: 34px; }
-
-    @media (max-width: 980px) {
-      .favorite-tool-grid { grid-template-columns: 1fr; }
-      .favorite-manual-panel .admin-favorite-form { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    }
-    @media (max-width: 700px) {
-      .favorite-overview { grid-template-columns: 1fr; gap: 10px; }
-      .favorite-overview-rule { display: none; }
-      .favorite-overview-note { padding-top: 9px; border-top: 1px dashed var(--border-light); }
-      .favorites-admin-panel .favorite-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .favorite-library-actions { justify-content: flex-start; }
-      .favorite-library-actions .admin-sync-label { flex-basis: 100%; margin-bottom: 2px; }
-      .favorite-manual-panel .admin-favorite-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-    @media (max-width: 520px) {
-      .favorites-admin-panel .admin-panel-content { padding: 12px; }
-      .favorite-overview { padding: 12px; }
-      .favorite-overview-copy { align-items: flex-start; }
-      .favorite-overview h3 { font-size: .9rem; }
-      .favorite-overview p { font-size: .73rem; }
-      .favorites-admin-panel .favorite-tabs .admin-tab { gap: 6px; min-height: 36px; padding: 6px 5px; font-size: .7rem; }
-      .favorite-tool-heading, .favorite-tool-block, .favorite-manual-panel .admin-favorite-form { padding-left: 11px; padding-right: 11px; }
-      .favorite-tool-block .admin-toolbar { align-items: stretch; flex-direction: column; }
-      .favorite-tool-block .admin-toolbar .btn { width: 100%; }
-      .favorite-manual-panel .admin-favorite-form { grid-template-columns: 1fr; }
-      .favorite-library-heading h3 { font-size: .82rem; }
-      .favorite-library-actions .btn { flex: 1 1 140px; }
-      .favorite-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-      .favorite-grid .admin-favorite-card { grid-template-rows: 112px 1fr auto; }
-      .favorite-grid .admin-favorite-card > img, .favorite-grid .admin-favorite-placeholder { height: 112px; }
-      .favorite-grid .admin-favorite-body { padding: 9px; }
-      .favorite-grid .admin-favorite-body p { display: none; }
-      .favorite-grid .admin-favorite-card footer { padding: 7px; }
-      .favorite-grid .admin-favorite-card footer .btn { padding: 4px 5px; }
-    }
-    @media (max-width: 360px) {
-      .favorite-grid { grid-template-columns: 1fr; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .favorite-grid .admin-favorite-card { transition: none; }
-      .favorite-grid .admin-favorite-card:hover { transform: none; }
-    }
-  </style>
 
   <style is:global>
-    .favorites-admin-page {
-      min-width: 0;
-    }
+    .favorites-admin-page { min-width: 0; }
+    .favorites-admin-page .admin-post-workspace-content { padding: 8px; }
 
-    .favorites-admin-page .admin-post-workspace-content {
-      padding: 8px;
-    }
+    .favorite-tabs { margin: 0 0 10px; }
+    .favorite-tabs .admin-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin: 0; padding: 0 0 8px; }
+    .favorite-tabs .admin-tab { min-width: 0; min-height: 30px !important; padding: 6px 8px !important; border-radius: 4px !important; font: 700 .68rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif !important; white-space: nowrap; }
 
-    .favorite-tabs {
-      margin: 0 0 9px;
-    }
+    .favorite-tools-column { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; min-width: 0; }
+    .favorite-tool-block { min-width: 0; padding: 10px 0 12px; }
+    .favorite-tool-block + .favorite-tool-block { border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent); }
+    .favorite-tool-block h3 { margin: 0 0 8px; color: var(--primary-dark); font: 700 .7rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
 
-    .favorite-tabs .admin-tabs {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 4px;
-      margin: 0;
-      padding: 0 0 8px;
-    }
-
-    .favorite-tabs .admin-tab {
-      min-width: 0;
-      min-height: 30px !important;
-      padding: 6px 8px !important;
-      border-radius: 4px !important;
-      font: 700 .68rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif !important;
-      white-space: nowrap;
-    }
-
-    .favorite-tool-grid {
-      display: grid;
-      grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
-      gap: 10px;
-      align-items: start;
-      min-width: 0;
-    }
-
-    .favorites-admin-page .admin-post-workspace-content .favorite-tool-grid {
-      align-items: start !important;
-      gap: 8px !important;
-    }
-
-    .favorite-source-panel,
-    .favorite-manual-panel {
-      min-width: 0;
-    }
-
-    .favorite-manual-panel {
-      padding-left: 10px;
-      border-left: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
-    }
-
-    .favorite-tool-block {
-      padding: 3px 0 10px;
-    }
-
-    .favorite-tool-block + .favorite-tool-block {
-      padding-top: 10px;
-      border-top: 1px dashed var(--border-light);
-    }
-
-    .favorite-tool-block h3,
-    .favorite-manual-panel > h3 {
-      margin: 0 0 7px;
-      color: var(--primary-dark);
-      font: 700 .68rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .favorites-admin-page .admin-field {
-      gap: 3px;
-      min-width: 0;
-    }
-
-    .favorites-admin-page .admin-field label {
-      color: var(--primary-dark);
-      font: 700 .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
+    .favorites-admin-page .admin-field { gap: 3px; min-width: 0; }
+    .favorites-admin-page .admin-field label { color: var(--primary-dark); font: 700 .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
     .favorites-admin-page input:not([type='checkbox']):not([type='radio']),
     .favorites-admin-page select,
-    .favorites-admin-page textarea {
-      min-height: 32px;
-      padding: 6px 8px;
-      border: 1px solid var(--primary-dark);
-      border-top-color: var(--primary-light);
-      border-left-color: var(--primary-light);
-      border-radius: 4px;
-      background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev)));
-      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .72), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
-      color: var(--text);
-      font: .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-    }
+    .favorites-admin-page textarea { min-height: 32px; padding: 6px 8px; border: 1px solid var(--primary-dark); border-top-color: var(--primary-light); border-left-color: var(--primary-light); border-radius: 4px; background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev))); color: var(--text); font: .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; }
+    .favorites-admin-page textarea { min-height: 58px; resize: vertical; }
 
-    .favorites-admin-page textarea {
-      min-height: 58px;
-      resize: vertical;
-    }
+    .favorite-search-toolbar { align-items: end; margin: 0; }
+    .favorite-search-toolbar .admin-field { flex: 1 1 auto; }
+    .favorite-search-toolbar .btn { min-height: 32px; }
+    .favorite-search-results { display: grid; gap: 5px; max-height: 340px; overflow: auto; margin-top: 8px; }
+    .favorite-search-item { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 9px; min-height: 62px; width: 100%; padding: 6px; border: 1px solid var(--border-light); border-radius: 4px; background: var(--bg-elev); }
+    .favorite-search-item > img,
+    .favorite-search-placeholder { width: 42px; height: 56px; object-fit: cover; border-radius: 3px; background: var(--bg-secondary); }
+    .favorite-search-placeholder { display: grid; place-items: center; color: var(--text-muted); }
+    .favorite-search-copy { display: grid; gap: 3px; min-width: 0; }
+    .favorite-search-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .76rem; }
+    .favorite-search-copy small { color: var(--text-muted); font-size: .66rem; }
+    .favorite-result-add { min-width: 58px; }
+    .favorite-search-loading { display: grid; place-items: center; min-height: 96px; color: var(--text-muted); font: .72rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; }
+    .favorite-search-empty { min-height: 96px !important; }
+    .favorite-search-error { margin: 0 !important; text-align: center; }
 
-    .favorites-admin-page input:focus-visible,
-    .favorites-admin-page select:focus-visible,
-    .favorites-admin-page textarea:focus-visible {
-      outline: 1px solid var(--primary);
-      border-color: var(--primary-dark);
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-light) 30%, transparent), inset 1px 1px 0 rgba(255, 255, 255, .72);
-    }
+    .admin-favorite-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .admin-favorite-full { grid-column: 1 / -1; }
+    .favorite-form-actions { display: flex; justify-content: flex-end; margin-top: 1px; padding-top: 7px; border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent); }
 
-    .favorite-tool-block .admin-toolbar {
-      align-items: end;
-      margin: 0;
-    }
+    .favorite-library-section { margin-top: 4px; padding-top: 11px; border-top: 2px solid var(--primary); }
+    .favorites-admin-page .admin-favorite-toolbar { align-items: center; margin: 0 0 8px; }
+    .favorite-library-heading { display: flex; align-items: center; gap: 7px; }
+    .favorite-library-heading h3 { margin: 0; color: var(--text); font: 700 .72rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+    .favorites-admin-page .admin-count { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 4px; background: var(--primary); color: var(--bg); font: 700 .62rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; }
 
-    .favorite-tool-block .admin-toolbar .admin-field {
-      flex: 1 1 160px;
-    }
-
-    .favorite-tool-block .admin-toolbar .btn,
-    .favorite-form-actions .btn {
-      min-height: 30px;
-      padding: 6px 11px;
-      border-radius: 4px;
-      font: 700 .68rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .favorite-manual-panel .admin-favorite-form {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      padding: 0;
-    }
-
-    .favorite-form-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 1px;
-      padding-top: 7px;
-      border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
-    }
-
-    .favorite-progress {
-      margin: 7px 0 0;
-      padding: 6px 7px;
-      border-radius: 4px;
-    }
-
-    .favorites-admin-page .favorite-progress[hidden] {
-      display: none !important;
-    }
-
-    .favorite-progress > div {
-      height: 5px;
-      border-radius: 2px;
-    }
-
-    .favorite-progress small {
-      font: .66rem/1.3 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-    }
-
-    .favorite-library-section {
-      margin-top: 11px;
-      padding-top: 10px;
-      border-top: 2px solid var(--primary);
-    }
-
-    .favorites-admin-page .admin-favorite-toolbar {
-      align-items: center;
-      margin: 0 0 8px;
-    }
-
-    .favorite-library-heading {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .favorite-library-heading h3 {
-      margin: 0;
-      color: var(--text);
-      font: 700 .72rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .favorites-admin-page .admin-count {
-      min-width: 18px;
-      height: 18px;
-      border-radius: 4px;
-      font: 700 .62rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-    }
-
-    .favorite-library-actions {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 5px;
-      flex-wrap: wrap;
-    }
-
-    .favorite-library-actions .btn {
-      min-height: 28px;
-      padding: 5px 8px;
-      border-radius: 4px;
-      font: 700 .64rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .favorite-library-actions .admin-sync-label {
-      color: var(--text-muted);
-      font: .66rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-    }
-
-    .favorite-grid {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 6px;
-    }
-
-    .favorites-admin-page .admin-post-workspace-content .favorite-grid {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
-      gap: 6px !important;
-    }
-
-    .favorite-grid .admin-favorite-card {
-      display: grid;
-      grid-template-rows: 88px minmax(0, 1fr) 30px;
-      height: 184px;
-      min-width: 0;
-      overflow: hidden;
-      border: 1px solid var(--border-light);
-      border-radius: 4px;
-      background: var(--bg-elev);
-      box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 34%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
-      transition: border-color .16s ease, background-color .16s ease;
-    }
-
-    .favorite-grid .admin-favorite-card:hover {
-      border-color: var(--primary);
-      background: color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev));
-      box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 38%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 20%, transparent);
-      transform: none;
-    }
-
+    .favorite-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+    .favorites-admin-page .admin-post-workspace-content .favorite-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important; gap: 6px !important; }
+    .favorite-loading { grid-column: 1 / -1; display: grid; place-items: center; min-height: 150px; width: 100%; color: var(--text-muted); font: .72rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; text-align: center; }
+    .favorite-grid .admin-favorite-card { display: grid; grid-template-rows: 88px minmax(0, 1fr) 30px; height: 184px; min-width: 0; overflow: hidden; border: 1px solid var(--border-light); border-radius: 4px; background: var(--bg-elev); box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 34%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent); }
+    .favorite-grid .admin-favorite-card:hover { border-color: var(--primary); background: color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev)); transform: none; }
     .favorite-grid .admin-favorite-card > img,
-    .favorite-grid .admin-favorite-placeholder {
-      width: 100%;
-      height: 88px;
-      object-fit: cover;
-      background: var(--bg-secondary);
-    }
+    .favorite-grid .admin-favorite-placeholder { width: 100%; height: 88px; object-fit: cover; background: var(--bg-secondary); }
+    .favorite-grid .admin-favorite-placeholder { display: grid; place-items: center; color: var(--primary-dark); }
+    .favorite-grid .admin-favorite-body { display: grid; align-content: start; gap: 3px; min-height: 0; padding: 6px; }
+    .favorite-grid .admin-favorite-body strong { display: -webkit-box; overflow: hidden; font: 700 .7rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .favorite-grid .admin-list-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 3px 5px; overflow: hidden; font: .58rem/1.15 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; }
+    .favorite-grid .admin-favorite-status { padding: 1px 4px; border-radius: 3px; font: .56rem/1.15 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; white-space: nowrap; }
+    .favorite-grid .admin-favorite-status.completed { background: #2ecc7122; color: #2ecc71; }
+    .favorite-grid .admin-favorite-status.watching,
+    .favorite-grid .admin-favorite-status.playing { background: color-mix(in srgb, var(--primary) 18%, transparent); color: var(--primary-dark); }
+    .favorite-grid .admin-favorite-status.dropped { background: #e74c3c22; color: #e74c3c; }
+    .favorite-grid .admin-favorite-card footer { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 4px; padding: 4px 6px; border-top: 1px dotted var(--border-light); background: transparent; }
+    .favorite-grid .admin-favorite-card footer .btn { width: 100%; min-width: 0; min-height: 22px; padding: 3px 4px; border-radius: 3px; font: 700 .56rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif; }
 
-    .favorite-grid .admin-favorite-placeholder {
-      display: grid;
-      place-items: center;
-      color: var(--primary-dark);
-    }
-
-    .favorite-grid .admin-favorite-body {
-      display: grid;
-      align-content: start;
-      gap: 3px;
-      min-height: 0;
-      padding: 6px;
-    }
-
-    .favorite-grid .admin-favorite-body strong {
-      display: -webkit-box;
-      overflow: hidden;
-      font: 700 .7rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-    }
-
-    .favorite-grid .admin-list-meta {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 3px 5px;
-      overflow: hidden;
-      font: .58rem/1.15 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-    }
-
-    .favorite-grid .admin-favorite-status {
-      padding: 1px 4px;
-      border-radius: 3px;
-      font: .56rem/1.15 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      white-space: nowrap;
-    }
-
-    .favorite-grid .admin-favorite-body p {
-      display: none;
-    }
-
-    .favorite-grid .admin-favorite-card footer {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      align-items: stretch;
-      gap: 4px;
-      padding: 4px 6px;
-      border-top: 1px dotted var(--border-light);
-      background: transparent;
-    }
-
-    .favorite-grid .admin-favorite-card footer .btn {
-      width: 100%;
-      min-width: 0;
-      min-height: 22px;
-      padding: 3px 4px;
-      border-radius: 3px;
-      font: 700 .56rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      flex: none;
-    }
-
-    #editFavoriteModal .admin-modal-card {
-      width: min(440px, calc(100vw - 24px));
-      border-radius: 5px;
-    }
-
-    #editFavoriteModal .admin-modal-header {
-      min-height: 34px;
-      padding: 6px 8px;
-    }
-
-    #editFavoriteModal .admin-modal-header h3 {
-      font: 700 .78rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-    }
-
-    #editFavoriteModal .admin-modal-body {
-      padding: 9px;
-    }
-
-    #editFavoriteModal #favoriteEditForm {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 7px;
-      max-width: none;
-    }
-
-    #editFavoriteModal #favoriteEditForm .edit-title-field {
-      grid-column: span 2;
-    }
-
-    #editFavoriteModal #favoriteEditForm .edit-stats-field {
-      display: grid;
-      grid-column: span 2;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 7px;
-    }
-
+    #editFavoriteModal .admin-modal-card { width: min(440px, calc(100vw - 24px)); border-radius: 5px; }
+    #editFavoriteModal .admin-modal-body { padding: 9px; }
+    #editFavoriteModal #favoriteEditForm { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; max-width: none; }
+    #editFavoriteModal #favoriteEditForm .edit-title-field { grid-column: span 2; }
+    #editFavoriteModal #favoriteEditForm .edit-stats-field { display: grid; grid-column: span 2; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
     #editFavoriteModal #favoriteEditForm .edit-description-field,
     #editFavoriteModal #favoriteEditForm .admin-status,
-    #editFavoriteModal #favoriteEditForm .admin-modal-actions {
-      grid-column: 1 / -1;
-    }
+    #editFavoriteModal #favoriteEditForm .admin-modal-actions { grid-column: 1 / -1; }
+    #editFavoriteModal #favoriteEditForm .admin-modal-actions { justify-content: flex-end; padding-top: 7px; border-top: 1px dotted var(--border-light); }
 
-    #editFavoriteModal #favoriteEditForm .admin-field {
-      gap: 3px;
-    }
+    .favorites-admin-page .btn,
+    .favorites-admin-page .btn:hover,
+    .favorites-admin-page .btn:focus,
+    .favorites-admin-page .btn:active,
+    #editFavoriteModal .btn,
+    #editFavoriteModal .btn:hover,
+    #editFavoriteModal .btn:focus,
+    #editFavoriteModal .btn:active,
+    .favorite-search-item,
+    .favorite-search-item:hover { transition: none !important; animation: none !important; transform: none !important; }
 
-    #editFavoriteModal #favoriteEditForm .admin-modal-actions {
-      justify-content: flex-end;
-      padding-top: 7px;
-      border-top: 1px dotted var(--border-light);
-    }
-
-    #editFavoriteModal #favoriteEditForm .admin-modal-actions .btn {
-      min-height: 27px;
-      padding: 5px 9px;
-      border-radius: 4px;
-      font: 700 .62rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      text-transform: uppercase;
-    }
-
-    .favorites-admin-page .admin-empty-state {
-      grid-column: 1 / -1;
-      min-height: 112px;
-      border-radius: 4px;
-    }
-
-    .favorites-admin-page .admin-status {
-      margin-top: 7px;
-    }
-
-    @media (max-width: 980px) {
-      .favorite-tool-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .favorite-manual-panel {
-        padding-top: 10px;
-        padding-left: 0;
-        border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
-        border-left: 0;
-      }
-    }
+    .favorites-admin-page .admin-empty-state { grid-column: 1 / -1; min-height: 112px; border-radius: 4px; }
+    .favorites-admin-page .admin-status { margin-top: 7px; }
 
     @media (max-width: 700px) {
-      .favorite-tabs .admin-tabs {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .favorite-manual-panel .admin-favorite-form {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .favorite-library-actions {
-        justify-content: flex-start;
-      }
+      .favorite-tabs .admin-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .admin-favorite-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 520px) {
-      .favorite-tool-block .admin-toolbar {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .favorite-tool-block .admin-toolbar .btn {
-        width: 100%;
-      }
-
-      .favorite-manual-panel .admin-favorite-form {
-        grid-template-columns: 1fr;
-      }
-
-      .favorite-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      #editFavoriteModal #favoriteEditForm {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
+      .favorite-search-toolbar { align-items: stretch; flex-direction: column; }
+      .favorite-search-toolbar .btn { width: 100%; }
+      .favorite-search-item { grid-template-columns: 40px minmax(0, 1fr) auto; }
+      .favorite-search-item > img,
+      .favorite-search-placeholder { width: 40px; height: 54px; }
+      .admin-favorite-form { grid-template-columns: 1fr; }
+      .admin-favorite-full { grid-column: auto; }
+      .favorite-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #editFavoriteModal #favoriteEditForm { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       #editFavoriteModal #favoriteEditForm .edit-title-field,
       #editFavoriteModal #favoriteEditForm .edit-image-field,
       #editFavoriteModal #favoriteEditForm .edit-status-field,
-      #editFavoriteModal #favoriteEditForm .edit-stats-field {
-        grid-column: 1 / -1;
-      }
+      #editFavoriteModal #favoriteEditForm .edit-stats-field { grid-column: 1 / -1; }
     }
 
     @media (max-width: 360px) {
-      .favorite-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .favorite-grid .admin-favorite-card {
-        transition: none;
-      }
+      .favorite-grid { grid-template-columns: 1fr; }
     }
   </style>
 </AdminLayout>
