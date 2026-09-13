@@ -3,7 +3,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro';
 import AdminStatus from '../../components/admin/AdminStatus.astro';
 ---
-<AdminLayout title="Resources Editor" active="resources">
+<AdminLayout title="Resources Editor" active="resources" bodyClass="admin-resources-page">
   <Fragment slot="head"><link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" /></Fragment>
   <AdminPostWorkspace active="scanlation" tabs={[{id:'scanlation',label:'Scanlation'},{id:'youtube',label:'YouTube'}]}>
     <Fragment slot="actions">
@@ -44,16 +44,16 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
 
     .scanlation-section .admin-resource-panel {
       overflow: hidden;
-      border: 1px solid var(--border-light);
+      border: 1px solid var(--primary-dark);
       border-radius: 5px;
       background: var(--card);
-      box-shadow: none;
+      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .7), 1px 1px 2px rgba(0, 0, 0, .14);
     }
 
     .scanlation-section .admin-resource-panel:hover {
-      border-color: var(--primary);
-      background: color-mix(in srgb, var(--primary-light) 10%, var(--card));
-      box-shadow: none;
+      border-color: var(--primary-dark);
+      background: var(--card);
+      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .7), 1px 1px 2px rgba(0, 0, 0, .14);
     }
 
     .scanlation-section .admin-resource-panel > header {
@@ -62,8 +62,9 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
       justify-content: space-between;
       gap: 8px;
       padding: 7px 9px;
-      background: color-mix(in srgb, var(--primary-light) 13%, var(--card));
-      border-bottom: 1px dashed var(--border-light);
+      background: linear-gradient(to bottom, var(--primary-light), var(--primary) 48%, var(--primary-dark) 52%, var(--primary-light));
+      border-bottom: 1px solid var(--primary-dark);
+      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .6);
     }
 
     .scanlation-section .admin-resource-panel-title {
@@ -79,15 +80,34 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
       place-items: center;
       flex-basis: 25px;
       height: 22px;
+      border: 1px solid color-mix(in srgb, var(--primary-dark) 60%, var(--primary-light));
       border-radius: 4px;
-      background: var(--bg-elev);
+      background: color-mix(in srgb, var(--bg-elev) 78%, transparent);
+      color: var(--bg);
       font: 700 .66rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000);
     }
 
     .scanlation-section .admin-resource-panel-title > input {
       min-width: 0;
       flex: 1;
+      min-height: 32px;
+      padding: 6px 8px;
+      box-sizing: border-box;
+      border: 1px solid var(--primary-dark) !important;
+      border-top-color: var(--primary-light) !important;
+      border-left-color: var(--primary-light) !important;
+      border-radius: 4px;
+      background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev))) !important;
+      color: var(--text);
+      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .72), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
       font: 700 .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .scanlation-section .admin-resource-panel-title > input:focus-visible {
+      outline: 1px solid var(--primary);
+      border-color: var(--primary-dark) !important;
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-light) 30%, transparent), inset 1px 1px 0 rgba(255, 255, 255, .72);
     }
 
     .scanlation-section .admin-resource-panel-actions {
@@ -100,20 +120,37 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
     .scanlation-section .admin-resource-panel-actions .btn {
       min-height: 28px;
       padding: 5px 8px;
+      border: 1px solid var(--primary-dark);
       border-radius: 4px;
+      background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
+      color: var(--primary-dark);
+      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .8), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
       font: 700 .68rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      text-transform: uppercase;
+    }
+
+    .scanlation-section .admin-resource-panel-actions .btn:hover:not(:disabled) {
+      border-color: var(--primary-dark);
+      background: linear-gradient(to bottom, var(--primary-light), var(--primary));
+      color: var(--bg);
+      transform: none;
+    }
+
+    .scanlation-section .admin-resource-panel-actions .admin-danger {
+      color: var(--admin-danger, #b42318);
     }
 
     .scanlation-section .admin-resource-editor {
-      min-height: 140px;
+      min-height: 0;
+      overflow: hidden;
       background: var(--card);
     }
 
     .scanlation-section .admin-resource-editor .ql-toolbar.ql-snow {
       padding: 6px 7px;
       border: 0;
-      border-bottom: 1px solid var(--border-light);
-      background: var(--bg-elev);
+      border-bottom: 1px solid var(--primary-dark);
+      background: linear-gradient(to bottom, var(--primary-light), var(--primary) 48%, var(--primary-dark) 52%, var(--primary-light));
     }
 
     .scanlation-section .admin-resource-editor .ql-container.ql-snow {
@@ -122,8 +159,8 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
     }
 
     .scanlation-section .admin-resource-editor .ql-editor {
-      min-height: 110px;
-      padding: 10px 11px;
+      min-height: 230px;
+      padding: 12px;
       color: var(--text);
       font: .78rem/1.55 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     }
@@ -138,7 +175,7 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding-top: 6px;
+      padding-top: 7px;
       border-top: 1px dotted var(--border-light);
     }
 
@@ -159,8 +196,18 @@ import AdminStatus from '../../components/admin/AdminStatus.astro';
     .resources-action-buttons .btn {
       min-height: 29px;
       padding: 5px 9px;
+      border: 1px solid var(--primary-dark);
       border-radius: 4px;
+      background: linear-gradient(to bottom, var(--primary-light), var(--primary) 48%, var(--primary-dark) 52%, var(--primary-light));
+      color: var(--bg);
+      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .6), 1px 1px 2px rgba(0, 0, 0, .16);
       font: 700 .68rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      text-transform: uppercase;
+    }
+
+    .resources-action-buttons .btn:hover {
+      background: var(--primary);
+      transform: none;
     }
 
     @media (max-width: 600px) {
