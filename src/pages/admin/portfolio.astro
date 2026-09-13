@@ -7,36 +7,38 @@ import AdminModal from '../../components/admin/AdminModal.astro';
 ---
 <AdminLayout title="Portfolio Editor" active="portfolio" bodyClass="admin-portfolio-page">
   <AdminPostWorkspace active="portfolio" tabs={[{ id: 'portfolio', label: 'Portfolio' }]}>
-    <div class="portfolio-import-block">
-      <div class="portfolio-section-heading">
-        <h2>Import from GitHub</h2>
+    <div class="portfolio-toolbar" role="search" aria-label="Import a GitHub project">
+      <div class="portfolio-toolbar-heading">
+        <h2>Import project</h2>
+        <span>GitHub</span>
       </div>
-      <div class="admin-toolbar portfolio-import-toolbar">
+      <div class="portfolio-toolbar-controls">
         <AdminField label="Repository URL" forId="githubUrl"><input id="githubUrl" type="url" placeholder="https://github.com/owner/repository" /></AdminField>
-        <button class="btn btn-primary" id="fetchGithub" type="button"><i class="bi bi-cloud-download" aria-hidden="true"></i> Fetch repository</button>
+        <button class="btn btn-primary" id="fetchGithub" type="button">Fetch repository</button>
       </div>
       <AdminStatus id="portfolioMessage" />
       <div id="repoPreview" class="admin-repo-preview" hidden>
-        <div class="admin-compact-card portfolio-preview-card">
-          <header>
+        <div class="portfolio-preview-summary">
+          <div>
             <strong id="previewName"></strong>
-          </header>
-          <div><p id="previewDescription"></p><div id="previewMeta" class="admin-list-meta"></div></div>
+            <p id="previewDescription"></p>
+          </div>
+          <div id="previewMeta" class="admin-list-meta"></div>
         </div>
         <div class="admin-split admin-custom-project-fields">
           <AdminField label="Custom Name" forId="customName" hint="Optional override shown on the public portfolio."><input id="customName" type="text" /></AdminField>
           <AdminField label="Custom Description" forId="customDescription" hint="Optional override shown on the public portfolio."><textarea id="customDescription"></textarea></AdminField>
         </div>
-        <div class="admin-preview-actions"><button class="btn btn-primary" id="addProject" type="button"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add Project</button><button class="btn btn-ghost" id="cancelProjectPreview" type="button">Cancel</button></div>
+        <div class="admin-preview-actions"><button class="btn btn-primary" id="addProject" type="button">Add project</button><button class="btn btn-ghost" id="cancelProjectPreview" type="button">Cancel</button></div>
       </div>
     </div>
 
     <div class="portfolio-library">
       <div class="admin-list-toolbar">
         <h2 class="portfolio-list-heading">Projects <span class="admin-count" id="projectCount">0</span></h2>
-        <button class="btn btn-ghost" id="refreshProjects" type="button"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Refresh</button>
+        <button class="btn btn-ghost" id="refreshProjects" type="button">Refresh</button>
       </div>
-      <div id="projectsList" class="admin-grid"><p class="admin-status" data-state="loading">Loading projects…</p></div>
+      <div id="projectsList" class="admin-list admin-post-list portfolio-list"><p class="admin-status" data-state="loading">Loading projects…</p></div>
     </div>
   </AdminPostWorkspace>
 
@@ -57,7 +59,7 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     const list=document.querySelector<HTMLElement>('#projectsList')!; const count=document.querySelector<HTMLElement>('#projectCount')!; const message=document.querySelector<HTMLElement>('#portfolioMessage'); const preview=document.querySelector<HTMLElement>('#repoPreview')!; const modal=document.querySelector<HTMLElement>('#editProjectModal')!; const editMessage=document.querySelector<HTMLElement>('#editProjectMessage');
     function closeModal(){modal.classList.remove('active');modal.setAttribute('aria-hidden','true')}
     document.querySelectorAll('[data-modal-close="editProjectModal"]').forEach((button)=>button.addEventListener('click',closeModal)); modal.addEventListener('click',(event)=>{if(event.target===modal)closeModal()});
-    function render(){count.textContent=String(projects.length);if(!projects.length){list.innerHTML='<div class="admin-empty-state"><i class="bi bi-inbox"></i><span>No projects yet. Add one above.</span></div>';return;}list.innerHTML=projects.map((project)=>{const name=project.custom_name||project.name;const desc=project.custom_description||project.description||'No description';const stars=project.stars??project.stargazers_count??0;const forks=project.forks??project.forks_count??0;return `<article class="admin-compact-card" data-id="${escapeHtml(project.id)}"><header><strong>${escapeHtml(name)}</strong></header><div><p class="admin-project-desc">${escapeHtml(desc)}</p><div class="admin-list-meta">${project.language?`<span>${escapeHtml(project.language)}</span>`:''}<span>★ ${escapeHtml(stars)}</span><span>⑂ ${escapeHtml(forks)}</span></div>${project.github_url?`<a href="${escapeHtml(project.github_url)}" target="_blank" rel="noopener noreferrer">Open repository</a>`:''}</div><footer><button class="btn btn-ghost" type="button" data-sync="${escapeHtml(project.id)}">Sync</button><button class="btn btn-ghost" type="button" data-edit="${escapeHtml(project.id)}">Edit</button><button class="btn btn-ghost admin-danger" type="button" data-delete="${escapeHtml(project.id)}">Delete</button></footer></article>`}).join('')}
+    function render(){count.textContent=String(projects.length);if(!projects.length){list.innerHTML='<div class="admin-empty-state"><i class="bi bi-inbox"></i><strong>No projects</strong><span>Import a repository to add one.</span></div>';return;}list.innerHTML=projects.map((project)=>{const name=project.custom_name||project.name;const desc=project.custom_description||project.description||'No description';const stars=project.stars??project.stargazers_count??0;const forks=project.forks??project.forks_count??0;return `<article class="admin-list-item masonry-item portfolio-project" data-id="${escapeHtml(project.id)}"><div class="admin-list-item-head item-header"><span class="post-card-icon" aria-hidden="true"><i class="bi bi-github"></i></span><h3>${escapeHtml(name)}</h3></div><div class="admin-list-item-body item-content"><p class="post-card-description">${escapeHtml(desc)}</p><div class="admin-list-meta item-meta"><span>${escapeHtml(project.language||'Repository')}</span><span>★ ${escapeHtml(stars)}</span><span>Forks ${escapeHtml(forks)}</span></div>${project.github_url?`<a class="portfolio-repository-link" href="${escapeHtml(project.github_url)}" target="_blank" rel="noopener noreferrer">Open repository</a>`:''}</div><div class="admin-list-item-actions"><button class="btn btn-ghost" type="button" data-sync="${escapeHtml(project.id)}">Sync</button><button class="btn btn-ghost" type="button" data-edit="${escapeHtml(project.id)}">Edit</button><button class="btn btn-ghost admin-danger" type="button" data-delete="${escapeHtml(project.id)}">Delete</button></div></article>`}).join('')}
     async function load(){list.innerHTML='<p class="admin-status" data-state="loading">Loading projects…</p>';try{const response=await adminFetch('/site/projects',{}, {auth:false});const data=await response.json();if(!response.ok)throw new Error(data.error||'Failed to load projects');projects=Array.isArray(data)?data:(Array.isArray(data.projects)?data.projects:[]);render();}catch(error){list.innerHTML=`<p class="admin-status" data-state="error">${escapeHtml(error instanceof Error?error.message:'Failed to load projects')}</p>`}}
     function resetPreview(){fetched=null;preview.hidden=true;(document.querySelector<HTMLInputElement>('#githubUrl')!).value='';(document.querySelector<HTMLInputElement>('#customName')!).value='';(document.querySelector<HTMLTextAreaElement>('#customDescription')!).value='';setAdminStatus(message)}
     document.querySelector('#fetchGithub')?.addEventListener('click',async()=>{const input=document.querySelector<HTMLInputElement>('#githubUrl')!;const url=input.value.trim();if(!url){setAdminStatus(message,'Enter a GitHub repository URL.','error');return;}setAdminStatus(message,'Fetching repository…','loading');try{const response=await adminFetch('/admin/projects/fetch-github',{method:'POST',body:JSON.stringify({url})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Failed to fetch repository');fetched={...data,github_url:url};(document.querySelector<HTMLElement>('#previewName')!).textContent=data.name||'Unnamed repository';(document.querySelector<HTMLElement>('#previewDescription')!).textContent=data.description||'No description';(document.querySelector<HTMLElement>('#previewMeta')!).innerHTML=`${data.language?`<span>${escapeHtml(data.language)}</span>`:''}<span>★ ${escapeHtml(data.stargazers_count??0)}</span><span>⑂ ${escapeHtml(data.forks_count??0)}</span>`;preview.hidden=false;setAdminStatus(message)}catch(error){setAdminStatus(message,error instanceof Error?error.message:'Failed to fetch repository','error')}});
@@ -67,26 +69,31 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     document.querySelector<HTMLFormElement>('#editProjectForm')?.addEventListener('submit',async(event)=>{event.preventDefault();const id=(document.querySelector<HTMLInputElement>('#editProjectId')!).value;const custom_name=(document.querySelector<HTMLInputElement>('#editCustomName')!).value.trim()||null;const custom_description=(document.querySelector<HTMLTextAreaElement>('#editCustomDescription')!).value.trim()||null;setAdminStatus(editMessage,'Saving…','loading');try{const response=await adminFetch(`/admin/projects/${encodeURIComponent(id)}`,{method:'PATCH',body:JSON.stringify({custom_name,custom_description})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Update failed');closeModal();await load();}catch(error){setAdminStatus(editMessage,error instanceof Error?error.message:'Update failed','error')}});
     document.querySelector('#refreshProjects')?.addEventListener('click',load); load();
   </script>
-  <style is="global">
+  <style is:global>
+    /* Portfolio follows the same compact archive language as Blogs and Resources. */
     .admin-portfolio-page .admin-post-workspace-content {
-      gap: 0;
+      gap: 8px;
       padding: 8px;
-      background: var(--bg-elev);
     }
 
-    .admin-portfolio-page .portfolio-import-block,
+    .admin-portfolio-page .portfolio-toolbar,
     .admin-portfolio-page .portfolio-library {
       min-width: 0;
       font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     }
 
-    .admin-portfolio-page .portfolio-import-block {
-      padding: 7px 8px 11px;
-      border-bottom: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
-      background: linear-gradient(to bottom, color-mix(in srgb, var(--primary-light) 9%, var(--bg-elev)), var(--bg-elev));
+    .admin-portfolio-page .portfolio-toolbar {
+      display: grid;
+      gap: 7px;
+      margin: 0 0 2px;
+      padding: 8px 9px;
+      border: 1px solid var(--border-light);
+      border-radius: 5px;
+      background: linear-gradient(to bottom, color-mix(in srgb, var(--bg-elev) 94%, var(--primary-light)), var(--bg-elev));
+      box-shadow: inset 0 1px 0 color-mix(in srgb, var(--primary-light) 45%, transparent);
     }
 
-    .admin-portfolio-page .portfolio-section-heading,
+    .admin-portfolio-page .portfolio-toolbar-heading,
     .admin-portfolio-page .admin-list-toolbar {
       display: flex;
       align-items: center;
@@ -94,25 +101,34 @@ import AdminModal from '../../components/admin/AdminModal.astro';
       gap: 8px;
     }
 
-    .admin-portfolio-page .portfolio-section-heading h2,
+    .admin-portfolio-page .portfolio-toolbar-heading {
+      padding-bottom: 6px;
+      border-bottom: 1px dashed var(--border-light);
+    }
+
+    .admin-portfolio-page .portfolio-toolbar-heading h2,
     .admin-portfolio-page .portfolio-list-heading {
       margin: 0;
       color: var(--text);
-      font: 700 .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      font: 700 .76rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
       letter-spacing: .1em;
       text-transform: uppercase;
     }
 
-    .admin-portfolio-page .portfolio-import-toolbar {
+    .admin-portfolio-page .portfolio-toolbar-heading span {
+      color: var(--text-muted);
+      font: .66rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      text-transform: uppercase;
+    }
+
+    .admin-portfolio-page .portfolio-toolbar-controls {
       display: grid;
       grid-template-columns: minmax(0, 1fr) max-content;
       align-items: end;
       gap: 8px;
-      margin: 8px 0 6px;
     }
 
-    .admin-portfolio-page .portfolio-import-toolbar .admin-field,
-    .admin-portfolio-page .admin-custom-project-fields .admin-field {
+    .admin-portfolio-page .admin-field {
       gap: 3px;
       min-width: 0;
     }
@@ -132,6 +148,7 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     .admin-portfolio-page input:not([type="checkbox"]):not([type="radio"]),
     .admin-portfolio-page textarea {
       min-height: 32px;
+      box-sizing: border-box;
       padding: 6px 8px;
       border: 1px solid var(--primary-dark);
       border-top-color: var(--primary-light);
@@ -140,8 +157,7 @@ import AdminModal from '../../components/admin/AdminModal.astro';
       background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev)));
       box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .72), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
       color: var(--text);
-      font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      font-size: .78rem;
+      font: .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     }
 
     .admin-portfolio-page textarea {
@@ -162,22 +178,28 @@ import AdminModal from '../../components/admin/AdminModal.astro';
       box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-light) 30%, transparent), inset 1px 1px 0 rgba(255, 255, 255, .72);
     }
 
-    .admin-portfolio-page .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      min-height: 30px;
-      padding: 6px 10px;
+    .admin-portfolio-page .portfolio-toolbar-controls > .btn,
+    .admin-portfolio-page .admin-list-toolbar > .btn {
+      min-height: 32px;
+      padding: 5px 10px;
+      border: 1px solid var(--primary-dark);
       border-radius: 4px;
-      font: 700 .7rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 18%, var(--bg-elev)));
+      color: var(--text-muted);
+      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .8), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 22%, transparent);
+      font: 700 .66rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
       text-transform: uppercase;
       transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
       transform: none !important;
     }
 
-    .admin-portfolio-page .btn:hover,
-    .admin-portfolio-page .btn:active {
+    .admin-portfolio-page .portfolio-toolbar-controls > .btn:hover,
+    .admin-portfolio-page .admin-list-toolbar > .btn:hover,
+    .admin-portfolio-page .portfolio-toolbar-controls > .btn:active,
+    .admin-portfolio-page .admin-list-toolbar > .btn:active {
+      border-color: var(--primary);
+      background: linear-gradient(to bottom, var(--primary-light), var(--primary));
+      color: var(--bg);
       transform: none !important;
     }
 
@@ -185,38 +207,56 @@ import AdminModal from '../../components/admin/AdminModal.astro';
       transform: translateY(-50%);
     }
 
-    .admin-portfolio-page .portfolio-import-toolbar > .btn {
-      min-height: 32px;
-    }
-
-    .admin-portfolio-page .admin-status {
+    .admin-portfolio-page .portfolio-toolbar > .admin-status {
       margin: 0;
-      border-radius: 4px;
-      font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      padding: 4px 6px;
+      border: 0;
+      background: transparent;
+      color: var(--text-muted);
+      font: .66rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     }
 
     .admin-portfolio-page .admin-repo-preview {
       display: grid;
-      gap: 9px;
-      margin-top: 8px;
-      padding: 9px;
-      border: 1px solid var(--primary-dark);
-      border-radius: 5px;
-      background: color-mix(in srgb, var(--primary-light) 8%, var(--bg-elev));
-      box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 36%, transparent), 1px 1px 2px rgba(0, 0, 0, .14);
+      gap: 8px;
+      margin-top: 1px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-light);
     }
 
-    .admin-portfolio-page .portfolio-preview-card {
-      box-shadow: none;
+    .admin-portfolio-page .admin-repo-preview[hidden] {
+      display: none;
     }
 
-    .admin-portfolio-page .portfolio-preview-card > header,
-    .admin-portfolio-page .portfolio-preview-card > div {
-      display: grid;
-      gap: 6px;
+    .admin-portfolio-page .portfolio-preview-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 8px;
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+      background: var(--card);
+      box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 32%, transparent);
     }
 
-    .admin-portfolio-page .admin-split.admin-custom-project-fields {
+    .admin-portfolio-page .portfolio-preview-summary strong {
+      color: var(--text);
+      font: 700 .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .admin-portfolio-page .portfolio-preview-summary p {
+      margin: 3px 0 0;
+      color: var(--text-muted);
+      font: .7rem/1.35 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .admin-portfolio-page .portfolio-preview-summary .admin-list-meta {
+      justify-content: flex-end;
+      flex: 0 0 auto;
+    }
+
+    .admin-portfolio-page .admin-custom-project-fields {
       align-items: start;
       gap: 8px;
     }
@@ -229,13 +269,13 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     }
 
     .admin-portfolio-page .portfolio-library {
-      padding: 11px 8px 8px;
+      padding: 2px 0 0;
     }
 
     .admin-portfolio-page .admin-list-toolbar {
-      margin: 0 0 8px;
-      padding: 0 0 7px;
-      border-bottom: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
+      margin: 0 2px 7px;
+      padding: 0 0 6px;
+      border-bottom: 1px dotted var(--primary-dark);
     }
 
     .admin-portfolio-page .portfolio-list-heading {
@@ -244,116 +284,58 @@ import AdminModal from '../../components/admin/AdminModal.astro';
       gap: 6px;
     }
 
-    .admin-portfolio-page .admin-list-toolbar > .btn {
-      flex: 0 0 auto;
-    }
-
     .admin-portfolio-page .admin-count {
       display: inline-grid;
       place-items: center;
-      min-width: 21px;
-      height: 21px;
-      padding: 0 6px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
       border: 1px solid var(--primary-dark);
       border-radius: 4px;
       background: var(--primary);
       color: var(--bg);
-      font: 700 .75rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      font: 700 .7rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     }
 
-    .admin-portfolio-page .admin-grid {
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 6px;
+    .admin-portfolio-page .portfolio-list {
+      gap: 5px;
     }
 
-    .admin-portfolio-page .admin-compact-card {
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      border: 1px solid var(--border-light);
-      border-radius: 4px;
-      background: var(--card);
-      box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 25%, transparent), 1px 1px 2px rgba(0, 0, 0, .13);
+    .admin-portfolio-page .portfolio-project {
       font-family: "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     }
 
-    .admin-portfolio-page .admin-compact-card:hover {
-      border-color: var(--primary);
-      box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 30%, transparent), 1px 1px 2px rgba(0, 0, 0, .13);
-      transform: none;
-    }
-
-    .admin-portfolio-page .admin-compact-card > header {
-      display: grid;
-      gap: 3px;
-      padding: 7px 8px;
-      border-bottom: 1px solid var(--primary-dark);
-      background: linear-gradient(to bottom, var(--primary-light), var(--primary) 48%, var(--primary-dark) 52%, var(--primary-light));
-      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .6);
-    }
-
-    .admin-portfolio-page .admin-compact-card > header strong {
+    .admin-portfolio-page .portfolio-project .admin-list-item-head h3 {
       overflow-wrap: anywhere;
-      color: #fff;
-      font: 700 .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 80%, #000);
     }
 
-    .admin-portfolio-page .admin-compact-card > div {
-      display: grid;
-      align-content: start;
-      gap: 7px;
-      padding: 8px;
+    .admin-portfolio-page .portfolio-project .admin-list-item-body {
+      gap: 4px;
     }
 
-    .admin-portfolio-page .admin-project-desc {
-      display: -webkit-box;
-      margin: 0;
-      overflow: hidden;
-      color: var(--text);
-      font: .72rem/1.4 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
+    .admin-portfolio-page .portfolio-project .post-card-description {
+      -webkit-line-clamp: 2;
     }
 
-    .admin-portfolio-page .admin-list-meta {
-      display: flex;
+    .admin-portfolio-page .portfolio-project .admin-list-meta {
       flex-wrap: wrap;
-      align-items: center;
-      gap: 4px 7px;
-      color: var(--text-muted);
-      font: .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      gap: 4px 9px;
+      margin-top: auto;
     }
 
-    .admin-portfolio-page .admin-list-meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      padding: 2px 5px;
-      border: 1px solid var(--border-light);
-      border-radius: 3px;
-      background: color-mix(in srgb, var(--primary-light) 10%, var(--bg-elev));
-    }
-
-    .admin-portfolio-page .admin-compact-card a {
+    .admin-portfolio-page .portfolio-repository-link {
       width: fit-content;
+      margin-top: 1px;
       color: var(--primary-dark);
-      font: 700 .7rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      font: 700 .66rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
       text-underline-offset: 2px;
     }
 
-    .admin-portfolio-page .admin-compact-card > footer {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      padding: 6px;
-      border-top: 1px dotted var(--border-light);
-      background: color-mix(in srgb, var(--bg) 32%, var(--card));
-    }
-
-    .admin-portfolio-page .admin-compact-card > footer .btn {
-      min-height: 24px;
-      padding: 4px 7px;
-      font-size: .62rem;
+    .admin-portfolio-page .portfolio-project .admin-list-item-actions .btn {
+      min-height: 20px;
+      padding: 3px 6px;
+      font: 700 .62rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      transform: none !important;
     }
 
     .admin-portfolio-page .admin-modal-card,
@@ -367,35 +349,35 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     }
 
     @media (max-width: 700px) {
-      .admin-portfolio-page .portfolio-section-heading,
+      .admin-portfolio-page .portfolio-toolbar-heading,
       .admin-portfolio-page .admin-list-toolbar {
         align-items: stretch;
         flex-direction: column;
       }
 
-      .admin-portfolio-page .portfolio-import-toolbar {
+      .admin-portfolio-page .portfolio-toolbar-controls {
         grid-template-columns: 1fr;
         align-items: stretch;
       }
 
-      .admin-portfolio-page .portfolio-import-toolbar > .btn,
+      .admin-portfolio-page .portfolio-toolbar-controls > .btn,
       .admin-portfolio-page .admin-list-toolbar > .btn {
         width: 100%;
       }
+
+      .admin-portfolio-page .portfolio-preview-summary {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .admin-portfolio-page .portfolio-preview-summary .admin-list-meta {
+        justify-content: flex-start;
+      }
     }
 
-    @media (max-width: 500px) {
-      .admin-portfolio-page .portfolio-import-block,
-      .admin-portfolio-page .portfolio-library {
-        padding-inline: 5px;
-      }
-
-      .admin-portfolio-page .admin-grid {
+    @media (max-width: 560px) {
+      .admin-portfolio-page .admin-custom-project-fields {
         grid-template-columns: 1fr;
-      }
-
-      .admin-portfolio-page .admin-preview-actions > .btn {
-        flex: 1 1 130px;
       }
     }
   </style>
