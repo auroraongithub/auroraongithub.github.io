@@ -80,7 +80,7 @@
 .admin-icon-button { width:31px;padding:0!important; }
 .admin-editor { min-height:330px;background:var(--card); }
 .admin-page .ql-toolbar.ql-snow { border-color:var(--border);border-radius:6px 6px 0 0;background:var(--bg-elev); }
-.admin-page .ql-container.ql-snow { border-color:var(--border);border-radius:0 0 6px 6px;color:var(--text);font-family:Poppins,system-ui,sans-serif; }
+.admin-page .ql-container.ql-snow { border-color:var(--border);border-radius:0 0 6px 6px;color:var(--text);font-family:"MS PGothic","MS UI Gothic",Tahoma,sans-serif; }
 .admin-page .ql-editor { min-height:280px;font-size:.9rem;line-height:1.65; }
 .admin-page .ql-snow .ql-stroke { stroke:var(--text-muted); }
 .admin-page .ql-snow .ql-fill { fill:var(--text-muted); }

@@ -25,24 +25,24 @@ colors:
   dark-muted: "#a0c9c9"
 typography:
   display:
-    fontFamily: "Ecoder, Poppins, sans-serif"
+    fontFamily: "Ecoder, MS PGothic, sans-serif"
     fontSize: "1.8rem"
     fontWeight: 700
     lineHeight: 1.3
     letterSpacing: "3px"
   headline:
-    fontFamily: "Poppins, system-ui, -apple-system, sans-serif"
+    fontFamily: "MS PGothic, MS UI Gothic, Tahoma, sans-serif"
     fontSize: "1.2rem"
     fontWeight: 600
     lineHeight: 1.3
     letterSpacing: "2px"
   title:
-    fontFamily: "Poppins, system-ui, -apple-system, sans-serif"
+    fontFamily: "MS PGothic, MS UI Gothic, Tahoma, sans-serif"
     fontSize: "1rem"
     fontWeight: 600
     lineHeight: 1.3
   body:
-    fontFamily: "Poppins, system-ui, -apple-system, sans-serif"
+    fontFamily: "MS PGothic, MS UI Gothic, Tahoma, sans-serif"
     fontSize: "15px"
     fontWeight: 400
     lineHeight: 1.6
@@ -89,13 +89,13 @@ components:
 
 elythria.dev is a deliberately personal, content-rich web space: part creator portfolio, part scanlation archive, part journal, and part playful internet clubhouse. Its visual language is bright, tactile, and a little nostalgic without becoming a novelty theme. The interface keeps content in framed modules so many different interests can coexist while the color system, header treatment, and motion keep the whole site recognizable.
 
-The incumbent system uses a light or dark atmospheric background, a selectable accent palette, compact uppercase section headers, rounded cards, and small interactive details. It should feel authored and expressive rather than like a generic SaaS dashboard. The existing identity, imagery, Poppins/Ecoder pairing, theme controls, and CRT/status treatment are the visual authority for this refactor.
+The incumbent system uses a light or dark atmospheric background, a selectable accent palette, compact uppercase section headers, rounded cards, and small interactive details. It should feel authored and expressive rather than like a generic SaaS dashboard. The existing identity, imagery, MS PGothic/Ecoder pairing, theme controls, and CRT/status treatment are the visual authority for this refactor.
 
 **Key Characteristics:**
 
 - Framed personal-web modules with a double-line outer shell.
 - Cyan-first accent system with selectable pink, purple, green, orange, blue, red, yellow, and teal variants.
-- Poppins for readable UI and Ecoder for the branded display wordmark.
+- MS PGothic for the pixel-friendly old-web UI and Ecoder for the branded display wordmark.
 - Soft gradients, dotted motion texture, rounded 8px cards, and hover lift.
 - Dense but navigable content, with progressive disclosure on mobile.
 
@@ -134,11 +134,11 @@ The palette is a bright accent carried through borders, gradient headers, links,
 
 ## Typography
 
-**Display Font:** Ecoder (with Poppins, sans-serif)
-**Body Font:** Poppins (with system-ui, -apple-system, sans-serif)
+**Display Font:** Ecoder (with MS PGothic, sans-serif)
+**Body Font:** MS PGothic (with MS UI Gothic, Tahoma, sans-serif)
 **Label/Mono Font:** Courier New, monospace
 
-**Character:** Poppins keeps dense content friendly and legible. Ecoder is reserved for the branded display treatment, while Courier New marks the CRT/status surface as a distinct technical channel.
+**Character:** MS PGothic gives dense content the compact, pixel-friendly old-web voice. Ecoder is reserved for the branded display treatment, while Courier New marks the CRT/status surface as a distinct technical channel.
 
 ### Hierarchy
 
@@ -150,7 +150,7 @@ The palette is a bright accent carried through borders, gradient headers, links,
 
 ### Named Rules
 
-**The Two-Voice Rule.** Poppins carries the site; Ecoder and Courier New are signature voices, not default replacements for body text.
+**The Two-Voice Rule.** MS PGothic carries the site; Ecoder and Courier New are signature voices, not default replacements for body text.
 
 ## Layout
 
@@ -207,7 +207,7 @@ The form language is rounded but bounded: most cards, carousels, inputs, and com
 
 ### Navigation
 
-The desktop header combines an image-backed gradient banner, Ecoder brand, compact navigation links, and icon controls for theme/color. Desktop side navigation is a framed scrollable module with smaller Poppins labels. Mobile navigation becomes a fixed bottom bar with a More drawer for secondary destinations and contextual widgets; arcade/games remain secondary navigation rather than primary identity.
+The desktop header combines an image-backed gradient banner, Ecoder brand, compact navigation links, and icon controls for theme/color. Desktop side navigation is a framed scrollable module with smaller MS PGothic labels. Mobile navigation becomes a fixed bottom bar with a More drawer for secondary destinations and contextual widgets; arcade/games remain secondary navigation rather than primary identity.
 
 ### CRT Status Strip
 
