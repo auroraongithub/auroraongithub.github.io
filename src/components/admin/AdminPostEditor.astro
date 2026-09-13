@@ -17,7 +17,7 @@ const updating = mode === 'update';
           <select id="postCategory"><option value="">Select</option><option value="blog">Blog</option><option value="story">Story</option></select>
         </AdminField>
       )}
-      <AdminField label="Tags" forId="postTags" hint="Comma-separated tags" required><input id="postTags" type="text" placeholder="tag1, tag2" /></AdminField>
+      <AdminField label="Tags" forId="postTags" required><input id="postTags" type="text" placeholder="tag1, tag2" /></AdminField>
       <AdminField label="Content" required><div id="postEditor" class="admin-editor"></div></AdminField>
       <AdminStatus id="postEditorStatus" />
       <div><button class="btn btn-primary" type="submit">{updating ? 'Update Post' : 'Add Post'}</button></div>
@@ -31,7 +31,7 @@ const updating = mode === 'update';
         <select id="postCategory"><option value="">Select</option><option value="blog">Blog</option><option value="story">Story</option></select>
       </AdminField>
     )}
-    <AdminField label="Tags" forId="postTags" hint="Comma-separated tags" required><input id="postTags" type="text" placeholder="tag1, tag2" /></AdminField>
+    <AdminField label="Tags" forId="postTags" required><input id="postTags" type="text" placeholder="tag1, tag2" /></AdminField>
     <AdminField label="Content" required><div id="postEditor" class="admin-editor"></div></AdminField>
     <AdminStatus id="postEditorStatus" />
     <div><button class="btn btn-primary" type="submit">{updating ? 'Update Post' : 'Add Post'}</button></div>
