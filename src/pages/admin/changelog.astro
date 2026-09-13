@@ -25,10 +25,12 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
             <AdminField label="Description" forId="newBody" required>
               <textarea id="newBody" rows="6" placeholder="What changed?"></textarea>
             </AdminField>
-            <label class="admin-check"><input type="checkbox" id="newPinned" /> <span>Pin entry</span></label>
             <AdminStatus id="changelogMessage" />
-            <div class="changelog-form-actions">
-              <button class="btn btn-primary" type="submit"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add entry</button>
+            <div class="changelog-form-footer">
+              <label class="admin-check"><input type="checkbox" id="newPinned" /> <span>Pin entry</span></label>
+              <div class="changelog-form-actions">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add entry</button>
+              </div>
             </div>
           </form>
         </section>
@@ -288,8 +290,15 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 
   .changelog-form-actions {
     display: flex;
-    justify-content: flex-end;
-    padding-top: 3px;
+    margin-left: auto;
+  }
+
+  .changelog-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
   .changelog-form-actions .btn {
@@ -531,14 +540,14 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     position: relative;
     min-width: 0;
     padding: 7px 8px;
-    padding-right: 96px;
+    padding-right: 108px;
     border-bottom: 1px solid var(--primary-dark);
     background: linear-gradient(to bottom, var(--primary-light) 0%, var(--primary) 45%, var(--primary-dark) 50%, var(--primary-light) 100%);
     box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .6);
   }
 
   .changelog-history .changelog-list .admin-list-item-head h3 {
-    display: -webkit-box;
+    display: block;
     min-width: 0;
     overflow: hidden;
     margin: 0;
@@ -546,8 +555,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     font: 700 .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
     text-overflow: ellipsis;
     text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary-dark) 75%, #000);
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    white-space: nowrap;
   }
 
   .changelog-history .changelog-list .admin-list-item-head .post-card-icon {
@@ -603,6 +611,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     position: absolute;
     top: 6px;
     right: 6px;
+    z-index: 1;
     gap: 5px;
     min-height: 0;
     padding: 0;
