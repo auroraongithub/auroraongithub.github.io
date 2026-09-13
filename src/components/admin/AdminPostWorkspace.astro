@@ -24,7 +24,8 @@ const workspaceTabs = tabs ?? postTabs;
 <script>
   const postRoutes: Record<string, string> = {
     blogs: '/admin/blogs/',
-    stories: '/admin/stories/'
+    stories: '/admin/stories/',
+    changelog: '/admin/changelog/'
   };
 
   document.querySelectorAll<HTMLButtonElement>('.admin-post-workspace-header [data-category]').forEach((tab) => {
