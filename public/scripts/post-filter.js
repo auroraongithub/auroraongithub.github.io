@@ -45,6 +45,11 @@ function setEmptyState(empty, visible) {
   if (empty) empty.hidden = visible !== 0;
 }
 
+function readCardTags(card) {
+  try { return JSON.parse(card.dataset.tags || '[]'); } catch (_) {}
+  return String(card.dataset.tags || '').split('|').map((tag) => tag.trim()).filter(Boolean);
+}
+
 function initFilters(grid) {
   const input = document.querySelector('[data-post-search]');
   const filterBar = document.querySelector('[data-tag-filters]');
@@ -55,8 +60,7 @@ function initFilters(grid) {
     const query = String(input?.value || '').trim().toLowerCase();
     let visible = 0;
     grid.querySelectorAll('[data-post-card]').forEach((card) => {
-      let tags = [];
-      try { tags = JSON.parse(card.dataset.tags || '[]'); } catch (_) {}
+      const tags = readCardTags(card);
       const matchesQuery = !query || card.dataset.title.includes(query) || tags.some((tag) => tag.includes(query)) || card.textContent.toLowerCase().includes(query);
       const matchesTag = !activeTag || tags.includes(activeTag);
       const show = matchesQuery && matchesTag;
@@ -118,8 +122,9 @@ async function initLivePosts() {
   } catch (error) {
     console.warn(`Live ${type} posts unavailable`, error);
     loading?.remove();
-    grid.innerHTML = '<p class="text-muted">Unable to load posts right now.</p>';
-    setEmptyState(empty, 1);
+    const fallbackCount = grid.querySelectorAll('[data-post-card]').length;
+    if (!fallbackCount) grid.innerHTML = '<p class="text-muted">Unable to load posts right now.</p>';
+    setEmptyState(empty, fallbackCount ? fallbackCount : 1);
   }
 }
 
