@@ -1,17 +1,19 @@
 ---
 import AdminTabs from './AdminTabs.astro';
 
-interface Props { active: 'blogs' | 'stories' }
+interface WorkspaceTab { id: string; label: string; icon?: string }
+interface Props { active: string; tabs?: readonly WorkspaceTab[] }
 
-const { active } = Astro.props;
+const { active, tabs } = Astro.props;
 const postTabs = [
   { id: 'blogs', label: 'Blogs' },
   { id: 'stories', label: 'Stories' }
 ] as const;
+const workspaceTabs = tabs ?? postTabs;
 ---
 <section class:list={['neo-box', 'scroll-animate', 'admin-post-workspace', `${active}-section`]}>
   <div class="neo-header admin-post-workspace-header">
-    <AdminTabs tabs={postTabs} active={active} dataAttribute="category" />
+    <AdminTabs tabs={workspaceTabs} active={active} dataAttribute="category" />
     <div class="admin-post-workspace-actions"><slot name="actions" /></div>
   </div>
   <div class="neo-content admin-post-workspace-content">
