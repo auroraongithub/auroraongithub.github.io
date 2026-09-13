@@ -93,10 +93,16 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     };
 
     const JIKAN = 'https://api.jikan.moe/v4';
+    const JIKAN_TIMEOUT_MS = 11000;
+    const JIKAN_MAX_RETRIES = 3;
+    const JIKAN_RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504]);
     let category = 'anime';
     let favorites: Favorite[] = [];
     let searchItems: Favorite[] = [];
     let lastJikan = 0;
+    let activeSearchController: AbortController | null = null;
+    let activeSearchKey: string | null = null;
+    let searchRequestId = 0;
 
     const list = document.querySelector<HTMLElement>('#favoritesList')!;
     const count = document.querySelector<HTMLElement>('#favoriteCount')!;
@@ -106,6 +112,69 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     const searchInput = document.querySelector<HTMLInputElement>('#favoriteSearch')!;
     const searchButton = document.querySelector<HTMLButtonElement>('#searchFavorites')!;
     const searchResults = document.querySelector<HTMLElement>('#favoriteSearchResults')!;
+
+    class JikanHttpError extends Error {
+      status: number;
+
+      constructor(status: number) {
+        super(`MyAnimeList search failed (${status})`);
+        this.name = 'JikanHttpError';
+        this.status = status;
+      }
+    }
+
+    class JikanTemporaryError extends Error {
+      constructor() {
+        super('Jikan is temporarily unavailable. Try searching again in a moment.');
+        this.name = 'JikanTemporaryError';
+      }
+    }
+
+    function abortError() {
+      return new DOMException('Search aborted', 'AbortError');
+    }
+
+    function waitFor(ms: number, signal?: AbortSignal) {
+      if (signal?.aborted) return Promise.reject(abortError());
+      if (ms <= 0) return Promise.resolve();
+
+      return new Promise<void>((resolve, reject) => {
+        let settled = false;
+        const onAbort = () => {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timer);
+          signal?.removeEventListener('abort', onAbort);
+          reject(abortError());
+        };
+        const timer = window.setTimeout(() => {
+          if (settled) return;
+          settled = true;
+          signal?.removeEventListener('abort', onAbort);
+          resolve();
+        }, ms);
+
+        signal?.addEventListener('abort', onAbort, { once: true });
+        if (signal?.aborted) onAbort();
+      });
+    }
+
+    function retryDelay(response: Response, attempt: number) {
+      const retryAfter = response.headers.get('Retry-After');
+      if (retryAfter) {
+        const seconds = Number(retryAfter);
+        if (Number.isFinite(seconds) && seconds >= 0) return Math.min(seconds * 1000, 15000);
+
+        const retryAt = Date.parse(retryAfter);
+        if (!Number.isNaN(retryAt)) return Math.min(Math.max(0, retryAt - Date.now()), 15000);
+      }
+
+      return Math.min(3000, (attempt + 1) * 1000);
+    }
+
+    function isAbortError(error: unknown) {
+      return error instanceof DOMException && error.name === 'AbortError';
+    }
 
     const malId = (item: any) => item?.mal_id ?? item?.malId ?? item?.myanimelist_id ?? item?.myanimelistId ?? null;
 
@@ -190,6 +259,11 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     }
 
     async function switchCategory(next: string) {
+      activeSearchController?.abort();
+      activeSearchController = null;
+      activeSearchKey = null;
+      searchRequestId += 1;
+      searchButton.removeAttribute('aria-busy');
       category = next;
       document.querySelectorAll<HTMLButtonElement>('#favoriteTabs [data-category]').forEach((button) => {
         const active = button.dataset.category === next;
@@ -311,17 +385,47 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       }
     });
 
-    async function jikanRequest(url: string) {
-      const wait = Math.max(0, 1200 - (Date.now() - lastJikan));
-      if (wait) await new Promise((resolve) => setTimeout(resolve, wait));
-      lastJikan = Date.now();
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`MyAnimeList search failed (${response.status})`);
-      return response.json();
+    async function jikanRequest(url: string, signal?: AbortSignal) {
+      for (let attempt = 0; attempt <= JIKAN_MAX_RETRIES; attempt += 1) {
+        if (signal?.aborted) throw abortError();
+
+        const throttle = Math.max(0, 1200 - (Date.now() - lastJikan));
+        if (throttle) await waitFor(throttle, signal);
+
+        const requestController = new AbortController();
+        const timeout = window.setTimeout(() => requestController.abort(), JIKAN_TIMEOUT_MS);
+        const forwardAbort = () => requestController.abort();
+        signal?.addEventListener('abort', forwardAbort, { once: true });
+
+        try {
+          lastJikan = Date.now();
+          const response = await fetch(url, { signal: requestController.signal });
+          if (response.ok) return response.json();
+
+          if (!JIKAN_RETRYABLE_STATUSES.has(response.status)) {
+            throw new JikanHttpError(response.status);
+          }
+
+          if (attempt === JIKAN_MAX_RETRIES) throw new JikanTemporaryError();
+          await waitFor(retryDelay(response, attempt), signal);
+        } catch (error) {
+          if (signal?.aborted) throw abortError();
+          if (error instanceof JikanHttpError || error instanceof JikanTemporaryError) throw error;
+
+          // Timeouts, connection failures, and malformed transient responses are retryable.
+          if (attempt === JIKAN_MAX_RETRIES) throw new JikanTemporaryError();
+          await waitFor((attempt + 1) * 1000, signal);
+        } finally {
+          window.clearTimeout(timeout);
+          signal?.removeEventListener('abort', forwardAbort);
+        }
+      }
+
+      throw new JikanTemporaryError();
     }
 
-    function resultToFavorite(item: any): Favorite {
-      if (category === 'characters') {
+    function resultToFavorite(item: any, resultCategory = category): Favorite {
+      if (resultCategory === 'characters') {
         return {
           title: item.name,
           image: item.images?.jpg?.image_url || null,
@@ -362,14 +466,26 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       const query = searchInput.value.trim();
       if (!query || category === 'games') return;
 
+      const resultCategory = category;
+      const searchKey = `${resultCategory}:${query.toLocaleLowerCase()}`;
+      if (activeSearchController && activeSearchKey === searchKey) return;
+
+      activeSearchController?.abort();
+      const requestController = new AbortController();
+      const requestId = ++searchRequestId;
+      activeSearchController = requestController;
+      activeSearchKey = searchKey;
+
       searchResults.hidden = false;
       searchResults.innerHTML = '<div class="favorite-search-loading">Searching...</div>';
       searchButton.disabled = true;
+      searchButton.setAttribute('aria-busy', 'true');
 
       try {
-        const endpoint = category === 'characters' ? 'characters' : category;
-        const data = await jikanRequest(`${JIKAN}/${endpoint}?q=${encodeURIComponent(query)}&limit=10`);
-        searchItems = (data.data || []).map(resultToFavorite);
+        const endpoint = resultCategory === 'characters' ? 'characters' : resultCategory;
+        const data = await jikanRequest(`${JIKAN}/${endpoint}?q=${encodeURIComponent(query)}&limit=10`, requestController.signal);
+        if (requestId !== searchRequestId || requestController.signal.aborted) return;
+        searchItems = (data.data || []).map((item: any) => resultToFavorite(item, resultCategory));
 
         if (!searchItems.length) {
           searchResults.innerHTML = '<div class="admin-empty-state favorite-search-empty"><span>No results found.</span></div>';
@@ -390,9 +506,20 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
           `;
         }).join('');
       } catch (error) {
-        searchResults.innerHTML = `<p class="admin-status favorite-search-error" data-state="error">${escapeHtml(error instanceof Error ? error.message : 'Search failed')}</p>`;
+        if (requestId !== searchRequestId || isAbortError(error)) return;
+        const message = error instanceof JikanTemporaryError
+          ? error.message
+          : error instanceof JikanHttpError
+            ? `${error.message}. Check the search and try again.`
+            : 'MyAnimeList search failed. Please try again.';
+        searchResults.innerHTML = `<p class="admin-status favorite-search-error" data-state="error">${escapeHtml(message)}</p>`;
       } finally {
-        searchButton.disabled = category === 'games';
+        if (requestId === searchRequestId) {
+          activeSearchController = null;
+          activeSearchKey = null;
+          searchButton.disabled = category === 'games';
+          searchButton.removeAttribute('aria-busy');
+        }
       }
     }
 
