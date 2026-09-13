@@ -1,7 +1,6 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import AdminField from '../../components/admin/AdminField.astro';
-import AdminStatus from '../../components/admin/AdminStatus.astro';
 import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro';
 ---
 <AdminLayout title="Now Editor" active="now">
@@ -30,23 +29,27 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       </AdminField>
 
       <div class="now-editor-actions">
-        <AdminStatus id="nowMessage" />
-        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-primary" id="nowSaveButton" type="submit">Save</button>
       </div>
     </form>
   </AdminPostWorkspace>
 </AdminLayout>
 
 <script>
-  import { adminFetch, setAdminStatus } from '../../lib/admin/api';
+  import { adminFetch } from '../../lib/admin/api';
   const workingOn = document.querySelector<HTMLInputElement>('#workingOn')!;
   const learning = document.querySelector<HTMLInputElement>('#learning')!;
   const yes = document.querySelector<HTMLInputElement>('#collabsYes')!;
   const no = document.querySelector<HTMLInputElement>('#collabsNo')!;
-  const message = document.querySelector<HTMLElement>('#nowMessage');
+  const saveButton = document.querySelector<HTMLButtonElement>('#nowSaveButton')!;
+  const defaultSaveLabel = saveButton.textContent || 'Save';
+
+  function setSaveState(label: string, disabled: boolean): void {
+    saveButton.textContent = label;
+    saveButton.disabled = disabled;
+  }
 
   (async () => {
-    setAdminStatus(message, 'Loading…', 'loading');
     try {
       const response = await adminFetch('/site/now', {}, { auth: false });
       const data = await response.json();
@@ -55,15 +58,12 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       learning.value = data.learning || '';
       yes.checked = Boolean(data.open_to_collabs);
       no.checked = !yes.checked;
-      setAdminStatus(message);
-    } catch (error) {
-      setAdminStatus(message, error instanceof Error ? error.message : 'Failed to load', 'error');
-    }
+    } catch (_) {}
   })();
 
   document.querySelector<HTMLFormElement>('#nowForm')?.addEventListener('submit', async (event) => {
     event.preventDefault();
-    setAdminStatus(message, 'Saving…', 'loading');
+    setSaveState('Saving…', true);
     try {
       const response = await adminFetch('/admin/now', {
         method: 'PUT',
@@ -75,9 +75,10 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'Failed to save');
-      setAdminStatus(message, 'Saved.', 'success');
-    } catch (error) {
-      setAdminStatus(message, error instanceof Error ? error.message : 'Error saving', 'error');
+      setSaveState('Saved.', true);
+      window.setTimeout(() => setSaveState(defaultSaveLabel, false), 1100);
+    } catch {
+      setSaveState('Retry', false);
     }
   });
 </script>
@@ -175,11 +176,6 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     gap: 7px;
     padding-top: 8px;
     border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 52%, transparent);
-  }
-
-  .now-editor-actions .admin-status {
-    flex: 1 1 auto;
-    margin: 0;
   }
 
   .now-editor-actions .btn {
