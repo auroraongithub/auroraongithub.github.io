@@ -1,7 +1,6 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import AdminField from '../../components/admin/AdminField.astro';
-import AdminStatus from '../../components/admin/AdminStatus.astro';
 import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro';
 import StatusStrip from '../../components/StatusStrip.astro';
 ---
@@ -23,8 +22,7 @@ import StatusStrip from '../../components/StatusStrip.astro';
         </AdminField>
 
         <div class="status-form-footer">
-          <AdminStatus id="statusMessage" />
-          <button class="btn btn-primary" type="submit">Save status</button>
+          <button class="btn btn-primary" id="statusSaveButton" type="submit">Save</button>
         </div>
       </form>
 
@@ -33,17 +31,24 @@ import StatusStrip from '../../components/StatusStrip.astro';
   </div>
 
   <script>
-    import { adminFetch, setAdminStatus } from '../../lib/admin/api';
+    import { adminFetch } from '../../lib/admin/api';
 
     const feeling = document.querySelector<HTMLInputElement>('#feeling');
     const doing = document.querySelector<HTMLInputElement>('#doing');
     const marquee = document.querySelector<HTMLInputElement>('#marquee');
-    const message = document.querySelector<HTMLElement>('#statusMessage');
+    const saveButton = document.querySelector<HTMLButtonElement>('#statusSaveButton');
     const previewFeeling = document.querySelector<HTMLElement>('#statusFeeling');
     const previewDoing = document.querySelector<HTMLElement>('#statusDoing');
     const previewMarquee = document.querySelector<HTMLElement>('#marqueeText');
 
-    if (feeling && doing && marquee && message && previewFeeling && previewDoing && previewMarquee) {
+    if (feeling && doing && marquee && saveButton && previewFeeling && previewDoing && previewMarquee) {
+      const defaultSaveLabel = saveButton.textContent || 'Save';
+
+      const setSaveState = (label: string, disabled: boolean): void => {
+        saveButton.textContent = label;
+        saveButton.disabled = disabled;
+      };
+
       const updatePreview = () => {
         previewFeeling.textContent = feeling.value || 'Feeling';
         previewDoing.textContent = doing.value || 'Doing';
@@ -53,7 +58,6 @@ import StatusStrip from '../../components/StatusStrip.astro';
       [feeling, doing, marquee].forEach((input) => input.addEventListener('input', updatePreview));
 
       (async () => {
-        setAdminStatus(message, 'Loading...', 'loading');
         try {
           const response = await adminFetch('/site/status', {}, { auth: false });
           const data = await response.json();
@@ -62,15 +66,12 @@ import StatusStrip from '../../components/StatusStrip.astro';
           doing.value = data.doing || '';
           marquee.value = data.currently_marquee || '';
           updatePreview();
-          setAdminStatus(message);
-        } catch (error) {
-          setAdminStatus(message, error instanceof Error ? error.message : 'Failed to load status', 'error');
-        }
+        } catch (_) {}
       })();
 
       document.querySelector<HTMLFormElement>('#statusForm')?.addEventListener('submit', async (event) => {
         event.preventDefault();
-        setAdminStatus(message, 'Saving...', 'loading');
+        setSaveState('Saving…', true);
         try {
           const response = await adminFetch('/admin/status', {
             method: 'PUT',
@@ -78,9 +79,10 @@ import StatusStrip from '../../components/StatusStrip.astro';
           });
           const data = await response.json().catch(() => ({}));
           if (!response.ok) throw new Error(data.error || 'Failed to save');
-          setAdminStatus(message, 'Saved.', 'success');
-        } catch (error) {
-          setAdminStatus(message, error instanceof Error ? error.message : 'Error saving status', 'error');
+          setSaveState('Saved.', true);
+          window.setTimeout(() => setSaveState(defaultSaveLabel, false), 1100);
+        } catch {
+          setSaveState('Retry', false);
         }
       });
     }
@@ -154,14 +156,6 @@ import StatusStrip from '../../components/StatusStrip.astro';
     gap: 8px;
     padding-top: 7px;
     border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
-  }
-
-  .status-form-footer .admin-status {
-    flex: 1 1 auto;
-    min-width: 0;
-    padding: 5px 7px;
-    border-radius: 4px;
-    font: .72rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
   }
 
   .status-form-footer .btn {
