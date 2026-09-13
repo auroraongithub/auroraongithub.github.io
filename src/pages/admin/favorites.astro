@@ -1,83 +1,74 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import AdminPanel from '../../components/admin/AdminPanel.astro';
 import AdminField from '../../components/admin/AdminField.astro';
 import AdminStatus from '../../components/admin/AdminStatus.astro';
 import AdminModal from '../../components/admin/AdminModal.astro';
+import AdminTabs from '../../components/admin/AdminTabs.astro';
+import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro';
 ---
 <AdminLayout title="Favorites Editor" active="favorites" wide={true}>
-  <AdminPanel title="Favorites Editor" icon="bi-heart" class="favorites-admin-panel">
-    <Fragment slot="actions">
-      <span class="favorite-panel-mode"><span class="favorite-live-dot" aria-hidden="true"></span> Curating library</span>
-    </Fragment>
-
-    <div class="favorite-overview">
-      <div class="favorite-overview-copy">
-        <span class="favorite-overview-icon" aria-hidden="true"><i class="bi bi-collection-heart"></i></span>
-        <div>
-          <h3>Keep the personal canon tidy.</h3>
-          <p>Switch shelves, pull in MAL favorites, or make a precise manual edit. Every change stays in the same public favorites feed.</p>
-        </div>
+  <div class="favorites-admin-page">
+    <AdminPostWorkspace active="favorites" tabs={[{ id: 'favorites', label: 'Favorites' }]}>
+      <div id="favoriteTabs" class="favorite-tabs">
+        <AdminTabs
+          tabs={[
+            { id: 'anime', label: 'Anime' },
+            { id: 'manga', label: 'Manga / LN' },
+            { id: 'characters', label: 'Characters' },
+            { id: 'games', label: 'Games' }
+          ]}
+          active="anime"
+          dataAttribute="category"
+        />
       </div>
-      <div class="favorite-overview-rule" aria-hidden="true"></div>
-      <div class="favorite-overview-note"><i class="bi bi-shield-check" aria-hidden="true"></i><span>Admin-only controls</span></div>
-    </div>
-
-    <div class="admin-tabs favorite-tabs" id="favoriteTabs" role="tablist" aria-label="Favorite category">
-      <button class="btn btn-ghost admin-tab active" data-category="anime" role="tab" aria-selected="true"><i class="bi bi-film" aria-hidden="true"></i><span>Anime</span></button>
-      <button class="btn btn-ghost admin-tab" data-category="manga" role="tab" aria-selected="false"><i class="bi bi-book" aria-hidden="true"></i><span>Manga / LN</span></button>
-      <button class="btn btn-ghost admin-tab" data-category="characters" role="tab" aria-selected="false"><i class="bi bi-person-heart" aria-hidden="true"></i><span>Characters</span></button>
-      <button class="btn btn-ghost admin-tab" data-category="games" role="tab" aria-selected="false"><i class="bi bi-controller" aria-hidden="true"></i><span>Games</span></button>
-    </div>
 
     <div class="favorite-tool-grid">
-      <section class="favorite-tool-panel favorite-source-panel">
-        <div class="favorite-tool-heading">
-          <span class="favorite-tool-icon" aria-hidden="true"><i class="bi bi-cloud-arrow-down"></i></span>
-          <div><h3>Bring in a favorite</h3><p>Use MyAnimeList as a shortcut, then verify before saving.</p></div>
-        </div>
-
+      <div class="favorite-source-panel">
         <section class="favorite-tool-block" id="malImportSection">
-          <div class="favorite-block-heading"><h4>Import from MyAnimeList</h4><span class="favorite-block-key">MAL → shelf</span></div>
-          <div class="admin-toolbar"><AdminField label="MAL Username" forId="malUsername"><input id="malUsername" type="text" placeholder="Your MyAnimeList username" /></AdminField><button class="btn btn-primary" id="importMal" type="button"><i class="bi bi-download" aria-hidden="true"></i> Import Favorites</button></div>
-          <div class="admin-progress favorite-progress" id="importProgress" hidden><div><span id="importFill"></span></div><small id="importText">Importing…</small></div>
+          <h3>Import from MyAnimeList</h3>
+          <div class="admin-toolbar">
+            <AdminField label="Username" forId="malUsername"><input id="malUsername" type="text" placeholder="MyAnimeList username" /></AdminField>
+            <button class="btn btn-primary" id="importMal" type="button">Import</button>
+          </div>
+          <div class="admin-progress favorite-progress" id="importProgress" hidden><div><span id="importFill"></span></div><small id="importText">Importing...</small></div>
         </section>
 
         <section class="favorite-tool-block favorite-search-block">
-          <div class="favorite-block-heading"><h4>Search MyAnimeList</h4><span class="favorite-block-key">Jikan lookup</span></div>
-          <div class="admin-toolbar"><AdminField label="Search" forId="favoriteSearch"><input id="favoriteSearch" type="text" placeholder="Search by title…" /></AdminField><button class="btn btn-ghost" id="searchFavorites" type="button"><i class="bi bi-search" aria-hidden="true"></i> Search</button></div>
+          <h3>Search MyAnimeList</h3>
+          <div class="admin-toolbar">
+            <AdminField label="Title" forId="favoriteSearch"><input id="favoriteSearch" type="text" placeholder="Search by title..." /></AdminField>
+            <button class="btn btn-ghost" id="searchFavorites" type="button">Search</button>
+          </div>
           <div id="favoriteSearchResults" class="admin-search-results" hidden></div>
         </section>
-      </section>
+      </div>
 
-      <section class="favorite-tool-panel favorite-manual-panel">
-        <div class="favorite-tool-heading">
-          <span class="favorite-tool-icon" aria-hidden="true"><i class="bi bi-pencil-square"></i></span>
-          <div><h3>Add manually</h3><p>Best for games, custom entries, or anything not indexed.</p></div>
-        </div>
+      <section class="favorite-manual-panel">
+        <h3>Add manually</h3>
         <form id="favoriteAddForm" class="admin-favorite-form">
           <AdminField label="Title" forId="addTitle" required><input id="addTitle" required /></AdminField>
-          <AdminField label="Image URL" forId="addImage"><input id="addImage" type="url" placeholder="https://…" /></AdminField>
+          <AdminField label="Image URL" forId="addImage"><input id="addImage" type="url" placeholder="https://..." /></AdminField>
           <AdminField label="MAL ID" forId="addMalId"><input id="addMalId" type="number" min="1" /></AdminField>
           <AdminField label="Status" forId="addStatus"><select id="addStatus"><option value="completed">Completed</option><option value="watching">Watching / Reading / Playing</option><option value="plan">Plan to Watch / Read / Play</option><option value="dropped">Dropped</option></select></AdminField>
           <AdminField label="Score" forId="addScore"><input id="addScore" type="number" min="0" max="10" step="0.01" /></AdminField>
           <AdminField label="Year" forId="addYear"><input id="addYear" type="number" min="1900" max="2100" /></AdminField>
           <AdminField label="Description" forId="addDescription" class="admin-favorite-full"><textarea id="addDescription"></textarea></AdminField>
-          <div class="admin-favorite-full favorite-form-actions"><button class="btn btn-primary" type="submit"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add Favorite</button></div>
+          <div class="admin-favorite-full favorite-form-actions"><button class="btn btn-primary" type="submit">Add favorite</button></div>
         </form>
       </section>
     </div>
 
     <section class="favorite-library-section" aria-labelledby="favoriteLibraryTitle">
       <div class="admin-list-toolbar admin-favorite-toolbar">
-        <div class="favorite-library-title"><div class="favorite-library-heading"><span class="favorite-library-mark" aria-hidden="true"><i class="bi bi-heart-fill"></i></span><h3 id="favoriteLibraryTitle">Current favorites</h3><span class="admin-count" id="favoriteCount">0</span></div><span class="favorite-library-subtitle">Items currently visible on the site</span></div>
-        <div class="favorite-library-actions"><span id="favoriteSyncStatus" class="admin-sync-label"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Checking cache…</span><button class="btn btn-ghost" id="applyManualMetadata" type="button"><i class="bi bi-patch-check" aria-hidden="true"></i> Fill verified MAL data</button><button class="btn btn-ghost" id="syncJikan" type="button"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Sync missing</button></div>
+        <div class="favorite-library-title"><div class="favorite-library-heading"><h3 id="favoriteLibraryTitle">Current favorites</h3><span class="admin-count" id="favoriteCount">0</span></div></div>
+        <div class="favorite-library-actions"><span id="favoriteSyncStatus" class="admin-sync-label">Checking cache...</span><button class="btn btn-ghost" id="applyManualMetadata" type="button">Fill MAL data</button><button class="btn btn-ghost" id="syncJikan" type="button">Sync missing</button></div>
       </div>
-      <div class="admin-progress favorite-progress" id="syncProgress" hidden><div><span id="syncFill"></span></div><small id="syncText">Syncing…</small></div>
+      <div class="admin-progress favorite-progress" id="syncProgress" hidden><div><span id="syncFill"></span></div><small id="syncText">Syncing...</small></div>
       <AdminStatus id="favoriteMessage" />
-      <div id="favoritesList" class="admin-grid favorite-grid"><p class="admin-status" data-state="loading">Loading…</p></div>
+      <div id="favoritesList" class="admin-grid favorite-grid"><p class="admin-status" data-state="loading">Loading...</p></div>
     </section>
-  </AdminPanel>
+    </AdminPostWorkspace>
+  </div>
 
   <AdminModal id="editFavoriteModal" title="Edit Favorite">
     <form id="favoriteEditForm" class="admin-form">
@@ -242,6 +233,347 @@ import AdminModal from '../../components/admin/AdminModal.astro';
     @media (prefers-reduced-motion: reduce) {
       .favorite-grid .admin-favorite-card { transition: none; }
       .favorite-grid .admin-favorite-card:hover { transform: none; }
+    }
+  </style>
+
+  <style>
+    .favorites-admin-page {
+      min-width: 0;
+    }
+
+    .favorites-admin-page .admin-post-workspace-content {
+      padding: 8px;
+    }
+
+    .favorite-tabs {
+      margin: 0 0 9px;
+    }
+
+    .favorite-tabs .admin-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 4px;
+      margin: 0;
+      padding: 0 0 8px;
+    }
+
+    .favorite-tabs .admin-tab {
+      min-width: 0;
+      min-height: 30px !important;
+      padding: 6px 8px !important;
+      border-radius: 4px !important;
+      font: 700 .68rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif !important;
+      white-space: nowrap;
+    }
+
+    .favorite-tool-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .favorite-source-panel,
+    .favorite-manual-panel {
+      min-width: 0;
+    }
+
+    .favorite-manual-panel {
+      padding-left: 10px;
+      border-left: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
+    }
+
+    .favorite-tool-block {
+      padding: 3px 0 10px;
+    }
+
+    .favorite-tool-block + .favorite-tool-block {
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-light);
+    }
+
+    .favorite-tool-block h3,
+    .favorite-manual-panel > h3 {
+      margin: 0 0 7px;
+      color: var(--primary-dark);
+      font: 700 .68rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .favorites-admin-page .admin-field {
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .favorites-admin-page .admin-field label {
+      color: var(--primary-dark);
+      font: 700 .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .favorites-admin-page input:not([type='checkbox']):not([type='radio']),
+    .favorites-admin-page select,
+    .favorites-admin-page textarea {
+      min-height: 32px;
+      padding: 6px 8px;
+      border: 1px solid var(--primary-dark);
+      border-top-color: var(--primary-light);
+      border-left-color: var(--primary-light);
+      border-radius: 4px;
+      background: linear-gradient(to bottom, var(--bg-elev), color-mix(in srgb, var(--primary-light) 16%, var(--bg-elev)));
+      box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .72), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
+      color: var(--text);
+      font: .78rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .favorites-admin-page textarea {
+      min-height: 58px;
+      resize: vertical;
+    }
+
+    .favorites-admin-page input:focus-visible,
+    .favorites-admin-page select:focus-visible,
+    .favorites-admin-page textarea:focus-visible {
+      outline: 1px solid var(--primary);
+      border-color: var(--primary-dark);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-light) 30%, transparent), inset 1px 1px 0 rgba(255, 255, 255, .72);
+    }
+
+    .favorite-tool-block .admin-toolbar {
+      align-items: end;
+      margin: 0;
+    }
+
+    .favorite-tool-block .admin-toolbar .admin-field {
+      flex: 1 1 160px;
+    }
+
+    .favorite-tool-block .admin-toolbar .btn,
+    .favorite-form-actions .btn {
+      min-height: 30px;
+      padding: 6px 11px;
+      border-radius: 4px;
+      font: 700 .68rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .favorite-manual-panel .admin-favorite-form {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 0;
+    }
+
+    .favorite-form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1px;
+      padding-top: 7px;
+      border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
+    }
+
+    .favorite-progress {
+      margin: 7px 0 0;
+      padding: 6px 7px;
+      border-radius: 4px;
+    }
+
+    .favorite-progress > div {
+      height: 5px;
+      border-radius: 2px;
+    }
+
+    .favorite-progress small {
+      font: .66rem/1.3 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .favorite-library-section {
+      margin-top: 11px;
+      padding-top: 10px;
+      border-top: 2px solid var(--primary);
+    }
+
+    .favorites-admin-page .admin-favorite-toolbar {
+      align-items: center;
+      margin: 0 0 8px;
+    }
+
+    .favorite-library-heading {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .favorite-library-heading h3 {
+      margin: 0;
+      color: var(--text);
+      font: 700 .72rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .favorites-admin-page .admin-count {
+      min-width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      font: 700 .62rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .favorite-library-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .favorite-library-actions .btn {
+      min-height: 28px;
+      padding: 5px 8px;
+      border-radius: 4px;
+      font: 700 .64rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .favorite-library-actions .admin-sync-label {
+      color: var(--text-muted);
+      font: .66rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .favorite-grid {
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 8px;
+    }
+
+    .favorite-grid .admin-favorite-card {
+      grid-template-rows: 108px 1fr auto;
+      min-width: 0;
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+      background: var(--bg-elev);
+      box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 34%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 18%, transparent);
+      transition: border-color .16s ease, background-color .16s ease;
+    }
+
+    .favorite-grid .admin-favorite-card:hover {
+      border-color: var(--primary);
+      background: color-mix(in srgb, var(--primary-light) 12%, var(--bg-elev));
+      box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--primary-light) 38%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--primary-dark) 20%, transparent);
+      transform: none;
+    }
+
+    .favorite-grid .admin-favorite-card > img,
+    .favorite-grid .admin-favorite-placeholder {
+      height: 108px;
+    }
+
+    .favorite-grid .admin-favorite-body {
+      gap: 5px;
+      padding: 8px;
+    }
+
+    .favorite-grid .admin-favorite-body strong {
+      font: 700 .76rem/1.25 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .favorite-grid .admin-list-meta {
+      gap: 4px 6px;
+      font: .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .favorite-grid .admin-favorite-status {
+      padding: 1px 4px;
+      border-radius: 3px;
+      font: .62rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .favorite-grid .admin-favorite-body p {
+      display: none;
+    }
+
+    .favorite-grid .admin-favorite-card footer {
+      gap: 4px;
+      padding: 6px 7px;
+      border-top: 1px dotted var(--border-light);
+      background: transparent;
+    }
+
+    .favorite-grid .admin-favorite-card footer .btn {
+      min-height: 26px;
+      padding: 4px 6px;
+      border-radius: 3px;
+      font: 700 .62rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    }
+
+    .favorites-admin-page .admin-empty-state {
+      grid-column: 1 / -1;
+      min-height: 112px;
+      border-radius: 4px;
+    }
+
+    .favorites-admin-page .admin-status {
+      margin-top: 7px;
+    }
+
+    @media (max-width: 980px) {
+      .favorite-tool-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .favorite-manual-panel {
+        padding-top: 10px;
+        padding-left: 0;
+        border-top: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
+        border-left: 0;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .favorite-tabs .admin-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .favorite-manual-panel .admin-favorite-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .favorite-library-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .favorite-tool-block .admin-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .favorite-tool-block .admin-toolbar .btn {
+        width: 100%;
+      }
+
+      .favorite-manual-panel .admin-favorite-form {
+        grid-template-columns: 1fr;
+      }
+
+      .favorite-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 360px) {
+      .favorite-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .favorite-grid .admin-favorite-card {
+        transition: none;
+      }
     }
   </style>
 </AdminLayout>
