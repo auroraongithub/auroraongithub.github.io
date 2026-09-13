@@ -62,7 +62,9 @@ export async function adminFetch(path: string, init: RequestInit = {}, options: 
   const url = `${ADMIN_API_BASE}${path}${auth && token ? `${separator}token=${encodeURIComponent(token)}` : ''}`;
   const headers = new Headers(init.headers || {});
   if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
-  if (auth && token && !headers.has('Authorization')) headers.set('Authorization', `Bearer ${token}`);
+  // This backend's established admin contract is the token query parameter.
+  // Do not add a Bearer header: its middleware may treat that value as the
+  // token itself and reject an otherwise valid query-token session.
 
   const response = await fetch(url, { ...init, headers });
   if (response.status === 401 && redirectOnUnauthorized) {
