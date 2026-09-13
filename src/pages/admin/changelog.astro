@@ -150,6 +150,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 
   document.querySelector<HTMLFormElement>('#changelogAddForm')?.addEventListener('submit', async (event) => {
     event.preventDefault();
+    const form = event.currentTarget as HTMLFormElement;
     if (!newBody.value.trim()) {
       setAdminStatus(message, 'Description is required.', 'error');
       return;
@@ -162,7 +163,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'Failed to add entry');
-      (event.currentTarget as HTMLFormElement).reset();
+      form.reset();
       setAdminStatus(message, 'Entry added.', 'success');
       await load();
     } catch (error) {
