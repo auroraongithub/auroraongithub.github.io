@@ -6,6 +6,28 @@ function text(id, value) {
 }
 
 let favoritesLoadToken = 0;
+let spotifyPlaybackState = null;
+
+function formatSpotifyTime(milliseconds) {
+  const seconds = Math.max(0, Math.floor(Number(milliseconds) / 1000));
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+}
+
+function updateSpotifyProgress() {
+  if (!spotifyPlaybackState?.playing) return;
+
+  const elapsed = Date.now() - spotifyPlaybackState.receivedAt;
+  const progress = Math.min(spotifyPlaybackState.duration, spotifyPlaybackState.progress + elapsed);
+  const percent = spotifyPlaybackState.duration
+    ? Math.min(100, Math.max(0, (progress / spotifyPlaybackState.duration) * 100))
+    : 0;
+  const fill = document.querySelector('.spotify-progress-fill');
+  const time = document.querySelector('.spotify-progress-time');
+  const progressBar = document.querySelector('.spotify-progress');
+  if (fill) fill.style.width = `${percent}%`;
+  if (time) time.textContent = `${formatSpotifyTime(progress)} / ${formatSpotifyTime(spotifyPlaybackState.duration)}`;
+  if (progressBar) progressBar.setAttribute('aria-label', `${formatSpotifyTime(progress)} of ${formatSpotifyTime(spotifyPlaybackState.duration)}`);
+}
 
 const characterSeriesByMalId = {
   152120: 'Yuru Camp△',
@@ -226,12 +248,8 @@ async function loadSpotify() {
   const widget = document.getElementById('widgetSpotifyNowPlaying');
   if (!widget || !box) return;
 
-  const formatTime = (milliseconds) => {
-    const seconds = Math.max(0, Math.floor(Number(milliseconds) / 1000));
-    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
-  };
-
   const renderState = (state, message) => {
+    spotifyPlaybackState = null;
     widget.className = `spotify-now-playing ${state === 'playing' ? 'is-playing' : `is-${state}`}`;
     widget.innerHTML = `<span class="spotify-status-dot" aria-hidden="true"></span><span class="spotify-status-line">${escapeHtml(message)}</span>`;
     box.style.display = '';
@@ -247,6 +265,12 @@ async function loadSpotify() {
     const duration = Number(data.duration_ms) || 0;
     const progress = Number(data.progress_ms) || 0;
     const progressPercent = duration ? Math.min(100, Math.max(0, (progress / duration) * 100)) : 0;
+    spotifyPlaybackState = {
+      duration,
+      progress,
+      receivedAt: Date.now(),
+      playing: true,
+    };
     const image = data.image
       ? `<img class="spotify-art" src="${escapeHtml(data.image)}" alt="" loading="lazy" />`
       : '<span class="spotify-art spotify-art-empty" aria-hidden="true">♪</span>';
@@ -259,14 +283,13 @@ async function loadSpotify() {
     widget.innerHTML = `
       ${image}
       <div class="spotify-track-info">
-        <span class="spotify-status-line"><span class="spotify-status-dot" aria-hidden="true"></span> Listening now</span>
         <strong class="spotify-track-name">${escapeHtml(data.name)}</strong>
         <span class="spotify-track-artist">${escapeHtml(artists)}</span>
         ${album}
-        <div class="spotify-progress" aria-label="${formatTime(progress)} of ${formatTime(duration)}">
+        <div class="spotify-progress" aria-label="${formatSpotifyTime(progress)} of ${formatSpotifyTime(duration)}">
           <span class="spotify-progress-fill" style="width: ${progressPercent}%"></span>
         </div>
-        <div class="spotify-track-footer"><small>${formatTime(progress)} / ${formatTime(duration)}</small>${openLink}</div>
+        <div class="spotify-track-footer"><small class="spotify-progress-time">${formatSpotifyTime(progress)} / ${formatSpotifyTime(duration)}</small>${openLink}</div>
       </div>`;
   };
 
@@ -383,7 +406,10 @@ async function initWidgets() {
   initModals();
   initMoreDrawer();
   await Promise.allSettled([loadStatus(), loadNow(), loadChangelog(), loadStats(), loadSpotify(), loadPortfolio(), loadFavorites(), loadRecent()]);
-  if (document.getElementById('widgetSpotifyNowPlaying')) window.setInterval(() => void loadSpotify(), 30_000);
+  if (document.getElementById('widgetSpotifyNowPlaying')) {
+    window.setInterval(updateSpotifyProgress, 1_000);
+    window.setInterval(() => void loadSpotify(), 15_000);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', initWidgets, { once: true });
