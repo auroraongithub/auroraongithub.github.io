@@ -10,6 +10,13 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
         <AdminField label="Spotify link" forId="spotifyUrl">
           <input id="spotifyUrl" type="text" placeholder="https://open.spotify.com/track/…" />
         </AdminField>
+        <div class="settings-spotify-connection" id="spotifyConnection">
+          <div>
+            <span class="settings-connection-label">Spotify API</span>
+            <span id="spotifyConnectionState" data-state="loading">Checking connection…</span>
+          </div>
+          <button class="btn btn-ghost" id="spotifyConnectButton" type="button">Connect Spotify</button>
+        </div>
         <AdminField label="Chat room" forId="chattableRoom">
           <input id="chattableRoom" type="text" placeholder="nijikade" />
         </AdminField>
@@ -26,13 +33,15 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 </AdminLayout>
 
 <script>
-  import { adminFetch } from '../../lib/admin/api';
+  import { ADMIN_API_BASE, adminFetch, getAdminToken } from '../../lib/admin/api';
   import { spotifyToEmbed } from '../../lib/admin/spotify';
 
   const spotify = document.querySelector<HTMLInputElement>('#spotifyUrl')!;
   const room = document.querySelector<HTMLInputElement>('#chattableRoom')!;
   const preview = document.querySelector<HTMLElement>('#spotifyPreview')!;
   const saveButton = document.querySelector<HTMLButtonElement>('#settingsSaveButton')!;
+  const spotifyConnectionState = document.querySelector<HTMLElement>('#spotifyConnectionState')!;
+  const spotifyConnectButton = document.querySelector<HTMLButtonElement>('#spotifyConnectButton')!;
   const defaultSaveLabel = saveButton.textContent || 'Save';
 
   function setSaveState(label: string, disabled: boolean): void {
@@ -72,6 +81,75 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
 
   spotify.addEventListener('input', updatePreview);
 
+  function setSpotifyConnectionState(label: string, state = '') {
+    spotifyConnectionState.textContent = label;
+    spotifyConnectionState.dataset.state = state;
+  }
+
+  async function loadSpotifyConnection() {
+    try {
+      const response = await adminFetch('/admin/spotify/status');
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to load Spotify status');
+
+      if (!data.configured) {
+        setSpotifyConnectionState('API credentials are not configured', 'error');
+        spotifyConnectButton.disabled = true;
+      } else if (data.connected) {
+        setSpotifyConnectionState(data.profile?.display_name ? `Connected as ${data.profile.display_name}` : 'Connected', 'success');
+        spotifyConnectButton.textContent = 'Disconnect';
+        spotifyConnectButton.disabled = false;
+      } else {
+        setSpotifyConnectionState('Not connected', '');
+        spotifyConnectButton.textContent = 'Connect Spotify';
+        spotifyConnectButton.disabled = false;
+      }
+    } catch (error) {
+      setSpotifyConnectionState(error instanceof Error ? error.message : 'Spotify status unavailable', 'error');
+      spotifyConnectButton.disabled = true;
+    }
+  }
+
+  spotifyConnectButton.addEventListener('click', async () => {
+    const token = getAdminToken();
+    if (!token) return;
+
+    if (spotifyConnectButton.textContent === 'Disconnect') {
+      spotifyConnectButton.disabled = true;
+      try {
+        const response = await adminFetch('/admin/spotify', { method: 'DELETE' });
+        if (!response.ok) throw new Error('Failed to disconnect Spotify');
+        await loadSpotifyConnection();
+      } catch (error) {
+        setSpotifyConnectionState(error instanceof Error ? error.message : 'Failed to disconnect Spotify', 'error');
+        spotifyConnectButton.disabled = false;
+      }
+      return;
+    }
+
+    spotifyConnectButton.disabled = true;
+    setSpotifyConnectionState('Opening Spotify…', 'loading');
+    try {
+      const response = await fetch(`${ADMIN_API_BASE}/admin/spotify/connect`, {
+        method: 'POST',
+        headers: { Authorization: token, accept: 'application/json' }
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.authorization_url) throw new Error(data.error || 'Failed to start Spotify authorization');
+      window.location.assign(data.authorization_url);
+    } catch (error) {
+      setSpotifyConnectionState(error instanceof Error ? error.message : 'Failed to connect Spotify', 'error');
+      spotifyConnectButton.disabled = false;
+    }
+  });
+
+  const spotifyResult = new URLSearchParams(window.location.search).get('spotify');
+  if (spotifyResult === 'connected') setSpotifyConnectionState('Connected — loading account…', 'success');
+  if (spotifyResult === 'denied') setSpotifyConnectionState('Spotify authorization was cancelled', 'error');
+  if (spotifyResult === 'invalid_state') setSpotifyConnectionState('Spotify authorization expired. Try again.', 'error');
+  if (spotifyResult === 'error') setSpotifyConnectionState('Spotify authorization failed. Try again.', 'error');
+  if (spotifyResult) window.history.replaceState({}, '', window.location.pathname);
+
   (async () => {
     try {
       const response = await adminFetch('/site/settings', {}, { auth: false });
@@ -82,6 +160,8 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
       updatePreview();
     } catch (_) {}
   })();
+
+  void loadSpotifyConnection();
 
   document.querySelector<HTMLFormElement>('#settingsForm')?.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -115,6 +195,51 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 9px;
+  }
+
+  .settings-spotify-connection {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 9px;
+    min-width: 0;
+    padding: 8px;
+    border: 1px dotted color-mix(in srgb, var(--primary-dark) 54%, transparent);
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--bg-elev) 72%, transparent);
+  }
+
+  .settings-spotify-connection > div {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .settings-connection-label {
+    color: var(--primary-dark);
+    font: 700 .64rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  #spotifyConnectionState {
+    overflow: hidden;
+    color: var(--text-muted);
+    font: .72rem/1.2 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #spotifyConnectionState[data-state='success'] { color: var(--primary-dark); }
+  #spotifyConnectionState[data-state='error'] { color: var(--danger, #b42e2e); }
+
+  .settings-spotify-connection .btn {
+    flex: 0 0 auto;
+    min-height: 29px;
+    padding: 5px 10px;
+    font: 700 .68rem/1 "MS PGothic", "MS UI Gothic", Tahoma, sans-serif;
+    text-transform: uppercase;
   }
 
   .settings-form .admin-field {

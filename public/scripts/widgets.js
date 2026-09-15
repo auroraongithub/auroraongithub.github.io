@@ -225,12 +225,24 @@ async function loadSpotify() {
   const frame = document.getElementById('widgetSpotify');
   const box = document.getElementById('widgetSpotifyBox');
   if (!frame || !box) return;
+
+  const setEmbed = (url) => {
+    if (!url) return false;
+    if (frame.getAttribute('src') !== url) frame.setAttribute('src', url);
+    box.style.display = '';
+    return true;
+  };
+
+  try {
+    const nowPlaying = await cachedFetch('/site/spotify/now-playing', 15_000);
+    if (setEmbed(nowPlaying.embed_url)) return;
+  } catch (error) {
+    console.warn('Spotify now-playing unavailable; using saved embed', error);
+  }
+
   try {
     const data = await cachedFetch('/site/settings', 300_000);
-    if (data.spotify_embed_url) {
-      frame.src = data.spotify_embed_url;
-      box.style.display = '';
-    }
+    setEmbed(data.spotify_embed_url);
   } catch (error) {
     console.warn('Spotify widget unavailable', error);
   }
@@ -340,6 +352,7 @@ async function initWidgets() {
   initModals();
   initMoreDrawer();
   await Promise.allSettled([loadStatus(), loadNow(), loadChangelog(), loadStats(), loadSpotify(), loadPortfolio(), loadFavorites(), loadRecent()]);
+  if (document.getElementById('widgetSpotify')) window.setInterval(() => void loadSpotify(), 30_000);
 }
 
 document.addEventListener('DOMContentLoaded', initWidgets, { once: true });
