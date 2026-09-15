@@ -264,12 +264,24 @@ async function loadSpotify() {
     const artists = Array.isArray(data.artists) && data.artists.length ? data.artists.join(' · ') : 'Unknown artist';
     const duration = Number(data.duration_ms) || 0;
     const progress = Number(data.progress_ms) || 0;
+    const trackKey = data.url || `${data.name}\u0000${artists}`;
+    const snapshotFetchedAt = Number(data.fetched_at) || Date.now();
+    const previousState = spotifyPlaybackState;
+    if (
+      previousState?.trackKey === trackKey
+      && snapshotFetchedAt <= previousState.snapshotFetchedAt
+    ) {
+      updateSpotifyProgress();
+      return;
+    }
     const progressPercent = duration ? Math.min(100, Math.max(0, (progress / duration) * 100)) : 0;
     spotifyPlaybackState = {
       duration,
       progress,
       receivedAt: Date.now(),
       playing: true,
+      snapshotFetchedAt,
+      trackKey,
     };
     const image = data.image
       ? `<img class="spotify-art" src="${escapeHtml(data.image)}" alt="" loading="lazy" />`
