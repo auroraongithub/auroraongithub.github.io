@@ -89,7 +89,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   async function loadSpotifyConnection() {
     try {
       const response = await adminFetch('/admin/spotify/status');
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'Failed to load Spotify status');
 
       if (!data.configured) {
@@ -153,7 +153,7 @@ import AdminPostWorkspace from '../../components/admin/AdminPostWorkspace.astro'
   (async () => {
     try {
       const response = await adminFetch('/site/settings', {}, { auth: false });
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'Failed to load');
       spotify.value = data.spotify_embed_url || '';
       room.value = data.chattable_room || 'nijikade';
