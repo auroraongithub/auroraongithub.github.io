@@ -90,8 +90,10 @@ const recentStories = sortByDate(await getCollection('stories', ({ data }) => !d
     </div>
   </SiteSection>
 
-  <SiteSection id="widgetSpotifyBox" title="Currently Listening" class="listening-section" style="display: none;">
-    <iframe id="widgetSpotify" class="listening-frame" src="" title="Currently listening on Spotify" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <SiteSection id="widgetSpotifyBox" title="Currently Listening" class="listening-section">
+    <div id="widgetSpotifyNowPlaying" class="spotify-now-playing" aria-live="polite">
+      <span class="spotify-status-line">Checking Spotify…</span>
+    </div>
   </SiteSection>
 
   <MobileShoutbox />

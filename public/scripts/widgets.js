@@ -222,29 +222,60 @@ async function loadStats() {
 }
 
 async function loadSpotify() {
-  const frame = document.getElementById('widgetSpotify');
   const box = document.getElementById('widgetSpotifyBox');
-  if (!frame || !box) return;
+  const widget = document.getElementById('widgetSpotifyNowPlaying');
+  if (!widget || !box) return;
 
-  const setEmbed = (url) => {
-    if (!url) return false;
-    if (frame.getAttribute('src') !== url) frame.setAttribute('src', url);
+  const formatTime = (milliseconds) => {
+    const seconds = Math.max(0, Math.floor(Number(milliseconds) / 1000));
+    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+  };
+
+  const renderState = (state, message) => {
+    widget.className = `spotify-now-playing ${state === 'playing' ? 'is-playing' : `is-${state}`}`;
+    widget.innerHTML = `<span class="spotify-status-dot" aria-hidden="true"></span><span class="spotify-status-line">${escapeHtml(message)}</span>`;
     box.style.display = '';
-    return true;
+  };
+
+  const renderNowPlaying = (data) => {
+    if (!data?.connected || !data?.playing || !data?.name) {
+      renderState('idle', 'Currently not listening to anything :p');
+      return;
+    }
+
+    const artists = Array.isArray(data.artists) && data.artists.length ? data.artists.join(' · ') : 'Unknown artist';
+    const duration = Number(data.duration_ms) || 0;
+    const progress = Number(data.progress_ms) || 0;
+    const progressPercent = duration ? Math.min(100, Math.max(0, (progress / duration) * 100)) : 0;
+    const image = data.image
+      ? `<img class="spotify-art" src="${escapeHtml(data.image)}" alt="" loading="lazy" />`
+      : '<span class="spotify-art spotify-art-empty" aria-hidden="true">♪</span>';
+    const album = data.album ? `<span class="spotify-track-album">${escapeHtml(data.album)}</span>` : '';
+    const openLink = data.url
+      ? `<a class="spotify-open-link" href="${escapeHtml(data.url)}" target="_blank" rel="noopener noreferrer">Open in Spotify <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>`
+      : '';
+
+    widget.className = 'spotify-now-playing is-playing';
+    widget.innerHTML = `
+      ${image}
+      <div class="spotify-track-info">
+        <span class="spotify-status-line"><span class="spotify-status-dot" aria-hidden="true"></span> Listening now</span>
+        <strong class="spotify-track-name">${escapeHtml(data.name)}</strong>
+        <span class="spotify-track-artist">${escapeHtml(artists)}</span>
+        ${album}
+        <div class="spotify-progress" aria-label="${formatTime(progress)} of ${formatTime(duration)}">
+          <span class="spotify-progress-fill" style="width: ${progressPercent}%"></span>
+        </div>
+        <div class="spotify-track-footer"><small>${formatTime(progress)} / ${formatTime(duration)}</small>${openLink}</div>
+      </div>`;
   };
 
   try {
     const nowPlaying = await cachedFetch('/site/spotify/now-playing', 15_000);
-    if (setEmbed(nowPlaying.embed_url)) return;
+    renderNowPlaying(nowPlaying);
   } catch (error) {
-    console.warn('Spotify now-playing unavailable; using saved embed', error);
-  }
-
-  try {
-    const data = await cachedFetch('/site/settings', 300_000);
-    setEmbed(data.spotify_embed_url);
-  } catch (error) {
-    console.warn('Spotify widget unavailable', error);
+    console.warn('Spotify now-playing unavailable', error);
+    renderState('offline', 'Spotify is taking a little break :p');
   }
 }
 
@@ -352,7 +383,7 @@ async function initWidgets() {
   initModals();
   initMoreDrawer();
   await Promise.allSettled([loadStatus(), loadNow(), loadChangelog(), loadStats(), loadSpotify(), loadPortfolio(), loadFavorites(), loadRecent()]);
-  if (document.getElementById('widgetSpotify')) window.setInterval(() => void loadSpotify(), 30_000);
+  if (document.getElementById('widgetSpotifyNowPlaying')) window.setInterval(() => void loadSpotify(), 30_000);
 }
 
 document.addEventListener('DOMContentLoaded', initWidgets, { once: true });
