@@ -179,7 +179,7 @@
         const token = localStorage.getItem('jwt');
         if (!token) return alert('You are not logged in');
         if (!title || !type || !tags || !quill.root.innerText.trim()) return alert('Fill all the fields');
-        const res = await fetch(`https://nijikade-backend.vercel.app/api/post?token=${token}`, {
+        const res = await fetch(`https://api.elythria.dev/api/post?token=${token}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title, type, content, tags })
         });

@@ -126,7 +126,7 @@
       import '../assets/app.js';
       async function load() {
         const root = document.querySelector('#posts');
-        const res = await fetch('https://nijikade-backend.vercel.app/api/post?type=story');
+        const res = await fetch('https://api.elythria.dev/api/post?type=story');
         const data = await res.json();
         root.innerHTML = '';
         data.posts.forEach(year => {
@@ -170,7 +170,7 @@
           if (!confirm('Delete this post?')) return;
           try {
             const token = sessionStorage.getItem('jwt');
-            await fetch(`https://nijikade-backend.vercel.app/api/post/${id}`, {
+            await fetch(`https://api.elythria.dev/api/post/${id}`, {
               method: 'DELETE',
               headers: { 'Authorization': `Bearer ${token}` }
             });

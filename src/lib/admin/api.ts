@@ -1,4 +1,4 @@
-export const ADMIN_API_BASE = 'https://nijikade-backend.vercel.app/api';
+export const ADMIN_API_BASE = 'https://api.elythria.dev/api';
 
 function tokenTimestamp(token: string): number | null {
   try {
@@ -58,13 +58,10 @@ export async function adminFetch(path: string, init: RequestInit = {}, options: 
     throw new Error('Not logged in');
   }
 
-  const separator = path.includes('?') ? '&' : '?';
-  const url = `${ADMIN_API_BASE}${path}${auth && token ? `${separator}token=${encodeURIComponent(token)}` : ''}`;
+  const url = `${ADMIN_API_BASE}${path}`;
   const headers = new Headers(init.headers || {});
   if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
-  // This backend's established admin contract is the token query parameter.
-  // Do not add a Bearer header: its middleware may treat that value as the
-  // token itself and reject an otherwise valid query-token session.
+  if (auth && token) headers.set('Authorization', `Bearer ${token}`);
 
   const response = await fetch(url, { ...init, headers });
   if (response.status === 401 && redirectOnUnauthorized) {
