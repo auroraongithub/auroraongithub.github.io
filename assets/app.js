@@ -200,7 +200,7 @@ export async function getAllPosts(type) {
   root.innerHTML = '<div class="loading">Loading...</div>';
   
   try {
-    const data = await fetchJSON('https://nijikade-backend.vercel.app/api/post?type=' + encodeURIComponent(type));
+    const data = await fetchJSON('https://api.elythria.dev/api/post?type=' + encodeURIComponent(type));
     root.innerHTML = '';
     
     (data.posts || []).forEach(year => {
@@ -255,7 +255,7 @@ export async function getPost() {
       return;
     }
     
-    const data = await fetchJSON('https://nijikade-backend.vercel.app/api/post/' + encodeURIComponent(id));
+    const data = await fetchJSON('https://api.elythria.dev/api/post/' + encodeURIComponent(id));
     titleEl.textContent = data.data.title;
     contentEl.innerHTML = data.data.content;
     
@@ -812,7 +812,7 @@ function initPetals() {
 // STATUS STRIP & WIDGETS
 // ==========================================================================
 
-const API_BASE = 'https://nijikade-backend.vercel.app/api';
+const API_BASE = 'https://api.elythria.dev/api';
 
 // Cache system to reduce API calls
 const apiCache = {

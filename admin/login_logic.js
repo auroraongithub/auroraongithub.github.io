@@ -10,7 +10,7 @@ form?.addEventListener('submit', async (e) => {
   const password = passwordInput.value.trim();
   if (!email || !password) { alert('Fill all the fields'); return; }
   try {
-    const res = await fetch('https://nijikade-backend.vercel.app/api/login', {
+    const res = await fetch('https://api.elythria.dev/api/login', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });

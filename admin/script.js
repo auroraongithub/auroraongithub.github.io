@@ -28,7 +28,7 @@ if (loginForm) {
         });
 
         try {
-            const response = await axios.post('https://nijikade-backend.vercel.app/api/login', { email, password });
+            const response = await axios.post('https://api.elythria.dev/api/login', { email, password });
             localStorage.setItem('jwt', response.data.token)
             Swal.close();
             Swal.fire({
@@ -113,7 +113,7 @@ if (addBlogForm) {
         console.log(data);
 
         try {
-            const response = await axios.post(`https://nijikade-backend.vercel.app/api/post?token=${token}`, data);
+            const response = await axios.post(`https://api.elythria.dev/api/post?token=${token}`, data);
             localStorage.setItem('jwt', response.data.token)
             Swal.close();
             Swal.fire({
@@ -186,7 +186,7 @@ if (updateBlogForm) {
             if (!id) {
                 window.location.href = './blogs.html';
             }
-            const response = await axios.patch(`https://nijikade-backend.vercel.app/api/post/${id}?token=${token}`, { title, content, tags });
+            const response = await axios.patch(`https://api.elythria.dev/api/post/${id}?token=${token}`, { title, content, tags });
             localStorage.setItem('jwt', response.data.token)
             Swal.close();
             Swal.fire({
@@ -217,7 +217,7 @@ if (updateBlogForm) {
 
 
 const getPostsAdmin = async (type) => {
-    const blog = await axios.get('https://nijikade-backend.vercel.app/api/post?type=' + type);
+    const blog = await axios.get('https://api.elythria.dev/api/post?type=' + type);
     const years = blog.data.posts;
     const postsDiv = document.querySelector('#posts');
     postsDiv.innerHTML = '';
@@ -241,7 +241,7 @@ const getPostData = async () => {
         window.location.href = './blogs.html';
     }
 
-    const postData = await axios.get('https://nijikade-backend.vercel.app/api/post/' + id);
+    const postData = await axios.get('https://api.elythria.dev/api/post/' + id);
     const post = postData.data;
 
     titleInput.value = post.data.title;
@@ -270,7 +270,7 @@ const deletePost = (id) => {
         reverseButtons: true,
     }).then((result) => {
         if (result.isConfirmed) {
-            axios.delete(`https://nijikade-backend.vercel.app/api/post/${id}?token=${token}`)
+            axios.delete(`https://api.elythria.dev/api/post/${id}?token=${token}`)
                 .then((response) => {
                     Swal.fire({
                         title: 'Post deleted successfully',

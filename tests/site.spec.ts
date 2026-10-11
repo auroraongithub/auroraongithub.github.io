@@ -94,7 +94,7 @@ test('legacy public URLs and admin remain available', async ({ page }) => {
 });
 
 test('public API outages degrade without breaking the site shell', async ({ page }) => {
-  await page.route('https://nijikade-backend.vercel.app/**', (route) => route.abort());
+  await page.route('https://api.elythria.dev/**', (route) => route.abort());
   await page.goto('/resources/');
   await expect(page.locator('.site-banner')).toBeVisible();
   await expect(page.locator('#resourcePanels')).toContainText('temporarily unavailable');

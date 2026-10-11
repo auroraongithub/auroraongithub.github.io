@@ -102,7 +102,7 @@ The public site is not a React SPA.
 
 ## Backend configuration and secrets
 
-The public API base remains `https://nijikade-backend.vercel.app/api`. No new private credentials are required by the Astro build. The existing browser-side realtime configuration is preserved only to maintain the current chat behavior.
+The public API base remains `https://api.elythria.dev/api`. No new private credentials are required by the Astro build. The existing browser-side realtime configuration is preserved only to maintain the current chat behavior.
 
 `npm run verify:build` scans generated text output for common private-key/token patterns and fails if an `.env` file is emitted.
 

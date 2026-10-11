@@ -6,3 +6,6 @@ dist/
 src/content/blogs/_generated/
 src/content/stories/_generated/
 src/content/projects/_generated/
+
+playwright-report/
+test-results/

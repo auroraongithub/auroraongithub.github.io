@@ -418,7 +418,7 @@
     // Initialize
     (async function init() {
       try {
-        const res = await fetch('https://nijikade-backend.vercel.app/api/post?type=blog');
+        const res = await fetch('https://api.elythria.dev/api/post?type=blog');
         const data = await res.json();
         all = data.posts || [];
         render(all);

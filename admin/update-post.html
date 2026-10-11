@@ -176,7 +176,7 @@
         const url = new URL(window.location.href);
         const id = url.searchParams.get('id');
         if (!id) return window.location.href = './blogs.html';
-        const res = await fetch('https://nijikade-backend.vercel.app/api/post/' + id);
+        const res = await fetch('https://api.elythria.dev/api/post/' + id);
         const data = await res.json();
         titleInput.value = data.data.title;
         tagsInput.value = data.data.tags || '';
@@ -193,7 +193,7 @@
         const tags = tagsInput.value.trim();
         const content = quill.root.innerHTML;
         if (!title || !tags || !quill.root.innerText.trim()) return alert('Fill all the fields');
-        const res = await fetch(`https://nijikade-backend.vercel.app/api/post/${id}?token=${token}`, {
+        const res = await fetch(`https://api.elythria.dev/api/post/${id}?token=${token}`, {
           method: 'PATCH', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title, content, tags })
         });

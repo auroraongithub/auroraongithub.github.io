@@ -1,4 +1,4 @@
-export const API_BASE = 'https://nijikade-backend.vercel.app/api';
+export const API_BASE = 'https://api.elythria.dev/api';
 
 const cache = new Map();
 

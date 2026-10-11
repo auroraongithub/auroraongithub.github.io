@@ -2,7 +2,7 @@ import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const API_BASE = process.env.ELYTHRIA_API_BASE || 'https://nijikade-backend.vercel.app/api';
+const API_BASE = process.env.ELYTHRIA_API_BASE || 'https://api.elythria.dev/api';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 function slugify(value) {
