@@ -231,16 +231,75 @@ async function loadChangelog() {
   }
 }
 
-async function loadStats() {
-  if (!document.getElementById('statPosts') && !document.getElementById('drawerStatPosts')) return;
+function formatCount(value) {
+  const num = Number(value) || 0;
+  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`;
+  if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`;
+  return String(num);
+}
+
+function visitorSessionId() {
+  let id = null;
+  try { id = sessionStorage.getItem('visitorSessionId'); } catch {}
+  if (!id) {
+    id = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+    try { sessionStorage.setItem('visitorSessionId', id); } catch {}
+  }
+  return id;
+}
+
+function postVisitor(action, body) {
+  return fetch(`${API_BASE}/site/visitors/${action}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    keepalive: true,
+  });
+}
+
+async function loadVisitorStats() {
+  try {
+    const data = await cachedFetch('/site/visitors/stats', 30_000);
+    for (const id of ['statVisitors', 'drawerStatVisitors']) text(id, formatCount(data.online ?? data.visitors ?? data.online_now));
+    for (const id of ['statPageviews', 'drawerStatPageviews']) text(id, formatCount(data.total ?? data.pageviews ?? data.total_visits));
+  } catch (error) {
+    console.warn('Visitor stats unavailable', error);
+  }
+}
+
+let visitorTrackingStarted = false;
+
+async function startVisitorTracking() {
+  if (visitorTrackingStarted) return;
+  visitorTrackingStarted = true;
+  const sessionId = visitorSessionId();
+  try {
+    await postVisitor('connect', { sessionId, userAgent: navigator.userAgent, referrer: document.referrer || 'direct' });
+  } catch (error) {
+    console.warn('Visitor registration failed', error);
+  }
+  // The backend expires sessions after ~90s without a heartbeat.
+  window.setInterval(() => postVisitor('heartbeat', { sessionId }).catch(() => {}), 45_000);
+  window.setInterval(() => void loadVisitorStats(), 60_000);
+  window.addEventListener('pagehide', () => {
+    navigator.sendBeacon?.(`${API_BASE}/site/visitors/disconnect`, JSON.stringify({ sessionId }));
+  });
+}
+
+async function loadPostStats() {
   try {
     const data = await cachedFetch('/site/stats', 120_000);
-    for (const id of ['statPosts', 'drawerStatPosts']) text(id, data.posts ?? data.posts_count ?? '0');
-    for (const id of ['statVisitors', 'drawerStatVisitors']) text(id, data.visitors ?? data.online ?? data.online_now ?? '0');
-    for (const id of ['statPageviews', 'drawerStatPageviews']) text(id, data.pageviews ?? data.total_visits ?? data.total ?? '0');
+    for (const id of ['statPosts', 'drawerStatPosts']) text(id, String(data.posts ?? data.posts_count ?? 0));
   } catch (error) {
     console.warn('Stats unavailable', error);
   }
+}
+
+async function loadStats() {
+  if (!document.getElementById('statPosts') && !document.getElementById('drawerStatPosts')) return;
+  // Register first so the "Online Now" count includes this visitor.
+  await Promise.allSettled([loadPostStats(), startVisitorTracking()]);
+  await loadVisitorStats();
 }
 
 async function loadSpotify() {
